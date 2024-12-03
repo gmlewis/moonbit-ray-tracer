@@ -100,7 +100,7 @@ test "Multiplying the identity matrix by a tuple (p.60)" {
   assert_eq!(mat4ident().mul_tuple(a), a)
 }
 
-test "Transposing a matrix" {
+test "Transposing a matrix (p.61)" {
   let a = mat4(
     0, 9, 3, 0, // row 0
      9, 8, 0, 8, // row 1
@@ -116,7 +116,7 @@ test "Transposing a matrix" {
   assert_eq!(a.transpose(), want)
 }
 
-test "Transposing the identity matrix" {
+test "Transposing the identity matrix (p.61)" {
   let a = mat4ident().transpose()
   let want = mat4ident()
   assert_eq!(a, want)
