@@ -1,4 +1,4 @@
-///
+///|
 let color = @lib.color
 
 test "Colors are (red,green,blue) tuples (p.41)" {

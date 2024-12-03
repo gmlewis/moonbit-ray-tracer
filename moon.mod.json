@@ -1,6 +1,9 @@
 {
   "name": "gmlewis/ray-tracer",
   "version": "0.1.0",
+  "deps": {
+    "gmlewis/image": "0.10.0"
+  },
   "readme": "README.md",
   "repository": "",
   "license": "Apache-2.0",
