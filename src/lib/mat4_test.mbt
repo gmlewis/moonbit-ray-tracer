@@ -85,7 +85,7 @@ test "A matrix multiplied by a tuple (p.57)" {
   assert_eq!(a.mul_tuple(b), tuple(18, 24, 33, 1))
 }
 
-test "Multiplying a matrix by the identity matrix" {
+test "Multiplying a matrix by the identity matrix (p.60)" {
   let a = mat4(
     0, 1, 2, 4, // row 0
      1, 2, 4, 8, // row 1
@@ -95,7 +95,29 @@ test "Multiplying a matrix by the identity matrix" {
   assert_eq!(a * mat4ident(), a)
 }
 
-test "Multiplying the identity matrix by a tuple" {
+test "Multiplying the identity matrix by a tuple (p.60)" {
   let a = tuple(1, 2, 3, 4)
   assert_eq!(mat4ident().mul_tuple(a), a)
+}
+
+test "Transposing a matrix" {
+  let a = mat4(
+    0, 9, 3, 0, // row 0
+     9, 8, 0, 8, // row 1
+     1, 8, 5, 3, // row 2
+     0, 0, 5, 8, // row 3
+  )
+  let want = mat4(
+    0, 9, 1, 0, // row 0
+     9, 8, 8, 0, // row 1
+     3, 0, 5, 5, // row 2
+     0, 8, 3, 8, // row 3
+  )
+  assert_eq!(a.transpose(), want)
+}
+
+test "Transposing the identity matrix" {
+  let a = mat4ident().transpose()
+  let want = mat4ident()
+  assert_eq!(a, want)
 }

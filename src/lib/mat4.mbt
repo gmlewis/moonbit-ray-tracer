@@ -74,6 +74,34 @@ pub fn op_mul(self : Matrix, o : Matrix) -> Matrix {
 }
 
 ///|
+pub fn clone(self : Matrix) -> Matrix {
+  let nrows = self.num_rows()
+  let ncols = self.num_cols()
+  let result = Array::new(capacity=nrows)
+  for row in 0..<nrows {
+    let arr = Array::new(capacity=ncols)
+    for col in 0..<ncols {
+      arr.push(self[row][col])
+    }
+    result.push(MatrixRow(arr))
+  }
+  Matrix(result)
+}
+
+///|
+pub fn transpose(self : Matrix) -> Matrix {
+  let result = self.clone()
+  let nrows = self.num_rows()
+  let ncols = self.num_cols()
+  for row in 0..<nrows {
+    for col in 0..<ncols {
+      result[row][col] = self[col][row]
+    }
+  }
+  result
+}
+
+///|
 pub fn mat4(
   r0c0 : Double,
   r0c1 : Double,
