@@ -1,6 +1,7 @@
+///|
 const EPSILON = 0.00001
 
-/// Tuple represents either a point or a vector.
+///| Tuple represents either a point or a vector.
 pub(all) struct Tuple {
   mut x : Double
   mut y : Double
@@ -8,15 +9,38 @@ pub(all) struct Tuple {
   mut w : Double
 } derive(Show)
 
+///|
 pub fn tuple(x : Double, y : Double, z : Double, w : Double) -> Tuple {
   { x, y, z, w }
 }
 
+///|
+pub fn point(x : Double, y : Double, z : Double) -> Tuple {
+  { x, y, z, w: 1 }
+}
+
+///|
+pub fn is_point(self : Tuple) -> Bool {
+  self.w == 1
+}
+
+///|
+pub fn vector(x : Double, y : Double, z : Double) -> Tuple {
+  { x, y, z, w: 0 }
+}
+
+///|
+pub fn is_vector(self : Tuple) -> Bool {
+  self.w == 0
+}
+
+///|
 pub fn op_equal(self : Tuple, other : Tuple) -> Bool {
   let { x, y, z, w } = (self - other).abs()
   x < EPSILON && y < EPSILON && z < EPSILON && w < EPSILON
 }
 
+///|
 pub fn op_add(self : Tuple, other : Tuple) -> Tuple {
   let x = self.x + other.x
   let y = self.y + other.y
@@ -25,6 +49,7 @@ pub fn op_add(self : Tuple, other : Tuple) -> Tuple {
   { x, y, z, w }
 }
 
+///|
 pub fn op_sub(self : Tuple, other : Tuple) -> Tuple {
   let x = self.x - other.x
   let y = self.y - other.y
@@ -33,6 +58,52 @@ pub fn op_sub(self : Tuple, other : Tuple) -> Tuple {
   { x, y, z, w }
 }
 
+///|
+pub fn op_neg(self : Tuple) -> Tuple {
+  let x = -self.x
+  let y = -self.y
+  let z = -self.z
+  let w = -self.w
+  { x, y, z, w }
+}
+
+///|
+pub fn op_mul(self : Tuple, other : Tuple) -> Tuple {
+  let x = self.x * other.x
+  let y = self.y * other.y
+  let z = self.z * other.z
+  let w = self.w * other.w
+  { x, y, z, w }
+}
+
+///|
+pub fn mul_scalar(self : Tuple, other : Double) -> Tuple {
+  let x = self.x * other
+  let y = self.y * other
+  let z = self.z * other
+  let w = self.w * other
+  { x, y, z, w }
+}
+
+///|
+pub fn op_div(self : Tuple, other : Tuple) -> Tuple {
+  let x = self.x / other.x
+  let y = self.y / other.y
+  let z = self.z / other.z
+  let w = self.w / other.w
+  { x, y, z, w }
+}
+
+///|
+pub fn div_scalar(self : Tuple, other : Double) -> Tuple {
+  let x = self.x / other
+  let y = self.y / other
+  let z = self.z / other
+  let w = self.w / other
+  { x, y, z, w }
+}
+
+///|
 pub fn abs(self : Tuple) -> Tuple {
   let x = self.x.abs()
   let y = self.y.abs()
@@ -41,18 +112,31 @@ pub fn abs(self : Tuple) -> Tuple {
   { x, y, z, w }
 }
 
-pub fn point(x : Double, y : Double, z : Double) -> Tuple {
-  { x, y, z, w: 1 }
+///|
+pub fn magnitude(self : Tuple) -> Double {
+  let { x, y, z, w } = self
+  (x * x + y * y + z * z + w * w).sqrt()
 }
 
-pub fn is_point(self : Tuple) -> Bool {
-  self.w == 1
+///|
+pub fn normalize(self : Tuple) -> Tuple {
+  let len = self.magnitude()
+  self.div_scalar(len)
 }
 
-pub fn vector(x : Double, y : Double, z : Double) -> Tuple {
+///|
+pub fn dot(self : Tuple, other : Tuple) -> Double {
+  let x = self.x * other.x
+  let y = self.y * other.y
+  let z = self.z * other.z
+  let w = self.w * other.w
+  x + y + z + w
+}
+
+///|
+pub fn cross(self : Tuple, other : Tuple) -> Tuple {
+  let x = self.y * other.z - self.z * other.y
+  let y = self.z * other.x - self.x * other.z
+  let z = self.x * other.y - self.y * other.x
   { x, y, z, w: 0 }
-}
-
-pub fn is_vector(self : Tuple) -> Bool {
-  self.w == 0
 }
