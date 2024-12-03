@@ -1,4 +1,4 @@
-///|
+///
 let color = @lib.color
 
 test "Colors are (red,green,blue) tuples (p.41)" {
@@ -23,4 +23,10 @@ test "Subtracting colors (p.43)" {
 test "Multiplying a color by a scalar (p.43)" {
   let c = color(0.2, 0.3, 0.4)
   assert_eq!(c.mul_scalar(2), color(0.4, 0.6, 0.8))
+}
+
+test "Multiplying colors (p.43)" {
+  let c1 = color(1, 0.2, 0.4)
+  let c2 = color(0.9, 1, 0.1)
+  assert_eq!(c1 * c2, color(0.9, 0.2, 0.04))
 }
