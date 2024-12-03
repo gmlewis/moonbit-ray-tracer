@@ -1,6 +1,8 @@
 {
   "import": [
     "gmlewis/image",
-    "gmlewis/image/color"
+    "gmlewis/image/color",
+    "gmlewis/image/png",
+    "gmlewis/io"
   ]
 }

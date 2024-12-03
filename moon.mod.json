@@ -2,7 +2,8 @@
   "name": "gmlewis/ray-tracer",
   "version": "0.2.0",
   "deps": {
-    "gmlewis/image": "0.11.0"
+    "gmlewis/image": "0.11.0",
+    "gmlewis/io": "0.15.0"
   },
   "readme": "README.md",
   "repository": "",
