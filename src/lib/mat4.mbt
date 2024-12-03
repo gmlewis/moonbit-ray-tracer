@@ -7,6 +7,11 @@ pub fn op_get(self : MatrixRow, col : Int) -> Double {
 }
 
 ///|
+pub fn op_set(self : MatrixRow, col : Int, v : Double) -> Unit {
+  self._[col] = v
+}
+
+///|
 pub(all) type Matrix Array[MatrixRow] derive(Show)
 
 ///|
@@ -54,6 +59,20 @@ pub fn op_equal(self : Matrix, other : Matrix) -> Bool {
   true
 }
 
+///| Matrix multiplication - currently, only 4x4 is handled.
+pub fn op_mul(self : Matrix, o : Matrix) -> Matrix {
+  let m = mat4zero()
+  for row in 0..<4 {
+    for col in 0..<4 {
+      m[row][col] = self[row][0] * o[0][col] +
+        self[row][1] * o[1][col] +
+        self[row][2] * o[2][col] +
+        self[row][3] * o[3][col]
+    }
+  }
+  m
+}
+
 ///|
 pub fn mat4(
   r0c0 : Double,
@@ -79,4 +98,9 @@ pub fn mat4(
     [r2c0, r2c1, r2c2, r2c3],
     [r3c0, r3c1, r3c2, r3c3],
   ]
+}
+
+///|
+pub fn mat4zero() -> Matrix {
+  [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
 }

@@ -48,3 +48,25 @@ test "Matrix equality with different matrices (p.55)" {
   )
   assert_not_eq!(a, b)
 }
+
+test "Multiplying two matrices" {
+  let a = mat4(
+    1, 2, 3, 4, // row 0
+     5, 6, 7, 8, // row 1
+     9, 8, 7, 6, // row 2
+     5, 4, 3, 2, // row 3
+  )
+  let b = mat4(
+    -2, 1, 2, 3, // row 0
+     3, 2, 1, -1, // row 1
+     4, 3, 6, 5, // row 2
+     1, 2, 7, 8, // row 3
+  )
+  let want = mat4(
+    20, 22, 50, 48, // row 0
+     44, 54, 114, 108, // row 1
+     40, 58, 110, 102, // row 2
+     16, 26, 46, 42, // row 3
+  )
+  assert_eq!(a * b, want)
+}
