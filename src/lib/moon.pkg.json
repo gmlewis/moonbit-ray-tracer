@@ -1,5 +1,6 @@
 {
   "import": [
-    "gmlewis/image"
+    "gmlewis/image",
+    "gmlewis/image/color"
   ]
 }
