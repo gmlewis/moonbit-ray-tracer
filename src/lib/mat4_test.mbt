@@ -16,3 +16,35 @@ test "Constructing and inspecting a 4x4 matrix (p.54)" {
   assert_eq!(m[3][0], 13.5)
   assert_eq!(m[3][2], 15.5)
 }
+
+test "Matrix equality with identical matrices (p.55)" {
+  let a = mat4(
+    1, 2, 3, 4, // row 0
+     5, 6, 7, 8, // row 1
+     9, 10, 11, 12, // row 2
+     13, 14, 15, 16, // row 3
+  )
+  let b = mat4(
+    1, 2, 3, 4, // row 0
+     5, 6, 7, 8, // row 1
+     9, 10, 11, 12, // row 2
+     13, 14, 15, 16, // row 3
+  )
+  assert_eq!(a, b)
+}
+
+test "Matrix equality with different matrices (p.55)" {
+  let a = mat4(
+    1, 2, 3, 4, // row 0
+     5, 6, 7, 8, // row 1
+     9, 8, 7, 6, // row 2
+     5, 4, 3, 2, // row 3
+  )
+  let b = mat4(
+    2, 3, 4, 5, // row 0
+     6, 7, 8, 9, // row 1
+     8, 7, 6, 5, // row 2
+     4, 3, 2, 1, // row 3
+  )
+  assert_not_eq!(a, b)
+}

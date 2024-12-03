@@ -15,6 +15,46 @@ pub fn op_get(self : Matrix, row : Int) -> MatrixRow {
 }
 
 ///|
+pub fn num_rows(self : Matrix) -> Int {
+  self._.length()
+}
+
+///|
+pub fn num_cols(self : Matrix) -> Int {
+  if self.num_rows() == 0 {
+    return 0
+  }
+  self._[0]._.length()
+}
+
+///|
+pub fn op_equal(self : Matrix, other : Matrix) -> Bool {
+  let nrows = self.num_rows()
+  if self.num_rows() != other.num_rows() {
+    return false
+  }
+  if nrows == 0 { // weird, but precaution
+    return true
+  }
+  let ncols = self.num_cols()
+  if ncols != other.num_cols() {
+    return false
+  }
+  if ncols == 0 {
+    return true
+  }
+  for row in 0..<nrows {
+    for col in 0..<ncols {
+      let delta = (self._[row]._[col] - other._[row]._[col]).abs()
+      if delta >= EPSILON {
+        return false
+      }
+    }
+  }
+  true
+}
+
+///|
 pub fn mat4(
   r0c0 : Double,
   r0c1 : Double,
