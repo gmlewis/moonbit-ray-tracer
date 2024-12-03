@@ -146,3 +146,9 @@ pub fn submatrix(self : Matrix, row : Int, col : Int) -> Matrix {
   }
   Matrix(result)
 }
+
+///|
+pub fn minor(self : Matrix, row : Int, col : Int) -> Double {
+  let m = self.submatrix(row, col)
+  m.determinant()
+}
