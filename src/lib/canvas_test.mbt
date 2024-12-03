@@ -1,4 +1,4 @@
-///
+///|
 let canvas = @lib.canvas
 
 test "Creating a canvas (p.46)" {

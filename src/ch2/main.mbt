@@ -1,39 +1,41 @@
-///
+///|
 typealias Tuple = @lib.Tuple
 
+///|
 let canvas = @lib.canvas
 
+///|
 let color = @lib.color
 
-///
+///|
 let point = @lib.point
 
-///
+///|
 let vector = @lib.vector
 
-///
+///|
 struct Projectile {
   position : Tuple
   velocity : Tuple
 } derive(Show)
 
-///
+///|
 fn projectile(position : Tuple, velocity : Tuple) -> Projectile {
   { position, velocity }
 }
 
-///
+///|
 struct Environment {
   gravity : Tuple
   wind : Tuple
 }
 
-///
+///|
 fn environment(gravity : Tuple, wind : Tuple) -> Environment {
   { gravity, wind }
 }
 
-///
+///|
 fn main {
   // projectile starts one unit above the origin.
   // velocity is normalized to 1 unit/tick.
@@ -71,7 +73,7 @@ fn main {
   }
 }
 
-///
+///|
 fn tick(env : Environment, proj : Projectile) -> Projectile {
   let position = proj.position + proj.velocity
   let velocity = proj.velocity + env.gravity + env.wind
