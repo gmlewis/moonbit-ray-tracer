@@ -124,3 +124,25 @@ pub fn determinant(self : Matrix) -> Double {
     _ => 0
   }
 }
+
+///|
+pub fn submatrix(self : Matrix, row : Int, col : Int) -> Matrix {
+  let nrows = self.num_rows()
+  let ncols = self.num_cols()
+  guard nrows == ncols
+  let result = Array::new(capacity=nrows - 1)
+  for r in 0..<nrows {
+    if r == row {
+      continue
+    }
+    let arr = Array::new(capacity=ncols - 1)
+    for c in 0..<ncols {
+      if c == col {
+        continue
+      }
+      arr.push(self[r][c])
+    }
+    result.push(MatrixRow(arr))
+  }
+  Matrix(result)
+}

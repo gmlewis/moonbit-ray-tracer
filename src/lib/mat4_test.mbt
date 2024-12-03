@@ -121,3 +121,18 @@ test "Transposing the identity matrix (p.61)" {
   let want = mat4ident()
   assert_eq!(a, want)
 }
+
+test "A submatrix of a 4x4 matrix is a 3x3 matrix (p.63)" {
+  let a = mat4(
+    -6, 1, 1, 6, // row 0
+     -8, 5, 8, 6, // row 1
+     -1, 0, 8, 2, // row 2
+     -7, 1, -1, 1, // row 3
+  )
+  let want = mat3(
+    -6, 1, 6, // row 0
+     -8, 8, 6, // row 1
+     -7, -1, 1, // row 2
+  )
+  assert_eq!(a.submatrix(2, 1), want)
+}
