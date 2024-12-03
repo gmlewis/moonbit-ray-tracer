@@ -1,4 +1,4 @@
-///|
+///
 let canvas = @lib.canvas
 
 test "Creating a canvas (p.46)" {
@@ -91,4 +91,9 @@ test "Splitting long lines in PPM files (p.49)" {
       #|153 255 204 153 255 204 153 255 204 153 255 204 153
     ,
   )
+}
+
+test "PPM files are terminated by a newline character (p.49)" {
+  let ppm = canvas(5, 3).to_ppm()
+  assert_eq!(ppm[ppm.length() - 1], '\n')
 }

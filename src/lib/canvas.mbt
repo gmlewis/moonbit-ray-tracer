@@ -63,7 +63,7 @@ const MAX_PPM_LINE_LENGTH = 70
 
 ///|
 pub fn to_ppm(self : Canvas) -> String {
-  let lines = Array::new(capacity=self.height + 3)
+  let lines = Array::new(capacity=self.height + 4)
   lines.push("P3")
   lines.push("\{self.width} \{self.height}")
   lines.push("255")
@@ -99,6 +99,7 @@ pub fn to_ppm(self : Canvas) -> String {
   }
   // lines.join("\n")
   // YUCK! https://github.com/moonbitlang/core/pull/993
+  lines.push("")
   String::concat(lines, separator="\n")
 }
 
