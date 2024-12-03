@@ -76,3 +76,19 @@ test "Constructing the PNG pixel data" {
     ,
   )
 }
+
+test "Splitting long lines in PPM files (p.49)" {
+  let ppm = canvas(10, 2)..clear(color(1, 0.8, 0.6)).to_ppm()
+  // let lines4to6 = (ppm.split("\n")[3:7]).join("\n")
+  // YUCK! https://github.com/moonbitlang/core/pull/993
+  let lines4to6 = String::concat(ppm.split("\n")[3:7].collect(), separator="\n")
+  inspect!(
+    lines4to6,
+    content=
+      #|255 204 153 255 204 153 255 204 153 255 204 153 255 204 153 255 204
+      #|153 255 204 153 255 204 153 255 204 153 255 204 153
+      #|255 204 153 255 204 153 255 204 153 255 204 153 255 204 153 255 204
+      #|153 255 204 153 255 204 153 255 204 153 255 204 153
+    ,
+  )
+}

@@ -38,12 +38,28 @@ pub fn write_pixel(self : Canvas, x : Int, y : Int, color : Color) -> Unit {
   self.blue[off] = color.blue
 }
 
+///| clear clears the canvas to the provided color.
+pub fn clear(self : Canvas, color : Color) -> Unit {
+  let mut off = 0
+  for y in 0..<self.height {
+    for x in 0..<self.width {
+      self.red[off] = color.red
+      self.green[off] = color.green
+      self.blue[off] = color.blue
+      off += 1
+    }
+  }
+}
+
 ///|
 fn clamp2ppm(v : Double) -> String {
   let v = if v < 0 { 0.0 } else if v > 1 { 1.0 } else { v }
   let v = @math.round(v * 255).to_int()
   "\{v}"
 }
+
+///|
+const MAX_PPM_LINE_LENGTH = 70
 
 ///|
 pub fn to_ppm(self : Canvas) -> String {
@@ -53,16 +69,33 @@ pub fn to_ppm(self : Canvas) -> String {
   lines.push("255")
   let mut off = 0
   for y in 0..<self.height {
-    let line = Array::new(capacity=self.width * 3)
+    let mut line = StringBuilder::new(size_hint=MAX_PPM_LINE_LENGTH)
+    let mut len = 0
+    let f = fn(v : Double) {
+      let s = clamp2ppm(v)
+      if len + 1 + s.length() > MAX_PPM_LINE_LENGTH {
+        lines.push(line.to_string())
+        line = StringBuilder::new(size_hint=MAX_PPM_LINE_LENGTH)
+        line.write_string(s)
+        len = s.length()
+      } else {
+        if len > 0 {
+          line.write_string(" ")
+          len += 1
+        }
+        line.write_string(s)
+        len += s.length()
+      }
+    }
     for x in 0..<self.width {
-      line.push(clamp2ppm(self.red[off]))
-      line.push(clamp2ppm(self.green[off]))
-      line.push(clamp2ppm(self.blue[off]))
+      f(self.red[off])
+      f(self.green[off])
+      f(self.blue[off])
       off += 1
     }
-    // lines.push(line.join(" "))
-    // YUCK! https://github.com/moonbitlang/core/pull/993
-    lines.push(String::concat(line, separator=" "))
+    if len > 0 {
+      lines.push(line.to_string())
+    }
   }
   // lines.join("\n")
   // YUCK! https://github.com/moonbitlang/core/pull/993
