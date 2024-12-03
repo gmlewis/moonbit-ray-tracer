@@ -104,3 +104,15 @@ pub fn mat4(
 pub fn mat4zero() -> Matrix {
   [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
 }
+
+///| Multiple matrix by single-column tuple.
+pub fn mul_tuple(self : Matrix, o : Tuple) -> Tuple {
+  let m = tuple(0, 0, 0, 0)
+  for row in 0..<4 {
+    m[row] = self[row][0] * o.x +
+      self[row][1] * o.y +
+      self[row][2] * o.z +
+      self[row][3] * o.w
+  }
+  m
+}

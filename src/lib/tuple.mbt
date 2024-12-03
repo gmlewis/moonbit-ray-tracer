@@ -15,6 +15,28 @@ pub fn tuple(x : Double, y : Double, z : Double, w : Double) -> Tuple {
 }
 
 ///|
+pub fn op_get(self : Tuple, i : Int) -> Double {
+  match i {
+    0 => self.x
+    1 => self.y
+    2 => self.z
+    3 => self.w
+    _ => 0
+  }
+}
+
+///|
+pub fn op_set(self : Tuple, i : Int, v : Double) -> Unit {
+  match i {
+    0 => self.x = v
+    1 => self.y = v
+    2 => self.z = v
+    3 => self.w = v
+    _ => ()
+  }
+}
+
+///|
 pub fn point(x : Double, y : Double, z : Double) -> Tuple {
   { x, y, z, w: 1 }
 }

@@ -70,3 +70,14 @@ test "Multiplying two matrices" {
   )
   assert_eq!(a * b, want)
 }
+
+test "A matrix multiplied by a tuple (p.57)" {
+  let a = mat4(
+    1, 2, 3, 4, // row 0
+     2, 4, 4, 2, // row 1
+     8, 6, 4, 1, // row 2
+     0, 0, 0, 1, // row 3
+  )
+  let b = tuple(1, 2, 3, 1)
+  assert_eq!(a.mul_tuple(b), tuple(18, 24, 33, 1))
+}
