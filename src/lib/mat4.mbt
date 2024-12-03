@@ -105,6 +105,11 @@ pub fn mat4zero() -> Matrix {
   [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
 }
 
+///|
+pub fn mat4ident() -> Matrix {
+  [[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]]
+}
+
 ///| Multiple matrix by single-column tuple.
 pub fn mul_tuple(self : Matrix, o : Tuple) -> Tuple {
   let m = tuple(0, 0, 0, 0)

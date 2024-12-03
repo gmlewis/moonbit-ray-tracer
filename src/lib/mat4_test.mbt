@@ -1,6 +1,9 @@
 ///|
 let mat4 = @lib.mat4
 
+///|
+let mat4ident = @lib.mat4ident
+
 test "Constructing and inspecting a 4x4 matrix (p.54)" {
   let m = mat4(
     1, 2, 3, 4, // row 0
@@ -80,4 +83,19 @@ test "A matrix multiplied by a tuple (p.57)" {
   )
   let b = tuple(1, 2, 3, 1)
   assert_eq!(a.mul_tuple(b), tuple(18, 24, 33, 1))
+}
+
+test "Multiplying a matrix by the identity matrix" {
+  let a = mat4(
+    0, 1, 2, 4, // row 0
+     1, 2, 4, 8, // row 1
+     2, 4, 8, 16, // row 2
+     4, 8, 16, 32, // row 3
+  )
+  assert_eq!(a * mat4ident(), a)
+}
+
+test "Multiplying the identity matrix by a tuple" {
+  let a = tuple(1, 2, 3, 4)
+  assert_eq!(mat4ident().mul_tuple(a), a)
 }
