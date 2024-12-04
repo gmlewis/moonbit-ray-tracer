@@ -150,3 +150,47 @@ test "Calculating the determinant of a 4x4 matrix (p.65)" {
   assert_eq!(a.cofactor(0, 3), 51)
   assert_eq!(a.determinant(), -4071)
 }
+
+test "Testing an invertible matrix for invertibility (p.66)" {
+  let a = mat4(
+    6, 4, 4, 4, // row 0
+     5, 5, 7, 6, // row 1
+     4, -9, 3, -7, // row 2
+     9, 1, 7, -6, // row 3
+  )
+  assert_eq!(a.determinant(), -2120)
+  assert_true!(a.is_invertible())
+}
+
+test "Testing a non-invertible matrix for invertibility (p.67)" {
+  let a = mat4(
+    -4, 2, -2, -3, // row 0
+     9, 6, 2, 6, // row 1
+     0, -5, 1, -5, // row 2
+     0, 0, 0, 0, // row 3
+  )
+  assert_eq!(a.determinant(), 0)
+  assert_false!(a.is_invertible())
+}
+
+test "Calculating the inverse of a matrix (p.67)" {
+  let a = mat4(
+    -5, 2, 6, -8, // row 0
+     1, -5, 1, 8, // row 1
+     7, 7, -6, -7, // row 2
+     1, -3, 7, 4, // row 3
+  )
+  let b = a.inverse()
+  assert_eq!(a.determinant(), 532)
+  assert_eq!(a.cofactor(2, 3), -160)
+  assert_eq!(b[3][2], -160.0 / 532)
+  assert_eq!(a.cofactor(3, 2), 105)
+  assert_eq!(b[2][3], 105.0 / 532)
+  let want = mat4(
+    0.21805, 0.45113, 0.24060, -0.04511, // row 0
+     -0.80827, -1.45677, -0.44361, 0.52068, // row 1
+     -0.07895, -0.22368, -0.05263, 0.19737, // row 2
+     -0.52256, -0.81391, -0.30075, 0.30639, // row 3
+  )
+  assert_eq!(b, want)
+}

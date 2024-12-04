@@ -166,3 +166,29 @@ pub fn cofactor(self : Matrix, row : Int, col : Int) -> Double {
     -m
   }
 }
+
+///|
+pub fn is_invertible(self : Matrix) -> Bool {
+  let det = self.determinant()
+  det != 0
+}
+
+///|
+pub fn inverse(self : Matrix) -> Matrix {
+  let det = self.determinant()
+  if det == 0 {
+    return self
+  }
+  let nrows = self.num_rows()
+  let ncols = self.num_cols()
+  guard nrows == ncols
+  let inv = self.clone()
+  for row in 0..<nrows {
+    for col in 0..<ncols {
+      let c = self.cofactor(row, col)
+      // note that "[col][row]" here accomplishes the transpose!
+      inv[col][row] = c / det
+    }
+  }
+  inv
+}
