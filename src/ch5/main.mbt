@@ -1,17 +1,22 @@
-///
+///|
 let canvas = @lib.canvas
 
-///
+///|
 let color = @lib.color
 
-///
+///|
+let mat4ident = @lib.mat4ident
+
+///|
 let point = @lib.point
 
+///|
 let ray = @lib.ray
 
+///|
 let sphere = @lib.sphere
 
-///
+///|
 fn main {
   let width = 300
   let height = 300
@@ -27,6 +32,10 @@ fn main {
   let pixel_size = wall_size / width.to_double()
   let half = wall_size / 2
   let shape = sphere()
+  // shape.set_transform(mat4ident().scale(1, 0.5, 1))
+  // shape.set_transform(mat4ident().scale(0.5, 1, 1))
+  // shape.set_transform(mat4ident().scale(0.5, 1, 1).rotate_z(@math.PI / 4))
+  // shape.set_transform(mat4ident().scale(0.5, 1, 1).shear(1, 0, 0, 0, 0, 0))
 
   // for each row of pixels in the canvas
   for y in 0..<height {
