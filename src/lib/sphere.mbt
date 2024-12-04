@@ -26,7 +26,7 @@ pub fn intersect(self : Sphere, ray : Ray) -> Intersections {
   let c = sphere_to_ray.dot(sphere_to_ray) - 1
   let discriminant = b * b - a * c * 4
   if discriminant < 0 {
-    return []
+    return intersections([])
   }
   let d = discriminant.sqrt()
   let t1 = (-b - d) / (a * 2)

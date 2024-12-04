@@ -10,32 +10,39 @@ pub fn intersection(t : Double, object : Sphere) -> Intersection {
 }
 
 ///|
-pub(all) type Intersections Array[Intersection]
+struct Intersections {
+  xs : Array[Intersection]
+  hit : Intersection?
+}
 
 ///|
 pub fn intersections(xs : Array[Intersection]) -> Intersections {
-  xs.sort_by(
-    fn(a, b) { if a.t < b.t { -1 } else if a.t > b.t { 1 } else { 0 } },
-  )
-  Intersections(xs)
+  if xs.length() > 1 {
+    xs.sort_by(
+      fn(a, b) { if a.t < b.t { -1 } else if a.t > b.t { 1 } else { 0 } },
+    )
+  }
+  let mut hit = None
+  for x in xs {
+    if x.t >= 0 {
+      hit = Some(x)
+      break
+    }
+  }
+  { xs, hit }
 }
 
 ///|
 pub fn length(self : Intersections) -> Int {
-  self._.length()
+  self.xs.length()
 }
 
 ///|
 pub fn op_get(self : Intersections, i : Int) -> Intersection {
-  self._[i]
+  self.xs[i]
 }
 
 ///|
 pub fn hit(self : Intersections) -> Intersection? {
-  for xs in self._ {
-    if xs.t >= 0 {
-      return Some(xs)
-    }
-  }
-  None
+  self.hit
 }
