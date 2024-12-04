@@ -98,38 +98,69 @@ test "Rotating a point around the z axis (p.81)" {
   assert_eq!(full_quarter.mul_tuple(p), point(-1, 0, 0))
 }
 
-test "A shearing transformation moves x in proportion to y" {
+test "A shearing transformation moves x in proportion to y (p.84)" {
   let transform = shearing(1, 0, 0, 0, 0, 0)
   let p = point(2, 3, 4)
   assert_eq!(transform.mul_tuple(p), point(5, 3, 4))
 }
 
-test "A shearing transformation moves x in proportion to z" {
+test "A shearing transformation moves x in proportion to z (p.84)" {
   let transform = shearing(0, 1, 0, 0, 0, 0)
   let p = point(2, 3, 4)
   assert_eq!(transform.mul_tuple(p), point(6, 3, 4))
 }
 
-test "A shearing transformation moves y in proportion to x" {
+test "A shearing transformation moves y in proportion to x (p.84)" {
   let transform = shearing(0, 0, 1, 0, 0, 0)
   let p = point(2, 3, 4)
   assert_eq!(transform.mul_tuple(p), point(2, 5, 4))
 }
 
-test "A shearing transformation moves y in proportion to z" {
+test "A shearing transformation moves y in proportion to z (p.84)" {
   let transform = shearing(0, 0, 0, 1, 0, 0)
   let p = point(2, 3, 4)
   assert_eq!(transform.mul_tuple(p), point(2, 7, 4))
 }
 
-test "A shearing transformation moves z in proportion to x" {
+test "A shearing transformation moves z in proportion to x (p.84)" {
   let transform = shearing(0, 0, 0, 0, 1, 0)
   let p = point(2, 3, 4)
   assert_eq!(transform.mul_tuple(p), point(2, 3, 6))
 }
 
-test "A shearing transformation moves z in proportion to y" {
+test "A shearing transformation moves z in proportion to y (p.84)" {
   let transform = shearing(0, 0, 0, 0, 0, 1)
   let p = point(2, 3, 4)
   assert_eq!(transform.mul_tuple(p), point(2, 3, 7))
+}
+
+test "Individual transformations are applied in sequence (p.86)" {
+  let p = point(1, 0, 1)
+  let a = rotation_x(pi / 2)
+  let b = scaling(5, 5, 5)
+  let c = translation(10, 5, 7)
+  // apply rotation first
+  let p2 = a.mul_tuple(p)
+  assert_eq!(p2, point(1, -1, 0))
+  // then apply scaling
+  let p3 = b.mul_tuple(p2)
+  assert_eq!(p3, point(5, -5, 0))
+  // then apply translation
+  let p4 = c.mul_tuple(p3)
+  assert_eq!(p4, point(15, 0, 7))
+}
+
+test "Chained transformations must be applied in reverse order (p.87)" {
+  let p = point(1, 0, 1)
+  let a = rotation_x(pi / 2)
+  let b = scaling(5, 5, 5)
+  let c = translation(10, 5, 7)
+  let t = c * b * a
+  assert_eq!(t.mul_tuple(p), point(15, 0, 7))
+}
+
+test "Fluent API transformations work in MoonBit (p.87)" {
+  let p = point(1, 0, 1)
+  let t = mat4ident().rotate_x(pi / 2).scale(5, 5, 5).translate(10, 5, 7)
+  assert_eq!(t.mul_tuple(p), point(15, 0, 7))
 }

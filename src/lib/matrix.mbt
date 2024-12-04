@@ -230,3 +230,41 @@ pub fn dump(self : Matrix) -> String {
     _ => "unsupported nrows=\{nrows}"
   }
 }
+
+///|
+pub fn rotate_x(self : Matrix, rad : Double) -> Matrix {
+  rotation_x(rad) * self
+}
+
+///|
+pub fn rotate_y(self : Matrix, rad : Double) -> Matrix {
+  rotation_y(rad) * self
+}
+
+///|
+pub fn rotate_z(self : Matrix, rad : Double) -> Matrix {
+  rotation_z(rad) * self
+}
+
+///|
+pub fn scale(self : Matrix, x : Double, y : Double, z : Double) -> Matrix {
+  scaling(x, y, z) * self
+}
+
+///|
+pub fn translate(self : Matrix, x : Double, y : Double, z : Double) -> Matrix {
+  translation(x, y, z) * self
+}
+
+///|
+pub fn shear(
+  self : Matrix,
+  xy : Double,
+  xz : Double,
+  yx : Double,
+  yz : Double,
+  zx : Double,
+  zy : Double
+) -> Matrix {
+  shearing(xy, xz, yx, yz, zx, zy) * self
+}
