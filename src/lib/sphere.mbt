@@ -45,3 +45,12 @@ pub fn intersect(self : Sphere, ray : Ray) -> Intersections {
   let t2 = (-b + d) / (a * 2)
   intersections([intersection(t1, self), intersection(t2, self)])
 }
+
+///|
+pub fn normal_at(self : Sphere, world_point : Tuple) -> Tuple {
+  let object_point = self.inv_transform.mul_tuple(world_point)
+  let object_normal = object_point - point(0, 0, 0)
+  let { x, y, z, .. } = self.inv_transform.transpose().mul_tuple(object_normal)
+  let world_normal = vector(x, y, z)
+  world_normal.normalize()
+}

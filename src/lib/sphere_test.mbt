@@ -73,3 +73,51 @@ test "Intersecting a translated sphere with a ray (p.106)" {
   let xs = s.intersect(r)
   assert_eq!(xs.count, 0)
 }
+
+test "The normal on a sphere at a point on the x axis (p.115)" {
+  let s = sphere()
+  let n = s.normal_at(point(1, 0, 0))
+  assert_eq!(n, vector(1, 0, 0))
+}
+
+test "The normal on a sphere at a point on the y axis (p.115)" {
+  let s = sphere()
+  let n = s.normal_at(point(0, 1, 0))
+  assert_eq!(n, vector(0, 1, 0))
+}
+
+test "The normal on a sphere at a point on the z axis (p.115)" {
+  let s = sphere()
+  let n = s.normal_at(point(0, 0, 1))
+  assert_eq!(n, vector(0, 0, 1))
+}
+
+test "The normal on a sphere at a non-axial point (p.116)" {
+  let s = sphere()
+  let c = 3.0.sqrt() / 3
+  let n = s.normal_at(point(c, c, c))
+  assert_eq!(n, vector(c, c, c))
+}
+
+test "The normal a normalized vector (p.116)" {
+  let s = sphere()
+  let c = 3.0.sqrt() / 3
+  let n = s.normal_at(point(c, c, c))
+  assert_eq!(n, n.normalize())
+}
+
+test "Computing the normal on a translated sphere" {
+  let s = sphere()
+  s.set_transform(translation(0, 1, 0))
+  let n = s.normal_at(point(0, 1.70711, -0.70711))
+  assert_eq!(n, vector(0, 0.70711, -0.70711))
+}
+
+test "Computing the normal on a transformed sphere" {
+  let s = sphere()
+  let m = scaling(1, 0.5, 1) * rotation_z(@math.PI / 5)
+  s.set_transform(m)
+  let sq2 = 2.0.sqrt() / 2
+  let n = s.normal_at(point(0, sq2, -sq2))
+  assert_eq!(n, vector(0, 0.97014, -0.24254))
+}
