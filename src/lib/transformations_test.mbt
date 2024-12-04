@@ -5,6 +5,12 @@ let pi : Double = @math.PI
 let rotation_x = @lib.rotation_x
 
 ///|
+let rotation_y = @lib.rotation_y
+
+///|
+let rotation_z = @lib.rotation_z
+
+///|
 let scaling = @lib.scaling
 
 ///|
@@ -54,7 +60,7 @@ test "Reflection is scaling by a negative value" {
   assert_eq!(transform.mul_tuple(p), point(-2, 3, 4))
 }
 
-test "Rotating a point around the x axis" {
+test "Rotating a point around the x axis (p.79)" {
   let p = point(0, 1, 0)
   let half_quarter = rotation_x(pi / 4)
   let full_quarter = rotation_x(pi / 2)
@@ -63,10 +69,28 @@ test "Rotating a point around the x axis" {
   assert_eq!(full_quarter.mul_tuple(p), point(0, 0, 1))
 }
 
-test "The inverse of an x-rotation rotates in the opposite direction" {
+test "The inverse of an x-rotation rotates in the opposite direction (p.80)" {
   let p = point(0, 1, 0)
   let half_quarter = rotation_x(pi / 4)
   let inv = half_quarter.inverse()
   let v = 2.0.sqrt() / 2
   assert_eq!(inv.mul_tuple(p), point(0, v, -v))
+}
+
+test "Rotating a point around the y axis (p.80)" {
+  let p = point(0, 0, 1)
+  let half_quarter = rotation_y(pi / 4)
+  let full_quarter = rotation_y(pi / 2)
+  let v = 2.0.sqrt() / 2
+  assert_eq!(half_quarter.mul_tuple(p), point(v, 0, v))
+  assert_eq!(full_quarter.mul_tuple(p), point(1, 0, 0))
+}
+
+test "Rotating a point around the z axis (p.81)" {
+  let p = point(0, 1, 0)
+  let half_quarter = rotation_z(pi / 4)
+  let full_quarter = rotation_z(pi / 2)
+  let v = 2.0.sqrt() / 2
+  assert_eq!(half_quarter.mul_tuple(p), point(-v, v, 0))
+  assert_eq!(full_quarter.mul_tuple(p), point(-1, 0, 0))
 }
