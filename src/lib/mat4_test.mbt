@@ -194,3 +194,52 @@ test "Calculating the inverse of a matrix (p.67)" {
   )
   assert_eq!(b, want)
 }
+
+test "Calculating the inverse of another matrix (p.68)" {
+  let a = mat4(
+    8, -5, 9, 2, // row 0
+     7, 5, 6, 1, // row 1
+     -6, 0, 9, 6, // row 2
+     -3, 0, -9, -4, // row 3
+  )
+  let want = mat4(
+    -0.15385, -0.15385, -0.28205, -0.53846, // row 0
+     -0.07692, 0.12308, 0.02564, 0.03077, // row 1
+     0.35897, 0.35897, 0.43590, 0.92308, // row 2
+     -0.69231, -0.69231, -0.76923, -1.92308, // row 3
+  )
+  assert_eq!(a.inverse(), want)
+}
+
+test "Calculating the inverse of a third matrix (p.69)" {
+  let a = mat4(
+    9, 3, 0, 9, // row 0
+     -5, -2, -6, -3, // row 1
+     -4, 9, 6, 4, // row 2
+     -7, 6, 6, 2, // row 3
+  )
+  let want = mat4(
+    -0.04074, -0.07778, 0.14444, -0.22222, // row 0
+     -0.07778, 0.03333, 0.36667, -0.33333, // row 1
+     -0.02901, -0.1463, -0.10926, 0.12963, // row 2
+     0.17778, 0.06667, -0.26667, 0.33333, // row 3
+  )
+  assert_eq!(a.inverse(), want)
+}
+
+test "Multiplying a product by its inverse (p.69)" {
+  let a = mat4(
+    3, -9, 7, 3, // row 0
+     3, -8, 2, -9, // row 1
+     -4, 4, 4, 1, // row 2
+     -6, 5, -1, 1, // row 3
+  )
+  let b = mat4(
+    8, 2, 2, 2, // row 0
+     3, -1, 7, 0, // row 1
+     7, 0, 5, 4, // row 2
+     6, -2, 0, 5, // row 3
+  )
+  let c = a * b
+  assert_eq!(c * b.inverse(), a)
+}

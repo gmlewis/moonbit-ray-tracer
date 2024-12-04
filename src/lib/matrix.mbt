@@ -192,3 +192,41 @@ pub fn inverse(self : Matrix) -> Matrix {
   }
   inv
 }
+
+///| round_to_fixed rounds the double to the provided
+/// number of digits.
+pub fn round_to_fixed(v : Double, digits : Int) -> Double {
+  let num = digits.to_double().abs()
+  let exp = @math.round(@math.exp(num * @math.ln(10.0)))
+  if digits < 0 {
+    return @math.round(v / exp) * exp
+  }
+  @math.round(v * exp) / exp
+}
+
+///|
+pub fn dump(self : Matrix) -> String {
+  let nrows = self.num_rows()
+  let f = fn(v) { round_to_fixed(v, 5) }
+  match nrows {
+    2 =>
+      #|mat2(
+      $|\{f(self[0][0])}, \{f(self[0][1])}, // row 0
+      $|\{f(self[1][0])}, \{f(self[1][1])}, // row 1
+      #|)
+    3 =>
+      #|mat3(
+      $|\{f(self[0][0])}, \{f(self[0][1])}, \{f(self[0][2])}, // row 0
+      $|\{f(self[1][0])}, \{f(self[1][1])}, \{f(self[1][2])}, // row 1
+      $|\{f(self[2][0])}, \{f(self[2][1])}, \{f(self[2][2])}, // row 2
+      #|)
+    4 =>
+      #|mat4(
+      $|\{f(self[0][0])}, \{f(self[0][1])}, \{f(self[0][2])}, \{f(self[0][3])}, // row 0
+      $|\{f(self[1][0])}, \{f(self[1][1])}, \{f(self[1][2])}, \{f(self[1][3])}, // row 1
+      $|\{f(self[2][0])}, \{f(self[2][1])}, \{f(self[2][2])}, \{f(self[2][3])}, // row 2
+      $|\{f(self[3][0])}, \{f(self[3][1])}, \{f(self[3][2])}, \{f(self[3][3])}, // row 3
+      #|)
+    _ => "unsupported nrows=\{nrows}"
+  }
+}
