@@ -25,7 +25,7 @@ test "A submatrix of a 3x3 matrix is a 2x2 matrix (p.63)" {
   assert_eq!(a.submatrix(0, 2), want)
 }
 
-test "Calculating a minor of a 3x3 matrix" {
+test "Calculating a minor of a 3x3 matrix (p.64)" {
   let a = mat3(
     3, 5, 0, // row 0
      2, -1, -7, // row 1
@@ -34,4 +34,16 @@ test "Calculating a minor of a 3x3 matrix" {
   let b = a.submatrix(1, 0)
   assert_eq!(b.determinant(), 25)
   assert_eq!(a.minor(1, 0), 25)
+}
+
+test "Calculating a cofactor of a 3x3 matrix (p.64)" {
+  let a = mat3(
+    3, 5, 0, // row 0
+     2, -1, -7, // row 1
+     6, -1, 5, // row 2
+  )
+  assert_eq!(a.minor(0, 0), -12)
+  assert_eq!(a.cofactor(0, 0), -12)
+  assert_eq!(a.minor(1, 0), 25)
+  assert_eq!(a.cofactor(1, 0), -25)
 }

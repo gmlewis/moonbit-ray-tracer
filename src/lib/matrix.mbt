@@ -152,3 +152,13 @@ pub fn minor(self : Matrix, row : Int, col : Int) -> Double {
   let m = self.submatrix(row, col)
   m.determinant()
 }
+
+///|
+pub fn cofactor(self : Matrix, row : Int, col : Int) -> Double {
+  let m = self.minor(row, col)
+  if (row + col) % 2 == 0 {
+    m
+  } else {
+    -m
+  }
+}
