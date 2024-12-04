@@ -1,9 +1,17 @@
 ///| Sphere represents a sphere with radius 1.
-pub(all) struct Sphere {} derive(Eq)
+pub(all) struct Sphere {
+  transform : Matrix
+} derive(Eq)
 
 ///|
 pub fn sphere() -> Sphere {
-  Sphere::{  }
+  let transform = mat4ident()
+  { transform, }
+}
+
+///|
+pub fn set_transform(self : Sphere, t : Matrix) -> Unit {
+  self.transform.copy(t)
 }
 
 ///|
@@ -18,6 +26,7 @@ pub impl Show for Sphere with output(self, logger) {
 
 ///|
 pub fn intersect(self : Sphere, ray : Ray) -> Intersections {
+  let ray = ray.transform(self.transform.inverse())
   // the vector from the sphere's center to the ray origin
   // (the sphere is centered at the world origin)
   let sphere_to_ray = ray.origin - point(0, 0, 0)

@@ -10,13 +10,15 @@ pub fn intersection(t : Double, object : Sphere) -> Intersection {
 }
 
 ///|
-struct Intersections {
+pub(all) struct Intersections {
+  count : Int
   xs : Array[Intersection]
   hit : Intersection?
 }
 
 ///|
 pub fn intersections(xs : Array[Intersection]) -> Intersections {
+  let count = xs.length()
   if xs.length() > 1 {
     xs.sort_by(
       fn(a, b) { if a.t < b.t { -1 } else if a.t > b.t { 1 } else { 0 } },
@@ -29,13 +31,13 @@ pub fn intersections(xs : Array[Intersection]) -> Intersections {
       break
     }
   }
-  { xs, hit }
+  { count, xs, hit }
 }
 
-///|
-pub fn length(self : Intersections) -> Int {
-  self.xs.length()
-}
+// ///
+// pub fn length(self : Intersections) -> Int {
+//   self.xs.length()
+// }
 
 ///|
 pub fn op_get(self : Intersections, i : Int) -> Intersection {

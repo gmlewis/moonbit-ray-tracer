@@ -89,6 +89,18 @@ pub fn clone(self : Matrix) -> Matrix {
 }
 
 ///|
+pub fn copy(self : Matrix, other : Matrix) -> Unit {
+  let nrows = self.num_rows()
+  let ncols = self.num_cols()
+  guard other.num_rows() == nrows && other.num_cols() == ncols
+  for row in 0..<nrows {
+    for col in 0..<ncols {
+      self[row][col] = other[row][col]
+    }
+  }
+}
+
+///|
 pub fn transpose(self : Matrix) -> Matrix {
   let result = self.clone()
   let nrows = self.num_rows()
