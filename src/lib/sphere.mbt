@@ -1,5 +1,5 @@
 ///| Sphere represents a sphere with radius 1.
-pub(all) struct Sphere {}
+pub(all) struct Sphere {} derive(Eq)
 
 ///|
 pub fn sphere() -> Sphere {
@@ -12,12 +12,12 @@ pub fn to_string(self : Sphere) -> String {
 }
 
 ///|
-impl Show for Sphere with output(self, logger) {
+pub impl Show for Sphere with output(self, logger) {
   logger.write_string(self.to_string())
 }
 
 ///|
-pub fn intersect(self : Sphere, ray : Ray) -> Array[Double] {
+pub fn intersect(self : Sphere, ray : Ray) -> Intersections {
   // the vector from the sphere's center to the ray origin
   // (the sphere is centered at the world origin)
   let sphere_to_ray = ray.origin - point(0, 0, 0)
@@ -31,5 +31,5 @@ pub fn intersect(self : Sphere, ray : Ray) -> Array[Double] {
   let d = discriminant.sqrt()
   let t1 = (-b - d) / (a * 2)
   let t2 = (-b + d) / (a * 2)
-  [t1, t2]
+  intersections([intersection(t1, self), intersection(t2, self)])
 }
