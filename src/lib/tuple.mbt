@@ -182,3 +182,8 @@ pub fn cross(self : Tuple, other : Tuple) -> Tuple {
   let z = self.x * other.y - self.y * other.x
   { x, y, z, w: 0 }
 }
+
+///|
+pub fn reflect(self : Tuple, normal : Tuple) -> Tuple {
+  self - normal.mul_scalar(self.dot(normal) * 2)
+}

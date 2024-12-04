@@ -140,3 +140,18 @@ test "The cross product of two vectors (p.36)" {
   assert_eq!(a.cross(b), vector(-1, 2, -1))
   assert_eq!(b.cross(a), vector(1, -2, 1))
 }
+
+test "Reflecting a vector approaching at 45° (p.122)" {
+  let v = vector(1, -1, 0)
+  let n = vector(0, 1, 0)
+  let r = v.reflect(n)
+  assert_eq!(r, vector(1, 1, 0))
+}
+
+test "Reflecting a vector off a slanted surface (p.122)" {
+  let v = vector(0, -1, 0)
+  let sq2 = 2.0.sqrt() / 2
+  let n = vector(sq2, sq2, 0)
+  let r = v.reflect(n)
+  assert_eq!(r, vector(1, 0, 0))
+}
