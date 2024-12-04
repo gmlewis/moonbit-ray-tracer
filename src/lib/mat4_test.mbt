@@ -136,3 +136,17 @@ test "A submatrix of a 4x4 matrix is a 3x3 matrix (p.63)" {
   )
   assert_eq!(a.submatrix(2, 1), want)
 }
+
+test "Calculating the determinant of a 4x4 matrix (p.65)" {
+  let a = mat4(
+    -2, -8, 3, 5, // row 0
+     -3, 1, 7, 3, // row 1
+     1, 2, -9, 6, // row 2
+     -6, 7, 7, -9, // row 3
+  )
+  assert_eq!(a.cofactor(0, 0), 690)
+  assert_eq!(a.cofactor(0, 1), 447)
+  assert_eq!(a.cofactor(0, 2), 210)
+  assert_eq!(a.cofactor(0, 3), 51)
+  assert_eq!(a.determinant(), -4071)
+}

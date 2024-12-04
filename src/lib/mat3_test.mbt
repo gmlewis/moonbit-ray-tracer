@@ -47,3 +47,15 @@ test "Calculating a cofactor of a 3x3 matrix (p.64)" {
   assert_eq!(a.minor(1, 0), 25)
   assert_eq!(a.cofactor(1, 0), -25)
 }
+
+test "Calculating the determinant of a 3x3 matrix (p.65)" {
+  let a = mat3(
+    1, 2, 6, // row 0
+     -5, 8, -4, // row 1
+     2, 6, 4, // row 2
+  )
+  assert_eq!(a.cofactor(0, 0), 56)
+  assert_eq!(a.cofactor(0, 1), 12)
+  assert_eq!(a.cofactor(0, 2), -46)
+  assert_eq!(a.determinant(), -196)
+}

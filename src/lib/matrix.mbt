@@ -119,10 +119,14 @@ pub fn determinant(self : Matrix) -> Double {
   let nrows = self.num_rows()
   let ncols = self.num_cols()
   guard nrows == ncols
-  match nrows {
-    2 => self[0][0] * self[1][1] - self[0][1] * self[1][0]
-    _ => 0
+  if nrows == 2 {
+    return self[0][0] * self[1][1] - self[0][1] * self[1][0]
   }
+  let mut det = 0.0
+  for col in 0..<ncols {
+    det += self[0][col] * self.cofactor(0, col)
+  }
+  det
 }
 
 ///|
