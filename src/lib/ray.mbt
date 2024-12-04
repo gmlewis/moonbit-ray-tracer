@@ -1,0 +1,30 @@
+///| Ray represents an origin and direction.
+pub(all) struct Ray {
+  origin : Tuple
+  direction : Tuple
+}
+
+///|
+pub fn ray(origin : Tuple, direction : Tuple) -> Ray {
+  { origin, direction }
+}
+
+///|
+pub fn to_string(self : Ray) -> String {
+  "ray(\{self.origin}, \{self.direction})"
+}
+
+///|
+impl Show for Ray with output(self, logger) {
+  logger.write_string(self.to_string())
+}
+
+///|
+pub fn op_equal(self : Ray, other : Ray) -> Bool {
+  self.origin == other.origin && self.direction == other.direction
+}
+
+///|
+pub fn position(self : Ray, t : Double) -> Tuple {
+  self.origin + self.direction.mul_scalar(t)
+}
