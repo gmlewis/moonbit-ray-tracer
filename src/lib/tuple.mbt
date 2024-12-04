@@ -7,11 +7,31 @@ pub(all) struct Tuple {
   mut y : Double
   mut z : Double
   mut w : Double
-} derive(Show)
+}
 
 ///|
 pub fn tuple(x : Double, y : Double, z : Double, w : Double) -> Tuple {
   { x, y, z, w }
+}
+
+///|
+pub fn to_string(self : Tuple) -> String {
+  let x = round_to_fixed(self.x, 5)
+  let y = round_to_fixed(self.y, 5)
+  let z = round_to_fixed(self.z, 5)
+  let w = round_to_fixed(self.w, 5)
+  if w == 0 {
+    "vector(\{x}, \{y}, \{z})"
+  } else if w == 1 {
+    "point(\{x}, \{y}, \{z})"
+  } else {
+    "tuple(\{x}, \{y}, \{z}, \{w})"
+  }
+}
+
+///|
+pub impl Show for Tuple with output(self, logger) {
+  logger.write_string(self.to_string())
 }
 
 ///|

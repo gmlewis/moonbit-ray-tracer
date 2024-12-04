@@ -1,13 +1,13 @@
-///
+///|
 let canvas = @lib.canvas
 
-///
+///|
 let color = @lib.color
 
-///
+///|
 let point = @lib.point
 
-///
+///|
 fn main {
   let width = 900
   let height = 550
