@@ -28,3 +28,10 @@ pub fn op_equal(self : Ray, other : Ray) -> Bool {
 pub fn position(self : Ray, t : Double) -> Tuple {
   self.origin + self.direction.mul_scalar(t)
 }
+
+///|
+pub fn transform(self : Ray, m : Matrix) -> Ray {
+  let origin = m.mul_tuple(self.origin)
+  let direction = m.mul_tuple(self.direction)
+  { origin, direction }
+}
