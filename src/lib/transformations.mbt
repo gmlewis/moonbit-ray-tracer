@@ -28,3 +28,15 @@ pub fn rotation_z(rad : Double) -> Matrix {
   let s = @math.sin(rad)
   mat4(c, -s, 0, 0, s, c, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)
 }
+
+///|
+pub fn shearing(
+  xy : Double,
+  xz : Double,
+  yx : Double,
+  yz : Double,
+  zx : Double,
+  zy : Double
+) -> Matrix {
+  mat4(1, xy, xz, 0, yx, 1, yz, 0, zx, zy, 1, 0, 0, 0, 0, 1)
+}

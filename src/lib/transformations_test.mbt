@@ -14,6 +14,9 @@ let rotation_z = @lib.rotation_z
 let scaling = @lib.scaling
 
 ///|
+let shearing = @lib.shearing
+
+///|
 let translation = @lib.translation
 
 test "Multiplying by a translation matrix (p.73)" {
@@ -93,4 +96,40 @@ test "Rotating a point around the z axis (p.81)" {
   let v = 2.0.sqrt() / 2
   assert_eq!(half_quarter.mul_tuple(p), point(-v, v, 0))
   assert_eq!(full_quarter.mul_tuple(p), point(-1, 0, 0))
+}
+
+test "A shearing transformation moves x in proportion to y" {
+  let transform = shearing(1, 0, 0, 0, 0, 0)
+  let p = point(2, 3, 4)
+  assert_eq!(transform.mul_tuple(p), point(5, 3, 4))
+}
+
+test "A shearing transformation moves x in proportion to z" {
+  let transform = shearing(0, 1, 0, 0, 0, 0)
+  let p = point(2, 3, 4)
+  assert_eq!(transform.mul_tuple(p), point(6, 3, 4))
+}
+
+test "A shearing transformation moves y in proportion to x" {
+  let transform = shearing(0, 0, 1, 0, 0, 0)
+  let p = point(2, 3, 4)
+  assert_eq!(transform.mul_tuple(p), point(2, 5, 4))
+}
+
+test "A shearing transformation moves y in proportion to z" {
+  let transform = shearing(0, 0, 0, 1, 0, 0)
+  let p = point(2, 3, 4)
+  assert_eq!(transform.mul_tuple(p), point(2, 7, 4))
+}
+
+test "A shearing transformation moves z in proportion to x" {
+  let transform = shearing(0, 0, 0, 0, 1, 0)
+  let p = point(2, 3, 4)
+  assert_eq!(transform.mul_tuple(p), point(2, 3, 6))
+}
+
+test "A shearing transformation moves z in proportion to y" {
+  let transform = shearing(0, 0, 0, 0, 0, 1)
+  let p = point(2, 3, 4)
+  assert_eq!(transform.mul_tuple(p), point(2, 3, 7))
 }
