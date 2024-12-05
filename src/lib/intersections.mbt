@@ -57,6 +57,7 @@ pub(all) struct Computations {
   eyev : Tuple
   normalv : Tuple
   inside : Bool
+  over_point : Tuple
 }
 
 ///|
@@ -70,5 +71,6 @@ pub fn prepare_computations(self : Intersection, ray : Ray) -> Computations {
   if inside {
     normalv = -normalv
   }
-  { t, object, point, eyev, normalv, inside }
+  let over_point = point + normalv.mul_scalar(EPSILON)
+  { t, object, point, eyev, normalv, inside, over_point }
 }

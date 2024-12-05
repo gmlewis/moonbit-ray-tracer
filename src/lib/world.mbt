@@ -40,11 +40,13 @@ pub fn shade_hit(self : World, comps : Computations) -> Color {
   let mut green = 0.0
   let mut blue = 0.0
   for light in self.lights {
+    let in_shadow = self.is_shadowed(comps.over_point, light~)
     let c = comps.object.material.lighting(
       light,
       comps.point,
       comps.eyev,
       comps.normalv,
+      in_shadow~,
     )
     red += c.red
     green += c.green
@@ -65,29 +67,19 @@ pub fn color_at(self : World, ray : Ray) -> Color {
 }
 
 ///|
-pub fn every_light(self : World, func : (Light) -> Bool) -> Bool {
-  for i in 0..<self.lights.length() {
-    if not(func(self.lights[i])) {
-      return false
-    }
+pub fn is_shadowed(
+  self : World,
+  point : Tuple,
+  light~ : Light = self.lights[0]
+) -> Bool {
+  let v = light.position - point
+  let distance = v.magnitude()
+  let direction = v.normalize()
+  let r = ray(point, direction)
+  let xs = self.intersect_world(r)
+  let h = xs.hit()
+  match h {
+    Some(hit) => hit.t < distance
+    _ => false
   }
-  true
-}
-
-///|
-pub fn is_shadowed(self : World, point : Tuple) -> Bool {
-  self.every_light(
-    fn(light) {
-      let v = light.position - point
-      let distance = v.magnitude()
-      let direction = v.normalize()
-      let r = ray(point, direction)
-      let xs = self.intersect_world(r)
-      let h = xs.hit()
-      match h {
-        Some(hit) => hit.t < distance
-        _ => false
-      }
-    },
-  )
 }

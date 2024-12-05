@@ -102,3 +102,16 @@ test "There is no shadow when an object is behind the poiny (p.159)" {
   let p = point(-2, 2, -2)
   assert_false!(w.is_shadowed(p))
 }
+
+test "shade_hit() is given an intersection in shadow (p.160)" {
+  let w = world()
+  w.lights = [point_light(point(0, 0, -10), color(1, 1, 1))]
+  let s1 = sphere()
+  let s2 = sphere()..set_transform(translation(0, 0, 10))
+  w.objects = [s1, s2]
+  let r = ray(point(0, 0, 5), vector(0, 0, 1))
+  let i = intersection(4, s2)
+  let comps = i.prepare_computations(r)
+  let c = w.shade_hit(comps)
+  assert_eq!(c, color(0.1, 0.1, 0.1))
+}

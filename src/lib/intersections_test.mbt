@@ -99,3 +99,12 @@ test "The hit, when an intersection occurs on the inside (p.136)" {
   // normal would have been (0,0,1), but is inverted!
   assert_eq!(comps.normalv, vector(0, 0, -1))
 }
+
+test "The hit should offset the point (p.161)" {
+  let r = ray(point(0, 0, -5), vector(0, 0, 1))
+  let shape = sphere()..set_transform(translation(0, 0, 1))
+  let i = intersection(5, shape)
+  let comps = i.prepare_computations(r)
+  assert_true!(comps.over_point.z < -@lib.EPSILON / 2)
+  assert_true!(comps.point.z > comps.over_point.z)
+}

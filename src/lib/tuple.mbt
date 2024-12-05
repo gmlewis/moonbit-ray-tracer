@@ -1,5 +1,5 @@
 ///|
-const EPSILON = 0.00001
+pub const EPSILON = 0.00001
 
 ///| Tuple represents either a point or a vector.
 pub(all) struct Tuple {
