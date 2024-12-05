@@ -50,3 +50,16 @@ pub fn ray_for_pixel(self : Camera, px : Int, py : Int) -> Ray {
   let direction = (pixel - origin).normalize()
   ray(origin, direction)
 }
+
+///|
+pub fn render(self : Camera, world : World) -> Canvas {
+  let image = canvas(self.hsize, self.vsize)
+  for y in 0..<self.vsize {
+    for x in 0..<self.hsize {
+      let ray = self.ray_for_pixel(x, y)
+      let color = world.color_at(ray)
+      image.write_pixel(x, y, color)
+    }
+  }
+  image
+}

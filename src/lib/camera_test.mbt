@@ -44,3 +44,14 @@ test "Constructing a ray when the camera is transformed (p.146)" {
   let sq2 = 2.0.sqrt() / 2
   assert_eq!(r.direction, vector(sq2, 0, -sq2))
 }
+
+test "Rendering a world with a camera (p.148)" {
+  let w = default_world()
+  let c = camera(11, 11, @math.PI / 2)
+  let from = point(0, 0, -5)
+  let to = point(0, 0, 0)
+  let up = vector(0, 1, 0)
+  c.transform = view_transform(from, to, up)
+  let image = c.render(w)
+  assert_eq!(image.pixel_at(5, 5), color(0.38066, 0.47583, 0.2855))
+}

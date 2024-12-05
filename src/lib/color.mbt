@@ -4,7 +4,20 @@ pub(all) struct Color {
   green : Double
   blue : Double
   // alpha : Double
-} derive(Show)
+}
+
+///|
+pub fn to_string(self : Color) -> String {
+  let r = round_to_fixed(self.red, 5).to_string()
+  let g = round_to_fixed(self.green, 5).to_string()
+  let b = round_to_fixed(self.blue, 5).to_string()
+  "color(\{r}, \{g}, \{b})"
+}
+
+///|
+pub impl Show for Color with output(self, logger) {
+  logger.write_string(self.to_string())
+}
 
 ///|
 pub fn color(red : Double, green : Double, blue : Double) -> Color {
