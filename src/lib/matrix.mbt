@@ -205,11 +205,16 @@ pub fn inverse(self : Matrix) -> Matrix {
   inv
 }
 
+///|
+fn my_pow(base : Double, exponent : Double) -> Double {
+  @math.exp(exponent * @math.ln(base))
+}
+
 ///| round_to_fixed rounds the double to the provided
 /// number of digits.
 pub fn round_to_fixed(v : Double, digits : Int) -> Double {
   let num = digits.to_double().abs()
-  let exp = @math.round(@math.exp(num * @math.ln(10.0)))
+  let exp = @math.round(my_pow(10, num))
   if digits < 0 {
     return @math.round(v / exp) * exp
   }
