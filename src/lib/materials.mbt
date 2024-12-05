@@ -23,7 +23,8 @@ pub fn lighting(
   light : Light,
   position : Tuple,
   eyev : Tuple,
-  normalv : Tuple
+  normalv : Tuple,
+  in_shadow~ : Bool = false
 ) -> Color {
   // combine the surface color with the light's color/intensity
   let effective_color = self.color * light.intensity
@@ -31,6 +32,10 @@ pub fn lighting(
   let lightv = (light.position - position).normalize()
   // compute the ambient contribution
   let ambient = effective_color.mul_scalar(self.ambient)
+  if in_shadow {
+    return ambient
+  }
+
   // light_dot_normal represents the cosine of the angle between the
   // light vector and the normal vector. A negative number means the
   // light is on the other side of the surface.

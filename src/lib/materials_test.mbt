@@ -61,3 +61,14 @@ test "Lighting with the light behind the surface (p.129)" {
   let result = m.lighting(light, position, eyev, normalv)
   assert_eq!(result, color(0.1, 0.1, 0.1))
 }
+
+test "Lighting with the surface in shadow (p.155)" {
+  let m = material()
+  let position = point(0, 0, 0)
+  let eyev = vector(0, 0, -1)
+  let normalv = vector(0, 0, -1)
+  let light = point_light(point(0, 0, -10), color(1, 1, 1))
+  let in_shadow = true
+  let result = m.lighting(light, position, eyev, normalv, in_shadow~)
+  assert_eq!(result, color(0.1, 0.1, 0.1))
+}
