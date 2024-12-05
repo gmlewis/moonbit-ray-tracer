@@ -20,7 +20,7 @@ pub fn set_transform(self : Sphere, t : Matrix) -> Unit {
 }
 
 ///|
-pub fn to_string(self : Sphere) -> String {
+pub fn Sphere::to_string(_self : Sphere) -> String {
   "sphere()"
 }
 

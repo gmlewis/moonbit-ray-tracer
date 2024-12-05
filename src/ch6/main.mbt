@@ -5,9 +5,6 @@ let canvas = @lib.canvas
 let color = @lib.color
 
 ///|
-let mat4ident = @lib.mat4ident
-
-///|
 let point = @lib.point
 
 ///|
