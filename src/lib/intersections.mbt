@@ -48,3 +48,27 @@ pub fn op_get(self : Intersections, i : Int) -> Intersection {
 pub fn hit(self : Intersections) -> Intersection? {
   self.hit
 }
+
+///|
+pub(all) struct Computations {
+  t : Double
+  object : Sphere
+  point : Tuple
+  eyev : Tuple
+  normalv : Tuple
+  inside : Bool
+}
+
+///|
+pub fn prepare_computations(self : Intersection, ray : Ray) -> Computations {
+  let t = self.t
+  let object = self.object
+  let point = ray.position(t)
+  let eyev = -ray.direction
+  let mut normalv = object.normal_at(point)
+  let inside = normalv.dot(eyev) < 0
+  if inside {
+    normalv = -normalv
+  }
+  { t, object, point, eyev, normalv, inside }
+}

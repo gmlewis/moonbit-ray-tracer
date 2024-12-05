@@ -67,3 +67,35 @@ test "The hit is always the lowest non-negative intersection (p.102)" {
   let i = xs.hit()
   assert_eq!(i, Some(i4))
 }
+
+test "Precomputing the state of an intersection (p.135)" {
+  let r = ray(point(0, 0, -5), vector(0, 0, 1))
+  let shape = sphere()
+  let i = intersection(4, shape)
+  let comps = i.prepare_computations(r)
+  assert_eq!(comps.t, i.t)
+  assert_eq!(comps.object, i.object)
+  assert_eq!(comps.point, point(0, 0, -1))
+  assert_eq!(comps.eyev, vector(0, 0, -1))
+  assert_eq!(comps.normalv, vector(0, 0, -1))
+}
+
+test "The hit, when an intersection occurs on the outside (p.136)" {
+  let r = ray(point(0, 0, -5), vector(0, 0, 1))
+  let shape = sphere()
+  let i = intersection(4, shape)
+  let comps = i.prepare_computations(r)
+  assert_eq!(comps.inside, false)
+}
+
+test "The hit, when an intersection occurs on the inside (p.136)" {
+  let r = ray(point(0, 0, 0), vector(0, 0, 1))
+  let shape = sphere()
+  let i = intersection(1, shape)
+  let comps = i.prepare_computations(r)
+  assert_eq!(comps.point, point(0, 0, 1))
+  assert_eq!(comps.eyev, vector(0, 0, -1))
+  assert_eq!(comps.inside, true)
+  // normal would have been (0,0,1), but is inverted!
+  assert_eq!(comps.normalv, vector(0, 0, -1))
+}
