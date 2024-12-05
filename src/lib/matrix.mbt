@@ -12,7 +12,29 @@ pub fn op_set(self : MatrixRow, col : Int, v : Double) -> Unit {
 }
 
 ///|
-pub(all) type Matrix Array[MatrixRow] derive(Show)
+pub(all) type Matrix Array[MatrixRow]
+
+///|
+pub fn to_string(self : Matrix) -> String {
+  let nrows = self.num_rows()
+  let ncols = self.num_cols()
+  guard nrows == ncols
+  let rows = StringBuilder::new()
+  for row in 0..<nrows {
+    for col in 0..<ncols {
+      let s = round_to_fixed(self[row][col], 5).to_string()
+      rows.write_string(s)
+      rows.write_string(", ")
+    }
+    rows.write_string("// row \{row}\n")
+  }
+  "mat\{nrows}(\n\{rows})"
+}
+
+///|
+pub impl Show for Matrix with output(self, logger) {
+  logger.write_string(self.to_string())
+}
 
 ///|
 pub fn op_get(self : Matrix, row : Int) -> MatrixRow {

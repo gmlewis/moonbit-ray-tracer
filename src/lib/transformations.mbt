@@ -40,3 +40,30 @@ pub fn shearing(
 ) -> Matrix {
   mat4(1, xy, xz, 0, yx, 1, yz, 0, zx, zy, 1, 0, 0, 0, 0, 1)
 }
+
+///|
+pub fn view_transform(from : Tuple, to : Tuple, up : Tuple) -> Matrix {
+  // left-hand coordinate system
+  let forward = (to - from).normalize()
+  let left = forward.cross(up.normalize())
+  let true_up = left.cross(forward)
+  let orientation = mat4(
+    left.x,
+    left.y,
+    left.z,
+    0, // row 0
+    true_up.x,
+    true_up.y,
+    true_up.z,
+    0, // row 1
+    -forward.x,
+    -forward.y,
+    -forward.z,
+    0, // row 2
+    0,
+    0,
+    0,
+    1, // row 3
+  )
+  orientation * translation(-from.x, -from.y, -from.z)
+}

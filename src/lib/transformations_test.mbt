@@ -19,6 +19,9 @@ let shearing = @lib.shearing
 ///|
 let translation = @lib.translation
 
+///|
+let view_transform = @lib.view_transform
+
 test "Multiplying by a translation matrix (p.73)" {
   let transform = translation(5, -3, 2)
   let p = point(-3, 4, 5)
@@ -163,4 +166,42 @@ test "Fluent API transformations work in MoonBit (p.87)" {
   let p = point(1, 0, 1)
   let t = mat4ident().rotate_x(pi / 2).scale(5, 5, 5).translate(10, 5, 7)
   assert_eq!(t.mul_tuple(p), point(15, 0, 7))
+}
+
+test "The transformation matrix for the default orientation (p.140)" {
+  let from = point(0, 0, 0)
+  let to = point(0, 0, -1)
+  let up = vector(0, 1, 0)
+  let t = view_transform(from, to, up)
+  assert_eq!(t, mat4ident())
+}
+
+test "A transformation matrix looking in positive z direction (p.141)" {
+  let from = point(0, 0, 0)
+  let to = point(0, 0, 1)
+  let up = vector(0, 1, 0)
+  let t = view_transform(from, to, up)
+  assert_eq!(t, scaling(-1, 1, -1))
+}
+
+test "The view transformation moves the world (p.141)" {
+  let from = point(0, 0, 8)
+  let to = point(0, 0, 0)
+  let up = vector(0, 1, 0)
+  let t = view_transform(from, to, up)
+  assert_eq!(t, translation(0, 0, -8))
+}
+
+test "An arbitrary view transformation (p.141)" {
+  let from = point(1, 3, 2)
+  let to = point(4, -2, 8)
+  let up = vector(1, 1, 0)
+  let t = view_transform(from, to, up)
+  let want = mat4(
+    -0.50709, 0.50709, 0.67612, -2.36643, // row 0
+     0.76772, 0.60609, 0.12122, -2.82843, // row 1
+     -0.35857, 0.59761, -0.71714, 0, // row 2
+     0, 0, 0, 1, // row 3
+  )
+  assert_eq!(t, want)
 }
