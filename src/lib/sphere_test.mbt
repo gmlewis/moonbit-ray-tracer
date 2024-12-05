@@ -121,3 +121,17 @@ test "Computing the normal on a transformed sphere" {
   let n = s.normal_at(point(0, sq2, -sq2))
   assert_eq!(n, vector(0, 0.97014, -0.24254))
 }
+
+test "A sphere has a default material (p.125)" {
+  let s = sphere()
+  let m = s.material
+  assert_eq!(m, material())
+}
+
+test "A sphere may be assigned a material (p.125)" {
+  let s = sphere()
+  let m = material()
+  m.ambient = 1
+  s.material = m
+  assert_eq!(s.material, m)
+}

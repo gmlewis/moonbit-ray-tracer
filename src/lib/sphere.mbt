@@ -2,13 +2,15 @@
 pub(all) struct Sphere {
   transform : Matrix
   inv_transform : Matrix
+  mut material : Material
 } derive(Eq)
 
 ///|
 pub fn sphere() -> Sphere {
   let transform = mat4ident()
   let inv_transform = mat4ident()
-  { transform, inv_transform }
+  let material = material()
+  { transform, inv_transform, material }
 }
 
 ///|
