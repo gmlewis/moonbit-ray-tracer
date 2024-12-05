@@ -78,3 +78,27 @@ test "The color with an intersection behind the ray (p.139)" {
   let c = w.color_at(r)
   assert_eq!(c, inner.material.color)
 }
+
+test "There is no shadow when nothing is collinear with point and light (p.157)" {
+  let w = default_world()
+  let p = point(0, 10, 0)
+  assert_false!(w.is_shadowed(p))
+}
+
+test "The shadow when an object is between the point and the light (p.157)" {
+  let w = default_world()
+  let p = point(10, -10, 10)
+  assert_true!(w.is_shadowed(p))
+}
+
+test "There is no shadow when an object is behind the light (p.158)" {
+  let w = default_world()
+  let p = point(-20, 20, -20)
+  assert_false!(w.is_shadowed(p))
+}
+
+test "There is no shadow when an object is behind the poiny (p.159)" {
+  let w = default_world()
+  let p = point(-2, 2, -2)
+  assert_false!(w.is_shadowed(p))
+}

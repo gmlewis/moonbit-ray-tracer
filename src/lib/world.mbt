@@ -63,3 +63,31 @@ pub fn color_at(self : World, ray : Ray) -> Color {
   let comps = hit.prepare_computations(ray)
   self.shade_hit(comps)
 }
+
+///|
+pub fn every_light(self : World, func : (Light) -> Bool) -> Bool {
+  for i in 0..<self.lights.length() {
+    if not(func(self.lights[i])) {
+      return false
+    }
+  }
+  true
+}
+
+///|
+pub fn is_shadowed(self : World, point : Tuple) -> Bool {
+  self.every_light(
+    fn(light) {
+      let v = light.position - point
+      let distance = v.magnitude()
+      let direction = v.normalize()
+      let r = ray(point, direction)
+      let xs = self.intersect_world(r)
+      let h = xs.hit()
+      match h {
+        Some(hit) => hit.t < distance
+        _ => false
+      }
+    },
+  )
+}
