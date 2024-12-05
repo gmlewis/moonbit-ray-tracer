@@ -1,7 +1,7 @@
 ///|
 pub(all) struct World {
-  objects : Array[Sphere]
-  lights : Array[Light]
+  mut objects : Array[Sphere]
+  mut lights : Array[Light]
 }
 
 ///|
@@ -32,4 +32,34 @@ pub fn intersect_world(self : World, ray : Ray) -> Intersections {
     xs.append(x.xs)
   }
   intersections(xs)
+}
+
+///|
+pub fn shade_hit(self : World, comps : Computations) -> Color {
+  let mut red = 0.0
+  let mut green = 0.0
+  let mut blue = 0.0
+  for light in self.lights {
+    let c = comps.object.material.lighting(
+      light,
+      comps.point,
+      comps.eyev,
+      comps.normalv,
+    )
+    red += c.red
+    green += c.green
+    blue += c.blue
+  }
+  color(red, green, blue)
+}
+
+///|
+pub fn color_at(self : World, ray : Ray) -> Color {
+  let xs = self.intersect_world(ray)
+  let hit = match xs.hit() {
+    None => return color(0, 0, 0)
+    Some(hit) => hit
+  }
+  let comps = hit.prepare_computations(ray)
+  self.shade_hit(comps)
 }
