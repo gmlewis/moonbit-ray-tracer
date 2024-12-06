@@ -55,6 +55,9 @@ pub fn pattern_at_shape(
 }
 
 ///|
+// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+// StripePattern
+// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 pub(all) struct StripePattern {
   colors : Array[Color]
 } derive(Eq)
@@ -98,6 +101,9 @@ pub fn pattern_at(self : StripePattern, point : Tuple) -> Color {
 }
 
 ///|
+// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+// GradientPattern
+// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 pub(all) struct GradientPattern {
   colors : Array[Color]
 } derive(Eq)
@@ -141,5 +147,103 @@ pub fn pattern_at(self : GradientPattern, point : Tuple) -> Color {
   let ca = self.colors[index]
   let cb = self.colors[next_index]
   let t = point.x - @math.floor(point.x)
+  ca + (cb - ca).mul_scalar(t)
+}
+
+///|
+// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+// RingPattern
+// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+pub(all) struct RingPattern {
+  colors : Array[Color]
+} derive(Eq)
+
+///|
+pub fn to_string(self : RingPattern) -> String {
+  let colors = self.colors.map(fn(c) { "\{c}" })
+  //let colors = colors.join(",")
+  // YUCK! https://github.com/moonbitlang/core/pull/993
+  let colors = String::concat(colors, separator=",")
+  "ring(\{colors})"
+}
+
+///|
+pub fn output(self : RingPattern, logger : Logger) -> Unit {
+  logger.write_string(self.to_string())
+}
+
+///|
+pub fn clone(self : RingPattern) -> Pattern {
+  ring_pattern(self.colors)
+}
+
+///|
+pub fn ring_pattern(colors : Array[Color]) -> Pattern {
+  let pattern = RingPattern::{ colors, }
+  Pattern::new(pattern)
+}
+
+///|
+pub fn pattern_at(self : RingPattern, point : Tuple) -> Color {
+  let ncols = self.colors.length()
+  let r = (point.x * point.x + point.z * point.z).sqrt()
+  let index = @math.floor(r).to_int()
+  let index = if index >= 0 {
+    index % ncols
+  } else {
+    let d = -index / ncols
+    (index + ncols * (d + 1)) % ncols
+  }
+  self.colors[index]
+}
+
+///|
+// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+// GradientRingPattern
+// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+pub(all) struct GradientRingPattern {
+  colors : Array[Color]
+} derive(Eq)
+
+///|
+pub fn to_string(self : GradientRingPattern) -> String {
+  let colors = self.colors.map(fn(c) { "\{c}" })
+  //let colors = colors.join(",")
+  // YUCK! https://github.com/moonbitlang/core/pull/993
+  let colors = String::concat(colors, separator=",")
+  "ring(\{colors})"
+}
+
+///|
+pub fn output(self : GradientRingPattern, logger : Logger) -> Unit {
+  logger.write_string(self.to_string())
+}
+
+///|
+pub fn clone(self : GradientRingPattern) -> Pattern {
+  gradient_ring_pattern(self.colors)
+}
+
+///|
+pub fn gradient_ring_pattern(colors : Array[Color]) -> Pattern {
+  let pattern = GradientRingPattern::{ colors, }
+  Pattern::new(pattern)
+}
+
+///|
+pub fn pattern_at(self : GradientRingPattern, point : Tuple) -> Color {
+  let ncols = self.colors.length()
+  let r = (point.x * point.x + point.z * point.z).sqrt()
+  let index = @math.floor(r).to_int()
+  let index = if index >= 0 {
+    index % ncols
+  } else {
+    let d = -index / ncols
+    (index + ncols * (d + 1)) % ncols
+  }
+  let next_index = (index + 1) % ncols
+  let ca = self.colors[index]
+  let cb = self.colors[next_index]
+  let t = r - @math.floor(r)
   ca + (cb - ca).mul_scalar(t)
 }

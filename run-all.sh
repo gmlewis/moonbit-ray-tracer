@@ -9,3 +9,5 @@ moon run --target ${TARGET} src/ch7/main.mbt
 moon run --target ${TARGET} src/ch9/main.mbt
 moon run --target ${TARGET} src/ch10-stripes/main.mbt
 moon run --target ${TARGET} src/ch10-gradients/main.mbt
+moon run --target ${TARGET} src/ch10-rings/main.mbt
+moon run --target ${TARGET} src/ch10-gradient-rings/main.mbt

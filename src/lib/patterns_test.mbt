@@ -14,6 +14,9 @@ let white = @lib.white
 let gradient_pattern = @lib.gradient_pattern
 
 ///|
+let ring_pattern = @lib.ring_pattern
+
+///|
 let stripe_pattern = @lib.stripe_pattern
 
 test "Creating a stripe pattern (p.175)" {
@@ -155,4 +158,13 @@ test "A gradient linearly interpolates between colors (p.184)" {
     color(0.25, 0.25, 0.25),
   )
   assert_eq!(pattern.pattern.pattern_at(point(1, 0, 0)), black)
+}
+
+test "A ring should extend in both x and z (p.186)" {
+  let pattern = ring_pattern([white, black])
+  assert_eq!(pattern.pattern.pattern_at(point(0, 0, 0)), white)
+  assert_eq!(pattern.pattern.pattern_at(point(1, 0, 0)), black)
+  assert_eq!(pattern.pattern.pattern_at(point(0, 0, 1)), black)
+  // 0.708 = just slightly more than √2/2
+  assert_eq!(pattern.pattern.pattern_at(point(0.708, 0, 0.708)), black)
 }
