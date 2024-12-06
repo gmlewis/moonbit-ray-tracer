@@ -80,10 +80,8 @@ pub fn clone(self : StripePattern) -> Pattern {
 
 ///|
 pub fn stripe_pattern(colors : Array[Color]) -> Pattern {
-  let pattern = { colors, }
-  let transform = mat4ident()
-  let inv_transform = mat4ident()
-  { pattern, transform, inv_transform }
+  let pattern = StripePattern::{ colors, }
+  Pattern::new(pattern)
 }
 
 ///|
@@ -97,4 +95,51 @@ pub fn pattern_at(self : StripePattern, point : Tuple) -> Color {
     (index + ncols * (d + 1)) % ncols
   }
   self.colors[index]
+}
+
+///|
+pub(all) struct GradientPattern {
+  colors : Array[Color]
+} derive(Eq)
+
+///|
+pub fn to_string(self : GradientPattern) -> String {
+  let colors = self.colors.map(fn(c) { "\{c}" })
+  //let colors = colors.join(",")
+  // YUCK! https://github.com/moonbitlang/core/pull/993
+  let colors = String::concat(colors, separator=",")
+  "gradient(\{colors})"
+}
+
+///|
+pub fn output(self : GradientPattern, logger : Logger) -> Unit {
+  logger.write_string(self.to_string())
+}
+
+///|
+pub fn clone(self : GradientPattern) -> Pattern {
+  gradient_pattern(self.colors)
+}
+
+///|
+pub fn gradient_pattern(colors : Array[Color]) -> Pattern {
+  let pattern = GradientPattern::{ colors, }
+  Pattern::new(pattern)
+}
+
+///|
+pub fn pattern_at(self : GradientPattern, point : Tuple) -> Color {
+  let ncols = self.colors.length()
+  let index = @math.floor(point.x).to_int()
+  let index = if index >= 0 {
+    index % ncols
+  } else {
+    let d = -index / ncols
+    (index + ncols * (d + 1)) % ncols
+  }
+  let next_index = (index + 1) % ncols
+  let ca = self.colors[index]
+  let cb = self.colors[next_index]
+  let t = point.x - @math.floor(point.x)
+  ca + (cb - ca).mul_scalar(t)
 }

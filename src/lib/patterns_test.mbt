@@ -11,6 +11,9 @@ let black = @lib.black
 let white = @lib.white
 
 ///|
+let gradient_pattern = @lib.gradient_pattern
+
+///|
 let stripe_pattern = @lib.stripe_pattern
 
 test "Creating a stripe pattern (p.175)" {
@@ -137,4 +140,19 @@ test "A pattern with both an object and a pattern transformation (p.182)" {
   pattern.set_pattern_transform(translation(0.5, 1, 1.5))
   let c = pattern.pattern_at_shape(shape, point(2.5, 3, 3.5))
   assert_eq!(c, color(0.75, 0.5, 0.25))
+}
+
+test "A gradient linearly interpolates between colors (p.184)" {
+  let pattern = gradient_pattern([white, black])
+  assert_eq!(pattern.pattern.pattern_at(point(0, 0, 0)), white)
+  assert_eq!(
+    pattern.pattern.pattern_at(point(0.25, 0, 0)),
+    color(0.75, 0.75, 0.75),
+  )
+  assert_eq!(pattern.pattern.pattern_at(point(0.5, 0, 0)), color(0.5, 0.5, 0.5))
+  assert_eq!(
+    pattern.pattern.pattern_at(point(0.75, 0, 0)),
+    color(0.25, 0.25, 0.25),
+  )
+  assert_eq!(pattern.pattern.pattern_at(point(1, 0, 0)), black)
 }
