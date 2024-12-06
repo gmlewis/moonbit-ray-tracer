@@ -82,8 +82,9 @@ test "Lighting with a pattern applied (p.176)" {
   let eyev = vector(0, 0, -1)
   let normalv = vector(0, 0, -1)
   let light = point_light(point(0, 0, -10), color(1, 1, 1))
-  let c1 = m.lighting(light, point(0.9, 0, 0), eyev, normalv)
-  let c2 = m.lighting(light, point(1.1, 0, 0), eyev, normalv)
+  let object = Some(sphere())
+  let c1 = m.lighting(light, point(0.9, 0, 0), eyev, normalv, object~)
+  let c2 = m.lighting(light, point(1.1, 0, 0), eyev, normalv, object~)
   assert_eq!(c1, white)
   assert_eq!(c2, black)
 }

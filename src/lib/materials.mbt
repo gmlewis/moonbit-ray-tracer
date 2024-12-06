@@ -26,10 +26,11 @@ pub fn lighting(
   position : Tuple,
   eyev : Tuple,
   normalv : Tuple,
-  in_shadow~ : Bool = false
+  in_shadow~ : Bool = false,
+  object~ : Shape? = None
 ) -> Color {
-  let clr = match self.pattern {
-    Some(pattern) => pattern.stripe_at(position)
+  let clr = match (self.pattern, object) {
+    (Some(pattern), Some(object)) => pattern.stripe_at_object(object, position)
     _ => self.color
   }
   // combine the surface color with the light's color/intensity

@@ -47,6 +47,7 @@ pub fn shade_hit(self : World, comps : Computations) -> Color {
       comps.eyev,
       comps.normalv,
       in_shadow~,
+      object=Some(comps.object),
     )
     red += c.red
     green += c.green
