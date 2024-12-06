@@ -1,22 +1,18 @@
 ///| Sphere represents a sphere with radius 1.
-pub(all) struct Sphere {
-  transform : Matrix
-  inv_transform : Matrix
-  mut material : Material
-} derive(Eq)
+pub(all) struct Sphere {} derive(Eq)
 
 ///|
-pub fn sphere() -> Sphere {
-  let transform = mat4ident()
-  let inv_transform = mat4ident()
-  let material = material()
-  { transform, inv_transform, material }
+let _Sphere : Object = Sphere::{  }
+
+///|
+pub fn sphere() -> Shape {
+  let sphere = Sphere::{  }
+  Shape::new(sphere)
 }
 
 ///|
-pub fn set_transform(self : Sphere, t : Matrix) -> Unit {
-  self.transform.copy(t)
-  self.inv_transform.copy(t.inverse())
+pub fn op_equal(self : Sphere, other : Sphere) -> Bool {
+  self == other
 }
 
 ///|
@@ -25,13 +21,12 @@ pub fn Sphere::to_string(_self : Sphere) -> String {
 }
 
 ///|
-pub impl Show for Sphere with output(self, logger) {
+pub fn output(self : Sphere, logger : Logger) -> Unit {
   logger.write_string(self.to_string())
 }
 
 ///|
-pub fn intersect(self : Sphere, ray : Ray) -> Intersections {
-  let ray = ray.transform(self.inv_transform)
+pub fn Sphere::local_intersect(_self : Sphere, ray : Ray) -> Array[Double] {
   // the vector from the sphere's center to the ray origin
   // (the sphere is centered at the world origin)
   let sphere_to_ray = ray.origin - point(0, 0, 0)
@@ -40,19 +35,15 @@ pub fn intersect(self : Sphere, ray : Ray) -> Intersections {
   let c = sphere_to_ray.dot(sphere_to_ray) - 1
   let discriminant = b * b - a * c * 4
   if discriminant < 0 {
-    return intersections([])
+    return []
   }
   let d = discriminant.sqrt()
   let t1 = (-b - d) / (a * 2)
   let t2 = (-b + d) / (a * 2)
-  intersections([intersection(t1, self), intersection(t2, self)])
+  [t1, t2]
 }
 
 ///|
-pub fn normal_at(self : Sphere, world_point : Tuple) -> Tuple {
-  let object_point = self.inv_transform.mul_tuple(world_point)
-  let object_normal = object_point - point(0, 0, 0)
-  let { x, y, z, .. } = self.inv_transform.transpose().mul_tuple(object_normal)
-  let world_normal = vector(x, y, z)
-  world_normal.normalize()
+pub fn Sphere::local_normal_at(_self : Sphere, local_point : Tuple) -> Tuple {
+  local_point - point(0, 0, 0)
 }

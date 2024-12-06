@@ -1,12 +1,27 @@
 ///|
 pub(all) struct Intersection {
   t : Double
-  object : Sphere
-} derive(Show, Eq)
+  object : Shape
+}
 
 ///|
-pub fn intersection(t : Double, object : Sphere) -> Intersection {
+pub fn intersection(t : Double, object : Shape) -> Intersection {
   { t, object }
+}
+
+///|
+pub fn op_equal(self : Intersection, other : Intersection) -> Bool {
+  self.t == other.t // && self.object == other.object
+}
+
+///|
+pub fn to_string(self : Intersection) -> String {
+  "intersection(\{self.t})"
+}
+
+///|
+pub impl Show for Intersection with output(self, logger) {
+  logger.write_string(self.to_string())
 }
 
 ///|
@@ -52,7 +67,7 @@ pub fn hit(self : Intersections) -> Intersection? {
 ///|
 pub(all) struct Computations {
   t : Double
-  object : Sphere
+  object : Shape
   point : Tuple
   eyev : Tuple
   normalv : Tuple

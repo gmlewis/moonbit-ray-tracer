@@ -1,7 +1,4 @@
 ///|
-typealias Intersections = @lib.Intersections
-
-///|
 typealias Ray = @lib.Ray
 
 ///|
@@ -16,15 +13,19 @@ struct TestShape {
 } derive(Show, Eq)
 
 ///|
-fn local_intersect(self : TestShape, ray : Ray) -> Intersections {
+fn local_intersect(self : TestShape, ray : Ray) -> Array[Double] {
   self.saved_ray = ray
-  let xs = []
-  intersections(xs)
+  []
 }
 
 ///|
 fn TestShape::local_normal_at(_self : TestShape, point : Tuple) -> Tuple {
   vector(point.x, point.y, point.z)
+}
+
+///|
+fn to_string(self : TestShape) -> String {
+  "test_shape(\{self.saved_ray})"
 }
 
 ///|
@@ -70,7 +71,7 @@ test "Intersecting a scaled shape with a ray (p.167)" {
   let _ = s.intersect(r)
   inspect!(
     s.object,
-    content="{saved_ray: ray(point(0, 0, -2.5), vector(0, 0, 0.5))}",
+    content="test_shape(ray(point(0, 0, -2.5), vector(0, 0, 0.5)))",
   )
 }
 
@@ -81,7 +82,7 @@ test "Intersecting a translated shape with a ray (p.167)" {
   let _ = s.intersect(r)
   inspect!(
     s.object,
-    content="{saved_ray: ray(point(-5, 0, -5), vector(0, 0, 1))}",
+    content="test_shape(ray(point(-5, 0, -5), vector(0, 0, 1)))",
   )
 }
 

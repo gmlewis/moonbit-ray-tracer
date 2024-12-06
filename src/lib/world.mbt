@@ -1,6 +1,6 @@
 ///|
 pub(all) struct World {
-  mut objects : Array[Sphere]
+  mut objects : Array[Shape]
   mut lights : Array[Light]
 }
 
