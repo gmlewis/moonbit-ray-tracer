@@ -5,7 +5,7 @@ pub(all) struct Material {
   mut diffuse : Double
   mut specular : Double
   mut shininess : Double
-  mut pattern : StripePattern?
+  mut pattern : Pattern?
 } derive(Show, Eq)
 
 ///|
@@ -27,10 +27,10 @@ pub fn lighting(
   eyev : Tuple,
   normalv : Tuple,
   in_shadow~ : Bool = false,
-  object~ : Shape? = None
+  shape~ : Shape? = None
 ) -> Color {
-  let clr = match (self.pattern, object) {
-    (Some(pattern), Some(object)) => pattern.stripe_at_object(object, position)
+  let clr = match (self.pattern, shape) {
+    (Some(pattern), Some(shape)) => pattern.pattern_at_shape(shape, position)
     _ => self.color
   }
   // combine the surface color with the light's color/intensity

@@ -31,7 +31,7 @@ test "A ray intersecting a plane from above (p.171)" {
   let xs = p.local_intersect(r)
   assert_eq!(xs.count, 1)
   assert_eq!(xs[0].t, 1)
-  assert_eq!(xs[0].object, p)
+  assert_eq!(xs[0].shape, p)
 }
 
 test "A ray intersecting a plane from below (p.171)" {
@@ -40,5 +40,5 @@ test "A ray intersecting a plane from below (p.171)" {
   let xs = p.local_intersect(r)
   assert_eq!(xs.count, 1)
   assert_eq!(xs[0].t, 1)
-  assert_eq!(xs[0].object, p)
+  assert_eq!(xs[0].shape, p)
 }

@@ -2,6 +2,7 @@
 pub(open) trait Object {
   local_intersect(Self, Ray) -> Array[Double]
   local_normal_at(Self, Tuple) -> Tuple
+  // https://github.com/moonbitlang/core/issues/1304
   output(Self, Logger) -> Unit
   to_string(Self) -> String
 }
@@ -31,6 +32,7 @@ pub fn output(self : Shape, logger : Logger) -> Unit {
 
 ///|
 pub fn op_equal(self : Shape, other : Shape) -> Bool {
+  // https://github.com/moonbitlang/core/issues/1304#issuecomment-2523373703
   // self.object == other.object &&
   self.material == other.material && self.transform == other.transform
 }

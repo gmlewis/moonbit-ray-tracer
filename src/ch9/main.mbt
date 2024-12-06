@@ -67,7 +67,7 @@ fn main {
   let world = world()
   let light = point_light(point(-10, 10, -10), color(1, 1, 1))
   world.lights = [light]
-  world.objects = [left, right, middle, floor]
+  world.shapes = [left, right, middle, floor]
 
   //
   let camera = camera(width, height, @math.PI / 3)

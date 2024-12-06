@@ -1,14 +1,14 @@
 ///|
 pub(all) struct World {
-  mut objects : Array[Shape]
+  mut shapes : Array[Shape]
   mut lights : Array[Light]
 }
 
 ///|
 pub fn world() -> World {
-  let objects = []
+  let shapes = []
   let lights = []
-  { objects, lights }
+  { shapes, lights }
 }
 
 ///|
@@ -18,16 +18,16 @@ pub fn default_world() -> World {
   s1.material.diffuse = 0.7
   s1.material.specular = 0.2
   let s2 = sphere()..set_transform(scaling(0.5, 0.5, 0.5))
-  let objects = [s1, s2]
+  let shapes = [s1, s2]
   let light = point_light(point(-10, 10, -10), color(1, 1, 1))
   let lights = [light]
-  { objects, lights }
+  { shapes, lights }
 }
 
 ///|
 pub fn intersect_world(self : World, ray : Ray) -> Intersections {
   let xs = []
-  for obj in self.objects {
+  for obj in self.shapes {
     let x = obj.intersect(ray)
     xs.append(x.xs)
   }
@@ -41,13 +41,13 @@ pub fn shade_hit(self : World, comps : Computations) -> Color {
   let mut blue = 0.0
   for light in self.lights {
     let in_shadow = self.is_shadowed(comps.over_point, light~)
-    let c = comps.object.material.lighting(
+    let c = comps.shape.material.lighting(
       light,
       comps.point,
       comps.eyev,
       comps.normalv,
       in_shadow~,
-      object=Some(comps.object),
+      shape=Some(comps.shape),
     )
     red += c.red
     green += c.green

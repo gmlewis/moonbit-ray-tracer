@@ -4,11 +4,11 @@ let intersection = @lib.intersection
 ///|
 let intersections = @lib.intersections
 
-test "An intersection encapsulates t and object (p.99)" {
+test "An intersection encapsulates t and shape (p.99)" {
   let s = sphere()
   let i = intersection(3.5, s)
   assert_eq!(i.t, 3.5)
-  assert_eq!(i.object, s)
+  assert_eq!(i.shape, s)
 }
 
 test "Aggregating intersections (p.99)" {
@@ -21,13 +21,13 @@ test "Aggregating intersections (p.99)" {
   assert_eq!(xs[1].t, 2)
 }
 
-test "Intersect sets the object on the intersection (p.99)" {
+test "Intersect sets the shape on the intersection (p.99)" {
   let r = ray(point(0, 0, -5), vector(0, 0, 1))
   let s = sphere()
   let xs = s.intersect(r)
   assert_eq!(xs.count, 2)
-  assert_eq!(xs[0].object, s)
-  assert_eq!(xs[1].object, s)
+  assert_eq!(xs[0].shape, s)
+  assert_eq!(xs[1].shape, s)
 }
 
 test "The hit, when all intersections have positive t (p.101)" {
@@ -74,7 +74,7 @@ test "Precomputing the state of an intersection (p.135)" {
   let i = intersection(4, shape)
   let comps = i.prepare_computations(r)
   assert_eq!(comps.t, i.t)
-  assert_eq!(comps.object, i.object)
+  assert_eq!(comps.shape, i.shape)
   assert_eq!(comps.point, point(0, 0, -1))
   assert_eq!(comps.eyev, vector(0, 0, -1))
   assert_eq!(comps.normalv, vector(0, 0, -1))

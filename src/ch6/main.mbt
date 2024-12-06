@@ -55,9 +55,9 @@ fn main {
       match xs.hit() {
         Some(hit) => {
           let point = r.position(hit.t)
-          let normal = hit.object.normal_at(point)
+          let normal = hit.shape.normal_at(point)
           let eye = r.direction
-          let clr = hit.object.material.lighting(light, point, eye, normal)
+          let clr = hit.shape.material.lighting(light, point, eye, normal)
           c.write_pixel(x, y, clr)
         }
         _ => ()

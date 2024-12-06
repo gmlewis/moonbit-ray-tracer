@@ -6,7 +6,7 @@ let default_world = @lib.default_world
 
 test "Creating a world (p.134)" {
   let w = world()
-  assert_eq!(w.objects, [])
+  assert_eq!(w.shapes, [])
   assert_eq!(w.lights, [])
 }
 
@@ -18,7 +18,7 @@ test "The default world (p.134)" {
   s1.material.specular = 0.2
   let s2 = sphere()..set_transform(scaling(0.5, 0.5, 0.5))
   let w = default_world()
-  assert_eq!(w.objects, [s1, s2])
+  assert_eq!(w.shapes, [s1, s2])
   assert_eq!(w.lights, [light])
 }
 
@@ -36,7 +36,7 @@ test "Intersect a world with a ray (p.134)" {
 test "Shading an intersection (p.137)" {
   let w = default_world()
   let r = ray(point(0, 0, -5), vector(0, 0, 1))
-  let shape = w.objects[0]
+  let shape = w.shapes[0]
   let i = intersection(4, shape)
   let comps = i.prepare_computations(r)
   let c = w.shade_hit(comps)
@@ -47,7 +47,7 @@ test "Shading an intersection from the inside (p.137)" {
   let w = default_world()
   w.lights = [point_light(point(0, 0.25, 0), color(1, 1, 1))]
   let r = ray(point(0, 0, 0), vector(0, 0, 1))
-  let shape = w.objects[1]
+  let shape = w.shapes[1]
   let i = intersection(0.5, shape)
   let comps = i.prepare_computations(r)
   let c = w.shade_hit(comps)
@@ -70,9 +70,9 @@ test "The color when a ray hits (p.138)" {
 
 test "The color with an intersection behind the ray (p.139)" {
   let w = default_world()
-  let outer = w.objects[0]
+  let outer = w.shapes[0]
   outer.material.ambient = 1
-  let inner = w.objects[1]
+  let inner = w.shapes[1]
   inner.material.ambient = 1
   let r = ray(point(0, 0, 0.75), vector(0, 0, -1))
   let c = w.color_at(r)
@@ -108,7 +108,7 @@ test "shade_hit() is given an intersection in shadow (p.160)" {
   w.lights = [point_light(point(0, 0, -10), color(1, 1, 1))]
   let s1 = sphere()
   let s2 = sphere()..set_transform(translation(0, 0, 10))
-  w.objects = [s1, s2]
+  w.shapes = [s1, s2]
   let r = ray(point(0, 0, 5), vector(0, 0, 1))
   let i = intersection(4, s2)
   let comps = i.prepare_computations(r)

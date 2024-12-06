@@ -1,12 +1,12 @@
 ///|
 pub(all) struct Intersection {
   t : Double
-  object : Shape
+  shape : Shape
 }
 
 ///|
-pub fn intersection(t : Double, object : Shape) -> Intersection {
-  { t, object }
+pub fn intersection(t : Double, shape : Shape) -> Intersection {
+  { t, shape }
 }
 
 ///|
@@ -67,7 +67,7 @@ pub fn hit(self : Intersections) -> Intersection? {
 ///|
 pub(all) struct Computations {
   t : Double
-  object : Shape
+  shape : Shape
   point : Tuple
   eyev : Tuple
   normalv : Tuple
@@ -78,14 +78,14 @@ pub(all) struct Computations {
 ///|
 pub fn prepare_computations(self : Intersection, ray : Ray) -> Computations {
   let t = self.t
-  let object = self.object
+  let shape = self.shape
   let point = ray.position(t)
   let eyev = -ray.direction
-  let mut normalv = object.normal_at(point)
+  let mut normalv = shape.normal_at(point)
   let inside = normalv.dot(eyev) < 0
   if inside {
     normalv = -normalv
   }
   let over_point = point + normalv.mul_scalar(EPSILON)
-  { t, object, point, eyev, normalv, inside, over_point }
+  { t, shape, point, eyev, normalv, inside, over_point }
 }
