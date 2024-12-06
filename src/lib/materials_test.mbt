@@ -72,3 +72,18 @@ test "Lighting with the surface in shadow (p.155)" {
   let result = m.lighting(light, position, eyev, normalv, in_shadow~)
   assert_eq!(result, color(0.1, 0.1, 0.1))
 }
+
+test "Lighting with a pattern applied (p.176)" {
+  let m = material()
+  m.pattern = Some(stripe_pattern([white, black]))
+  m.ambient = 1
+  m.diffuse = 0
+  m.specular = 0
+  let eyev = vector(0, 0, -1)
+  let normalv = vector(0, 0, -1)
+  let light = point_light(point(0, 0, -10), color(1, 1, 1))
+  let c1 = m.lighting(light, point(0.9, 0, 0), eyev, normalv)
+  let c2 = m.lighting(light, point(1.1, 0, 0), eyev, normalv)
+  assert_eq!(c1, white)
+  assert_eq!(c2, black)
+}

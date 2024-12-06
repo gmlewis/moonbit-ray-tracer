@@ -5,6 +5,7 @@ pub(all) struct Material {
   mut diffuse : Double
   mut specular : Double
   mut shininess : Double
+  mut pattern : StripePattern?
 } derive(Show, Eq)
 
 ///|
@@ -14,7 +15,8 @@ pub fn material() -> Material {
   let diffuse = 0.9
   let specular = 0.9
   let shininess = 200.0
-  { color, ambient, diffuse, specular, shininess }
+  let pattern = None
+  { color, ambient, diffuse, specular, shininess, pattern }
 }
 
 ///|
@@ -26,8 +28,12 @@ pub fn lighting(
   normalv : Tuple,
   in_shadow~ : Bool = false
 ) -> Color {
+  let clr = match self.pattern {
+    Some(pattern) => pattern.stripe_at(position)
+    _ => self.color
+  }
   // combine the surface color with the light's color/intensity
-  let effective_color = self.color * light.intensity
+  let effective_color = clr * light.intensity
   // find the direction to the light source
   let lightv = (light.position - position).normalize()
   // compute the ambient contribution

@@ -1,7 +1,7 @@
 ///|
 pub(all) struct StripePattern {
   colors : Array[Color]
-}
+} derive(Show, Eq)
 
 ///|
 pub fn stripe_pattern(colors : Array[Color]) -> StripePattern {
