@@ -7,6 +7,12 @@ pub(all) struct Color {
 }
 
 ///|
+pub let black : Color = color(0, 0, 0)
+
+///|
+pub let white : Color = color(1, 1, 1)
+
+///|
 pub fn to_string(self : Color) -> String {
   let r = round_to_fixed(self.red, 5).to_string()
   let g = round_to_fixed(self.green, 5).to_string()
