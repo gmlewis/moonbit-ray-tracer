@@ -7,6 +7,14 @@ pub(all) struct StripePattern {
 } derive(Show, Eq)
 
 ///|
+pub fn clone(self : StripePattern) -> StripePattern {
+  let colors = self.colors.map(fn(c) { c.clone() })
+  let transform = self.transform.clone()
+  let inv_transform = self.inv_transform.clone()
+  { colors, transform, inv_transform }
+}
+
+///|
 pub fn set_pattern_transform(self : StripePattern, transform : Matrix) -> Unit {
   self.transform = transform
   self.inv_transform = transform.inverse()

@@ -7,6 +7,12 @@ pub(all) struct Color {
 }
 
 ///|
+pub fn clone(self : Color) -> Color {
+  let { red, green, blue } = self
+  { red, green, blue }
+}
+
+///|
 pub let black : Color = color(0, 0, 0)
 
 ///|
