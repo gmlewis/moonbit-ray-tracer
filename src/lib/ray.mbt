@@ -2,7 +2,7 @@
 pub(all) struct Ray {
   origin : Tuple
   direction : Tuple
-}
+} derive(Eq)
 
 ///|
 pub fn ray(origin : Tuple, direction : Tuple) -> Ray {
@@ -15,7 +15,7 @@ pub fn to_string(self : Ray) -> String {
 }
 
 ///|
-impl Show for Ray with output(self, logger) {
+pub impl Show for Ray with output(self, logger) {
   logger.write_string(self.to_string())
 }
 
