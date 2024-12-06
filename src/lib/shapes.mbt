@@ -20,9 +20,8 @@ pub(all) struct Shape {
 }
 
 ///|
-pub fn Shape::to_string(_self : Shape) -> String {
-  // self.object.to_string()
-  "shape()"
+pub fn Shape::to_string(self : Shape) -> String {
+  self.object.to_string()
 }
 
 ///|
@@ -53,6 +52,11 @@ pub fn set_transform(self : Shape, transform : Matrix) -> Unit {
 ///|
 pub fn intersect(self : Shape, ray : Ray) -> Intersections {
   let local_ray = ray.transform(self.inv_transform)
+  self.local_intersect(local_ray)
+}
+
+///|
+pub fn local_intersect(self : Shape, local_ray : Ray) -> Intersections {
   let ts = self.object.local_intersect(local_ray)
   intersections(ts.map(fn(t) { intersection(t, self) }))
 }
@@ -64,4 +68,9 @@ pub fn normal_at(self : Shape, point : Tuple) -> Tuple {
   let world_normal = self.inv_transform.transpose().mul_tuple(local_normal)
   world_normal.w = 0
   world_normal.normalize()
+}
+
+///|
+pub fn local_normal_at(self : Shape, local_point : Tuple) -> Tuple {
+  self.object.local_normal_at(local_point)
 }
