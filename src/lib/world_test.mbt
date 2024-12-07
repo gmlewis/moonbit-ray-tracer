@@ -123,7 +123,7 @@ test "The reflected color for a non-reflective material (p.197)" {
   shape.material.ambient = 1
   let i = intersection(1, shape)
   let comps = i.prepare_computations(r)
-  let color = w.reflected_color(comps)
+  let color = w.reflected_color(comps, 5)
   assert_eq!(color, black)
 }
 
@@ -136,7 +136,7 @@ test "The reflected color for a reflective material (p.197)" {
   let r = ray(point(0, 0, -3), vector(0, -sq2, sq2))
   let i = intersection(2.0.sqrt(), shape)
   let comps = i.prepare_computations(r)
-  let c = w.reflected_color(comps)
+  let c = w.reflected_color(comps, 5)
   assert_eq!(c, color(0.19033, 0.23792, 0.14275))
 }
 
@@ -151,4 +151,32 @@ test "shade_hit() with a reflective material (p.198)" {
   let comps = i.prepare_computations(r)
   let c = w.shade_hit(comps)
   assert_eq!(c, color(0.87676, 0.92434, 0.82917))
+}
+
+test "color_at() with mutually reflective surfaces (p.199)" {
+  let w = world()
+  w.lights.push(point_light(point(0, 0, 0), color(1, 1, 1)))
+  let lower = plane()..set_transform(translation(0, -1, 0))
+  lower.material.reflective = 1
+  w.shapes.push(lower)
+  let upper = plane()..set_transform(translation(0, 1, 0))
+  upper.material.reflective = 1
+  w.shapes.push(upper)
+  let r = ray(point(0, 0, 0), vector(0, 1, 0))
+  // should terminate successfully
+  let _ = w.color_at(r)
+
+}
+
+test "The reflected color at the maximum recursive depth (p.200)" {
+  let w = default_world()
+  let shape = plane()..set_transform(translation(0, -1, 0))
+  shape.material.reflective = 0.5
+  w.shapes.push(shape)
+  let sq2 = 2.0.sqrt() / 2
+  let r = ray(point(0, 0, -3), vector(0, -sq2, sq2))
+  let i = intersection(2.0.sqrt(), shape)
+  let comps = i.prepare_computations(r)
+  let c = w.reflected_color(comps, 0)
+  assert_eq!(c, black)
 }

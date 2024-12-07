@@ -1,4 +1,7 @@
 ///|
+const MAX_BOUNCES = 4
+
+///|
 pub(all) struct World {
   mut shapes : Array[Shape]
   mut lights : Array[Light]
@@ -35,7 +38,11 @@ pub fn intersect_world(self : World, ray : Ray) -> Intersections {
 }
 
 ///|
-pub fn shade_hit(self : World, comps : Computations) -> Color {
+pub fn shade_hit(
+  self : World,
+  comps : Computations,
+  remaining~ : Int = MAX_BOUNCES
+) -> Color {
   let mut red = 0.0
   let mut green = 0.0
   let mut blue = 0.0
@@ -49,7 +56,7 @@ pub fn shade_hit(self : World, comps : Computations) -> Color {
       in_shadow~,
       shape=Some(comps.shape),
     )
-    let reflected = self.reflected_color(comps)
+    let reflected = self.reflected_color(comps, remaining)
     red += c.red + reflected.red
     green += c.green + reflected.green
     blue += c.blue + reflected.blue
@@ -58,14 +65,18 @@ pub fn shade_hit(self : World, comps : Computations) -> Color {
 }
 
 ///|
-pub fn color_at(self : World, ray : Ray) -> Color {
+pub fn color_at(
+  self : World,
+  ray : Ray,
+  remaining~ : Int = MAX_BOUNCES
+) -> Color {
   let xs = self.intersect_world(ray)
   let hit = match xs.hit() {
     None => return color(0, 0, 0)
     Some(hit) => hit
   }
   let comps = hit.prepare_computations(ray)
-  self.shade_hit(comps)
+  self.shade_hit(comps, remaining~)
 }
 
 ///|
@@ -87,13 +98,17 @@ pub fn is_shadowed(
 }
 
 ///|
-pub fn reflected_color(self : World, comps : Computations) -> Color {
+pub fn reflected_color(
+  self : World,
+  comps : Computations,
+  remaining : Int
+) -> Color {
   let reflective = comps.shape.material.reflective
-  if reflective == 0 {
+  if remaining <= 0 || reflective == 0 {
     return color(0, 0, 0)
   }
 
   //
   let reflect_ray = ray(comps.over_point, comps.reflectv)
-  self.color_at(reflect_ray).mul_scalar(reflective)
+  self.color_at(reflect_ray, remaining=remaining - 1).mul_scalar(reflective)
 }
