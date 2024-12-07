@@ -32,6 +32,15 @@ pub(all) struct Intersections {
 }
 
 ///|
+pub fn Intersections::from_ts(
+  ts : Array[Double],
+  shape : Shape
+) -> Intersections {
+  let xs = ts.map(fn(t) { intersection(t, shape) })
+  intersections(xs)
+}
+
+///|
 pub fn intersections(xs : Array[Intersection]) -> Intersections {
   let count = xs.length()
   if xs.length() > 1 {
@@ -151,4 +160,27 @@ pub fn prepare_computations(
     n1,
     n2,
   }
+}
+
+///|
+pub fn schlick(self : Computations) -> Double {
+  // find the cosine of the angle between the eye and normal vectors
+  let mut cos = self.eyev.dot(self.normalv)
+  // total internal reflection can only occur if n1 > n2
+  if self.n1 > self.n2 {
+    let n = self.n1 / self.n2
+    let sin2_t = n * n * (1.0 - cos * cos)
+    if sin2_t > 1 {
+      return 1
+    }
+    // compute consine of theta_t using trig identity
+    let cos_t = (1.0 - sin2_t).sqrt()
+    // when n1 > n2, use cos(theta_2) instead
+    cos = cos_t
+  }
+  let r0 = (self.n1 - self.n2) / (self.n1 + self.n2)
+  let r0 = r0 * r0
+  let f = 1.0 - cos
+  let f = f * f * f * f * f
+  r0 + (1.0 - r0) * f
 }

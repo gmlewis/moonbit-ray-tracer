@@ -43,12 +43,10 @@ pub fn shade_hit(
   comps : Computations,
   remaining~ : Int = MAX_BOUNCES
 ) -> Color {
-  let mut red = 0.0
-  let mut green = 0.0
-  let mut blue = 0.0
+  let mut c = color(0, 0, 0)
   for light in self.lights {
     let in_shadow = self.is_shadowed(comps.over_point, light~)
-    let c = comps.shape.material.lighting(
+    let surface = comps.shape.material.lighting(
       light,
       comps.point,
       comps.eyev,
@@ -57,12 +55,19 @@ pub fn shade_hit(
       shape=Some(comps.shape),
     )
     let reflected = self.reflected_color(comps, remaining)
-    let refracted_color = self.refracted_color(comps, remaining)
-    red += c.red + reflected.red + refracted_color.red
-    green += c.green + reflected.green + refracted_color.green
-    blue += c.blue + reflected.blue + refracted_color.blue
+    let refracted = self.refracted_color(comps, remaining)
+    let material = comps.shape.material
+    if material.reflective > 0 && material.transparency > 0 {
+      let reflectance = comps.schlick()
+      c = c +
+        surface +
+        reflected.mul_scalar(reflectance) +
+        refracted.mul_scalar(1.0 - reflectance)
+    } else {
+      c = c + surface + reflected + refracted
+    }
   }
-  color(red, green, blue)
+  c
 }
 
 ///|

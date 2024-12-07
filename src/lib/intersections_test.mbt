@@ -1,4 +1,7 @@
 ///|
+typealias Intersections = @lib.Intersections
+
+///|
 let intersection = @lib.intersection
 
 ///|
@@ -161,4 +164,32 @@ test "The under point is offset below the surface (p.208)" {
   let comps = i.prepare_computations(r, xs~)
   assert_true!(comps.under_point.z > @lib.EPSILON / 2)
   assert_true!(comps.point.z < comps.under_point.z)
+}
+
+test "The Schlick approximation under total internal reflection (p.216)" {
+  let shape = glass_sphere()
+  let sq2 = 2.0.sqrt() / 2
+  let r = ray(point(0, 0, sq2), vector(0, 1, 0))
+  let xs = intersections([intersection(-sq2, shape), intersection(sq2, shape)])
+  let comps = xs[1].prepare_computations(r, xs~)
+  let reflectance = comps.schlick()
+  assert_eq!(reflectance, 1)
+}
+
+test "The Schlick approximation with a perpendicular viewing angle (p.217)" {
+  let shape = glass_sphere()
+  let r = ray(point(0, 0, 0), vector(0, 1, 0))
+  let xs = Intersections::from_ts([-1, 1], shape)
+  let comps = xs[1].prepare_computations(r, xs~)
+  let reflectance = comps.schlick()
+  assert_true!((reflectance - 0.04).abs() < @lib.EPSILON)
+}
+
+test "The Schlick approximation with small angle and n2 > n1 (p.217)" {
+  let shape = glass_sphere()
+  let r = ray(point(0, 0.99, -2), vector(0, 0, 1))
+  let xs = Intersections::from_ts([1.8589], shape)
+  let comps = xs[0].prepare_computations(r, xs~)
+  let reflectance = comps.schlick()
+  assert_true!((0.48873 - reflectance).abs() < @lib.EPSILON)
 }
