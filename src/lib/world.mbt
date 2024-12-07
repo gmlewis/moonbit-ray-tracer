@@ -112,3 +112,36 @@ pub fn reflected_color(
   let reflect_ray = ray(comps.over_point, comps.reflectv)
   self.color_at(reflect_ray, remaining=remaining - 1).mul_scalar(reflective)
 }
+
+///|
+pub fn refracted_color(
+  self : World,
+  comps : Computations,
+  remaining : Int
+) -> Color {
+  if remaining <= 0 || comps.shape.material.transparency == 0 {
+    return color(0, 0, 0)
+  }
+  // find the ratio of first index of refraction to the second
+  let n_ratio = comps.n1 / comps.n2
+  // cos(theta_i) is the same as the dot product  of the two vectors
+  let cos_i = comps.eyev.dot(comps.normalv)
+  // find sin(theta_t)^2 via trigonometric identity
+  let sin2_t = n_ratio * n_ratio * (1.0 - cos_i * cos_i)
+  if sin2_t > 1 {
+    return color(0, 0, 0)
+  }
+
+  // Find cos(theta_t) via trigonometric identity
+  let cos_t = (1.0 - sin2_t).sqrt()
+  // Compute the direction of the refracted ray
+  let direction = comps.normalv.mul_scalar(n_ratio * cos_i - cos_t) -
+    comps.eyev.mul_scalar(n_ratio)
+  // Created the refracted ray
+  let refract_ray = ray(comps.under_point, direction)
+  // Find the color of the refracted ray, making sure to multiply
+  // by the transparency value to account for any opacity
+  self
+  .color_at(refract_ray, remaining=remaining - 1)
+  .mul_scalar(comps.shape.material.transparency)
+}

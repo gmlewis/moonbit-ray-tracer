@@ -180,3 +180,62 @@ test "The reflected color at the maximum recursive depth (p.200)" {
   let c = w.reflected_color(comps, 0)
   assert_eq!(c, black)
 }
+
+test "The refracted color with an opaque surface (p.209)" {
+  let w = default_world()
+  let shape = w.shapes[0]
+  let r = ray(point(0, 0, -5), vector(0, 0, 1))
+  let xs = intersections([intersection(4, shape), intersection(5, shape)])
+  let comps = xs[0].prepare_computations(r, xs~)
+  let c = w.refracted_color(comps, 5)
+  assert_eq!(c, black)
+}
+
+test "The refracted color at the maximum recursive depth (p.209)" {
+  let w = default_world()
+  let shape = w.shapes[0]
+  shape.material.transparency = 1
+  shape.material.refractive_index = 1.5
+  let r = ray(point(0, 0, -5), vector(0, 0, 1))
+  let xs = intersections([intersection(4, shape), intersection(6, shape)])
+  let comps = xs[0].prepare_computations(r, xs~)
+  let c = w.refracted_color(comps, 0)
+  assert_eq!(c, black)
+}
+
+test "The refracted color under total internal reflection (p.210)" {
+  let w = default_world()
+  let shape = w.shapes[0]
+  shape.material.transparency = 1
+  shape.material.refractive_index = 1.5
+  let sq2 = 2.0.sqrt() / 2
+  let r = ray(point(0, 0, sq2), vector(0, 1, 0))
+  let xs = intersections([intersection(-sq2, shape), intersection(sq2, shape)])
+  // Note: this time it is inside the sphere, so we need
+  // to look at the second intersection, xs[1], not xs[0].
+  let comps = xs[1].prepare_computations(r, xs~)
+  let c = w.refracted_color(comps, 5)
+  assert_eq!(c, color(0, 0, 0))
+}
+
+test "The refracted color with a refracted ray (p.212)" {
+  let w = default_world()
+  let a = w.shapes[0]
+  a.material.ambient = 1
+  a.material.pattern = Some(test_pattern())
+  let b = w.shapes[1]
+  b.material.transparency = 1
+  b.material.refractive_index = 1.5
+  let r = ray(point(0, 0, 0.1), vector(0, 1, 0))
+  let xs = intersections(
+    [
+      intersection(-0.9899, a),
+      intersection(-0.4899, b),
+      intersection(0.4899, b),
+      intersection(0.9899, a),
+    ],
+  )
+  let comps = xs[2].prepare_computations(r, xs~)
+  let c = w.refracted_color(comps, 5)
+  assert_eq!(c, color(0, 0.99888, 0.04722))
+}

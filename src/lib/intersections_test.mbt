@@ -152,3 +152,13 @@ test "Finding n1 and n2 at various intersections (p.205)" {
     assert_eq!(comps.n2, tt.2)
   }
 }
+
+test "The under point is offset below the surface (p.208)" {
+  let r = ray(point(0, 0, -5), vector(0, 0, 1))
+  let shape = glass_sphere()..set_transform(translation(0, 0, 1))
+  let i = intersection(5, shape)
+  let xs = intersections([i])
+  let comps = i.prepare_computations(r, xs~)
+  assert_true!(comps.under_point.z > @lib.EPSILON / 2)
+  assert_true!(comps.point.z < comps.under_point.z)
+}
