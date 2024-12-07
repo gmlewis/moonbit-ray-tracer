@@ -6,6 +6,8 @@ pub(all) struct Material {
   mut specular : Double
   mut shininess : Double
   mut reflective : Double
+  mut transparency : Double
+  mut refractive_index : Double
   mut pattern : Pattern?
 } derive(Show, Eq)
 
@@ -17,8 +19,20 @@ pub fn material() -> Material {
   let specular = 0.9
   let shininess = 200.0
   let reflective = 0.0
+  let transparency = 0.0
+  let refractive_index = 1.0
   let pattern = None
-  { color, ambient, diffuse, specular, shininess, reflective, pattern }
+  {
+    color,
+    ambient,
+    diffuse,
+    specular,
+    shininess,
+    reflective,
+    transparency,
+    refractive_index,
+    pattern,
+  }
 }
 
 ///|

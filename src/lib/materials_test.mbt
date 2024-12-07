@@ -118,3 +118,9 @@ test "Reflectivity for the default material (p.196)" {
   let m = material()
   assert_eq!(m.reflective, 0)
 }
+
+test "Transparency and Refractive Index for the default material (p.204)" {
+  let m = material()
+  assert_eq!(m.transparency, 0)
+  assert_eq!(m.refractive_index, 1)
+}

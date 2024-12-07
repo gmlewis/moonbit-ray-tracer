@@ -75,7 +75,7 @@ pub fn color_at(
     None => return color(0, 0, 0)
     Some(hit) => hit
   }
-  let comps = hit.prepare_computations(ray)
+  let comps = hit.prepare_computations(ray, xs~)
   self.shade_hit(comps, remaining~)
 }
 

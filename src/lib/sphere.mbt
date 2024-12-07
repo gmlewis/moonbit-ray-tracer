@@ -11,6 +11,14 @@ pub fn sphere() -> Shape {
 }
 
 ///|
+pub fn glass_sphere() -> Shape {
+  let s = sphere()
+  s.material.transparency = 1
+  s.material.refractive_index = 1.5
+  s
+}
+
+///|
 pub fn op_equal(self : Sphere, other : Sphere) -> Bool {
   self == other
 }

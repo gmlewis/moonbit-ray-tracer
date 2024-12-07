@@ -117,3 +117,38 @@ test "Precomputing the reflection vector (p.196)" {
   let comps = i.prepare_computations(r)
   assert_eq!(comps.reflectv, vector(0, sq2, sq2))
 }
+
+test "Finding n1 and n2 at various intersections (p.205)" {
+  let a = glass_sphere()..set_transform(scaling(2, 2, 2))
+  a.material.refractive_index = 1.5
+  let b = glass_sphere()..set_transform(translation(0, 0, -0.25))
+  b.material.refractive_index = 2.0
+  let c = glass_sphere()..set_transform(translation(0, 0, 0.25))
+  c.material.refractive_index = 2.5
+  let r = ray(point(0, 0, -4), vector(0, 0, 1))
+  let xs = intersections(
+    [
+      intersection(2, a),
+      intersection(2.75, b),
+      intersection(3.25, c),
+      intersection(4.75, b),
+      intersection(5.25, c),
+      intersection(6, a),
+    ],
+  )
+
+  //
+  let tests = [
+    (0, 1.0, 1.5),
+    (1, 1.5, 2.0),
+    (2, 2.0, 2.5),
+    (3, 2.5, 2.5),
+    (4, 2.5, 1.5),
+    (5, 1.5, 1.0),
+  ]
+  for tt in tests {
+    let comps = xs[tt.0].prepare_computations(r, xs~)
+    assert_eq!(comps.n1, tt.1)
+    assert_eq!(comps.n2, tt.2)
+  }
+}

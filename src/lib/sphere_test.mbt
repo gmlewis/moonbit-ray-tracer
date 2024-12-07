@@ -1,4 +1,7 @@
 ///|
+let glass_sphere = @lib.glass_sphere
+
+///|
 let sphere = @lib.sphere
 
 test "A ray intersects a sphere at two points (p.94)" {
@@ -134,4 +137,11 @@ test "A sphere may be assigned a material (p.125)" {
   m.ambient = 1
   s.material = m
   assert_eq!(s.material, m)
+}
+
+test "A helper for producing a sphere with a glassy material (p.204)" {
+  let s = glass_sphere()
+  assert_eq!(s.transform, mat4ident())
+  assert_eq!(s.material.transparency, 1)
+  assert_eq!(s.material.refractive_index, 1.5)
 }

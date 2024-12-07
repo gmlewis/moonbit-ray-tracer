@@ -74,10 +74,17 @@ pub(all) struct Computations {
   reflectv : Tuple
   inside : Bool
   over_point : Tuple
+  under_point : Tuple
+  n1 : Double // entering index of refraction
+  n2 : Double // leaving index of refraction
 }
 
 ///|
-pub fn prepare_computations(self : Intersection, ray : Ray) -> Computations {
+pub fn prepare_computations(
+  self : Intersection,
+  ray : Ray,
+  xs~ : Intersections = intersections([self])
+) -> Computations {
   let t = self.t
   let shape = self.shape
   let point = ray.position(t)
@@ -87,7 +94,61 @@ pub fn prepare_computations(self : Intersection, ray : Ray) -> Computations {
   if inside {
     normalv = -normalv
   }
-  let over_point = point + normalv.mul_scalar(EPSILON)
+  let delta = normalv.mul_scalar(EPSILON)
+  let over_point = point + delta
+  let under_point = point - delta
   let reflectv = ray.direction.reflect(normalv)
-  { t, shape, point, eyev, normalv, reflectv, inside, over_point }
+
+  // calculate indexices of refraction
+  let mut n1 = 1.0
+  let mut n2 = 1.0
+  let containers : Array[Shape] = []
+  let index_of = fn(s) {
+    for index, shape in containers {
+      if s == shape {
+        return index
+      }
+    }
+    return -1
+  }
+
+  //
+  for i in xs.xs {
+    if i == self {
+      if containers.length() == 0 {
+        n1 = 1.0
+      } else {
+        n1 = containers[containers.length() - 1].material.refractive_index
+      }
+    }
+    let index = index_of(i.shape)
+    if index >= 0 {
+      ignore(containers.remove(index))
+    } else {
+      containers.push(i.shape)
+    }
+    if i == self {
+      if containers.length() == 0 {
+        n2 = 1.0
+      } else {
+        n2 = containers[containers.length() - 1].material.refractive_index
+      }
+      break
+    }
+  }
+
+  //
+  {
+    t,
+    shape,
+    point,
+    eyev,
+    normalv,
+    reflectv,
+    inside,
+    over_point,
+    under_point,
+    n1,
+    n2,
+  }
 }
