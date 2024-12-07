@@ -239,3 +239,21 @@ test "The refracted color with a refracted ray (p.212)" {
   let c = w.refracted_color(comps, 5)
   assert_eq!(c, color(0, 0.99888, 0.04722))
 }
+
+test "shade_hit() with a transparent material (p.213)" {
+  let w = default_world()
+  let floor = plane()..set_transform(translation(0, -1, 0))
+  floor.material.transparency = 0.5
+  floor.material.refractive_index = 1.5
+  w.shapes.push(floor)
+  let ball = sphere()..set_transform(translation(0, -3.5, -0.5))
+  ball.material.color = color(1, 0, 0)
+  ball.material.ambient = 0.5
+  w.shapes.push(ball)
+  let sq2 = 2.0.sqrt() / 2
+  let r = ray(point(0, 0, -3), vector(0, -sq2, sq2))
+  let xs = intersections([intersection(2.0.sqrt(), floor)])
+  let comps = xs[0].prepare_computations(r, xs~)
+  let c = w.shade_hit(comps, remaining=5)
+  assert_eq!(c, color(0.93642, 0.68642, 0.68642))
+}

@@ -57,9 +57,10 @@ pub fn shade_hit(
       shape=Some(comps.shape),
     )
     let reflected = self.reflected_color(comps, remaining)
-    red += c.red + reflected.red
-    green += c.green + reflected.green
-    blue += c.blue + reflected.blue
+    let refracted_color = self.refracted_color(comps, remaining)
+    red += c.red + reflected.red + refracted_color.red
+    green += c.green + reflected.green + refracted_color.green
+    blue += c.blue + reflected.blue + refracted_color.blue
   }
   color(red, green, blue)
 }
