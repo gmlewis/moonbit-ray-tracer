@@ -115,3 +115,40 @@ test "shade_hit() is given an intersection in shadow (p.160)" {
   let c = w.shade_hit(comps)
   assert_eq!(c, color(0.1, 0.1, 0.1))
 }
+
+test "The reflected color for a non-reflective material (p.197)" {
+  let w = default_world()
+  let r = ray(point(0, 0, 0), vector(0, 0, 1))
+  let shape = w.shapes[1]
+  shape.material.ambient = 1
+  let i = intersection(1, shape)
+  let comps = i.prepare_computations(r)
+  let color = w.reflected_color(comps)
+  assert_eq!(color, black)
+}
+
+test "The reflected color for a reflective material (p.197)" {
+  let w = default_world()
+  let shape = plane()..set_transform(translation(0, -1, 0))
+  shape.material.reflective = 0.5
+  w.shapes.push(shape)
+  let sq2 = 2.0.sqrt() / 2
+  let r = ray(point(0, 0, -3), vector(0, -sq2, sq2))
+  let i = intersection(2.0.sqrt(), shape)
+  let comps = i.prepare_computations(r)
+  let c = w.reflected_color(comps)
+  assert_eq!(c, color(0.19033, 0.23792, 0.14275))
+}
+
+test "shade_hit() with a reflective material (p.198)" {
+  let w = default_world()
+  let shape = plane()..set_transform(translation(0, -1, 0))
+  shape.material.reflective = 0.5
+  w.shapes.push(shape)
+  let sq2 = 2.0.sqrt() / 2
+  let r = ray(point(0, 0, -3), vector(0, -sq2, sq2))
+  let i = intersection(2.0.sqrt(), shape)
+  let comps = i.prepare_computations(r)
+  let c = w.shade_hit(comps)
+  assert_eq!(c, color(0.87676, 0.92434, 0.82917))
+}

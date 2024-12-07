@@ -71,6 +71,7 @@ pub(all) struct Computations {
   point : Tuple
   eyev : Tuple
   normalv : Tuple
+  reflectv : Tuple
   inside : Bool
   over_point : Tuple
 }
@@ -87,5 +88,6 @@ pub fn prepare_computations(self : Intersection, ray : Ray) -> Computations {
     normalv = -normalv
   }
   let over_point = point + normalv.mul_scalar(EPSILON)
-  { t, shape, point, eyev, normalv, inside, over_point }
+  let reflectv = ray.direction.reflect(normalv)
+  { t, shape, point, eyev, normalv, reflectv, inside, over_point }
 }

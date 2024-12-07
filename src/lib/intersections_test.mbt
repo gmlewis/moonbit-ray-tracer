@@ -108,3 +108,12 @@ test "The hit should offset the point (p.161)" {
   assert_true!(comps.over_point.z < -@lib.EPSILON / 2)
   assert_true!(comps.point.z > comps.over_point.z)
 }
+
+test "Precomputing the reflection vector (p.196)" {
+  let shape = plane()
+  let sq2 = 2.0.sqrt() / 2
+  let r = ray(point(0, 1, -1), vector(0, -sq2, sq2))
+  let i = intersection(sq2, shape)
+  let comps = i.prepare_computations(r)
+  assert_eq!(comps.reflectv, vector(0, sq2, sq2))
+}

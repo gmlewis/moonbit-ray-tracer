@@ -113,3 +113,8 @@ test "Stripes with both an object and a pattern transformation (p.179)" {
   let c = pattern.pattern_at_shape(shape, point(2.5, 0, 0))
   assert_eq!(c, white)
 }
+
+test "Reflectivity for the default material (p.196)" {
+  let m = material()
+  assert_eq!(m.reflective, 0)
+}

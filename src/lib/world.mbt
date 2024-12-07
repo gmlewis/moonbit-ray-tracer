@@ -49,9 +49,10 @@ pub fn shade_hit(self : World, comps : Computations) -> Color {
       in_shadow~,
       shape=Some(comps.shape),
     )
-    red += c.red
-    green += c.green
-    blue += c.blue
+    let reflected = self.reflected_color(comps)
+    red += c.red + reflected.red
+    green += c.green + reflected.green
+    blue += c.blue + reflected.blue
   }
   color(red, green, blue)
 }
@@ -83,4 +84,16 @@ pub fn is_shadowed(
     Some(hit) => hit.t < distance
     _ => false
   }
+}
+
+///|
+pub fn reflected_color(self : World, comps : Computations) -> Color {
+  let reflective = comps.shape.material.reflective
+  if reflective == 0 {
+    return color(0, 0, 0)
+  }
+
+  //
+  let reflect_ray = ray(comps.over_point, comps.reflectv)
+  self.color_at(reflect_ray).mul_scalar(reflective)
 }
