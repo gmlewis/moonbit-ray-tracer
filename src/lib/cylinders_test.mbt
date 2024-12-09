@@ -71,3 +71,26 @@ test "Intersecting a constrained cylinder (p.240)" {
     assert_eq!(xs.count, tt.2)
   }
 }
+
+// MoonBit has no reflection.
+// test "The default closed value for a cylinder (p.243)" {
+//   let cyl = @lib.cylinder()
+//   assert_false!(cyl.closed)
+// }
+
+test "Intersecting the caps of a closed cylinder (p.243)" {
+  let cyl = @lib.cylinder(minimum=1, maximum=2, closed=true)
+  let tests = [
+    (point(0, 3, 0), vector(0, -1, 0), 2),
+    (point(0, 3, -2), vector(0, -1, 2), 2),
+    (point(0, 4, -2), vector(0, -1, 1), 2),
+    (point(0, 0, -2), vector(0, 1, 2), 2),
+    (point(0, -1, -2), vector(0, 1, 1), 2),
+  ]
+  for tt in tests {
+    let direction = tt.1.normalize()
+    let r = ray(tt.0, direction)
+    let xs = cyl.local_intersect(r)
+    assert_eq!(xs.count, tt.2)
+  }
+}
