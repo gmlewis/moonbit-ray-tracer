@@ -37,7 +37,7 @@ pub fn output(self : Cylinder, logger : Logger) -> Unit {
 // checks to see if the intersection at `t` is within a radius
 // of 1 (the radius of the cylinders) from the y axis.
 ///|
-fn check_cap(ray : Ray, t : Double) -> Bool {
+fn check_cylinder_cap(ray : Ray, t : Double) -> Bool {
   let x = ray.origin.x + t * ray.direction.x
   let z = ray.origin.z + t * ray.direction.z
   x * x + z * z <= 1
@@ -53,13 +53,13 @@ fn intersect_caps(self : Cylinder, ray : Ray, xs : Array[Double]) -> Unit {
   // check for an intersection with the lower end cap by intersecting
   // the ray with the plane at y=cyl.minimum
   let t = (self.minimum - ray.origin.y) / ray.direction.y
-  if check_cap(ray, t) {
+  if check_cylinder_cap(ray, t) {
     xs.push(t)
   }
   // check for an intersection with the upper end cap by intersecting
   // the ray with the plane at y=cyl.maximum
   let t = (self.maximum - ray.origin.y) / ray.direction.y
-  if check_cap(ray, t) {
+  if check_cylinder_cap(ray, t) {
     xs.push(t)
   }
 }
