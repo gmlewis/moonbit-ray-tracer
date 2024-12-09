@@ -114,3 +114,10 @@ pub fn local_normal_at(self : Cylinder, local_point : Tuple) -> Tuple {
   }
   vector(local_point.x, 0, local_point.z)
 }
+
+///|
+pub fn Cylinder::bounds(_self : Cylinder) -> Bounds {
+  let min = point(-1, -1, -1)
+  let max = point(1, 1, 1)
+  { min, max }
+}

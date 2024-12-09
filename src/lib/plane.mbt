@@ -38,3 +38,10 @@ pub fn Plane::local_intersect(_self : Plane, ray : Ray) -> Array[Double] {
 pub fn Plane::local_normal_at(_self : Plane, _local_point : Tuple) -> Tuple {
   vector(0, 1, 0)
 }
+
+///|
+pub fn Plane::bounds(_self : Plane) -> Bounds {
+  let min = point(@double.neg_infinity, 0, @double.neg_infinity)
+  let max = point(@double.infinity, 0, @double.infinity)
+  { min, max }
+}

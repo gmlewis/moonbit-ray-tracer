@@ -69,3 +69,10 @@ pub fn Cube::local_normal_at(_self : Cube, local_point : Tuple) -> Tuple {
     vector(0, 0, local_point.z)
   }
 }
+
+///|
+pub fn Cube::bounds(_self : Cube) -> Bounds {
+  let min = point(-1, -1, -1)
+  let max = point(1, 1, 1)
+  { min, max }
+}

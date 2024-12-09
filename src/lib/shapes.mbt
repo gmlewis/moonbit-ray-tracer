@@ -2,6 +2,7 @@
 pub(open) trait Object {
   local_intersect(Self, Ray) -> Array[Double] // Intersections
   local_normal_at(Self, Tuple) -> Tuple
+  bounds(Self) -> Bounds
   // https://github.com/moonbitlang/core/issues/1304
   output(Self, Logger) -> Unit
   to_string(Self) -> String

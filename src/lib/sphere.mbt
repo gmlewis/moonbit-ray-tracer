@@ -55,3 +55,10 @@ pub fn Sphere::local_intersect(_self : Sphere, ray : Ray) -> Array[Double] {
 pub fn Sphere::local_normal_at(_self : Sphere, local_point : Tuple) -> Tuple {
   local_point - point(0, 0, 0)
 }
+
+///|
+pub fn Sphere::bounds(_self : Sphere) -> Bounds {
+  let min = point(-1, -1, -1)
+  let max = point(1, 1, 1)
+  { min, max }
+}
