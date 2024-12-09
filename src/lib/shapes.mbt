@@ -121,3 +121,14 @@ pub fn world_to_object(self : Shape, point : Tuple) -> Tuple {
     _ => self.inv_transform.mul_tuple(point)
   }
 }
+
+///|
+pub fn normal_to_world(self : Shape, normal : Tuple) -> Tuple {
+  let normal = self.inv_transform.transpose().mul_tuple(normal)
+  normal.w = 0
+  let normal = normal.normalize()
+  match self.parent {
+    Some(parent) => parent.normal_to_world(normal)
+    _ => normal
+  }
+}

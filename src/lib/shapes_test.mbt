@@ -114,3 +114,12 @@ test "Converting a point from world to object space (p.256)" {
   let p = s.world_to_object(point(-2, 0, -10))
   assert_eq!(p, point(0, 0, -1))
 }
+
+test "Converting a normal from object to world space (p.257)" {
+  let s = sphere()..set_transform(translation(5, 0, 0))
+  let g2 = @lib.group()..set_transform(scaling(1, 2, 3))..add_child(s)
+  @lib.group()..set_transform(rotation_y(@math.PI / 2)).add_child(g2)
+  let sq3 = 3.0.sqrt() / 3
+  let n = s.normal_to_world(vector(sq3, sq3, sq3))
+  assert_eq!(n, vector(0.28571, 0.42857, -0.85714))
+}
