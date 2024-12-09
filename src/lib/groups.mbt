@@ -19,16 +19,20 @@ pub fn output(self : Group, logger : Logger) -> Unit {
 }
 
 ///|
-pub fn local_intersect(self : Group, ray : Ray) -> Array[Double] {
+pub fn local_intersect(
+  self : Group,
+  group_shape : Shape,
+  ray : Ray
+) -> Intersections {
   if self.children.length() == 0 {
-    return []
+    return Intersections::from_ts([], group_shape)
   }
   let xs = []
   for child in self.children {
-    let child_xs = child.intersect(ray)
-    xs.append(child_xs.to_ts())
+    let ts = child.intersect(ray)
+    xs.append(ts.xs)
   }
-  xs
+  intersections(xs)
 }
 
 ///|

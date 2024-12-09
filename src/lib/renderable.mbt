@@ -21,7 +21,7 @@ pub fn output(self : Renderable, logger : Logger) -> Unit {
 pub fn local_intersect(self : Renderable, ray : Ray) -> Array[Double] {
   match self {
     Object(object) => object.local_intersect(ray)
-    Group(group) => group.local_intersect(ray)
+    _ => [] // Group is handled by Shape::local_intersect
   }
 }
 

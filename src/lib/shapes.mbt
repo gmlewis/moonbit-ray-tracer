@@ -69,8 +69,13 @@ pub fn intersect(self : Shape, ray : Ray) -> Intersections {
 
 ///|
 pub fn local_intersect(self : Shape, local_ray : Ray) -> Intersections {
-  let ts = self.object.local_intersect(local_ray)
-  intersections(ts.map(fn(t) { intersection(t, self) }))
+  match self.object {
+    Object(object) => {
+      let ts = object.local_intersect(local_ray)
+      intersections(ts.map(fn(t) { intersection(t, self) }))
+    }
+    Group(group) => group.local_intersect(self, local_ray)
+  }
 }
 
 ///|
