@@ -110,3 +110,14 @@ pub fn add_child(self : Shape, child : Shape) -> Unit {
     Object(_) => ()
   }
 }
+
+///|
+pub fn world_to_object(self : Shape, point : Tuple) -> Tuple {
+  match self.parent {
+    Some(parent) => {
+      let point = parent.world_to_object(point)
+      self.inv_transform.mul_tuple(point)
+    }
+    _ => self.inv_transform.mul_tuple(point)
+  }
+}

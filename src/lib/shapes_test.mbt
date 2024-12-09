@@ -106,3 +106,11 @@ test "A shape has a parent attribute (p.253)" {
   let s = test_shape()
   assert_eq!(s.parent, None)
 }
+
+test "Converting a point from world to object space (p.256)" {
+  let s = sphere()..set_transform(translation(5, 0, 0))
+  let g2 = @lib.group()..set_transform(scaling(2, 2, 2))..add_child(s)
+  @lib.group()..set_transform(rotation_y(@math.PI / 2)).add_child(g2)
+  let p = s.world_to_object(point(-2, 0, -10))
+  assert_eq!(p, point(0, 0, -1))
+}
