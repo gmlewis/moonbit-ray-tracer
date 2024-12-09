@@ -7,7 +7,7 @@ let _Sphere : Object = Sphere::{  }
 ///|
 pub fn sphere() -> Shape {
   let sphere = Sphere::{  }
-  Shape::new(sphere)
+  Shape::new_object(sphere)
 }
 
 ///|

@@ -36,7 +36,7 @@ fn output(self : TestShape, logger : Logger) -> Unit {
 ///|
 fn test_shape() -> Shape {
   let saved_ray = ray(point(0, 0, 0), vector(0, 1, 0)) // initial value unimportant
-  Shape::new(TestShape::{ saved_ray, })
+  Shape::new_object(TestShape::{ saved_ray, })
 }
 
 test "The default transformation (p.165)" {
@@ -100,4 +100,9 @@ test "Computing the normal on a transformed shape (p.168)" {
   let sq2 = 2.0.sqrt() / 2
   let n = s.normal_at(point(0, sq2, -sq2))
   assert_eq!(n, vector(0, 0.97014, -0.24254))
+}
+
+test "A shape has a parent attribute (p.253)" {
+  let s = test_shape()
+  assert_eq!(s.parent, None)
 }

@@ -15,7 +15,7 @@ pub fn cone(
   closed~ : Bool = false
 ) -> Shape {
   let cone = Cone::{ minimum, maximum, closed }
-  Shape::new(cone)
+  Shape::new_object(cone)
 }
 
 ///|

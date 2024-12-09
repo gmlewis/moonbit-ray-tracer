@@ -1,23 +1,22 @@
 ///|
 pub(open) trait Object {
-  local_intersect(Self, Ray) -> Array[Double]
+  local_intersect(Self, Ray) -> Array[Double] // Intersections
   local_normal_at(Self, Tuple) -> Tuple
   // https://github.com/moonbitlang/core/issues/1304
   output(Self, Logger) -> Unit
   to_string(Self) -> String
 }
-
-///|
 // pub impl Eq for Object with op_equal(self, other) { self == other }
 
 ///|
 pub(all) struct Shape {
-  object : Object
+  object : Renderable
   mut material : Material
   // Do not modify transform or inv_transform directly.
   // Instead, use `set_transform`.
   mut transform : Matrix
   mut inv_transform : Matrix
+  mut parent : Shape?
 }
 
 ///|
@@ -38,11 +37,22 @@ pub fn op_equal(self : Shape, other : Shape) -> Bool {
 }
 
 ///|
-pub fn Shape::new(object : Object) -> Shape {
+pub fn Shape::new_object(object : Object) -> Shape {
+  Shape::new(Object(object))
+}
+
+///|
+pub fn Shape::new_group(group : Group) -> Shape {
+  Shape::new(Group(group))
+}
+
+///|
+pub fn Shape::new(object : Renderable) -> Shape {
   let material = material()
   let transform = mat4ident()
   let inv_transform = mat4ident()
-  { object, material, transform, inv_transform }
+  let parent = None
+  { object, material, transform, inv_transform, parent }
 }
 
 ///|
@@ -75,4 +85,23 @@ pub fn normal_at(self : Shape, point : Tuple) -> Tuple {
 ///|
 pub fn local_normal_at(self : Shape, local_point : Tuple) -> Tuple {
   self.object.local_normal_at(local_point)
+}
+
+///|
+pub fn children(self : Shape) -> Array[Shape] {
+  match self.object {
+    Object(_) => []
+    Group(group) => group.children
+  }
+}
+
+///|
+pub fn add_child(self : Shape, child : Shape) -> Unit {
+  match self.object {
+    Group(group) => {
+      group.children.push(child)
+      child.parent = Some(self)
+    }
+    Object(_) => ()
+  }
 }

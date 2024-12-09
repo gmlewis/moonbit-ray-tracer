@@ -7,7 +7,7 @@ let _Cube : Object = Cube::{  }
 ///|
 pub fn cube() -> Shape {
   let cube = Cube::{  }
-  Shape::new(cube)
+  Shape::new_object(cube)
 }
 
 ///|

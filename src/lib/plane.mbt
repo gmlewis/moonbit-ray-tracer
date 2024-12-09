@@ -7,7 +7,7 @@ let _Plane : Object = Plane::{  }
 ///|
 pub fn plane() -> Shape {
   let plane = Plane::{  }
-  Shape::new(plane)
+  Shape::new_object(plane)
 }
 
 ///|

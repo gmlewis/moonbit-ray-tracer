@@ -41,6 +41,11 @@ pub fn Intersections::from_ts(
 }
 
 ///|
+pub fn to_ts(self : Intersections) -> Array[Double] {
+  self.xs.map(fn(i) { i.t })
+}
+
+///|
 pub fn intersections(xs : Array[Intersection]) -> Intersections {
   let count = xs.length()
   if xs.length() > 1 {

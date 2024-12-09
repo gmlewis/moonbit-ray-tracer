@@ -15,7 +15,7 @@ pub fn cylinder(
   closed~ : Bool = false
 ) -> Shape {
   let cylinder = Cylinder::{ minimum, maximum, closed }
-  Shape::new(cylinder)
+  Shape::new_object(cylinder)
 }
 
 ///|
