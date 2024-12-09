@@ -9,7 +9,7 @@ pub fn group() -> Shape {
 }
 
 ///|
-pub fn to_string(self : Group) -> String {
+pub fn Group::to_string(_self : Group) -> String {
   "group()"
 }
 
@@ -36,6 +36,6 @@ pub fn local_intersect(
 }
 
 ///|
-pub fn local_normal_at(self : Group, point : Tuple) -> Tuple {
-  ...
+pub fn Group::local_normal_at(_self : Group, _point : Tuple) -> Tuple {
+  vector(0, 0, 0) // should not happen.
 }
