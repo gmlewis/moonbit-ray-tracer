@@ -123,3 +123,11 @@ test "Converting a normal from object to world space (p.257)" {
   let n = s.normal_to_world(vector(sq3, sq3, sq3))
   assert_eq!(n, vector(0.28571, 0.42857, -0.85714))
 }
+
+test "Finding the normal on a child object (p.258)" {
+  let s = sphere()..set_transform(translation(5, 0, 0))
+  let g2 = @lib.group()..set_transform(scaling(1, 2, 3))..add_child(s)
+  @lib.group()..set_transform(rotation_y(@math.PI / 2)).add_child(g2)
+  let n = s.normal_at(point(1.7321, 1.1547, -5.5774))
+  assert_eq!(n, vector(0.2857, 0.42854, -0.85716))
+}

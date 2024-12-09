@@ -79,12 +79,10 @@ pub fn local_intersect(self : Shape, local_ray : Ray) -> Intersections {
 }
 
 ///|
-pub fn normal_at(self : Shape, point : Tuple) -> Tuple {
-  let local_point = self.inv_transform.mul_tuple(point)
+pub fn normal_at(self : Shape, world_point : Tuple) -> Tuple {
+  let local_point = self.world_to_object(world_point)
   let local_normal = self.object.local_normal_at(local_point)
-  let world_normal = self.inv_transform.transpose().mul_tuple(local_normal)
-  world_normal.w = 0
-  world_normal.normalize()
+  self.normal_to_world(local_normal)
 }
 
 ///|
