@@ -94,3 +94,19 @@ test "Intersecting the caps of a closed cylinder (p.243)" {
     assert_eq!(xs.count, tt.2)
   }
 }
+
+test "The normal vector on a cylinder's end caps (p.245)" {
+  let cyl = @lib.cylinder(minimum=1, maximum=2, closed=true)
+  let tests = [
+    (point(0, 1, 0), vector(0, -1, 0)),
+    (point(0.5, 1, 0), vector(0, -1, 0)),
+    (point(0, 1, 0.5), vector(0, -1, 0)),
+    (point(0, 2, 0), vector(0, 1, 0)),
+    (point(0.5, 2, 0), vector(0, 1, 0)),
+    (point(0, 2, 0.5), vector(0, 1, 0)),
+  ]
+  for tt in tests {
+    let n = cyl.local_normal_at(tt.0)
+    assert_eq!(n, tt.1)
+  }
+}

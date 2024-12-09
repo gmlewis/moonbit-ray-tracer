@@ -104,9 +104,13 @@ pub fn local_intersect(self : Cylinder, ray : Ray) -> Array[Double] {
 }
 
 ///|
-pub fn Cylinder::local_normal_at(
-  _self : Cylinder,
-  local_point : Tuple
-) -> Tuple {
+pub fn local_normal_at(self : Cylinder, local_point : Tuple) -> Tuple {
+  let dist = local_point.x * local_point.x + local_point.z * local_point.z
+  if dist < 1 && local_point.y >= self.maximum - EPSILON {
+    return vector(0, 1, 0)
+  }
+  if dist < 1 && local_point.y <= self.minimum + EPSILON {
+    return vector(0, -1, 0)
+  }
   vector(local_point.x, 0, local_point.z)
 }
