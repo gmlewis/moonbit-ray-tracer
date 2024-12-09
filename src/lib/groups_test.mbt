@@ -34,3 +34,11 @@ test "Intersecting a ray with a non-empty group (p.254)" {
   assert_eq!(xs[2].shape, s1)
   assert_eq!(xs[3].shape, s1)
 }
+
+test "Intersecting a transformed group (p.255)" {
+  let s = sphere()..set_transform(translation(5, 0, 0))
+  let g = @lib.group()..set_transform(scaling(2, 2, 2))..add_child(s)
+  let r = ray(point(10, 0, -10), vector(0, 0, 1))
+  let xs = g.intersect(r)
+  assert_eq!(xs.count, 2)
+}
