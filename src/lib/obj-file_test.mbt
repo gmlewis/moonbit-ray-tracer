@@ -94,3 +94,31 @@ test "Triangles in named groups in an OBJ file (p.275)" {
   assert_eq!(t2.p2, parser.vertices[3])
   assert_eq!(t2.p3, parser.vertices[4])
 }
+
+test "Converting an OBJ file to a group (p.277)" {
+  let file =
+    #|v -1 1 0
+    #|v -1 0 0
+    #|v 1 0 0
+    #|v 1 1 0
+    #|
+    #|g FirstGroup
+    #|f 1 2 3
+    #|g SecondGroup
+    #|f 1 3 4
+  let parser = parse_obj_file!(file)
+  let g = parser.obj_to_group()
+  assert_eq!(g.children().length(), 2)
+  let g1 = g.children()[0]
+  assert_eq!(g1.children().length(), 1)
+  let g2 = g.children()[1]
+  assert_eq!(g2.children().length(), 1)
+  guard let Triangle(t1) = g1.children()[0].object
+  guard let Triangle(t2) = g2.children()[0].object
+  assert_eq!(t1.p1, parser.vertices[1])
+  assert_eq!(t1.p2, parser.vertices[2])
+  assert_eq!(t1.p3, parser.vertices[3])
+  assert_eq!(t2.p1, parser.vertices[1])
+  assert_eq!(t2.p2, parser.vertices[3])
+  assert_eq!(t2.p3, parser.vertices[4])
+}

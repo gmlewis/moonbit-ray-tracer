@@ -53,7 +53,7 @@ pub fn parse_obj_file(buf : String) -> ObjFile!ParserError {
         "add_triangle_faces expected at least 3 strings, got \{args.length()}",
       )
     }
-
+    // TODO...
   }
 
   //
@@ -108,4 +108,16 @@ fn parse_args(
     }
   }
   double_fn!(doubles)
+}
+
+///|
+pub fn obj_to_group(self : ObjFile) -> Shape {
+  let g = group()
+  for child in self.default_group.children() {
+    g.add_child(child)
+  }
+  for child in self.named_groups {
+    g.add_child(child.1)
+  }
+  g
 }
