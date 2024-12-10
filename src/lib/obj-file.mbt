@@ -53,7 +53,12 @@ pub fn parse_obj_file(buf : String) -> ObjFile!ParserError {
         "add_triangle_faces expected at least 3 strings, got \{args.length()}",
       )
     }
-    // TODO...
+    let (p1, n1) = parse_indices!(args[0])
+    for i in 2..<args.length() {
+      let (p2, n2) = parse_indices!(args[i - 1])
+      let (p3, n3) = parse_indices!(args[i])
+      last_group.add_child(triangle(vertices[p1], vertices[p2], vertices[p3]))
+    }
   }
 
   //
@@ -84,6 +89,23 @@ pub fn parse_obj_file(buf : String) -> ObjFile!ParserError {
 
   //
   { default_group, ignored_lines, vertices, normals, named_groups }
+}
+
+///|
+fn parse_indices(s : String) -> (Int, Int)!ParserError {
+  let mut p = 0
+  let mut n = 0
+  let get_vert_and_normal_indices = fn(
+    args : Array[Double]
+  ) -> Unit!ParserError {
+    guard args.length() == 3 else {
+      raise ParserError("parse_indices expected 3 ints, got \{args.length()}")
+    }
+    p = args[0].to_int()
+    n = args[2].to_int()
+  }
+  parse_args!(s, "/", get_vert_and_normal_indices)
+  (p, n)
 }
 
 ///|
