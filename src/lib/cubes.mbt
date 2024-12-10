@@ -27,9 +27,9 @@ pub fn output(self : Cube, logger : Logger) -> Unit {
 
 ///|
 pub fn Cube::local_intersect(_self : Cube, ray : Ray) -> Array[Double] {
-  let (xtmin, xtmax) = check_axis(ray.origin.x, ray.direction.x)
-  let (ytmin, ytmax) = check_axis(ray.origin.y, ray.direction.y)
-  let (ztmin, ztmax) = check_axis(ray.origin.z, ray.direction.z)
+  let (xtmin, xtmax) = check_axis(ray.origin.x, ray.direction.x, -1, 1)
+  let (ytmin, ytmax) = check_axis(ray.origin.y, ray.direction.y, -1, 1)
+  let (ztmin, ztmax) = check_axis(ray.origin.z, ray.direction.z, -1, 1)
 
   //
   let tmin = @math.maximum(@math.maximum(xtmin, ytmin), ztmin)
@@ -43,9 +43,14 @@ pub fn Cube::local_intersect(_self : Cube, ray : Ray) -> Array[Double] {
 }
 
 ///|
-fn check_axis(origin : Double, direction : Double) -> (Double, Double) {
-  let tmin_numerator = -1.0 - origin
-  let tmax_numerator = 1.0 - origin
+fn check_axis(
+  origin : Double,
+  direction : Double,
+  min : Double,
+  max : Double
+) -> (Double, Double) {
+  let tmin_numerator = min - origin
+  let tmax_numerator = max - origin
   let tmin = tmin_numerator / direction // div-by-zero = +/- infinity
   let tmax = tmax_numerator / direction
   if tmin > tmax {

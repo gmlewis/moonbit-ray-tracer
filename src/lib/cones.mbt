@@ -19,6 +19,13 @@ pub fn cone(
 }
 
 ///|
+pub fn bounds(self : Cone) -> Bounds {
+  let min = point(self.minimum, self.minimum, self.minimum)
+  let max = point(self.maximum, self.maximum, self.maximum)
+  { min, max }
+}
+
+///|
 pub fn op_equal(self : Cone, other : Cone) -> Bool {
   self == other
 }

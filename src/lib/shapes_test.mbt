@@ -13,6 +13,11 @@ struct TestShape {
 } derive(Show, Eq)
 
 ///|
+fn TestShape::bounds(_self : TestShape) -> @lib.Bounds {
+  @lib.Bounds::new()
+}
+
+///|
 fn local_intersect(self : TestShape, ray : Ray) -> Array[Double] {
   self.saved_ray = ray
   []

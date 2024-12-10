@@ -116,8 +116,8 @@ pub fn local_normal_at(self : Cylinder, local_point : Tuple) -> Tuple {
 }
 
 ///|
-pub fn Cylinder::bounds(_self : Cylinder) -> Bounds {
-  let min = point(-1, -1, -1)
-  let max = point(1, 1, 1)
+pub fn bounds(self : Cylinder) -> Bounds {
+  let min = point(-1, self.minimum, -1)
+  let max = point(1, self.maximum, 1)
   { min, max }
 }

@@ -18,6 +18,21 @@ pub(all) struct Shape {
   mut transform : Matrix
   mut inv_transform : Matrix
   mut parent : Shape?
+  mut bounds : Bounds?
+}
+
+///|
+pub fn bounds(self : Shape) -> Bounds {
+  match self.bounds {
+    Some(bounds) => return bounds
+    _ => ()
+  }
+  let bounds = match self.object {
+    Object(object) => object.bounds().transform(self.transform)
+    Group(group) => group.bounds().transform(self.transform)
+  }
+  self.bounds = Some(bounds)
+  bounds
 }
 
 ///|
@@ -53,7 +68,8 @@ pub fn Shape::new(object : Renderable) -> Shape {
   let transform = mat4ident()
   let inv_transform = mat4ident()
   let parent = None
-  { object, material, transform, inv_transform, parent }
+  let bounds = None
+  { object, material, transform, inv_transform, parent, bounds }
 }
 
 ///|
@@ -75,7 +91,14 @@ pub fn local_intersect(self : Shape, local_ray : Ray) -> Intersections {
       let ts = object.local_intersect(local_ray)
       intersections(ts.map(fn(t) { intersection(t, self) }))
     }
-    Group(group) => group.local_intersect(self, local_ray)
+    Group(group) => {
+      let bounds = group.bounds()
+      let xs = bounds.local_intersect(local_ray, self)
+      if xs.count == 0 {
+        return xs
+      }
+      group.local_intersect(self, local_ray)
+    }
   }
 }
 
