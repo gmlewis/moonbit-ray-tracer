@@ -70,3 +70,27 @@ test "Triangulating polygons in an OBJ file (p.274)" {
   assert_eq!(t3.p2, parser.vertices[4])
   assert_eq!(t3.p3, parser.vertices[5])
 }
+
+test "Triangles in named groups in an OBJ file (p.275)" {
+  let file =
+    #|v -1 1 0
+    #|v -1 0 0
+    #|v 1 0 0
+    #|v 1 1 0
+    #|
+    #|g FirstGroup
+    #|f 1 2 3
+    #|g SecondGroup
+    #|f 1 3 4
+  let parser = parse_obj_file!(file)
+  let g1 = parser.named_groups["FirstGroup"].unwrap()
+  let g2 = parser.named_groups["SecondGroup"].unwrap()
+  guard let Triangle(t1) = g1.children()[0].object
+  guard let Triangle(t2) = g2.children()[0].object
+  assert_eq!(t1.p1, parser.vertices[1])
+  assert_eq!(t1.p2, parser.vertices[2])
+  assert_eq!(t1.p3, parser.vertices[3])
+  assert_eq!(t2.p1, parser.vertices[1])
+  assert_eq!(t2.p2, parser.vertices[3])
+  assert_eq!(t2.p3, parser.vertices[4])
+}
