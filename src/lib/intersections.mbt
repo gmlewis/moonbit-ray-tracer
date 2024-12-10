@@ -110,7 +110,7 @@ pub fn prepare_computations(
   let shape = self.shape
   let point = ray.position(t)
   let eyev = -ray.direction
-  let mut normalv = shape.normal_at(point)
+  let mut normalv = shape.normal_at(point, hit=Some(self))
   let inside = normalv.dot(eyev) < 0
   if inside {
     normalv = -normalv

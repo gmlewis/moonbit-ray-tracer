@@ -57,7 +57,16 @@ pub fn parse_obj_file(buf : String) -> ObjFile!ParserError {
     for i in 2..<args.length() {
       let (p2, n2) = parse_indices!(args[i - 1])
       let (p3, n3) = parse_indices!(args[i])
-      last_group.add_child(triangle(vertices[p1], vertices[p2], vertices[p3]))
+      last_group.add_child(
+        smooth_triangle(
+          vertices[p1],
+          vertices[p2],
+          vertices[p3],
+          normals[n1],
+          normals[n2],
+          normals[n3],
+        ),
+      )
     }
   }
 

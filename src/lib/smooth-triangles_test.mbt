@@ -31,3 +31,11 @@ test "An intersection with a smooth triangle stores u/v (p.282)" {
   assert_true!((xs[0].u - 0.45).abs() < @lib.EPSILON)
   assert_true!((xs[0].v - 0.25).abs() < @lib.EPSILON)
 }
+
+test "A smooth triangle uses u/v to interpolate the normal (p.282)" {
+  let (p1, p2, p3, n1, n2, n3) = test_tuples()
+  let tri = smooth_triangle(p1, p2, p3, n1, n2, n3)
+  let i = @lib.intersection(1, tri, u=0.45, v=0.25)
+  let n = tri.normal_at(point(0, 0, 0), hit=Some(i))
+  assert_eq!(n, vector(-0.5547, 0.83205, 0))
+}

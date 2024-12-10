@@ -8,7 +8,6 @@ pub(all) struct SmoothTriangle {
   n3 : Tuple
   e1 : Tuple
   e2 : Tuple
-  normal : Tuple
   bounds : Bounds
 } derive(Show, Eq)
 
@@ -24,8 +23,7 @@ pub fn smooth_triangle(
   let bounds = Bounds::new()..update(p1)..update(p2)..update(p3)
   let e1 = p2 - p1
   let e2 = p3 - p1
-  let normal = e2.cross(e1).normalize()
-  Shape::new_smooth_triangle({ p1, p2, p3, n1, n2, n3, e1, e2, normal, bounds })
+  Shape::new_smooth_triangle({ p1, p2, p3, n1, n2, n3, e1, e2, bounds })
 }
 
 ///|
@@ -34,8 +32,14 @@ pub fn bounds(self : SmoothTriangle) -> Bounds {
 }
 
 ///|
-pub fn local_normal_at(self : SmoothTriangle, _point : Tuple) -> Tuple {
-  self.normal
+pub fn local_normal_at(
+  self : SmoothTriangle,
+  _point : Tuple,
+  hit : Intersection
+) -> Tuple {
+  self.n2.mul_scalar(hit.u) +
+  self.n3.mul_scalar(hit.v) +
+  self.n1.mul_scalar(1.0 - hit.u - hit.v)
 }
 
 ///|
