@@ -1,0 +1,26 @@
+///|
+let parse_obj_file = @lib.parse_obj_file
+
+test "Ignoring unrecognized lines in an OBJ file (p.272)" {
+  let gibberish =
+    #|There was a young lady named Bright
+    #|who traveled much faster than light.
+    #|She set out one day
+    #|in a relative way,
+    #|and came back the previous night.
+  let parser = parse_obj_file!(gibberish)
+  assert_eq!(parser.ignored_lines, 5)
+}
+
+test "Parse vertex records in an OBJ file (p.273)" {
+  let file =
+    #|v    -1    1   0
+    #|v -1.00000 0.50000 0.00000
+    #|v 1 0 0
+    #|v 1 1 0
+  let parser = parse_obj_file!(file)
+  assert_eq!(parser.vertices[1], point(-1, 1, 0))
+  assert_eq!(parser.vertices[2], point(-1, 0.5, 0))
+  assert_eq!(parser.vertices[3], point(1, 0, 0))
+  assert_eq!(parser.vertices[4], point(1, 1, 0))
+}
