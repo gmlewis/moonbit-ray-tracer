@@ -39,3 +39,13 @@ test "A smooth triangle uses u/v to interpolate the normal (p.282)" {
   let n = tri.normal_at(point(0, 0, 0), hit=Some(i))
   assert_eq!(n, vector(-0.5547, 0.83205, 0))
 }
+
+test "Preparing the normal on a smooth triangle (p.283)" {
+  let (p1, p2, p3, n1, n2, n3) = test_tuples()
+  let tri = smooth_triangle(p1, p2, p3, n1, n2, n3)
+  let i = @lib.intersection(1, tri, u=0.45, v=0.25)
+  let r = ray(point(-0.2, 0.3, -2), vector(0, 0, 1))
+  let xs = intersections([i])
+  let comps = i.prepare_computations(r, xs~)
+  assert_eq!(comps.normalv, vector(-0.5547, 0.83205, 0))
+}

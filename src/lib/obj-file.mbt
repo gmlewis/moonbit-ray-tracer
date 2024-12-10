@@ -108,7 +108,7 @@ fn parse_indices(s : String) -> (Int, Int)!ParserError {
     args : Array[Double]
   ) -> Unit!ParserError {
     guard args.length() == 3 else {
-      raise ParserError("parse_indices expected 3 ints, got \{args.length()}")
+      raise ParserError("parse_indices expected 3 ints, got \{s}")
     }
     p = args[0].to_int()
     n = args[2].to_int()
@@ -124,13 +124,15 @@ fn parse_args(
   double_fn : (Array[Double]) -> Unit!ParserError,
   string_fn~ : (Array[String]) -> Unit!ParserError = fn(_args) {  }
 ) -> Unit!ParserError {
-  let parts = s
-    .split(sep)
-    .map(fn(s) { s.trim_space() })
-    .filter(fn(s) { s != "" })
-    .collect()
+  let parts = s.split(sep).map(fn(s) { s.trim_space() }).collect()
   let doubles = Array::new(capacity=parts.length())
   for arg in parts {
+    if arg == "" {
+      if sep == "/" {
+        doubles.push(0.0) // missing arg defaults to 0 when parsing face information
+      }
+      continue
+    }
     try {
       let v = @strconv.parse_double!(arg)
       doubles.push(v)

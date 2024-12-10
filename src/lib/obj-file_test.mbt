@@ -122,3 +122,39 @@ test "Converting an OBJ file to a group (p.277)" {
   assert_eq!(t2.p2, parser.vertices[3])
   assert_eq!(t2.p3, parser.vertices[4])
 }
+
+test "Vertex normal records in an OBJ file (p.285)" {
+  let file =
+    #|vn 0 0 1
+    #|vn 0.707 0 -0.707
+    #|vn 1 2 3
+  let parser = parse_obj_file!(file)
+  assert_eq!(parser.normals[1], vector(0, 0, 1))
+  assert_eq!(parser.normals[2], vector(0.707, 0, -0.707))
+  assert_eq!(parser.normals[3], vector(1, 2, 3))
+}
+
+test "Faces with normals in an OBJ file (p.285)" {
+  let file =
+    #|v 0 1 0
+    #|v -1 0 0
+    #|v 1 0 0
+    #|
+    #|vn -1 0 0
+    #|vn 1 0 0
+    #|vn 0 1 0
+    #|
+    #|f 1//3 2//1 3//2
+    #|f 1/0/3 2/102/1 3/14/2
+  let parser = parse_obj_file!(file)
+  let g = parser.default_group
+  guard let SmoothTriangle(t1) = g.children()[0].object
+  guard let SmoothTriangle(t2) = g.children()[1].object
+  assert_eq!(t1.p1, parser.vertices[1])
+  assert_eq!(t1.p2, parser.vertices[2])
+  assert_eq!(t1.p3, parser.vertices[3])
+  assert_eq!(t1.n1, parser.normals[3])
+  assert_eq!(t1.n2, parser.normals[1])
+  assert_eq!(t1.n3, parser.normals[2])
+  assert_eq!(t1, t2)
+}
