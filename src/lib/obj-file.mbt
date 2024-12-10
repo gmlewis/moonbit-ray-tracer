@@ -40,7 +40,12 @@ pub fn parse_obj_file(buf : String) -> ObjFile!ParserError {
         "add_triangles expected at least 3 doubles, got \{args.length()}",
       )
     }
-
+    let p1 = args[0].to_int()
+    for i in 2..<args.length() {
+      let p2 = args[i - 1].to_int()
+      let p3 = args[i].to_int()
+      last_group.add_child(triangle(vertices[p1], vertices[p2], vertices[p3]))
+    }
   }
   let add_triangle_faces = fn(args : Array[String]) -> Unit!ParserError {
     guard args.length() >= 3 else {

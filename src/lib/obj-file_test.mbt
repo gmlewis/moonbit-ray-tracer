@@ -24,3 +24,24 @@ test "Parse vertex records in an OBJ file (p.273)" {
   assert_eq!(parser.vertices[3], point(1, 0, 0))
   assert_eq!(parser.vertices[4], point(1, 1, 0))
 }
+
+test "Parse triangle faces in an OBJ file (p.274)" {
+  let file =
+    #|v -1 1 0
+    #|v -1 0 0
+    #|v 1 0 0
+    #|v 1 1 0
+    #|
+    #|f 1 2 3
+    #|f 1 3 4
+  let parser = parse_obj_file!(file)
+  let g = parser.default_group
+  guard let Triangle(t1) = g.children()[0].object
+  guard let Triangle(t2) = g.children()[1].object
+  assert_eq!(t1.p1, parser.vertices[1])
+  assert_eq!(t1.p2, parser.vertices[2])
+  assert_eq!(t1.p3, parser.vertices[3])
+  assert_eq!(t2.p1, parser.vertices[1])
+  assert_eq!(t2.p2, parser.vertices[3])
+  assert_eq!(t2.p3, parser.vertices[4])
+}
