@@ -31,6 +31,7 @@ pub fn bounds(self : Shape) -> Bounds {
     Object(object) => object.bounds().transform(self.transform)
     Group(group) => group.bounds().transform(self.transform)
     Triangle(triangle) => triangle.bounds().transform(self.transform)
+    SmoothTriangle(triangle) => triangle.bounds().transform(self.transform)
   }
   self.bounds = Some(bounds)
   bounds
@@ -66,6 +67,11 @@ pub fn Shape::new_group(group : Group) -> Shape {
 ///|
 pub fn Shape::new_triangle(triangle : Triangle) -> Shape {
   Shape::new(Triangle(triangle))
+}
+
+///|
+pub fn Shape::new_smooth_triangle(triangle : SmoothTriangle) -> Shape {
+  Shape::new(SmoothTriangle(triangle))
 }
 
 ///|
@@ -107,7 +113,11 @@ pub fn local_intersect(self : Shape, local_ray : Ray) -> Intersections {
     }
     Triangle(triangle) => {
       let ts = triangle.local_intersect(local_ray)
-      intersections(ts.map(fn(t) { intersection(t, self) }))
+      intersections(ts.map(fn(t) { intersection(t.0, self, u=t.1, v=t.2) }))
+    }
+    SmoothTriangle(triangle) => {
+      let ts = triangle.local_intersect(local_ray)
+      intersections(ts.map(fn(t) { intersection(t.0, self, u=t.1, v=t.2) }))
     }
   }
 }
@@ -130,6 +140,7 @@ pub fn children(self : Shape) -> Array[Shape] {
     Object(_) => []
     Group(group) => group.children
     Triangle(_) => []
+    SmoothTriangle(_) => []
   }
 }
 
@@ -142,6 +153,7 @@ pub fn add_child(self : Shape, child : Shape) -> Unit {
     }
     Object(_) => ()
     Triangle(_) => ()
+    SmoothTriangle(_) => ()
   }
 }
 

@@ -2,11 +2,18 @@
 pub(all) struct Intersection {
   t : Double
   shape : Shape
+  u : Double
+  v : Double
 }
 
 ///|
-pub fn intersection(t : Double, shape : Shape) -> Intersection {
-  { t, shape }
+pub fn intersection(
+  t : Double,
+  shape : Shape,
+  u~ : Double = 0,
+  v~ : Double = 0
+) -> Intersection {
+  { t, shape, u, v }
 }
 
 ///|
