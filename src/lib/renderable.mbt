@@ -2,6 +2,7 @@
 pub(all) enum Renderable {
   Object(Object)
   Group(Group)
+  Triangle(Triangle)
 }
 
 ///|
@@ -9,6 +10,7 @@ pub fn to_string(self : Renderable) -> String {
   match self {
     Object(object) => object.to_string()
     Group(group) => group.to_string()
+    Triangle(triangle) => triangle.to_string()
   }
 }
 
@@ -30,5 +32,6 @@ pub fn local_normal_at(self : Renderable, point : Tuple) -> Tuple {
   match self {
     Object(object) => object.local_normal_at(point)
     Group(group) => group.local_normal_at(point)
+    Triangle(triangle) => triangle.local_normal_at(point)
   }
 }

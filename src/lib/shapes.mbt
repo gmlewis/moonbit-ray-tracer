@@ -30,6 +30,7 @@ pub fn bounds(self : Shape) -> Bounds {
   let bounds = match self.object {
     Object(object) => object.bounds().transform(self.transform)
     Group(group) => group.bounds().transform(self.transform)
+    Triangle(triangle) => triangle.bounds().transform(self.transform)
   }
   self.bounds = Some(bounds)
   bounds
@@ -60,6 +61,11 @@ pub fn Shape::new_object(object : Object) -> Shape {
 ///|
 pub fn Shape::new_group(group : Group) -> Shape {
   Shape::new(Group(group))
+}
+
+///|
+pub fn Shape::new_triangle(triangle : Triangle) -> Shape {
+  Shape::new(Triangle(triangle))
 }
 
 ///|
@@ -99,6 +105,10 @@ pub fn local_intersect(self : Shape, local_ray : Ray) -> Intersections {
       }
       group.local_intersect(self, local_ray)
     }
+    Triangle(triangle) => {
+      let ts = triangle.local_intersect(local_ray)
+      intersections(ts.map(fn(t) { intersection(t, self) }))
+    }
   }
 }
 
@@ -119,6 +129,7 @@ pub fn children(self : Shape) -> Array[Shape] {
   match self.object {
     Object(_) => []
     Group(group) => group.children
+    Triangle(_) => []
   }
 }
 
@@ -130,6 +141,7 @@ pub fn add_child(self : Shape, child : Shape) -> Unit {
       child.parent = Some(self)
     }
     Object(_) => ()
+    Triangle(_) => ()
   }
 }
 
