@@ -10,6 +10,11 @@ pub fn group() -> Shape {
 }
 
 ///|
+pub fn Shape::new_group(group : Group) -> Shape {
+  Shape::new(Group(group))
+}
+
+///|
 pub fn Group::to_string(_self : Group) -> String {
   "group()"
 }

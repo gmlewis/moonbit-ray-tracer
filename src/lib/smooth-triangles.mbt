@@ -27,6 +27,11 @@ pub fn smooth_triangle(
 }
 
 ///|
+pub fn Shape::new_smooth_triangle(triangle : SmoothTriangle) -> Shape {
+  Shape::new(SmoothTriangle(triangle))
+}
+
+///|
 pub fn bounds(self : SmoothTriangle) -> Bounds {
   self.bounds
 }

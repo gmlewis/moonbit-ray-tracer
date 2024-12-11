@@ -60,21 +60,6 @@ pub fn Shape::new_object(object : Object) -> Shape {
 }
 
 ///|
-pub fn Shape::new_group(group : Group) -> Shape {
-  Shape::new(Group(group))
-}
-
-///|
-pub fn Shape::new_triangle(triangle : Triangle) -> Shape {
-  Shape::new(Triangle(triangle))
-}
-
-///|
-pub fn Shape::new_smooth_triangle(triangle : SmoothTriangle) -> Shape {
-  Shape::new(SmoothTriangle(triangle))
-}
-
-///|
 pub fn Shape::new(object : Renderable) -> Shape {
   let material = material()
   let transform = mat4ident()
@@ -119,6 +104,10 @@ pub fn local_intersect(self : Shape, local_ray : Ray) -> Intersections {
       let ts = triangle.local_intersect(local_ray)
       intersections(ts.map(fn(t) { intersection(t.0, self, u=t.1, v=t.2) }))
     }
+    //  CSG(csg) => {
+    //    let ts = csg.local_intersect(local_ray)
+    //    intersections(ts.map(fn(t) { intersection(t, self) }))
+    //  }
   }
 }
 
@@ -163,6 +152,7 @@ pub fn children(self : Shape) -> Array[Shape] {
     Group(group) => group.children
     Triangle(_) => []
     SmoothTriangle(_) => []
+    CSG(_) => []
   }
 }
 
@@ -176,6 +166,7 @@ pub fn add_child(self : Shape, child : Shape) -> Unit {
     Object(_) => ()
     Triangle(_) => ()
     SmoothTriangle(_) => ()
+    CSG(_) => ()
   }
 }
 

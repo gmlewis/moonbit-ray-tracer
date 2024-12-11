@@ -19,6 +19,11 @@ pub fn triangle(p1 : Tuple, p2 : Tuple, p3 : Tuple) -> Shape {
 }
 
 ///|
+pub fn Shape::new_triangle(triangle : Triangle) -> Shape {
+  Shape::new(Triangle(triangle))
+}
+
+///|
 pub fn bounds(self : Triangle) -> Bounds {
   self.bounds
 }
