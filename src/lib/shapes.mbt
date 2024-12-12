@@ -19,7 +19,16 @@ pub(all) struct Shape {
   mut inv_transform : Matrix
   mut parent : Shape?
   mut bounds : Bounds?
+  // Since MoonBit does not have reflection or pointer comparisons, the `id`
+  // field has been added to uniquely identify an individual shape.
+  // Unfortunately, the bumping of the `id` field should be an atomic
+  // operation to be safe in future parallel threaded runtimes, but for now
+  // this is all single-threaded and unprotected.
+  id : UInt
 }
+
+///|
+let id_counter : Ref[UInt] = { val: 0 }
 
 ///|
 pub fn bounds(self : Shape) -> Bounds {
@@ -66,7 +75,9 @@ pub fn Shape::new(object : Renderable) -> Shape {
   let inv_transform = mat4ident()
   let parent = None
   let bounds = None
-  { object, material, transform, inv_transform, parent, bounds }
+  let id = id_counter.val
+  id_counter.val += 1
+  { object, material, transform, inv_transform, parent, bounds, id }
 }
 
 ///|
@@ -190,4 +201,25 @@ pub fn normal_to_world(self : Shape, normal : Tuple) -> Tuple {
     Some(parent) => parent.normal_to_world(normal)
     _ => normal
   }
+}
+
+///|
+pub fn includes_shape(self : Shape, shape : Shape) -> Bool {
+  if self.id == shape.id {
+    return true
+  }
+  match self.object {
+    Group(group) =>
+      for child in group.children {
+        if child.includes_shape(shape) {
+          return true
+        }
+      }
+    Object(_) => ()
+    Triangle(_) => ()
+    SmoothTriangle(_) => ()
+    CSG(csg) =>
+      return csg.left.includes_shape(shape) || csg.right.includes_shape(shape)
+  }
+  false
 }
