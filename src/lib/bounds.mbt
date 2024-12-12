@@ -27,6 +27,19 @@ pub fn transform(self : Bounds, transform : Matrix) -> Bounds {
 }
 
 ///|
+pub fn enlarge(self : Bounds, other : Bounds) -> Unit {
+  self
+  ..update(point(other.min.x, other.min.y, other.min.z))
+  ..update(point(other.max.x, other.min.y, other.min.z))
+  ..update(point(other.max.x, other.max.y, other.min.z))
+  ..update(point(other.min.x, other.max.y, other.min.z))
+  ..update(point(other.min.x, other.min.y, other.max.z))
+  ..update(point(other.max.x, other.min.y, other.max.z))
+  ..update(point(other.max.x, other.max.y, other.max.z))
+  .update(point(other.min.x, other.max.y, other.max.z))
+}
+
+///|
 pub fn update(self : Bounds, point : Tuple) -> Unit {
   if point.x < self.min.x {
     self.min.x = point.x

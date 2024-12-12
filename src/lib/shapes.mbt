@@ -41,6 +41,12 @@ pub fn bounds(self : Shape) -> Bounds {
     Group(group) => group.bounds().transform(self.transform)
     Triangle(triangle) => triangle.bounds().transform(self.transform)
     SmoothTriangle(triangle) => triangle.bounds().transform(self.transform)
+    CSG(csg) => {
+      let left_bounds = csg.left.bounds().transform(self.transform)
+      let right_bounds = csg.right.bounds().transform(self.transform)
+      left_bounds.enlarge(right_bounds)
+      left_bounds
+    }
   }
   self.bounds = Some(bounds)
   bounds
@@ -115,10 +121,12 @@ pub fn local_intersect(self : Shape, local_ray : Ray) -> Intersections {
       let ts = triangle.local_intersect(local_ray)
       intersections(ts.map(fn(t) { intersection(t.0, self, u=t.1, v=t.2) }))
     }
-    //  CSG(csg) => {
-    //    let ts = csg.local_intersect(local_ray)
-    //    intersections(ts.map(fn(t) { intersection(t, self) }))
-    //  }
+    CSG(csg) => {
+      let xs = csg.left.intersect(local_ray)
+      let right_xs = csg.right.intersect(local_ray)
+      xs.xs.append(right_xs.xs)
+      csg.filter_intersections(intersections(xs.xs))
+    }
   }
 }
 
@@ -153,6 +161,7 @@ pub fn local_normal_at(
           vector(0, 0, 0)
         }
       }
+    CSG(_) => vector(0, 0, 0) // never called directly since intersections report left or right object.
   }
 }
 

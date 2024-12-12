@@ -68,3 +68,23 @@ test "Filtering a list of intersections (p.297)" {
     assert_eq!(result[1], xs[tt.2])
   }
 }
+
+test "A ray misses a CSG object (p.299)" {
+  let c = csg(Union, sphere(), cube())
+  let r = ray(point(0, 2, -5), vector(0, 0, 1))
+  let xs = c.local_intersect(r)
+  assert_eq!(xs.count, 0)
+}
+
+test "A ray hits a CSG object (p.299)" {
+  let s1 = sphere()
+  let s2 = sphere()..set_transform(translation(0, 0, 0.5))
+  let c = csg(Union, s1, s2)
+  let r = ray(point(0, 0, -5), vector(0, 0, 1))
+  let xs = c.local_intersect(r)
+  assert_eq!(xs.count, 2)
+  assert_eq!(xs[0].t, 4)
+  assert_eq!(xs[0].shape, s1)
+  assert_eq!(xs[1].t, 6.5)
+  assert_eq!(xs[1].shape, s2)
+}
