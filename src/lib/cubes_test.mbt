@@ -1,6 +1,3 @@
-///|
-let cube = @lib.cube
-
 test "A ray intersects a cube (p.224)" {
   let tests = [
     ("+x", point(5, 0.5, 0), vector(-1, 0, 0), 4.0, 6.0),

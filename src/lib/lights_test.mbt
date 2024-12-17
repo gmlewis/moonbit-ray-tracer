@@ -1,6 +1,3 @@
-///|
-let point_light = @lib.point_light
-
 test "A point light has a position and intensity (p.124)" {
   let intensity = color(1, 1, 1)
   let position = point(0, 0, 0)

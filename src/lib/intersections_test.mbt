@@ -1,9 +1,3 @@
-///|
-typealias Intersections = @lib.Intersections
-
-///|
-let intersections = @lib.intersections
-
 test "An intersection encapsulates t and shape (p.99)" {
   let s = sphere()
   let i = @lib.intersection(3.5, s)
@@ -126,16 +120,14 @@ test "Finding n1 and n2 at various intersections (p.205)" {
   let c = glass_sphere()..set_transform(translation(0, 0, 0.25))
   c.material.refractive_index = 2.5
   let r = ray(point(0, 0, -4), vector(0, 0, 1))
-  let xs = intersections(
-    [
-      @lib.intersection(2, a),
-      @lib.intersection(2.75, b),
-      @lib.intersection(3.25, c),
-      @lib.intersection(4.75, b),
-      @lib.intersection(5.25, c),
-      @lib.intersection(6, a),
-    ],
-  )
+  let xs = intersections([
+    @lib.intersection(2, a),
+    @lib.intersection(2.75, b),
+    @lib.intersection(3.25, c),
+    @lib.intersection(4.75, b),
+    @lib.intersection(5.25, c),
+    @lib.intersection(6, a),
+  ])
 
   //
   let tests = [
@@ -167,9 +159,10 @@ test "The Schlick approximation under total internal reflection (p.216)" {
   let shape = glass_sphere()
   let sq2 = 2.0.sqrt() / 2
   let r = ray(point(0, 0, sq2), vector(0, 1, 0))
-  let xs = intersections(
-    [@lib.intersection(-sq2, shape), @lib.intersection(sq2, shape)],
-  )
+  let xs = intersections([
+    @lib.intersection(-sq2, shape),
+    @lib.intersection(sq2, shape),
+  ])
   let comps = xs[1].prepare_computations(r, xs~)
   let reflectance = comps.schlick()
   assert_eq!(reflectance, 1)

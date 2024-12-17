@@ -1,27 +1,3 @@
-///|
-typealias Color = @lib.Color
-
-///|
-typealias Pattern = @lib.Pattern
-
-///|
-let black = @lib.black
-
-///|
-let white = @lib.white
-
-///|
-let checkers_pattern = @lib.checkers_pattern
-
-///|
-let gradient_pattern = @lib.gradient_pattern
-
-///|
-let ring_pattern = @lib.ring_pattern
-
-///|
-let stripe_pattern = @lib.stripe_pattern
-
 test "Creating a stripe pattern (p.175)" {
   let pattern = stripe_pattern([white, black])
   inspect!(
@@ -98,7 +74,7 @@ fn TestPattern::to_string(_self : TestPattern) -> String {
 }
 
 ///|
-fn output(self : TestPattern, logger : Logger) -> Unit {
+fn output(self : TestPattern, logger : &Logger) -> Unit {
   logger.write_string(self.to_string())
 }
 

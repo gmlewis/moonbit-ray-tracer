@@ -1,6 +1,3 @@
-///|
-let parse_obj_file = @lib.parse_obj_file
-
 test "Ignoring unrecognized lines in an OBJ file (p.272)" {
   let gibberish =
     #|There was a young lady named Bright

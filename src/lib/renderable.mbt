@@ -1,6 +1,6 @@
 ///|
 pub(all) enum Renderable {
-  Object(Object)
+  Object(&Object)
   Group(Group)
   Triangle(Triangle)
   SmoothTriangle(SmoothTriangle)
@@ -19,6 +19,6 @@ pub fn to_string(self : Renderable) -> String {
 }
 
 ///|
-pub fn output(self : Renderable, logger : Logger) -> Unit {
+pub fn output(self : Renderable, logger : &Logger) -> Unit {
   logger.write_string(self.to_string())
 }

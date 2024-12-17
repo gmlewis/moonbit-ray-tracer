@@ -1,6 +1,3 @@
-///|
-let triangle = @lib.triangle
-
 test "Creating a triangle (p.267)" {
   let p1 = point(0, 1, 0)
   let p2 = point(-1, 0, 0)

@@ -1,9 +1,3 @@
-///|
-let glass_sphere = @lib.glass_sphere
-
-///|
-let sphere = @lib.sphere
-
 test "A ray intersects a sphere at two points (p.94)" {
   let r = ray(point(0, 0, -5), vector(0, 0, 1))
   let s = sphere()

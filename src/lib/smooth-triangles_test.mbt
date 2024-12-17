@@ -1,7 +1,4 @@
 ///|
-let smooth_triangle = @lib.smooth_triangle
-
-///|
 fn test_tuples() -> (Tuple, Tuple, Tuple, Tuple, Tuple, Tuple) {
   let p1 = point(0, 1, 0)
   let p2 = point(-1, 0, 0)

@@ -1,6 +1,3 @@
-///|
-let camera = @lib.camera
-
 test "Constructing a camera (p.144)" {
   let hsize = 160
   let vsize = 120

@@ -1,27 +1,6 @@
 ///|
 let pi : Double = @math.PI
 
-///|
-let rotation_x = @lib.rotation_x
-
-///|
-let rotation_y = @lib.rotation_y
-
-///|
-let rotation_z = @lib.rotation_z
-
-///|
-let scaling = @lib.scaling
-
-///|
-let shearing = @lib.shearing
-
-///|
-let translation = @lib.translation
-
-///|
-let view_transform = @lib.view_transform
-
 test "Multiplying by a translation matrix (p.73)" {
   let transform = translation(5, -3, 2)
   let p = point(-3, 4, 5)

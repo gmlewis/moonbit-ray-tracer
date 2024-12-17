@@ -3,20 +3,20 @@ pub(open) trait PatternTrait {
   pattern_at(Self, Tuple) -> Color
   clone(Self) -> Pattern // `clone(Self) -> Self` causes a compiler error
   // https://github.com/moonbitlang/core/issues/1304
-  output(Self, Logger) -> Unit
+  output(Self, &Logger) -> Unit
   to_string(Self) -> String
 }
 
 ///|
 pub(all) struct Pattern {
-  pattern : PatternTrait
+  pattern : &PatternTrait
   // Do not modify transform directly. Use `set_transform` instead.
   mut transform : Matrix
   mut inv_transform : Matrix
 } derive(Show)
 
 ///|
-pub fn Pattern::new(pattern : PatternTrait) -> Pattern {
+pub fn Pattern::new(pattern : &PatternTrait) -> Pattern {
   let transform = mat4ident()
   let inv_transform = mat4ident()
   { pattern, transform, inv_transform }
@@ -77,7 +77,7 @@ pub fn to_string(self : StripePattern) -> String {
 }
 
 ///|
-pub fn output(self : StripePattern, logger : Logger) -> Unit {
+pub fn output(self : StripePattern, logger : &Logger) -> Unit {
   logger.write_string(self.to_string())
 }
 
@@ -123,7 +123,7 @@ pub fn to_string(self : GradientPattern) -> String {
 }
 
 ///|
-pub fn output(self : GradientPattern, logger : Logger) -> Unit {
+pub fn output(self : GradientPattern, logger : &Logger) -> Unit {
   logger.write_string(self.to_string())
 }
 
@@ -173,7 +173,7 @@ pub fn to_string(self : RingPattern) -> String {
 }
 
 ///|
-pub fn output(self : RingPattern, logger : Logger) -> Unit {
+pub fn output(self : RingPattern, logger : &Logger) -> Unit {
   logger.write_string(self.to_string())
 }
 
@@ -220,7 +220,7 @@ pub fn to_string(self : GradientRingPattern) -> String {
 }
 
 ///|
-pub fn output(self : GradientRingPattern, logger : Logger) -> Unit {
+pub fn output(self : GradientRingPattern, logger : &Logger) -> Unit {
   logger.write_string(self.to_string())
 }
 
@@ -271,7 +271,7 @@ pub fn to_string(self : CheckersPattern) -> String {
 }
 
 ///|
-pub fn output(self : CheckersPattern, logger : Logger) -> Unit {
+pub fn output(self : CheckersPattern, logger : &Logger) -> Unit {
   logger.write_string(self.to_string())
 }
 
@@ -319,7 +319,7 @@ pub fn to_string(self : GradientCheckersPattern) -> String {
 }
 
 ///|
-pub fn output(self : GradientCheckersPattern, logger : Logger) -> Unit {
+pub fn output(self : GradientCheckersPattern, logger : &Logger) -> Unit {
   logger.write_string(self.to_string())
 }
 

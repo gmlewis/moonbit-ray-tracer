@@ -1,6 +1,3 @@
-///|
-let mat3 = @lib.mat3
-
 test "A 3x3 matrix ought to be representable (p.54)" {
   let m = mat3(
     -3, 5, 0, // row 0

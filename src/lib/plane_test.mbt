@@ -1,6 +1,3 @@
-///|
-let plane = @lib.plane
-
 test "The normal of a plane is constant everywhere (p.170)" {
   let p = plane()
   let n1 = p.local_normal_at(point(0, 0, 0))

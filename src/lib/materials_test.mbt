@@ -1,6 +1,3 @@
-///|
-let material = @lib.material
-
 test "The default material (p.125)" {
   let m = material()
   assert_eq!(m.color, color(1, 1, 1))

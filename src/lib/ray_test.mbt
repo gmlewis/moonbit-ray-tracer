@@ -1,6 +1,3 @@
-///|
-let ray = @lib.ray
-
 test "Creating and querying a ray (p.92)" {
   let origin = point(1, 2, 3)
   let direction = vector(4, 5, 6)

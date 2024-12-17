@@ -1,9 +1,3 @@
-///|
-let csg = @lib.csg
-
-///|
-let intersection_allowed = @lib.intersection_allowed
-
 test "CSG is created with an operation and two shapes (p.293)" {
   let s1 = sphere()
   let s2 = cube()
@@ -54,14 +48,12 @@ test "Filtering a list of intersections (p.297)" {
   let s2 = cube()
   for tt in tests {
     guard let CSG(c) = csg(tt.0, s1, s2).object
-    let xs = intersections(
-      [
-        @lib.intersection(1, s1),
-        @lib.intersection(2, s2),
-        @lib.intersection(3, s1),
-        @lib.intersection(4, s2),
-      ],
-    )
+    let xs = intersections([
+      @lib.intersection(1, s1),
+      @lib.intersection(2, s2),
+      @lib.intersection(3, s1),
+      @lib.intersection(4, s2),
+    ])
     let result = c.filter_intersections(xs)
     assert_eq!(result.count, 2)
     assert_eq!(result[0], xs[tt.1])

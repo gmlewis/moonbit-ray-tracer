@@ -1,12 +1,3 @@
-///|
-let point = @lib.point
-
-///|
-let tuple = @lib.tuple
-
-///|
-let vector = @lib.vector
-
 test "A tuple with w=1.0 is a point (p.26)" {
   let a = tuple(4.3, -4.2, 3.1, 1.0)
   inspect!(a.x, content="4.3")

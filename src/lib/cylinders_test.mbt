@@ -1,6 +1,3 @@
-///|
-let round_to_fixed = @lib.round_to_fixed
-
 test "A ray misses a cylinder (p.235)" {
   let cyl = @lib.cylinder()
   let tests = [

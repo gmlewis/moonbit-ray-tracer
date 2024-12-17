@@ -1,13 +1,4 @@
 ///|
-typealias Ray = @lib.Ray
-
-///|
-typealias Shape = @lib.Shape
-
-///|
-typealias Tuple = @lib.Tuple
-
-///|
 struct TestShape {
   mut saved_ray : Ray
 } derive(Show, Eq)
@@ -34,7 +25,7 @@ fn to_string(self : TestShape) -> String {
 }
 
 ///|
-fn output(self : TestShape, logger : Logger) -> Unit {
+fn output(self : TestShape, logger : &Logger) -> Unit {
   logger.write_string(self.to_string())
 }
 

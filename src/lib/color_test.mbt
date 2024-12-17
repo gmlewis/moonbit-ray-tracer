@@ -1,6 +1,3 @@
-///|
-let color = @lib.color
-
 test "Colors are (red,green,blue) tuples (p.41)" {
   let c = color(-0.5, 0.4, 1.7)
   inspect!(c.red, content="-0.5")

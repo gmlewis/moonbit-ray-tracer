@@ -2,7 +2,7 @@
 pub(all) struct Cube {} derive(Eq)
 
 ///|
-let _Cube : Object = Cube::{  }
+let _Cube : &Object = Cube::{  }
 
 ///|
 pub fn cube() -> Shape {
@@ -21,7 +21,7 @@ pub fn Cube::to_string(_self : Cube) -> String {
 }
 
 ///|
-pub fn output(self : Cube, logger : Logger) -> Unit {
+pub fn output(self : Cube, logger : &Logger) -> Unit {
   logger.write_string(self.to_string())
 }
 

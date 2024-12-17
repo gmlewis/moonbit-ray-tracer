@@ -56,9 +56,15 @@ pub fn to_ts(self : Intersections) -> Array[Double] {
 pub fn intersections(xs : Array[Intersection]) -> Intersections {
   let count = xs.length()
   if xs.length() > 1 {
-    xs.sort_by(
-      fn(a, b) { if a.t < b.t { -1 } else if a.t > b.t { 1 } else { 0 } },
-    )
+    xs.sort_by(fn(a, b) {
+      if a.t < b.t {
+        -1
+      } else if a.t > b.t {
+        1
+      } else {
+        0
+      }
+    })
   }
   let mut hit = None
   for x in xs {

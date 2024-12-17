@@ -1,6 +1,3 @@
-///|
-let mat2 = @lib.mat2
-
 test "A 2x2 matrix ought to be representable (p.54)" {
   let m = mat2(
     -3, 5, // row 0

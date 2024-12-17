@@ -20,7 +20,7 @@ pub fn Group::to_string(_self : Group) -> String {
 }
 
 ///|
-pub fn output(self : Group, logger : Logger) -> Unit {
+pub fn output(self : Group, logger : &Logger) -> Unit {
   logger.write_string(self.to_string())
 }
 

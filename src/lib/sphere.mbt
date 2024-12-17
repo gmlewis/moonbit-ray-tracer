@@ -2,7 +2,7 @@
 pub(all) struct Sphere {} derive(Eq)
 
 ///|
-let _Sphere : Object = Sphere::{  }
+let _Sphere : &Object = Sphere::{  }
 
 ///|
 pub fn sphere() -> Shape {
@@ -29,7 +29,7 @@ pub fn Sphere::to_string(_self : Sphere) -> String {
 }
 
 ///|
-pub fn output(self : Sphere, logger : Logger) -> Unit {
+pub fn output(self : Sphere, logger : &Logger) -> Unit {
   logger.write_string(self.to_string())
 }
 

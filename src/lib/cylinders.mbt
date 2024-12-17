@@ -6,7 +6,7 @@ pub(all) struct Cylinder {
 } derive(Eq)
 
 ///|
-let _Cylinder : Object = Cylinder::{ minimum: 0, maximum: 0, closed: false }
+let _Cylinder : &Object = Cylinder::{ minimum: 0, maximum: 0, closed: false }
 
 ///|
 pub fn cylinder(
@@ -29,7 +29,7 @@ pub fn Cylinder::to_string(_self : Cylinder) -> String {
 }
 
 ///|
-pub fn output(self : Cylinder, logger : Logger) -> Unit {
+pub fn output(self : Cylinder, logger : &Logger) -> Unit {
   logger.write_string(self.to_string())
 }
 

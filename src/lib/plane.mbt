@@ -2,7 +2,7 @@
 pub(all) struct Plane {} derive(Eq)
 
 ///|
-let _Plane : Object = Plane::{  }
+let _Plane : &Object = Plane::{  }
 
 ///|
 pub fn plane() -> Shape {
@@ -21,7 +21,7 @@ pub fn Plane::to_string(_self : Plane) -> String {
 }
 
 ///|
-pub fn output(self : Plane, logger : Logger) -> Unit {
+pub fn output(self : Plane, logger : &Logger) -> Unit {
   logger.write_string(self.to_string())
 }
 

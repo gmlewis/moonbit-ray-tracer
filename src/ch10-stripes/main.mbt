@@ -56,11 +56,9 @@ fn main {
   let c01105 = color(0.1, 1, 0.5)
   let c05101 = color(0.5, 1, 0.1)
   let c10801 = color(1, 0.8, 0.1)
-  let pattern = @lib.stripe_pattern(
-    [
-      white, black, red, green, blue, c110, c011, c101, c199, c01105, c05101, c10801,
-    ],
-  )
+  let pattern = @lib.stripe_pattern([
+    white, black, red, green, blue, c110, c011, c101, c199, c01105, c05101, c10801,
+  ])
 
   //
   let floor = plane()..set_transform(rotation_y(0.9))

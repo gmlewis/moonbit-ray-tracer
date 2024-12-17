@@ -1,6 +1,3 @@
-///|
-let canvas = @lib.canvas
-
 test "Creating a canvas (p.46)" {
   let c = canvas(10, 20)
   assert_eq!(c.width, 10)

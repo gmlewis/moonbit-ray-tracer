@@ -1,9 +1,3 @@
-///|
-let mat4 = @lib.mat4
-
-///|
-let mat4ident = @lib.mat4ident
-
 test "Constructing and inspecting a 4x4 matrix (p.54)" {
   let m = mat4(
     1, 2, 3, 4, // row 0

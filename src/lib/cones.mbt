@@ -6,7 +6,7 @@ pub(all) struct Cone {
 } derive(Eq)
 
 ///|
-let _Cone : Object = Cone::{ minimum: 0, maximum: 0, closed: false }
+let _Cone : &Object = Cone::{ minimum: 0, maximum: 0, closed: false }
 
 ///|
 pub fn cone(
@@ -36,7 +36,7 @@ pub fn Cone::to_string(_self : Cone) -> String {
 }
 
 ///|
-pub fn output(self : Cone, logger : Logger) -> Unit {
+pub fn output(self : Cone, logger : &Logger) -> Unit {
   logger.write_string(self.to_string())
 }
 

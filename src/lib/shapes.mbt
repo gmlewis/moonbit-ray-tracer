@@ -4,7 +4,7 @@ pub(open) trait Object {
   local_normal_at(Self, Tuple) -> Tuple
   bounds(Self) -> Bounds
   // https://github.com/moonbitlang/core/issues/1304
-  output(Self, Logger) -> Unit
+  output(Self, &Logger) -> Unit
   to_string(Self) -> String
 }
 // pub impl Eq for Object with op_equal(self, other) { self == other }
@@ -58,7 +58,7 @@ pub fn Shape::to_string(self : Shape) -> String {
 }
 
 ///|
-pub fn output(self : Shape, logger : Logger) -> Unit {
+pub fn output(self : Shape, logger : &Logger) -> Unit {
   logger.write_string(self.object.to_string())
 }
 
@@ -70,7 +70,7 @@ pub fn op_equal(self : Shape, other : Shape) -> Bool {
 }
 
 ///|
-pub fn Shape::new_object(object : Object) -> Shape {
+pub fn Shape::new_object(object : &Object) -> Shape {
   Shape::new(Object(object))
 }
 
