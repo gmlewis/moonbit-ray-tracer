@@ -11,7 +11,7 @@ pub fn cube() -> Shape {
 }
 
 ///|
-pub fn op_equal(self : Cube, other : Cube) -> Bool {
+pub fn Cube::op_equal(self : Cube, other : Cube) -> Bool {
   self == other
 }
 
@@ -21,7 +21,7 @@ pub fn Cube::to_string(_self : Cube) -> String {
 }
 
 ///|
-pub fn output(self : Cube, logger : &Logger) -> Unit {
+pub fn Cube::output(self : Cube, logger : &Logger) -> Unit {
   logger.write_string(self.to_string())
 }
 

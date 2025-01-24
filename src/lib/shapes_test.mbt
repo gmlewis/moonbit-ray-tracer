@@ -25,7 +25,7 @@ fn to_string(self : TestShape) -> String {
 }
 
 ///|
-fn output(self : TestShape, logger : &Logger) -> Unit {
+fn TestShape::output(self : TestShape, logger : &Logger) -> Unit {
   logger.write_string(self.to_string())
 }
 

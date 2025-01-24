@@ -11,7 +11,7 @@ pub fn plane() -> Shape {
 }
 
 ///|
-pub fn op_equal(self : Plane, other : Plane) -> Bool {
+pub fn Plane::op_equal(self : Plane, other : Plane) -> Bool {
   self == other
 }
 
@@ -21,7 +21,7 @@ pub fn Plane::to_string(_self : Plane) -> String {
 }
 
 ///|
-pub fn output(self : Plane, logger : &Logger) -> Unit {
+pub fn Plane::output(self : Plane, logger : &Logger) -> Unit {
   logger.write_string(self.to_string())
 }
 

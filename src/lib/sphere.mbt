@@ -19,7 +19,7 @@ pub fn glass_sphere() -> Shape {
 }
 
 ///|
-pub fn op_equal(self : Sphere, other : Sphere) -> Bool {
+pub fn Sphere::op_equal(self : Sphere, other : Sphere) -> Bool {
   self == other
 }
 
@@ -29,7 +29,7 @@ pub fn Sphere::to_string(_self : Sphere) -> String {
 }
 
 ///|
-pub fn output(self : Sphere, logger : &Logger) -> Unit {
+pub fn Sphere::output(self : Sphere, logger : &Logger) -> Unit {
   logger.write_string(self.to_string())
 }
 

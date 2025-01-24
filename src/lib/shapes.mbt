@@ -31,7 +31,7 @@ pub(all) struct Shape {
 let id_counter : Ref[UInt] = { val: 0 }
 
 ///|
-pub fn bounds(self : Shape) -> Bounds {
+pub fn Shape::bounds(self : Shape) -> Bounds {
   match self.bounds {
     Some(bounds) => return bounds
     _ => ()
@@ -58,12 +58,12 @@ pub fn Shape::to_string(self : Shape) -> String {
 }
 
 ///|
-pub fn output(self : Shape, logger : &Logger) -> Unit {
+pub fn Shape::output(self : Shape, logger : &Logger) -> Unit {
   logger.write_string(self.object.to_string())
 }
 
 ///|
-pub fn op_equal(self : Shape, other : Shape) -> Bool {
+pub fn Shape::op_equal(self : Shape, other : Shape) -> Bool {
   // https://github.com/moonbitlang/core/issues/1304#issuecomment-2523373703
   // self.object == other.object &&
   self.material == other.material && self.transform == other.transform
@@ -99,7 +99,7 @@ pub fn intersect(self : Shape, ray : Ray) -> Intersections {
 }
 
 ///|
-pub fn local_intersect(self : Shape, local_ray : Ray) -> Intersections {
+pub fn Shape::local_intersect(self : Shape, local_ray : Ray) -> Intersections {
   match self.object {
     Object(object) => {
       let ts = object.local_intersect(local_ray)
@@ -142,7 +142,7 @@ pub fn normal_at(
 }
 
 ///|
-pub fn local_normal_at(
+pub fn Shape::local_normal_at(
   self : Shape,
   local_point : Tuple,
   hit~ : Intersection? = None

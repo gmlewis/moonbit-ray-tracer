@@ -24,17 +24,17 @@ pub fn Shape::new_triangle(triangle : Triangle) -> Shape {
 }
 
 ///|
-pub fn bounds(self : Triangle) -> Bounds {
+pub fn Triangle::bounds(self : Triangle) -> Bounds {
   self.bounds
 }
 
 ///|
-pub fn local_normal_at(self : Triangle, _point : Tuple) -> Tuple {
+pub fn Triangle::local_normal_at(self : Triangle, _point : Tuple) -> Tuple {
   self.normal
 }
 
 ///|
-pub fn local_intersect(
+pub fn Triangle::local_intersect(
   self : Triangle,
   ray : Ray
 ) -> Array[(Double, Double, Double)] {

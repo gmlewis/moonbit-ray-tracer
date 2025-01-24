@@ -10,7 +10,7 @@ pub fn ray(origin : Tuple, direction : Tuple) -> Ray {
 }
 
 ///|
-pub fn to_string(self : Ray) -> String {
+pub fn Ray::to_string(self : Ray) -> String {
   "ray(\{self.origin}, \{self.direction})"
 }
 
@@ -20,7 +20,7 @@ pub impl Show for Ray with output(self, logger) {
 }
 
 ///|
-pub fn op_equal(self : Ray, other : Ray) -> Bool {
+pub fn Ray::op_equal(self : Ray, other : Ray) -> Bool {
   self.origin == other.origin && self.direction == other.direction
 }
 
@@ -30,7 +30,7 @@ pub fn position(self : Ray, t : Double) -> Tuple {
 }
 
 ///|
-pub fn transform(self : Ray, m : Matrix) -> Ray {
+pub fn Ray::transform(self : Ray, m : Matrix) -> Ray {
   let origin = m.mul_tuple(self.origin)
   let direction = m.mul_tuple(self.direction)
   { origin, direction }

@@ -32,12 +32,12 @@ pub fn Shape::new_smooth_triangle(triangle : SmoothTriangle) -> Shape {
 }
 
 ///|
-pub fn bounds(self : SmoothTriangle) -> Bounds {
+pub fn SmoothTriangle::bounds(self : SmoothTriangle) -> Bounds {
   self.bounds
 }
 
 ///|
-pub fn local_normal_at(
+pub fn SmoothTriangle::local_normal_at(
   self : SmoothTriangle,
   _point : Tuple,
   hit : Intersection
@@ -48,7 +48,7 @@ pub fn local_normal_at(
 }
 
 ///|
-pub fn local_intersect(
+pub fn SmoothTriangle::local_intersect(
   self : SmoothTriangle,
   ray : Ray
 ) -> Array[(Double, Double, Double)] {

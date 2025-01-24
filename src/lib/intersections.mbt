@@ -17,12 +17,15 @@ pub fn intersection(
 }
 
 ///|
-pub fn op_equal(self : Intersection, other : Intersection) -> Bool {
+pub fn Intersection::op_equal(
+  self : Intersection,
+  other : Intersection
+) -> Bool {
   self.t == other.t // && self.object == other.object
 }
 
 ///|
-pub fn to_string(self : Intersection) -> String {
+pub fn Intersection::to_string(self : Intersection) -> String {
   "intersection(\{self.t})"
 }
 

@@ -26,7 +26,7 @@ pub fn bounds(self : Cone) -> Bounds {
 }
 
 ///|
-pub fn op_equal(self : Cone, other : Cone) -> Bool {
+pub fn Cone::op_equal(self : Cone, other : Cone) -> Bool {
   self == other
 }
 
@@ -73,7 +73,7 @@ fn intersect_caps(self : Cone, ray : Ray, xs : Array[Double]) -> Unit {
 }
 
 ///|
-pub fn local_intersect(self : Cone, ray : Ray) -> Array[Double] {
+pub fn Cone::local_intersect(self : Cone, ray : Ray) -> Array[Double] {
   let xs = []
   let o = ray.origin
   let d = ray.direction

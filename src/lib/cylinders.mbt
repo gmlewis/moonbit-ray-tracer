@@ -19,7 +19,7 @@ pub fn cylinder(
 }
 
 ///|
-pub fn op_equal(self : Cylinder, other : Cylinder) -> Bool {
+pub fn Cylinder::op_equal(self : Cylinder, other : Cylinder) -> Bool {
   self == other
 }
 
@@ -29,7 +29,7 @@ pub fn Cylinder::to_string(_self : Cylinder) -> String {
 }
 
 ///|
-pub fn output(self : Cylinder, logger : &Logger) -> Unit {
+pub fn Cylinder::output(self : Cylinder, logger : &Logger) -> Unit {
   logger.write_string(self.to_string())
 }
 
@@ -44,7 +44,11 @@ fn check_cylinder_cap(ray : Ray, t : Double) -> Bool {
 }
 
 ///|
-fn intersect_caps(self : Cylinder, ray : Ray, xs : Array[Double]) -> Unit {
+fn Cylinder::intersect_caps(
+  self : Cylinder,
+  ray : Ray,
+  xs : Array[Double]
+) -> Unit {
   // caps only matter if the cylinder is closed, and might possibly be
   // intersected by the ray.
   if not(self.closed) || ray.direction.y.abs() < EPSILON {
@@ -65,7 +69,7 @@ fn intersect_caps(self : Cylinder, ray : Ray, xs : Array[Double]) -> Unit {
 }
 
 ///|
-pub fn local_intersect(self : Cylinder, ray : Ray) -> Array[Double] {
+pub fn Cylinder::local_intersect(self : Cylinder, ray : Ray) -> Array[Double] {
   let xs = []
   let a = ray.direction.x * ray.direction.x + ray.direction.z * ray.direction.z
   // ray is parallel to the y axis
@@ -104,7 +108,7 @@ pub fn local_intersect(self : Cylinder, ray : Ray) -> Array[Double] {
 }
 
 ///|
-pub fn local_normal_at(self : Cylinder, local_point : Tuple) -> Tuple {
+pub fn Cylinder::local_normal_at(self : Cylinder, local_point : Tuple) -> Tuple {
   let dist = local_point.x * local_point.x + local_point.z * local_point.z
   if dist < 1 && local_point.y >= self.maximum - EPSILON {
     return vector(0, 1, 0)
@@ -116,7 +120,7 @@ pub fn local_normal_at(self : Cylinder, local_point : Tuple) -> Tuple {
 }
 
 ///|
-pub fn bounds(self : Cylinder) -> Bounds {
+pub fn Cylinder::bounds(self : Cylinder) -> Bounds {
   let min = point(-1, self.minimum, -1)
   let max = point(1, self.maximum, 1)
   { min, max }

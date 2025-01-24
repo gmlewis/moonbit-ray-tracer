@@ -23,19 +23,19 @@ pub fn Pattern::new(pattern : &PatternTrait) -> Pattern {
 }
 
 ///|
-pub fn pattern_at(self : Pattern, point : Tuple) -> Color {
+pub fn Pattern::pattern_at(self : Pattern, point : Tuple) -> Color {
   self.pattern.pattern_at(point)
 }
 
 ///|
-pub fn op_equal(self : Pattern, other : Pattern) -> Bool {
+pub fn Pattern::op_equal(self : Pattern, other : Pattern) -> Bool {
   // https://github.com/moonbitlang/core/issues/1304#issuecomment-2523373703
   // self.pattern == other.pattern &&
   self.transform == other.transform
 }
 
 ///|
-pub fn clone(self : Pattern) -> Pattern {
+pub fn Pattern::clone(self : Pattern) -> Pattern {
   let pattern = self.pattern.clone().pattern
   let transform = self.transform.clone()
   let inv_transform = self.inv_transform.clone()
@@ -68,7 +68,7 @@ pub(all) struct StripePattern {
 } derive(Eq)
 
 ///|
-pub fn to_string(self : StripePattern) -> String {
+pub fn StripePattern::to_string(self : StripePattern) -> String {
   let colors = self.colors.map(fn(c) { "\{c}" })
   //let colors = colors.join(",")
   // YUCK! https://github.com/moonbitlang/core/pull/993
@@ -77,12 +77,12 @@ pub fn to_string(self : StripePattern) -> String {
 }
 
 ///|
-pub fn output(self : StripePattern, logger : &Logger) -> Unit {
+pub fn StripePattern::output(self : StripePattern, logger : &Logger) -> Unit {
   logger.write_string(self.to_string())
 }
 
 ///|
-pub fn clone(self : StripePattern) -> Pattern {
+pub fn StripePattern::clone(self : StripePattern) -> Pattern {
   stripe_pattern(self.colors)
 }
 
@@ -93,7 +93,7 @@ pub fn stripe_pattern(colors : Array[Color]) -> Pattern {
 }
 
 ///|
-pub fn pattern_at(self : StripePattern, point : Tuple) -> Color {
+pub fn StripePattern::pattern_at(self : StripePattern, point : Tuple) -> Color {
   let ncols = self.colors.length()
   let index = @math.floor(point.x).to_int()
   let index = if index >= 0 {
@@ -114,7 +114,7 @@ pub(all) struct GradientPattern {
 } derive(Eq)
 
 ///|
-pub fn to_string(self : GradientPattern) -> String {
+pub fn GradientPattern::to_string(self : GradientPattern) -> String {
   let colors = self.colors.map(fn(c) { "\{c}" })
   //let colors = colors.join(",")
   // YUCK! https://github.com/moonbitlang/core/pull/993
@@ -123,12 +123,15 @@ pub fn to_string(self : GradientPattern) -> String {
 }
 
 ///|
-pub fn output(self : GradientPattern, logger : &Logger) -> Unit {
+pub fn GradientPattern::output(
+  self : GradientPattern,
+  logger : &Logger
+) -> Unit {
   logger.write_string(self.to_string())
 }
 
 ///|
-pub fn clone(self : GradientPattern) -> Pattern {
+pub fn GradientPattern::clone(self : GradientPattern) -> Pattern {
   gradient_pattern(self.colors)
 }
 
@@ -139,7 +142,10 @@ pub fn gradient_pattern(colors : Array[Color]) -> Pattern {
 }
 
 ///|
-pub fn pattern_at(self : GradientPattern, point : Tuple) -> Color {
+pub fn GradientPattern::pattern_at(
+  self : GradientPattern,
+  point : Tuple
+) -> Color {
   let ncols = self.colors.length()
   let index = @math.floor(point.x).to_int()
   let index = if index >= 0 {
@@ -164,7 +170,7 @@ pub(all) struct RingPattern {
 } derive(Eq)
 
 ///|
-pub fn to_string(self : RingPattern) -> String {
+pub fn RingPattern::to_string(self : RingPattern) -> String {
   let colors = self.colors.map(fn(c) { "\{c}" })
   //let colors = colors.join(",")
   // YUCK! https://github.com/moonbitlang/core/pull/993
@@ -173,12 +179,12 @@ pub fn to_string(self : RingPattern) -> String {
 }
 
 ///|
-pub fn output(self : RingPattern, logger : &Logger) -> Unit {
+pub fn RingPattern::output(self : RingPattern, logger : &Logger) -> Unit {
   logger.write_string(self.to_string())
 }
 
 ///|
-pub fn clone(self : RingPattern) -> Pattern {
+pub fn RingPattern::clone(self : RingPattern) -> Pattern {
   ring_pattern(self.colors)
 }
 
@@ -189,7 +195,7 @@ pub fn ring_pattern(colors : Array[Color]) -> Pattern {
 }
 
 ///|
-pub fn pattern_at(self : RingPattern, point : Tuple) -> Color {
+pub fn RingPattern::pattern_at(self : RingPattern, point : Tuple) -> Color {
   let ncols = self.colors.length()
   let r = (point.x * point.x + point.z * point.z).sqrt()
   let index = @math.floor(r).to_int()
@@ -211,7 +217,7 @@ pub(all) struct GradientRingPattern {
 } derive(Eq)
 
 ///|
-pub fn to_string(self : GradientRingPattern) -> String {
+pub fn GradientRingPattern::to_string(self : GradientRingPattern) -> String {
   let colors = self.colors.map(fn(c) { "\{c}" })
   //let colors = colors.join(",")
   // YUCK! https://github.com/moonbitlang/core/pull/993
@@ -220,12 +226,15 @@ pub fn to_string(self : GradientRingPattern) -> String {
 }
 
 ///|
-pub fn output(self : GradientRingPattern, logger : &Logger) -> Unit {
+pub fn GradientRingPattern::output(
+  self : GradientRingPattern,
+  logger : &Logger
+) -> Unit {
   logger.write_string(self.to_string())
 }
 
 ///|
-pub fn clone(self : GradientRingPattern) -> Pattern {
+pub fn GradientRingPattern::clone(self : GradientRingPattern) -> Pattern {
   gradient_ring_pattern(self.colors)
 }
 
@@ -236,7 +245,10 @@ pub fn gradient_ring_pattern(colors : Array[Color]) -> Pattern {
 }
 
 ///|
-pub fn pattern_at(self : GradientRingPattern, point : Tuple) -> Color {
+pub fn GradientRingPattern::pattern_at(
+  self : GradientRingPattern,
+  point : Tuple
+) -> Color {
   let ncols = self.colors.length()
   let r = (point.x * point.x + point.z * point.z).sqrt()
   let index = @math.floor(r).to_int()
@@ -262,7 +274,7 @@ pub(all) struct CheckersPattern {
 } derive(Eq)
 
 ///|
-pub fn to_string(self : CheckersPattern) -> String {
+pub fn CheckersPattern::to_string(self : CheckersPattern) -> String {
   let colors = self.colors.map(fn(c) { "\{c}" })
   //let colors = colors.join(",")
   // YUCK! https://github.com/moonbitlang/core/pull/993
@@ -271,12 +283,15 @@ pub fn to_string(self : CheckersPattern) -> String {
 }
 
 ///|
-pub fn output(self : CheckersPattern, logger : &Logger) -> Unit {
+pub fn CheckersPattern::output(
+  self : CheckersPattern,
+  logger : &Logger
+) -> Unit {
   logger.write_string(self.to_string())
 }
 
 ///|
-pub fn clone(self : CheckersPattern) -> Pattern {
+pub fn CheckersPattern::clone(self : CheckersPattern) -> Pattern {
   checkers_pattern(self.colors)
 }
 
@@ -287,7 +302,10 @@ pub fn checkers_pattern(colors : Array[Color]) -> Pattern {
 }
 
 ///|
-pub fn pattern_at(self : CheckersPattern, point : Tuple) -> Color {
+pub fn CheckersPattern::pattern_at(
+  self : CheckersPattern,
+  point : Tuple
+) -> Color {
   let ncols = self.colors.length()
   let index = @math.floor(point.x).to_int() +
     @math.floor(point.y).to_int() +
@@ -310,7 +328,9 @@ pub(all) struct GradientCheckersPattern {
 } derive(Eq)
 
 ///|
-pub fn to_string(self : GradientCheckersPattern) -> String {
+pub fn GradientCheckersPattern::to_string(
+  self : GradientCheckersPattern
+) -> String {
   let colors = self.colors.map(fn(c) { "\{c}" })
   //let colors = colors.join(",")
   // YUCK! https://github.com/moonbitlang/core/pull/993
@@ -319,12 +339,17 @@ pub fn to_string(self : GradientCheckersPattern) -> String {
 }
 
 ///|
-pub fn output(self : GradientCheckersPattern, logger : &Logger) -> Unit {
+pub fn GradientCheckersPattern::output(
+  self : GradientCheckersPattern,
+  logger : &Logger
+) -> Unit {
   logger.write_string(self.to_string())
 }
 
 ///|
-pub fn clone(self : GradientCheckersPattern) -> Pattern {
+pub fn GradientCheckersPattern::clone(
+  self : GradientCheckersPattern
+) -> Pattern {
   gradient_checkers_pattern(self.colors)
 }
 
@@ -335,7 +360,10 @@ pub fn gradient_checkers_pattern(colors : Array[Color]) -> Pattern {
 }
 
 ///|
-pub fn pattern_at(self : GradientCheckersPattern, point : Tuple) -> Color {
+pub fn GradientCheckersPattern::pattern_at(
+  self : GradientCheckersPattern,
+  point : Tuple
+) -> Color {
   let ncols = self.colors.length()
   let index = @math.floor(point.x).to_int() +
     @math.floor(point.y).to_int() +

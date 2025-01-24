@@ -15,7 +15,7 @@ pub fn tuple(x : Double, y : Double, z : Double, w : Double) -> Tuple {
 }
 
 ///|
-pub fn to_string(self : Tuple) -> String {
+pub fn Tuple::to_string(self : Tuple) -> String {
   let x = round_to_fixed(self.x, 5)
   let y = round_to_fixed(self.y, 5)
   let z = round_to_fixed(self.z, 5)
@@ -35,7 +35,7 @@ pub impl Show for Tuple with output(self, logger) {
 }
 
 ///|
-pub fn op_get(self : Tuple, i : Int) -> Double {
+pub fn Tuple::op_get(self : Tuple, i : Int) -> Double {
   match i {
     0 => self.x
     1 => self.y
@@ -46,7 +46,7 @@ pub fn op_get(self : Tuple, i : Int) -> Double {
 }
 
 ///|
-pub fn op_set(self : Tuple, i : Int, v : Double) -> Unit {
+pub fn Tuple::op_set(self : Tuple, i : Int, v : Double) -> Unit {
   match i {
     0 => self.x = v
     1 => self.y = v
@@ -77,13 +77,13 @@ pub fn is_vector(self : Tuple) -> Bool {
 }
 
 ///|
-pub fn op_equal(self : Tuple, other : Tuple) -> Bool {
+pub fn Tuple::op_equal(self : Tuple, other : Tuple) -> Bool {
   let { x, y, z, w } = (self - other).abs()
   x < EPSILON && y < EPSILON && z < EPSILON && w < EPSILON
 }
 
 ///|
-pub fn op_add(self : Tuple, other : Tuple) -> Tuple {
+pub fn Tuple::op_add(self : Tuple, other : Tuple) -> Tuple {
   let x = self.x + other.x
   let y = self.y + other.y
   let z = self.z + other.z
@@ -92,7 +92,7 @@ pub fn op_add(self : Tuple, other : Tuple) -> Tuple {
 }
 
 ///|
-pub fn op_sub(self : Tuple, other : Tuple) -> Tuple {
+pub fn Tuple::op_sub(self : Tuple, other : Tuple) -> Tuple {
   let x = self.x - other.x
   let y = self.y - other.y
   let z = self.z - other.z
@@ -110,7 +110,7 @@ pub fn op_neg(self : Tuple) -> Tuple {
 }
 
 ///|
-pub fn op_mul(self : Tuple, other : Tuple) -> Tuple {
+pub fn Tuple::op_mul(self : Tuple, other : Tuple) -> Tuple {
   let x = self.x * other.x
   let y = self.y * other.y
   let z = self.z * other.z
@@ -119,7 +119,7 @@ pub fn op_mul(self : Tuple, other : Tuple) -> Tuple {
 }
 
 ///|
-pub fn mul_scalar(self : Tuple, other : Double) -> Tuple {
+pub fn Tuple::mul_scalar(self : Tuple, other : Double) -> Tuple {
   let x = self.x * other
   let y = self.y * other
   let z = self.z * other

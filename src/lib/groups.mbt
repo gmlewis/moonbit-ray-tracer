@@ -20,12 +20,12 @@ pub fn Group::to_string(_self : Group) -> String {
 }
 
 ///|
-pub fn output(self : Group, logger : &Logger) -> Unit {
+pub fn Group::output(self : Group, logger : &Logger) -> Unit {
   logger.write_string(self.to_string())
 }
 
 ///|
-pub fn local_intersect(
+pub fn Group::local_intersect(
   self : Group,
   group_shape : Shape,
   ray : Ray
@@ -47,7 +47,7 @@ pub fn Group::local_normal_at(_self : Group, _point : Tuple) -> Tuple {
 }
 
 ///|
-pub fn bounds(self : Group) -> Bounds {
+pub fn Group::bounds(self : Group) -> Bounds {
   match self.bounds {
     Some(bounds) => return bounds
     _ => ()

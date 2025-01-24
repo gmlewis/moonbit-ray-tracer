@@ -2,7 +2,7 @@
 pub(all) type MatrixRow Array[Double] derive(Show)
 
 ///|
-pub fn op_get(self : MatrixRow, col : Int) -> Double {
+pub fn MatrixRow::op_get(self : MatrixRow, col : Int) -> Double {
   self._[col]
 }
 
@@ -15,7 +15,7 @@ pub fn op_set(self : MatrixRow, col : Int, v : Double) -> Unit {
 pub(all) type Matrix Array[MatrixRow]
 
 ///|
-pub fn to_string(self : Matrix) -> String {
+pub fn Matrix::to_string(self : Matrix) -> String {
   let nrows = self.num_rows()
   let ncols = self.num_cols()
   guard nrows == ncols
@@ -37,7 +37,7 @@ pub impl Show for Matrix with output(self, logger) {
 }
 
 ///|
-pub fn op_get(self : Matrix, row : Int) -> MatrixRow {
+pub fn Matrix::op_get(self : Matrix, row : Int) -> MatrixRow {
   self._[row]
 }
 
@@ -55,7 +55,7 @@ pub fn num_cols(self : Matrix) -> Int {
 }
 
 ///|
-pub fn op_equal(self : Matrix, other : Matrix) -> Bool {
+pub fn Matrix::op_equal(self : Matrix, other : Matrix) -> Bool {
   let nrows = self.num_rows()
   if self.num_rows() != other.num_rows() {
     return false
@@ -82,7 +82,7 @@ pub fn op_equal(self : Matrix, other : Matrix) -> Bool {
 }
 
 ///| Matrix multiplication - currently, only 4x4 is handled.
-pub fn op_mul(self : Matrix, o : Matrix) -> Matrix {
+pub fn Matrix::op_mul(self : Matrix, o : Matrix) -> Matrix {
   let m = mat4zero()
   for row in 0..<4 {
     for col in 0..<4 {
@@ -96,7 +96,7 @@ pub fn op_mul(self : Matrix, o : Matrix) -> Matrix {
 }
 
 ///|
-pub fn clone(self : Matrix) -> Matrix {
+pub fn Matrix::clone(self : Matrix) -> Matrix {
   let nrows = self.num_rows()
   let ncols = self.num_cols()
   let result = Array::new(capacity=nrows)
