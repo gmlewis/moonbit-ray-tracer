@@ -1,3 +1,4 @@
+///|
 test "Constructing and inspecting a 4x4 matrix (p.54)" {
   let m = mat4(
     1, 2, 3, 4, // row 0
@@ -14,6 +15,7 @@ test "Constructing and inspecting a 4x4 matrix (p.54)" {
   assert_eq!(m[3][2], 15.5)
 }
 
+///|
 test "Matrix equality with identical matrices (p.55)" {
   let a = mat4(
     1, 2, 3, 4, // row 0
@@ -30,6 +32,7 @@ test "Matrix equality with identical matrices (p.55)" {
   assert_eq!(a, b)
 }
 
+///|
 test "Matrix equality with different matrices (p.55)" {
   let a = mat4(
     1, 2, 3, 4, // row 0
@@ -46,6 +49,7 @@ test "Matrix equality with different matrices (p.55)" {
   assert_not_eq!(a, b)
 }
 
+///|
 test "Multiplying two matrices" {
   let a = mat4(
     1, 2, 3, 4, // row 0
@@ -68,6 +72,7 @@ test "Multiplying two matrices" {
   assert_eq!(a * b, want)
 }
 
+///|
 test "A matrix multiplied by a tuple (p.57)" {
   let a = mat4(
     1, 2, 3, 4, // row 0
@@ -79,6 +84,7 @@ test "A matrix multiplied by a tuple (p.57)" {
   assert_eq!(a.mul_tuple(b), tuple(18, 24, 33, 1))
 }
 
+///|
 test "Multiplying a matrix by the identity matrix (p.60)" {
   let a = mat4(
     0, 1, 2, 4, // row 0
@@ -89,11 +95,13 @@ test "Multiplying a matrix by the identity matrix (p.60)" {
   assert_eq!(a * mat4ident(), a)
 }
 
+///|
 test "Multiplying the identity matrix by a tuple (p.60)" {
   let a = tuple(1, 2, 3, 4)
   assert_eq!(mat4ident().mul_tuple(a), a)
 }
 
+///|
 test "Transposing a matrix (p.61)" {
   let a = mat4(
     0, 9, 3, 0, // row 0
@@ -110,12 +118,14 @@ test "Transposing a matrix (p.61)" {
   assert_eq!(a.transpose(), want)
 }
 
+///|
 test "Transposing the identity matrix (p.61)" {
   let a = mat4ident().transpose()
   let want = mat4ident()
   assert_eq!(a, want)
 }
 
+///|
 test "A submatrix of a 4x4 matrix is a 3x3 matrix (p.63)" {
   let a = mat4(
     -6, 1, 1, 6, // row 0
@@ -131,6 +141,7 @@ test "A submatrix of a 4x4 matrix is a 3x3 matrix (p.63)" {
   assert_eq!(a.submatrix(2, 1), want)
 }
 
+///|
 test "Calculating the determinant of a 4x4 matrix (p.65)" {
   let a = mat4(
     -2, -8, 3, 5, // row 0
@@ -145,6 +156,7 @@ test "Calculating the determinant of a 4x4 matrix (p.65)" {
   assert_eq!(a.determinant(), -4071)
 }
 
+///|
 test "Testing an invertible matrix for invertibility (p.66)" {
   let a = mat4(
     6, 4, 4, 4, // row 0
@@ -156,6 +168,7 @@ test "Testing an invertible matrix for invertibility (p.66)" {
   assert_true!(a.is_invertible())
 }
 
+///|
 test "Testing a non-invertible matrix for invertibility (p.67)" {
   let a = mat4(
     -4, 2, -2, -3, // row 0
@@ -167,6 +180,7 @@ test "Testing a non-invertible matrix for invertibility (p.67)" {
   assert_false!(a.is_invertible())
 }
 
+///|
 test "Calculating the inverse of a matrix (p.67)" {
   let a = mat4(
     -5, 2, 6, -8, // row 0
@@ -189,6 +203,7 @@ test "Calculating the inverse of a matrix (p.67)" {
   assert_eq!(b, want)
 }
 
+///|
 test "Calculating the inverse of another matrix (p.68)" {
   let a = mat4(
     8, -5, 9, 2, // row 0
@@ -205,6 +220,7 @@ test "Calculating the inverse of another matrix (p.68)" {
   assert_eq!(a.inverse(), want)
 }
 
+///|
 test "Calculating the inverse of a third matrix (p.69)" {
   let a = mat4(
     9, 3, 0, 9, // row 0
@@ -221,6 +237,7 @@ test "Calculating the inverse of a third matrix (p.69)" {
   assert_eq!(a.inverse(), want)
 }
 
+///|
 test "Multiplying a product by its inverse (p.69)" {
   let a = mat4(
     3, -9, 7, 3, // row 0

@@ -134,9 +134,9 @@ fn main {
   let canvas = camera.render(world)
 
   //
-  @fs.write_string_to_file(path="ch10-rings.ppm", content=canvas.to_ppm())
   try {
-    @fs.write_bytes_to_file(path="ch10-rings.png", content=canvas.to_png!())
+    @fs.write_string_to_file!("ch10-rings.ppm", canvas.to_ppm())
+    @fs.write_bytes_to_file!("ch10-rings.png", canvas.to_png!())
   } catch {
     _ => println("error writing ch10-rings.png")
   }

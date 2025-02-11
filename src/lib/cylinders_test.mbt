@@ -1,3 +1,4 @@
+///|
 test "A ray misses a cylinder (p.235)" {
   let cyl = @lib.cylinder()
   let tests = [
@@ -13,6 +14,7 @@ test "A ray misses a cylinder (p.235)" {
   }
 }
 
+///|
 test "A ray strikes a cylinder (p.236)" {
   let cyl = @lib.cylinder()
   let tests = [
@@ -30,6 +32,7 @@ test "A ray strikes a cylinder (p.236)" {
   }
 }
 
+///|
 test "Normal vector on a cylinder (p.238)" {
   let cyl = @lib.cylinder()
   let tests = [
@@ -51,6 +54,7 @@ test "Normal vector on a cylinder (p.238)" {
 //   assert_eq!(cyl.object.maximum, @double.infinity)
 // }
 
+///|
 test "Intersecting a constrained cylinder (p.240)" {
   let cyl = @lib.cylinder(minimum=1, maximum=2)
   let tests = [
@@ -75,6 +79,7 @@ test "Intersecting a constrained cylinder (p.240)" {
 //   assert_false!(cyl.closed)
 // }
 
+///|
 test "Intersecting the caps of a closed cylinder (p.243)" {
   let cyl = @lib.cylinder(minimum=1, maximum=2, closed=true)
   let tests = [
@@ -92,6 +97,7 @@ test "Intersecting the caps of a closed cylinder (p.243)" {
   }
 }
 
+///|
 test "The normal vector on a cylinder's end caps (p.245)" {
   let cyl = @lib.cylinder(minimum=1, maximum=2, closed=true)
   let tests = [

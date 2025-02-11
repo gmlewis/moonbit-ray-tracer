@@ -1,9 +1,11 @@
+///|
 test "Creating a world (p.134)" {
   let w = world()
   assert_eq!(w.shapes, [])
   assert_eq!(w.lights, [])
 }
 
+///|
 test "The default world (p.134)" {
   let light = point_light(point(-10, 10, -10), color(1, 1, 1))
   let s1 = sphere()
@@ -16,6 +18,7 @@ test "The default world (p.134)" {
   assert_eq!(w.lights, [light])
 }
 
+///|
 test "Intersect a world with a ray (p.134)" {
   let w = default_world()
   let r = ray(point(0, 0, -5), vector(0, 0, 1))
@@ -27,6 +30,7 @@ test "Intersect a world with a ray (p.134)" {
   assert_eq!(xs[3].t, 6)
 }
 
+///|
 test "Shading an intersection (p.137)" {
   let w = default_world()
   let r = ray(point(0, 0, -5), vector(0, 0, 1))
@@ -37,6 +41,7 @@ test "Shading an intersection (p.137)" {
   assert_eq!(c, color(0.38066, 0.47583, 0.2855))
 }
 
+///|
 test "Shading an intersection from the inside (p.137)" {
   let w = default_world()
   w.lights = [point_light(point(0, 0.25, 0), color(1, 1, 1))]
@@ -48,6 +53,7 @@ test "Shading an intersection from the inside (p.137)" {
   assert_eq!(c, color(0.90498, 0.90498, 0.90498))
 }
 
+///|
 test "The color when a ray misses (p.138)" {
   let w = default_world()
   let r = ray(point(0, 0, -5), vector(0, 1, 0))
@@ -55,6 +61,7 @@ test "The color when a ray misses (p.138)" {
   assert_eq!(c, color(0, 0, 0))
 }
 
+///|
 test "The color when a ray hits (p.138)" {
   let w = default_world()
   let r = ray(point(0, 0, -5), vector(0, 0, 1))
@@ -62,6 +69,7 @@ test "The color when a ray hits (p.138)" {
   assert_eq!(c, color(0.38066, 0.47583, 0.2855))
 }
 
+///|
 test "The color with an intersection behind the ray (p.139)" {
   let w = default_world()
   let outer = w.shapes[0]
@@ -73,30 +81,35 @@ test "The color with an intersection behind the ray (p.139)" {
   assert_eq!(c, inner.material.color)
 }
 
+///|
 test "There is no shadow when nothing is collinear with point and light (p.157)" {
   let w = default_world()
   let p = point(0, 10, 0)
   assert_false!(w.is_shadowed(p))
 }
 
+///|
 test "The shadow when an object is between the point and the light (p.157)" {
   let w = default_world()
   let p = point(10, -10, 10)
   assert_true!(w.is_shadowed(p))
 }
 
+///|
 test "There is no shadow when an object is behind the light (p.158)" {
   let w = default_world()
   let p = point(-20, 20, -20)
   assert_false!(w.is_shadowed(p))
 }
 
+///|
 test "There is no shadow when an object is behind the poiny (p.159)" {
   let w = default_world()
   let p = point(-2, 2, -2)
   assert_false!(w.is_shadowed(p))
 }
 
+///|
 test "shade_hit() is given an intersection in shadow (p.160)" {
   let w = world()
   w.lights = [point_light(point(0, 0, -10), color(1, 1, 1))]
@@ -110,6 +123,7 @@ test "shade_hit() is given an intersection in shadow (p.160)" {
   assert_eq!(c, color(0.1, 0.1, 0.1))
 }
 
+///|
 test "The reflected color for a non-reflective material (p.197)" {
   let w = default_world()
   let r = ray(point(0, 0, 0), vector(0, 0, 1))
@@ -121,6 +135,7 @@ test "The reflected color for a non-reflective material (p.197)" {
   assert_eq!(color, black)
 }
 
+///|
 test "The reflected color for a reflective material (p.197)" {
   let w = default_world()
   let shape = plane()..set_transform(translation(0, -1, 0))
@@ -134,6 +149,7 @@ test "The reflected color for a reflective material (p.197)" {
   assert_eq!(c, color(0.19033, 0.23792, 0.14275))
 }
 
+///|
 test "shade_hit() with a reflective material (p.198)" {
   let w = default_world()
   let shape = plane()..set_transform(translation(0, -1, 0))
@@ -147,6 +163,7 @@ test "shade_hit() with a reflective material (p.198)" {
   assert_eq!(c, color(0.87676, 0.92434, 0.82917))
 }
 
+///|
 test "color_at() with mutually reflective surfaces (p.199)" {
   let w = world()
   w.lights.push(point_light(point(0, 0, 0), color(1, 1, 1)))
@@ -162,6 +179,7 @@ test "color_at() with mutually reflective surfaces (p.199)" {
 
 }
 
+///|
 test "The reflected color at the maximum recursive depth (p.200)" {
   let w = default_world()
   let shape = plane()..set_transform(translation(0, -1, 0))
@@ -175,6 +193,7 @@ test "The reflected color at the maximum recursive depth (p.200)" {
   assert_eq!(c, black)
 }
 
+///|
 test "The refracted color with an opaque surface (p.209)" {
   let w = default_world()
   let shape = w.shapes[0]
@@ -188,6 +207,7 @@ test "The refracted color with an opaque surface (p.209)" {
   assert_eq!(c, black)
 }
 
+///|
 test "The refracted color at the maximum recursive depth (p.209)" {
   let w = default_world()
   let shape = w.shapes[0]
@@ -203,6 +223,7 @@ test "The refracted color at the maximum recursive depth (p.209)" {
   assert_eq!(c, black)
 }
 
+///|
 test "The refracted color under total internal reflection (p.210)" {
   let w = default_world()
   let shape = w.shapes[0]
@@ -221,6 +242,7 @@ test "The refracted color under total internal reflection (p.210)" {
   assert_eq!(c, color(0, 0, 0))
 }
 
+///|
 test "The refracted color with a refracted ray (p.212)" {
   let w = default_world()
   let a = w.shapes[0]
@@ -241,6 +263,7 @@ test "The refracted color with a refracted ray (p.212)" {
   assert_eq!(c, color(0, 0.99888, 0.04722))
 }
 
+///|
 test "shade_hit() with a transparent material (p.213)" {
   let w = default_world()
   let floor = plane()..set_transform(translation(0, -1, 0))
@@ -259,6 +282,7 @@ test "shade_hit() with a transparent material (p.213)" {
   assert_eq!(c, color(0.93642, 0.68642, 0.68642))
 }
 
+///|
 test "shade_hit() with a reflective, transparent material (p.218)" {
   let w = default_world()
   let floor = plane()..set_transform(translation(0, -1, 0))

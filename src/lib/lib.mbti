@@ -1,0 +1,608 @@
+package gmlewis/ray-tracer/lib
+
+alias @gmlewis/image as @image
+
+// Values
+const EPSILON : Double = 0.00001
+
+let black : Color
+
+fn camera(Int, Int, Double) -> Camera
+
+fn canvas(Int, Int) -> Canvas
+
+fn checkers_pattern(Array[Color]) -> Pattern
+
+fn color(Double, Double, Double) -> Color
+
+fn cone(minimum~ : Double = .., maximum~ : Double = .., closed~ : Bool = ..) -> Shape
+
+fn csg(Operation, Shape, Shape) -> Shape
+
+fn cube() -> Shape
+
+fn cylinder(minimum~ : Double = .., maximum~ : Double = .., closed~ : Bool = ..) -> Shape
+
+fn default_world() -> World
+
+fn glass_sphere() -> Shape
+
+fn gradient_checkers_pattern(Array[Color]) -> Pattern
+
+fn gradient_pattern(Array[Color]) -> Pattern
+
+fn gradient_ring_pattern(Array[Color]) -> Pattern
+
+fn group() -> Shape
+
+fn intersection(Double, Shape, u~ : Double = .., v~ : Double = ..) -> Intersection
+
+fn intersection_allowed(Operation, Bool, Bool, Bool) -> Bool
+
+fn intersections(Array[Intersection]) -> Intersections
+
+fn mat2(Double, Double, Double, Double) -> Matrix
+
+fn mat3(Double, Double, Double, Double, Double, Double, Double, Double, Double) -> Matrix
+
+fn mat4(Double, Double, Double, Double, Double, Double, Double, Double, Double, Double, Double, Double, Double, Double, Double, Double) -> Matrix
+
+fn mat4ident() -> Matrix
+
+fn mat4zero() -> Matrix
+
+fn material() -> Material
+
+fn parse_obj_file(String) -> ObjFile!ParserError
+
+fn plane() -> Shape
+
+fn point(Double, Double, Double) -> Tuple
+
+fn point_light(Tuple, Color) -> Light
+
+fn ray(Tuple, Tuple) -> Ray
+
+fn ring_pattern(Array[Color]) -> Pattern
+
+fn rotation_x(Double) -> Matrix
+
+fn rotation_y(Double) -> Matrix
+
+fn rotation_z(Double) -> Matrix
+
+fn round_to_fixed(Double, Int) -> Double
+
+fn scaling(Double, Double, Double) -> Matrix
+
+fn shearing(Double, Double, Double, Double, Double, Double) -> Matrix
+
+fn smooth_triangle(Tuple, Tuple, Tuple, Tuple, Tuple, Tuple) -> Shape
+
+fn sphere() -> Shape
+
+fn stripe_pattern(Array[Color]) -> Pattern
+
+fn translation(Double, Double, Double) -> Matrix
+
+fn triangle(Tuple, Tuple, Tuple) -> Shape
+
+fn tuple(Double, Double, Double, Double) -> Tuple
+
+fn vector(Double, Double, Double) -> Tuple
+
+fn view_transform(Tuple, Tuple, Tuple) -> Matrix
+
+let white : Color
+
+fn world() -> World
+
+// Types and methods
+pub(all) struct Bounds {
+  min : Tuple
+  max : Tuple
+}
+impl Bounds {
+  enlarge(Self, Self) -> Unit
+  local_intersect(Self, Ray, Shape) -> Intersections
+  new() -> Self
+  transform(Self, Matrix) -> Self
+  update(Self, Tuple) -> Unit
+}
+impl Eq for Bounds
+impl Show for Bounds
+
+pub(all) struct CSG {
+  operation : Operation
+  left : Shape
+  right : Shape
+}
+impl CSG {
+  filter_intersections(Self, Intersections) -> Intersections
+}
+impl Eq for CSG
+impl Show for CSG
+
+pub(all) struct Camera {
+  hsize : Int
+  vsize : Int
+  field_of_view : Double
+  transform : Matrix
+  pixel_size : Double
+  half_width : Double
+  half_height : Double
+}
+impl Camera {
+  ray_for_pixel(Self, Int, Int) -> Ray
+  render(Self, World) -> Canvas
+}
+impl Eq for Camera
+impl Show for Camera
+
+pub(all) struct Canvas {
+  width : Int
+  height : Int
+  red : Array[Double]
+  green : Array[Double]
+  blue : Array[Double]
+}
+impl Canvas {
+  clear(Self, Color) -> Unit
+  pixel_at(Self, Int, Int) -> Color
+  to_png(Self) -> Bytes!@image.SizeError
+  to_ppm(Self) -> String
+  write_pixel(Self, Int, Int, Color) -> Unit
+}
+
+pub(all) struct CheckersPattern {
+  colors : Array[Color]
+}
+impl CheckersPattern {
+  clone(Self) -> Pattern
+  output(Self, &Logger) -> Unit
+  pattern_at(Self, Tuple) -> Color
+  to_string(Self) -> String
+}
+impl Eq for CheckersPattern
+
+pub(all) struct Color {
+  red : Double
+  green : Double
+  blue : Double
+}
+impl Color {
+  clone(Self) -> Self
+  mul_scalar(Self, Double) -> Self
+  op_add(Self, Self) -> Self
+  op_equal(Self, Self) -> Bool
+  op_mul(Self, Self) -> Self
+  op_sub(Self, Self) -> Self
+  to_string(Self) -> String
+}
+impl Show for Color
+
+pub(all) struct Computations {
+  t : Double
+  shape : Shape
+  point : Tuple
+  eyev : Tuple
+  normalv : Tuple
+  reflectv : Tuple
+  inside : Bool
+  over_point : Tuple
+  under_point : Tuple
+  n1 : Double
+  n2 : Double
+}
+impl Computations {
+  schlick(Self) -> Double
+}
+
+pub(all) struct Cone {
+  minimum : Double
+  maximum : Double
+  closed : Bool
+}
+impl Cone {
+  bounds(Self) -> Bounds
+  local_intersect(Self, Ray) -> Array[Double]
+  local_normal_at(Self, Tuple) -> Tuple
+  op_equal(Self, Self) -> Bool
+  output(Self, &Logger) -> Unit
+  to_string(Self) -> String
+}
+impl Eq for Cone
+
+pub(all) struct Cube {
+}
+impl Cube {
+  bounds(Self) -> Bounds
+  local_intersect(Self, Ray) -> Array[Double]
+  local_normal_at(Self, Tuple) -> Tuple
+  op_equal(Self, Self) -> Bool
+  output(Self, &Logger) -> Unit
+  to_string(Self) -> String
+}
+impl Eq for Cube
+
+pub(all) struct Cylinder {
+  minimum : Double
+  maximum : Double
+  closed : Bool
+}
+impl Cylinder {
+  bounds(Self) -> Bounds
+  local_intersect(Self, Ray) -> Array[Double]
+  local_normal_at(Self, Tuple) -> Tuple
+  op_equal(Self, Self) -> Bool
+  output(Self, &Logger) -> Unit
+  to_string(Self) -> String
+}
+impl Eq for Cylinder
+
+pub(all) struct GradientCheckersPattern {
+  colors : Array[Color]
+}
+impl GradientCheckersPattern {
+  clone(Self) -> Pattern
+  output(Self, &Logger) -> Unit
+  pattern_at(Self, Tuple) -> Color
+  to_string(Self) -> String
+}
+impl Eq for GradientCheckersPattern
+
+pub(all) struct GradientPattern {
+  colors : Array[Color]
+}
+impl GradientPattern {
+  clone(Self) -> Pattern
+  output(Self, &Logger) -> Unit
+  pattern_at(Self, Tuple) -> Color
+  to_string(Self) -> String
+}
+impl Eq for GradientPattern
+
+pub(all) struct GradientRingPattern {
+  colors : Array[Color]
+}
+impl GradientRingPattern {
+  clone(Self) -> Pattern
+  output(Self, &Logger) -> Unit
+  pattern_at(Self, Tuple) -> Color
+  to_string(Self) -> String
+}
+impl Eq for GradientRingPattern
+
+pub(all) struct Group {
+  children : Array[Shape]
+  bounds : Bounds?
+}
+impl Group {
+  bounds(Self) -> Bounds
+  local_intersect(Self, Shape, Ray) -> Intersections
+  local_normal_at(Self, Tuple) -> Tuple
+  output(Self, &Logger) -> Unit
+  to_string(Self) -> String
+}
+
+pub(all) struct Intersection {
+  t : Double
+  shape : Shape
+  u : Double
+  v : Double
+}
+impl Intersection {
+  op_equal(Self, Self) -> Bool
+  prepare_computations(Self, Ray, xs~ : Intersections = ..) -> Computations
+  to_string(Self) -> String
+}
+impl Show for Intersection
+
+pub(all) struct Intersections {
+  count : Int
+  xs : Array[Intersection]
+  hit : Intersection?
+}
+impl Intersections {
+  from_ts(Array[Double], Shape) -> Self
+  hit(Self) -> Intersection?
+  op_get(Self, Int) -> Intersection
+  to_ts(Self) -> Array[Double]
+}
+
+pub(all) struct Light {
+  position : Tuple
+  intensity : Color
+}
+impl Eq for Light
+impl Show for Light
+
+pub(all) struct Material {
+  color : Color
+  ambient : Double
+  diffuse : Double
+  specular : Double
+  shininess : Double
+  reflective : Double
+  transparency : Double
+  refractive_index : Double
+  pattern : Pattern?
+}
+impl Material {
+  lighting(Self, Light, Tuple, Tuple, Tuple, in_shadow~ : Bool = .., shape~ : Shape? = ..) -> Color
+}
+impl Eq for Material
+impl Show for Material
+
+pub(all) type Matrix Array[MatrixRow]
+impl Matrix {
+  clone(Self) -> Self
+  cofactor(Self, Int, Int) -> Double
+  copy(Self, Self) -> Unit
+  determinant(Self) -> Double
+  dump(Self) -> String
+  inverse(Self) -> Self
+  is_invertible(Self) -> Bool
+  minor(Self, Int, Int) -> Double
+  mul_tuple(Self, Tuple) -> Tuple
+  num_cols(Self) -> Int
+  num_rows(Self) -> Int
+  op_equal(Self, Self) -> Bool
+  op_get(Self, Int) -> MatrixRow
+  op_mul(Self, Self) -> Self
+  rotate_x(Self, Double) -> Self
+  rotate_y(Self, Double) -> Self
+  rotate_z(Self, Double) -> Self
+  scale(Self, Double, Double, Double) -> Self
+  shear(Self, Double, Double, Double, Double, Double, Double) -> Self
+  submatrix(Self, Int, Int) -> Self
+  to_string(Self) -> String
+  translate(Self, Double, Double, Double) -> Self
+  transpose(Self) -> Self
+}
+impl Show for Matrix
+
+pub(all) type MatrixRow Array[Double]
+impl MatrixRow {
+  op_get(Self, Int) -> Double
+  op_set(Self, Int, Double) -> Unit
+}
+impl Show for MatrixRow
+
+pub(all) struct ObjFile {
+  default_group : Shape
+  ignored_lines : Int
+  vertices : Array[Tuple]
+  normals : Array[Tuple]
+  named_groups : Map[String, Shape]
+}
+impl ObjFile {
+  obj_to_group(Self) -> Shape
+}
+
+pub(all) enum Operation {
+  Union
+  Intersection
+  Difference
+}
+impl Eq for Operation
+impl Show for Operation
+
+type ParserError
+impl Eq for ParserError
+impl Show for ParserError
+
+pub(all) struct Pattern {
+  pattern : &PatternTrait
+  transform : Matrix
+  inv_transform : Matrix
+}
+impl Pattern {
+  clone(Self) -> Self
+  new(&PatternTrait) -> Self
+  op_equal(Self, Self) -> Bool
+  pattern_at(Self, Tuple) -> Color
+  pattern_at_shape(Self, Shape, Tuple) -> Color
+  set_pattern_transform(Self, Matrix) -> Unit
+}
+impl Show for Pattern
+
+pub(all) struct Plane {
+}
+impl Plane {
+  bounds(Self) -> Bounds
+  local_intersect(Self, Ray) -> Array[Double]
+  local_normal_at(Self, Tuple) -> Tuple
+  op_equal(Self, Self) -> Bool
+  output(Self, &Logger) -> Unit
+  to_string(Self) -> String
+}
+impl Eq for Plane
+
+pub(all) struct Ray {
+  origin : Tuple
+  direction : Tuple
+}
+impl Ray {
+  op_equal(Self, Self) -> Bool
+  position(Self, Double) -> Tuple
+  to_string(Self) -> String
+  transform(Self, Matrix) -> Self
+}
+impl Eq for Ray
+impl Show for Ray
+
+pub(all) enum Renderable {
+  Object(&Object)
+  Group(Group)
+  Triangle(Triangle)
+  SmoothTriangle(SmoothTriangle)
+  CSG(CSG)
+}
+impl Renderable {
+  output(Self, &Logger) -> Unit
+  to_string(Self) -> String
+}
+
+pub(all) struct RingPattern {
+  colors : Array[Color]
+}
+impl RingPattern {
+  clone(Self) -> Pattern
+  output(Self, &Logger) -> Unit
+  pattern_at(Self, Tuple) -> Color
+  to_string(Self) -> String
+}
+impl Eq for RingPattern
+
+pub(all) struct Shape {
+  object : Renderable
+  material : Material
+  transform : Matrix
+  inv_transform : Matrix
+  parent : Shape?
+  bounds : Bounds?
+  id : UInt
+}
+impl Shape {
+  add_child(Self, Self) -> Unit
+  bounds(Self) -> Bounds
+  children(Self) -> Array[Self]
+  includes_shape(Self, Self) -> Bool
+  intersect(Self, Ray) -> Intersections
+  local_intersect(Self, Ray) -> Intersections
+  local_normal_at(Self, Tuple, hit~ : Intersection? = ..) -> Tuple
+  new(Renderable) -> Self
+  new_csg(CSG) -> Self
+  new_group(Group) -> Self
+  new_object(&Object) -> Self
+  new_smooth_triangle(SmoothTriangle) -> Self
+  new_triangle(Triangle) -> Self
+  normal_at(Self, Tuple, hit~ : Intersection? = ..) -> Tuple
+  normal_to_world(Self, Tuple) -> Tuple
+  op_equal(Self, Self) -> Bool
+  output(Self, &Logger) -> Unit
+  set_transform(Self, Matrix) -> Unit
+  to_string(Self) -> String
+  world_to_object(Self, Tuple) -> Tuple
+}
+
+pub(all) struct SmoothTriangle {
+  p1 : Tuple
+  p2 : Tuple
+  p3 : Tuple
+  n1 : Tuple
+  n2 : Tuple
+  n3 : Tuple
+  e1 : Tuple
+  e2 : Tuple
+  bounds : Bounds
+}
+impl SmoothTriangle {
+  bounds(Self) -> Bounds
+  local_intersect(Self, Ray) -> Array[(Double, Double, Double)]
+  local_normal_at(Self, Tuple, Intersection) -> Tuple
+}
+impl Eq for SmoothTriangle
+impl Show for SmoothTriangle
+
+pub(all) struct Sphere {
+}
+impl Sphere {
+  bounds(Self) -> Bounds
+  local_intersect(Self, Ray) -> Array[Double]
+  local_normal_at(Self, Tuple) -> Tuple
+  op_equal(Self, Self) -> Bool
+  output(Self, &Logger) -> Unit
+  to_string(Self) -> String
+}
+impl Eq for Sphere
+
+pub(all) struct StripePattern {
+  colors : Array[Color]
+}
+impl StripePattern {
+  clone(Self) -> Pattern
+  output(Self, &Logger) -> Unit
+  pattern_at(Self, Tuple) -> Color
+  to_string(Self) -> String
+}
+impl Eq for StripePattern
+
+pub(all) struct Triangle {
+  p1 : Tuple
+  p2 : Tuple
+  p3 : Tuple
+  e1 : Tuple
+  e2 : Tuple
+  normal : Tuple
+  bounds : Bounds
+}
+impl Triangle {
+  bounds(Self) -> Bounds
+  local_intersect(Self, Ray) -> Array[(Double, Double, Double)]
+  local_normal_at(Self, Tuple) -> Tuple
+}
+impl Eq for Triangle
+impl Show for Triangle
+
+pub(all) struct Tuple {
+  x : Double
+  y : Double
+  z : Double
+  w : Double
+}
+impl Tuple {
+  abs(Self) -> Self
+  cross(Self, Self) -> Self
+  div_scalar(Self, Double) -> Self
+  dot(Self, Self) -> Double
+  is_point(Self) -> Bool
+  is_vector(Self) -> Bool
+  magnitude(Self) -> Double
+  mul_scalar(Self, Double) -> Self
+  normalize(Self) -> Self
+  op_add(Self, Self) -> Self
+  op_div(Self, Self) -> Self
+  op_equal(Self, Self) -> Bool
+  op_get(Self, Int) -> Double
+  op_mul(Self, Self) -> Self
+  op_neg(Self) -> Self
+  op_set(Self, Int, Double) -> Unit
+  op_sub(Self, Self) -> Self
+  reflect(Self, Self) -> Self
+  to_string(Self) -> String
+}
+impl Show for Tuple
+
+pub(all) struct World {
+  shapes : Array[Shape]
+  lights : Array[Light]
+}
+impl World {
+  color_at(Self, Ray, remaining~ : Int = ..) -> Color
+  intersect_world(Self, Ray) -> Intersections
+  is_shadowed(Self, Tuple, light~ : Light = ..) -> Bool
+  reflected_color(Self, Computations, Int) -> Color
+  refracted_color(Self, Computations, Int) -> Color
+  shade_hit(Self, Computations, remaining~ : Int = ..) -> Color
+}
+
+// Type aliases
+
+// Traits
+pub(open) trait Object {
+  local_intersect(Self, Ray) -> Array[Double]
+  local_normal_at(Self, Tuple) -> Tuple
+  bounds(Self) -> Bounds
+  output(Self, &Logger) -> Unit
+  to_string(Self) -> String
+}
+
+pub(open) trait PatternTrait {
+  pattern_at(Self, Tuple) -> Color
+  clone(Self) -> Pattern
+  output(Self, &Logger) -> Unit
+  to_string(Self) -> String
+}
+

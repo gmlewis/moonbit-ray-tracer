@@ -1,3 +1,4 @@
+///|
 test "Creating a stripe pattern (p.175)" {
   let pattern = stripe_pattern([white, black])
   inspect!(
@@ -18,6 +19,7 @@ test "Creating a stripe pattern (p.175)" {
   )
 }
 
+///|
 test "A stripe pattern is constant in y (p.175)" {
   let pattern = stripe_pattern([white, black])
   assert_eq!(pattern.pattern_at(point(0, 0, 0)), white)
@@ -25,6 +27,7 @@ test "A stripe pattern is constant in y (p.175)" {
   assert_eq!(pattern.pattern_at(point(0, 2, 0)), white)
 }
 
+///|
 test "A stripe pattern is constant in z (p.175)" {
   let pattern = stripe_pattern([white, black])
   assert_eq!(pattern.pattern_at(point(0, 0, 0)), white)
@@ -32,6 +35,7 @@ test "A stripe pattern is constant in z (p.175)" {
   assert_eq!(pattern.pattern_at(point(0, 0, 2)), white)
 }
 
+///|
 test "A stripe pattern alternates in x (p.175)" {
   let pattern = stripe_pattern([white, black])
   assert_eq!(pattern.pattern_at(point(0, 0, 0)), white)
@@ -42,6 +46,7 @@ test "A stripe pattern alternates in x (p.175)" {
   assert_eq!(pattern.pattern_at(point(-1.1, 0, 0)), white)
 }
 
+///|
 test "A stripe pattern supports more than two colors" {
   let red = color(1, 0, 0)
   let green = color(0, 1, 0)
@@ -88,17 +93,20 @@ fn TestPattern::pattern_at(_self : TestPattern, point : Tuple) -> Color {
   color(point.x, point.y, point.z)
 }
 
+///|
 test "The default pattern transformation (p.182)" {
   let pattern = test_pattern()
   assert_eq!(pattern.transform, mat4ident())
 }
 
+///|
 test "Assigning a transformation (p.182)" {
   let pattern = test_pattern()
   pattern.set_pattern_transform(translation(1, 2, 3))
   assert_eq!(pattern.transform, translation(1, 2, 3))
 }
 
+///|
 test "A pattern with an object transformation (p.182)" {
   let shape = sphere()
   shape.set_transform(scaling(2, 2, 2))
@@ -107,6 +115,7 @@ test "A pattern with an object transformation (p.182)" {
   assert_eq!(c, color(1, 1.5, 2))
 }
 
+///|
 test "A pattern with a pattern transformation (p.182)" {
   let shape = sphere()
   let pattern = test_pattern()
@@ -115,6 +124,7 @@ test "A pattern with a pattern transformation (p.182)" {
   assert_eq!(c, color(1, 1.5, 2))
 }
 
+///|
 test "A pattern with both an object and a pattern transformation (p.182)" {
   let shape = sphere()
   shape.set_transform(scaling(2, 2, 2))
@@ -124,6 +134,7 @@ test "A pattern with both an object and a pattern transformation (p.182)" {
   assert_eq!(c, color(0.75, 0.5, 0.25))
 }
 
+///|
 test "A gradient linearly interpolates between colors (p.184)" {
   let pattern = gradient_pattern([white, black])
   assert_eq!(pattern.pattern_at(point(0, 0, 0)), white)
@@ -133,6 +144,7 @@ test "A gradient linearly interpolates between colors (p.184)" {
   assert_eq!(pattern.pattern_at(point(1, 0, 0)), black)
 }
 
+///|
 test "A ring should extend in both x and z (p.186)" {
   let pattern = ring_pattern([white, black])
   assert_eq!(pattern.pattern_at(point(0, 0, 0)), white)
@@ -142,6 +154,7 @@ test "A ring should extend in both x and z (p.186)" {
   assert_eq!(pattern.pattern_at(point(0.708, 0, 0.708)), black)
 }
 
+///|
 test "Checkers should repeat in x (p.189)" {
   let pattern = checkers_pattern([white, black])
   assert_eq!(pattern.pattern_at(point(0, 0, 0)), white)
@@ -149,6 +162,7 @@ test "Checkers should repeat in x (p.189)" {
   assert_eq!(pattern.pattern_at(point(1, 0, 0)), black)
 }
 
+///|
 test "Checkers should repeat in y (p.189)" {
   let pattern = checkers_pattern([white, black])
   assert_eq!(pattern.pattern_at(point(0, 0, 0)), white)
@@ -156,6 +170,7 @@ test "Checkers should repeat in y (p.189)" {
   assert_eq!(pattern.pattern_at(point(0, 1, 0)), black)
 }
 
+///|
 test "Checkers should repeat in z (p.189)" {
   let pattern = checkers_pattern([white, black])
   assert_eq!(pattern.pattern_at(point(0, 0, 0)), white)

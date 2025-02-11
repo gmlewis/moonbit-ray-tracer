@@ -1,3 +1,4 @@
+///|
 test "The default material (p.125)" {
   let m = material()
   assert_eq!(m.color, color(1, 1, 1))
@@ -7,6 +8,7 @@ test "The default material (p.125)" {
   assert_eq!(m.shininess, 200)
 }
 
+///|
 test "Lighting with the eye between the light and the surface (p.126)" {
   let m = material()
   let position = point(0, 0, 0)
@@ -17,6 +19,7 @@ test "Lighting with the eye between the light and the surface (p.126)" {
   assert_eq!(result, color(1.9, 1.9, 1.9))
 }
 
+///|
 test "Lighting with the eye between light and surface, eye offset 45° (p.127)" {
   let m = material()
   let position = point(0, 0, 0)
@@ -28,6 +31,7 @@ test "Lighting with the eye between light and surface, eye offset 45° (p.127)" 
   assert_eq!(result, color(1, 1, 1))
 }
 
+///|
 test "Lighting with the eye opposite surface, light offset 45° (p.128)" {
   let m = material()
   let position = point(0, 0, 0)
@@ -38,6 +42,7 @@ test "Lighting with the eye opposite surface, light offset 45° (p.128)" {
   assert_eq!(result, color(0.7364, 0.7364, 0.7364))
 }
 
+///|
 test "Lighting with the eye in the path of the reflection vector (p.129)" {
   let m = material()
   let position = point(0, 0, 0)
@@ -49,6 +54,7 @@ test "Lighting with the eye in the path of the reflection vector (p.129)" {
   assert_eq!(result, color(1.6364, 1.6364, 1.6364))
 }
 
+///|
 test "Lighting with the light behind the surface (p.129)" {
   let m = material()
   let position = point(0, 0, 0)
@@ -59,6 +65,7 @@ test "Lighting with the light behind the surface (p.129)" {
   assert_eq!(result, color(0.1, 0.1, 0.1))
 }
 
+///|
 test "Lighting with the surface in shadow (p.155)" {
   let m = material()
   let position = point(0, 0, 0)
@@ -70,6 +77,7 @@ test "Lighting with the surface in shadow (p.155)" {
   assert_eq!(result, color(0.1, 0.1, 0.1))
 }
 
+///|
 test "Lighting with a pattern applied (p.176)" {
   let m = material()
   m.pattern = Some(stripe_pattern([white, black]))
@@ -86,6 +94,7 @@ test "Lighting with a pattern applied (p.176)" {
   assert_eq!(c2, black)
 }
 
+///|
 test "Stripes with an object transformation (p.179)" {
   let object = sphere()
   object.set_transform(scaling(2, 2, 2))
@@ -94,6 +103,7 @@ test "Stripes with an object transformation (p.179)" {
   assert_eq!(c, white)
 }
 
+///|
 test "Stripes with a pattern transformation (p.179)" {
   let object = sphere()
   let pattern = stripe_pattern([white, black])
@@ -102,6 +112,7 @@ test "Stripes with a pattern transformation (p.179)" {
   assert_eq!(c, white)
 }
 
+///|
 test "Stripes with both an object and a pattern transformation (p.179)" {
   let shape = sphere()
   shape.set_transform(scaling(2, 2, 2))
@@ -111,11 +122,13 @@ test "Stripes with both an object and a pattern transformation (p.179)" {
   assert_eq!(c, white)
 }
 
+///|
 test "Reflectivity for the default material (p.196)" {
   let m = material()
   assert_eq!(m.reflective, 0)
 }
 
+///|
 test "Transparency and Refractive Index for the default material (p.204)" {
   let m = material()
   assert_eq!(m.transparency, 0)

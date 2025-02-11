@@ -1,3 +1,4 @@
+///|
 test "Ignoring unrecognized lines in an OBJ file (p.272)" {
   let gibberish =
     #|There was a young lady named Bright
@@ -9,6 +10,7 @@ test "Ignoring unrecognized lines in an OBJ file (p.272)" {
   assert_eq!(parser.ignored_lines, 5)
 }
 
+///|
 test "Parse vertex records in an OBJ file (p.273)" {
   let file =
     #|v    -1    1   0
@@ -22,6 +24,7 @@ test "Parse vertex records in an OBJ file (p.273)" {
   assert_eq!(parser.vertices[4], point(1, 1, 0))
 }
 
+///|
 test "Parse triangle faces in an OBJ file (p.274)" {
   let file =
     #|v -1 1 0
@@ -43,6 +46,7 @@ test "Parse triangle faces in an OBJ file (p.274)" {
   assert_eq!(t2.p3, parser.vertices[4])
 }
 
+///|
 test "Triangulating polygons in an OBJ file (p.274)" {
   let file =
     #|v -1 1 0
@@ -68,6 +72,7 @@ test "Triangulating polygons in an OBJ file (p.274)" {
   assert_eq!(t3.p3, parser.vertices[5])
 }
 
+///|
 test "Triangles in named groups in an OBJ file (p.275)" {
   let file =
     #|v -1 1 0
@@ -92,6 +97,7 @@ test "Triangles in named groups in an OBJ file (p.275)" {
   assert_eq!(t2.p3, parser.vertices[4])
 }
 
+///|
 test "Converting an OBJ file to a group (p.277)" {
   let file =
     #|v -1 1 0
@@ -120,6 +126,7 @@ test "Converting an OBJ file to a group (p.277)" {
   assert_eq!(t2.p3, parser.vertices[4])
 }
 
+///|
 test "Vertex normal records in an OBJ file (p.285)" {
   let file =
     #|vn 0 0 1
@@ -131,6 +138,7 @@ test "Vertex normal records in an OBJ file (p.285)" {
   assert_eq!(parser.normals[3], vector(1, 2, 3))
 }
 
+///|
 test "Faces with normals in an OBJ file (p.285)" {
   let file =
     #|v 0 1 0

@@ -1,3 +1,4 @@
+///|
 test "Creating a triangle (p.267)" {
   let p1 = point(0, 1, 0)
   let p2 = point(-1, 0, 0)
@@ -11,6 +12,7 @@ test "Creating a triangle (p.267)" {
   assert_eq!(t.normal, vector(0, 0, -1))
 }
 
+///|
 test "Finding the normal on a triangle (p.267)" {
   guard let Triangle(t) = triangle(
       point(0, 1, 0),
@@ -25,6 +27,7 @@ test "Finding the normal on a triangle (p.267)" {
   assert_eq!(n3, t.normal)
 }
 
+///|
 test "Intersecting a ray parallel to the triangle (p.268)" {
   let t = triangle(point(0, 1, 0), point(-1, 0, 0), point(1, 0, 0))
   let r = ray(point(0, -1, -2), vector(0, 1, 0))
@@ -32,6 +35,7 @@ test "Intersecting a ray parallel to the triangle (p.268)" {
   assert_eq!(xs.count, 0)
 }
 
+///|
 test "A ray misses the p1-p3 edge (p.269)" {
   let t = triangle(point(0, 1, 0), point(-1, 0, 0), point(1, 0, 0))
   let r = ray(point(1, 1, -2), vector(0, 0, 1))
@@ -39,6 +43,7 @@ test "A ray misses the p1-p3 edge (p.269)" {
   assert_eq!(xs.count, 0)
 }
 
+///|
 test "A ray misses the p1-p2 edge (p.269)" {
   let t = triangle(point(0, 1, 0), point(-1, 0, 0), point(1, 0, 0))
   let r = ray(point(-1, 1, -2), vector(0, 0, 1))
@@ -46,6 +51,7 @@ test "A ray misses the p1-p2 edge (p.269)" {
   assert_eq!(xs.count, 0)
 }
 
+///|
 test "A ray misses the p2-p3 edge (p.269)" {
   let t = triangle(point(0, 1, 0), point(-1, 0, 0), point(1, 0, 0))
   let r = ray(point(0, -1, -2), vector(0, 0, 1))
@@ -53,6 +59,7 @@ test "A ray misses the p2-p3 edge (p.269)" {
   assert_eq!(xs.count, 0)
 }
 
+///|
 test "A ray strikes a triangle (p.269)" {
   let t = triangle(point(0, 1, 0), point(-1, 0, 0), point(1, 0, 0))
   let r = ray(point(0, 0.5, -2), vector(0, 0, 1))

@@ -1,3 +1,4 @@
+///|
 test "A ray intersects a cube (p.224)" {
   let tests = [
     ("+x", point(5, 0.5, 0), vector(-1, 0, 0), 4.0, 6.0),
@@ -20,6 +21,7 @@ test "A ray intersects a cube (p.224)" {
   }
 }
 
+///|
 test "A ray misses a cube (p.228)" {
   let tests = [
     (point(-2, 0, 0), vector(0.2673, 0.5345, 0.8018)),
@@ -39,6 +41,7 @@ test "A ray misses a cube (p.228)" {
   }
 }
 
+///|
 test "The normal on the surface of a cube (p.230)" {
   let tests = [
     (point(1, 0.5, -0.8), vector(1, 0, 0)),

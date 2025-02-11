@@ -1,3 +1,4 @@
+///|
 test "Creating a canvas (p.46)" {
   let c = canvas(10, 20)
   assert_eq!(c.width, 10)
@@ -9,6 +10,7 @@ test "Creating a canvas (p.46)" {
   }
 }
 
+///|
 test "Writing pixels to a canvas (p.46)" {
   let c = canvas(10, 20)
   let red = color(1, 0, 0)
@@ -17,6 +19,7 @@ test "Writing pixels to a canvas (p.46)" {
   assert_eq!(c.pixel_at(0, 0), color(0, 0, 0))
 }
 
+///|
 test "Constructing the PPM header (p.48)" {
   let c = canvas(5, 3)
   let ppm = c.to_ppm()
@@ -33,6 +36,7 @@ test "Constructing the PPM header (p.48)" {
   )
 }
 
+///|
 test "Constructing the PPM pixel data (p.48)" {
   let c = canvas(5, 3)
   let c1 = color(1.5, 0, 0)
@@ -56,6 +60,7 @@ test "Constructing the PPM pixel data (p.48)" {
   )
 }
 
+///|
 test "Constructing the PNG pixel data" {
   let c = canvas(5, 3)
   let c1 = color(1.5, 0, 0)
@@ -74,6 +79,7 @@ test "Constructing the PNG pixel data" {
   )
 }
 
+///|
 test "Splitting long lines in PPM files (p.49)" {
   let ppm = canvas(10, 2)..clear(color(1, 0.8, 0.6)).to_ppm()
   // let lines4to6 = (ppm.split("\n")[3:7]).join("\n")
@@ -90,6 +96,7 @@ test "Splitting long lines in PPM files (p.49)" {
   )
 }
 
+///|
 test "PPM files are terminated by a newline character (p.49)" {
   let ppm = canvas(5, 3).to_ppm()
   assert_eq!(ppm[ppm.length() - 1], '\n')

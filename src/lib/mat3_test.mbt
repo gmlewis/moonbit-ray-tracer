@@ -1,3 +1,4 @@
+///|
 test "A 3x3 matrix ought to be representable (p.54)" {
   let m = mat3(
     -3, 5, 0, // row 0
@@ -9,6 +10,7 @@ test "A 3x3 matrix ought to be representable (p.54)" {
   assert_eq!(m[2][2], 1)
 }
 
+///|
 test "A submatrix of a 3x3 matrix is a 2x2 matrix (p.63)" {
   let a = mat3(
     1, 5, 0, // row 0
@@ -22,6 +24,7 @@ test "A submatrix of a 3x3 matrix is a 2x2 matrix (p.63)" {
   assert_eq!(a.submatrix(0, 2), want)
 }
 
+///|
 test "Calculating a minor of a 3x3 matrix (p.64)" {
   let a = mat3(
     3, 5, 0, // row 0
@@ -33,6 +36,7 @@ test "Calculating a minor of a 3x3 matrix (p.64)" {
   assert_eq!(a.minor(1, 0), 25)
 }
 
+///|
 test "Calculating a cofactor of a 3x3 matrix (p.64)" {
   let a = mat3(
     3, 5, 0, // row 0
@@ -45,6 +49,7 @@ test "Calculating a cofactor of a 3x3 matrix (p.64)" {
   assert_eq!(a.cofactor(1, 0), -25)
 }
 
+///|
 test "Calculating the determinant of a 3x3 matrix (p.65)" {
   let a = mat3(
     1, 2, 6, // row 0

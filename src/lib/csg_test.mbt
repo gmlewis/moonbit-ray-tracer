@@ -1,3 +1,4 @@
+///|
 test "CSG is created with an operation and two shapes (p.293)" {
   let s1 = sphere()
   let s2 = cube()
@@ -9,6 +10,7 @@ test "CSG is created with an operation and two shapes (p.293)" {
   assert_eq!(s1.parent, Some(parent))
 }
 
+///|
 test "Evaluating the rule for a CSG operation (p.294)" {
   let tests = [
     (@lib.Union, true, true, true, false),
@@ -42,6 +44,7 @@ test "Evaluating the rule for a CSG operation (p.294)" {
   }
 }
 
+///|
 test "Filtering a list of intersections (p.297)" {
   let tests = [(@lib.Union, 0, 3), (Intersection, 1, 2), (Difference, 0, 1)]
   let s1 = sphere()
@@ -61,6 +64,7 @@ test "Filtering a list of intersections (p.297)" {
   }
 }
 
+///|
 test "A ray misses a CSG object (p.299)" {
   let c = csg(Union, sphere(), cube())
   let r = ray(point(0, 2, -5), vector(0, 0, 1))
@@ -68,6 +72,7 @@ test "A ray misses a CSG object (p.299)" {
   assert_eq!(xs.count, 0)
 }
 
+///|
 test "A ray hits a CSG object (p.299)" {
   let s1 = sphere()
   let s2 = sphere()..set_transform(translation(0, 0, 0.5))

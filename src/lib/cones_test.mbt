@@ -1,3 +1,4 @@
+///|
 test "Intersecting a cone with a ray (p.248)" {
   let shape = @lib.cone()
   let tests = [
@@ -15,6 +16,7 @@ test "Intersecting a cone with a ray (p.248)" {
   }
 }
 
+///|
 test "Intersecting a cone with a ray parallel to one of its halves (p.248)" {
   let shape = @lib.cone()
   let direction = vector(0, 1, 1).normalize()
@@ -24,6 +26,7 @@ test "Intersecting a cone with a ray parallel to one of its halves (p.248)" {
   assert_eq!(round_to_fixed(xs[0].t, 5), 0.35355)
 }
 
+///|
 test "Intersecting a cone's end caps (p.248)" {
   let shape = @lib.cone(minimum=-0.5, maximum=0.5, closed=true)
   let tests = [
@@ -39,6 +42,7 @@ test "Intersecting a cone's end caps (p.248)" {
   }
 }
 
+///|
 test "Computing the normal vector on a cone (p.249)" {
   let shape = @lib.cone()
   let tests = [

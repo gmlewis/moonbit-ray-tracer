@@ -31,9 +31,9 @@ fn main {
   }
 
   //
-  @fs.write_string_to_file(path="ch4.ppm", content=c.to_ppm())
   try {
-    @fs.write_bytes_to_file(path="ch4.png", content=c.to_png!())
+    @fs.write_string_to_file!("ch4.ppm", c.to_ppm())
+    @fs.write_bytes_to_file!("ch4.png", c.to_png!())
   } catch {
     _ => println("error writing ch4.png")
   }

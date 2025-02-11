@@ -1,0 +1,14 @@
+package gmlewis/ray-tracer/ch01
+
+// Values
+
+// Types and methods
+type Environment
+
+type Projectile
+impl Show for Projectile
+
+// Type aliases
+
+// Traits
+

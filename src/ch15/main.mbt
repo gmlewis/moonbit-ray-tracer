@@ -62,7 +62,7 @@ fn main {
 
   //
   let parser = try {
-    let buf = @fs.read_file_to_string!(path="teapot.obj")
+    let buf = @fs.read_file_to_string!("teapot.obj")
     @lib.parse_obj_file!(buf)
   } catch {
     e => return println(e)
@@ -89,9 +89,9 @@ fn main {
   let canvas = camera.render(world)
 
   //
-  @fs.write_string_to_file(path="ch15.ppm", content=canvas.to_ppm())
   try {
-    @fs.write_bytes_to_file(path="ch15.png", content=canvas.to_png!())
+    @fs.write_string_to_file!("ch15.ppm", canvas.to_ppm())
+    @fs.write_bytes_to_file!("ch15.png", canvas.to_png!())
   } catch {
     _ => println("error writing ch15.png")
   }

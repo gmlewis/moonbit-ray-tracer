@@ -9,6 +9,7 @@ fn test_tuples() -> (Tuple, Tuple, Tuple, Tuple, Tuple, Tuple) {
   (p1, p2, p3, n1, n2, n3)
 }
 
+///|
 test "Constructing a smooth triangle (p.281)" {
   let (p1, p2, p3, n1, n2, n3) = test_tuples()
   guard let SmoothTriangle(tri) = smooth_triangle(p1, p2, p3, n1, n2, n3).object
@@ -20,6 +21,7 @@ test "Constructing a smooth triangle (p.281)" {
   assert_eq!(tri.n3, n3)
 }
 
+///|
 test "An intersection with a smooth triangle stores u/v (p.282)" {
   let (p1, p2, p3, n1, n2, n3) = test_tuples()
   let tri = smooth_triangle(p1, p2, p3, n1, n2, n3)
@@ -29,6 +31,7 @@ test "An intersection with a smooth triangle stores u/v (p.282)" {
   assert_true!((xs[0].v - 0.25).abs() < @lib.EPSILON)
 }
 
+///|
 test "A smooth triangle uses u/v to interpolate the normal (p.282)" {
   let (p1, p2, p3, n1, n2, n3) = test_tuples()
   let tri = smooth_triangle(p1, p2, p3, n1, n2, n3)
@@ -37,6 +40,7 @@ test "A smooth triangle uses u/v to interpolate the normal (p.282)" {
   assert_eq!(n, vector(-0.5547, 0.83205, 0))
 }
 
+///|
 test "Preparing the normal on a smooth triangle (p.283)" {
   let (p1, p2, p3, n1, n2, n3) = test_tuples()
   let tri = smooth_triangle(p1, p2, p3, n1, n2, n3)
