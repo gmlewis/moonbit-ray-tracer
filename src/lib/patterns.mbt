@@ -1,10 +1,7 @@
 ///|
-pub(open) trait PatternTrait {
+pub(open) trait PatternTrait: Show {
   pattern_at(Self, Tuple) -> Color
   clone(Self) -> Pattern // `clone(Self) -> Self` causes a compiler error
-  // https://github.com/moonbitlang/core/issues/1304
-  output(Self, &Logger) -> Unit
-  to_string(Self) -> String
 }
 
 ///|
@@ -23,19 +20,19 @@ pub fn Pattern::new(pattern : &PatternTrait) -> Pattern {
 }
 
 ///|
-pub fn Pattern::pattern_at(self : Pattern, point : Tuple) -> Color {
+pub impl PatternTrait for Pattern with pattern_at(self, point) {
   self.pattern.pattern_at(point)
 }
 
 ///|
-pub fn Pattern::op_equal(self : Pattern, other : Pattern) -> Bool {
+pub impl Eq for Pattern with op_equal(self, other) {
   // https://github.com/moonbitlang/core/issues/1304#issuecomment-2523373703
   // self.pattern == other.pattern &&
   self.transform == other.transform
 }
 
 ///|
-pub fn Pattern::clone(self : Pattern) -> Pattern {
+pub impl PatternTrait for Pattern with clone(self) {
   let pattern = self.pattern.clone().pattern
   let transform = self.transform.clone()
   let inv_transform = self.inv_transform.clone()
@@ -77,12 +74,12 @@ pub fn StripePattern::to_string(self : StripePattern) -> String {
 }
 
 ///|
-pub fn StripePattern::output(self : StripePattern, logger : &Logger) -> Unit {
+pub impl Show for StripePattern with output(self, logger) {
   logger.write_string(self.to_string())
 }
 
 ///|
-pub fn StripePattern::clone(self : StripePattern) -> Pattern {
+pub impl PatternTrait for StripePattern with clone(self) {
   stripe_pattern(self.colors)
 }
 
@@ -93,7 +90,7 @@ pub fn stripe_pattern(colors : Array[Color]) -> Pattern {
 }
 
 ///|
-pub fn StripePattern::pattern_at(self : StripePattern, point : Tuple) -> Color {
+pub impl PatternTrait for StripePattern with pattern_at(self, point) {
   let ncols = self.colors.length()
   let index = @math.floor(point.x).to_int()
   let index = if index >= 0 {
@@ -123,15 +120,12 @@ pub fn GradientPattern::to_string(self : GradientPattern) -> String {
 }
 
 ///|
-pub fn GradientPattern::output(
-  self : GradientPattern,
-  logger : &Logger
-) -> Unit {
+pub impl Show for GradientPattern with output(self, logger) {
   logger.write_string(self.to_string())
 }
 
 ///|
-pub fn GradientPattern::clone(self : GradientPattern) -> Pattern {
+pub impl PatternTrait for GradientPattern with clone(self) {
   gradient_pattern(self.colors)
 }
 
@@ -142,10 +136,7 @@ pub fn gradient_pattern(colors : Array[Color]) -> Pattern {
 }
 
 ///|
-pub fn GradientPattern::pattern_at(
-  self : GradientPattern,
-  point : Tuple
-) -> Color {
+pub impl PatternTrait for GradientPattern with pattern_at(self, point) {
   let ncols = self.colors.length()
   let index = @math.floor(point.x).to_int()
   let index = if index >= 0 {
@@ -179,12 +170,12 @@ pub fn RingPattern::to_string(self : RingPattern) -> String {
 }
 
 ///|
-pub fn RingPattern::output(self : RingPattern, logger : &Logger) -> Unit {
+pub impl Show for RingPattern with output(self, logger) {
   logger.write_string(self.to_string())
 }
 
 ///|
-pub fn RingPattern::clone(self : RingPattern) -> Pattern {
+pub impl PatternTrait for RingPattern with clone(self) {
   ring_pattern(self.colors)
 }
 
@@ -195,7 +186,7 @@ pub fn ring_pattern(colors : Array[Color]) -> Pattern {
 }
 
 ///|
-pub fn RingPattern::pattern_at(self : RingPattern, point : Tuple) -> Color {
+pub impl PatternTrait for RingPattern with pattern_at(self, point) {
   let ncols = self.colors.length()
   let r = (point.x * point.x + point.z * point.z).sqrt()
   let index = @math.floor(r).to_int()
@@ -226,15 +217,12 @@ pub fn GradientRingPattern::to_string(self : GradientRingPattern) -> String {
 }
 
 ///|
-pub fn GradientRingPattern::output(
-  self : GradientRingPattern,
-  logger : &Logger
-) -> Unit {
+pub impl Show for GradientRingPattern with output(self, logger) {
   logger.write_string(self.to_string())
 }
 
 ///|
-pub fn GradientRingPattern::clone(self : GradientRingPattern) -> Pattern {
+pub impl PatternTrait for GradientRingPattern with clone(self) {
   gradient_ring_pattern(self.colors)
 }
 
@@ -245,10 +233,7 @@ pub fn gradient_ring_pattern(colors : Array[Color]) -> Pattern {
 }
 
 ///|
-pub fn GradientRingPattern::pattern_at(
-  self : GradientRingPattern,
-  point : Tuple
-) -> Color {
+pub impl PatternTrait for GradientRingPattern with pattern_at(self, point) {
   let ncols = self.colors.length()
   let r = (point.x * point.x + point.z * point.z).sqrt()
   let index = @math.floor(r).to_int()
@@ -283,15 +268,12 @@ pub fn CheckersPattern::to_string(self : CheckersPattern) -> String {
 }
 
 ///|
-pub fn CheckersPattern::output(
-  self : CheckersPattern,
-  logger : &Logger
-) -> Unit {
+pub impl Show for CheckersPattern with output(self, logger) {
   logger.write_string(self.to_string())
 }
 
 ///|
-pub fn CheckersPattern::clone(self : CheckersPattern) -> Pattern {
+pub impl PatternTrait for CheckersPattern with clone(self) {
   checkers_pattern(self.colors)
 }
 
@@ -302,10 +284,7 @@ pub fn checkers_pattern(colors : Array[Color]) -> Pattern {
 }
 
 ///|
-pub fn CheckersPattern::pattern_at(
-  self : CheckersPattern,
-  point : Tuple
-) -> Color {
+pub impl PatternTrait for CheckersPattern with pattern_at(self, point) {
   let ncols = self.colors.length()
   let index = @math.floor(point.x).to_int() +
     @math.floor(point.y).to_int() +
@@ -339,17 +318,12 @@ pub fn GradientCheckersPattern::to_string(
 }
 
 ///|
-pub fn GradientCheckersPattern::output(
-  self : GradientCheckersPattern,
-  logger : &Logger
-) -> Unit {
+pub impl Show for GradientCheckersPattern with output(self, logger) {
   logger.write_string(self.to_string())
 }
 
 ///|
-pub fn GradientCheckersPattern::clone(
-  self : GradientCheckersPattern
-) -> Pattern {
+pub impl PatternTrait for GradientCheckersPattern with clone(self) {
   gradient_checkers_pattern(self.colors)
 }
 
@@ -360,10 +334,7 @@ pub fn gradient_checkers_pattern(colors : Array[Color]) -> Pattern {
 }
 
 ///|
-pub fn GradientCheckersPattern::pattern_at(
-  self : GradientCheckersPattern,
-  point : Tuple
-) -> Color {
+pub impl PatternTrait for GradientCheckersPattern with pattern_at(self, point) {
   let ncols = self.colors.length()
   let index = @math.floor(point.x).to_int() +
     @math.floor(point.y).to_int() +

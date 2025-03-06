@@ -1,31 +1,31 @@
 ///|
 struct TestShape {
   mut saved_ray : Ray
-} derive(Show, Eq)
+} derive(Eq)
 
 ///|
-fn TestShape::bounds(_self : TestShape) -> @lib.Bounds {
+impl Object for TestShape with bounds(_self) {
   @lib.Bounds::new()
 }
 
 ///|
-fn local_intersect(self : TestShape, ray : Ray) -> Array[Double] {
+impl Object for TestShape with local_intersect(self, ray) {
   self.saved_ray = ray
   []
 }
 
 ///|
-fn TestShape::local_normal_at(_self : TestShape, point : Tuple) -> Tuple {
+impl Object for TestShape with local_normal_at(_self, point) -> Tuple {
   vector(point.x, point.y, point.z)
 }
 
 ///|
-fn to_string(self : TestShape) -> String {
+impl Show for TestShape with to_string(self) {
   "test_shape(\{self.saved_ray})"
 }
 
 ///|
-fn TestShape::output(self : TestShape, logger : &Logger) -> Unit {
+impl Show for TestShape with output(self, logger) {
   logger.write_string(self.to_string())
 }
 

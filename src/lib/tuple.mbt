@@ -77,7 +77,7 @@ pub fn is_vector(self : Tuple) -> Bool {
 }
 
 ///|
-pub fn Tuple::op_equal(self : Tuple, other : Tuple) -> Bool {
+pub impl Eq for Tuple with op_equal(self, other) {
   let { x, y, z, w } = (self - other).abs()
   x < EPSILON && y < EPSILON && z < EPSILON && w < EPSILON
 }

@@ -8,7 +8,7 @@ pub(all) enum Renderable {
 }
 
 ///|
-pub fn Renderable::to_string(self : Renderable) -> String {
+pub impl Show for Renderable with to_string(self) {
   match self {
     Object(object) => object.to_string()
     Group(group) => group.to_string()
@@ -19,6 +19,6 @@ pub fn Renderable::to_string(self : Renderable) -> String {
 }
 
 ///|
-pub fn Renderable::output(self : Renderable, logger : &Logger) -> Unit {
+pub impl Show for Renderable with output(self, logger) {
   logger.write_string(self.to_string())
 }

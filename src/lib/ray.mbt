@@ -2,7 +2,7 @@
 pub(all) struct Ray {
   origin : Tuple
   direction : Tuple
-} derive(Eq)
+}
 
 ///|
 pub fn ray(origin : Tuple, direction : Tuple) -> Ray {
@@ -10,7 +10,7 @@ pub fn ray(origin : Tuple, direction : Tuple) -> Ray {
 }
 
 ///|
-pub fn Ray::to_string(self : Ray) -> String {
+pub impl Show for Ray with to_string(self) {
   "ray(\{self.origin}, \{self.direction})"
 }
 
@@ -20,7 +20,7 @@ pub impl Show for Ray with output(self, logger) {
 }
 
 ///|
-pub fn Ray::op_equal(self : Ray, other : Ray) -> Bool {
+pub impl Eq for Ray with op_equal(self, other) {
   self.origin == other.origin && self.direction == other.direction
 }
 

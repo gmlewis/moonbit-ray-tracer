@@ -1,5 +1,5 @@
 ///| Cube represents a unit cube at the origin.
-pub(all) struct Cube {} derive(Eq)
+pub(all) struct Cube {} derive(Show, Eq)
 
 ///|
 let _Cube : &Object = Cube::{  }
@@ -11,22 +11,12 @@ pub fn cube() -> Shape {
 }
 
 ///|
-pub fn Cube::op_equal(self : Cube, other : Cube) -> Bool {
-  self == other
-}
-
-///|
-pub fn Cube::to_string(_self : Cube) -> String {
+pub impl Show for Cube with to_string(_self) {
   "cube()"
 }
 
 ///|
-pub fn Cube::output(self : Cube, logger : &Logger) -> Unit {
-  logger.write_string(self.to_string())
-}
-
-///|
-pub fn Cube::local_intersect(_self : Cube, ray : Ray) -> Array[Double] {
+pub impl Object for Cube with local_intersect(_self, ray) {
   let (xtmin, xtmax) = check_axis(ray.origin.x, ray.direction.x, -1, 1)
   let (ytmin, ytmax) = check_axis(ray.origin.y, ray.direction.y, -1, 1)
   let (ztmin, ztmax) = check_axis(ray.origin.z, ray.direction.z, -1, 1)
@@ -61,7 +51,7 @@ fn check_axis(
 }
 
 ///|
-pub fn Cube::local_normal_at(_self : Cube, local_point : Tuple) -> Tuple {
+pub impl Object for Cube with local_normal_at(_self, local_point) {
   let xabs = local_point.x.abs()
   let yabs = local_point.y.abs()
   let zabs = local_point.z.abs()
@@ -76,7 +66,7 @@ pub fn Cube::local_normal_at(_self : Cube, local_point : Tuple) -> Tuple {
 }
 
 ///|
-pub fn Cube::bounds(_self : Cube) -> Bounds {
+pub impl Object for Cube with bounds(_self) {
   let min = point(-1, -1, -1)
   let max = point(1, 1, 1)
   { min, max }

@@ -3,7 +3,7 @@ test "CSG is created with an operation and two shapes (p.293)" {
   let s1 = sphere()
   let s2 = cube()
   let parent = csg(Union, s1, s2)
-  guard let CSG(c) = parent.object
+  guard parent.object is CSG(c)
   assert_eq!(c.operation, Union)
   assert_eq!(c.left, s1)
   assert_eq!(c.right, s2)
@@ -50,7 +50,7 @@ test "Filtering a list of intersections (p.297)" {
   let s1 = sphere()
   let s2 = cube()
   for tt in tests {
-    guard let CSG(c) = csg(tt.0, s1, s2).object
+    guard csg(tt.0, s1, s2).object is CSG(c)
     let xs = intersections([
       @lib.intersection(1, s1),
       @lib.intersection(2, s2),

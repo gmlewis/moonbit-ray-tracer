@@ -36,8 +36,8 @@ test "Parse triangle faces in an OBJ file (p.274)" {
     #|f 1 3 4
   let parser = parse_obj_file!(file)
   let g = parser.default_group
-  guard let Triangle(t1) = g.children()[0].object
-  guard let Triangle(t2) = g.children()[1].object
+  guard g.children()[0].object is Triangle(t1)
+  guard g.children()[1].object is Triangle(t2)
   assert_eq!(t1.p1, parser.vertices[1])
   assert_eq!(t1.p2, parser.vertices[2])
   assert_eq!(t1.p3, parser.vertices[3])
@@ -58,9 +58,9 @@ test "Triangulating polygons in an OBJ file (p.274)" {
     #|f 1 2 3 4 5
   let parser = parse_obj_file!(file)
   let g = parser.default_group
-  guard let Triangle(t1) = g.children()[0].object
-  guard let Triangle(t2) = g.children()[1].object
-  guard let Triangle(t3) = g.children()[2].object
+  guard g.children()[0].object is Triangle(t1)
+  guard g.children()[1].object is Triangle(t2)
+  guard g.children()[2].object is Triangle(t3)
   assert_eq!(t1.p1, parser.vertices[1])
   assert_eq!(t1.p2, parser.vertices[2])
   assert_eq!(t1.p3, parser.vertices[3])
@@ -87,8 +87,8 @@ test "Triangles in named groups in an OBJ file (p.275)" {
   let parser = parse_obj_file!(file)
   let g1 = parser.named_groups["FirstGroup"].unwrap()
   let g2 = parser.named_groups["SecondGroup"].unwrap()
-  guard let Triangle(t1) = g1.children()[0].object
-  guard let Triangle(t2) = g2.children()[0].object
+  guard g1.children()[0].object is Triangle(t1)
+  guard g2.children()[0].object is Triangle(t2)
   assert_eq!(t1.p1, parser.vertices[1])
   assert_eq!(t1.p2, parser.vertices[2])
   assert_eq!(t1.p3, parser.vertices[3])
@@ -116,8 +116,8 @@ test "Converting an OBJ file to a group (p.277)" {
   assert_eq!(g1.children().length(), 1)
   let g2 = g.children()[1]
   assert_eq!(g2.children().length(), 1)
-  guard let Triangle(t1) = g1.children()[0].object
-  guard let Triangle(t2) = g2.children()[0].object
+  guard g1.children()[0].object is Triangle(t1)
+  guard g2.children()[0].object is Triangle(t2)
   assert_eq!(t1.p1, parser.vertices[1])
   assert_eq!(t1.p2, parser.vertices[2])
   assert_eq!(t1.p3, parser.vertices[3])
@@ -153,8 +153,8 @@ test "Faces with normals in an OBJ file (p.285)" {
     #|f 1/0/3 2/102/1 3/14/2
   let parser = parse_obj_file!(file)
   let g = parser.default_group
-  guard let SmoothTriangle(t1) = g.children()[0].object
-  guard let SmoothTriangle(t2) = g.children()[1].object
+  guard g.children()[0].object is SmoothTriangle(t1)
+  guard g.children()[1].object is SmoothTriangle(t2)
   assert_eq!(t1.p1, parser.vertices[1])
   assert_eq!(t1.p2, parser.vertices[2])
   assert_eq!(t1.p3, parser.vertices[3])

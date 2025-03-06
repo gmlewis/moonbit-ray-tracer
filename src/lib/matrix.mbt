@@ -55,7 +55,7 @@ pub fn num_cols(self : Matrix) -> Int {
 }
 
 ///|
-pub fn Matrix::op_equal(self : Matrix, other : Matrix) -> Bool {
+pub impl Eq for Matrix with op_equal(self, other) {
   let nrows = self.num_rows()
   if self.num_rows() != other.num_rows() {
     return false

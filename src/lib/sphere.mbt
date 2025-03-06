@@ -1,5 +1,5 @@
 ///| Sphere represents a sphere with radius 1.
-pub(all) struct Sphere {} derive(Eq)
+pub(all) struct Sphere {} derive(Show, Eq)
 
 ///|
 let _Sphere : &Object = Sphere::{  }
@@ -19,22 +19,12 @@ pub fn glass_sphere() -> Shape {
 }
 
 ///|
-pub fn Sphere::op_equal(self : Sphere, other : Sphere) -> Bool {
-  self == other
-}
-
-///|
-pub fn Sphere::to_string(_self : Sphere) -> String {
+pub impl Show for Sphere with to_string(_self) {
   "sphere()"
 }
 
 ///|
-pub fn Sphere::output(self : Sphere, logger : &Logger) -> Unit {
-  logger.write_string(self.to_string())
-}
-
-///|
-pub fn Sphere::local_intersect(_self : Sphere, ray : Ray) -> Array[Double] {
+pub impl Object for Sphere with local_intersect(_self, ray) {
   // the vector from the sphere's center to the ray origin
   // (the sphere is centered at the world origin)
   let sphere_to_ray = ray.origin - point(0, 0, 0)
@@ -52,12 +42,12 @@ pub fn Sphere::local_intersect(_self : Sphere, ray : Ray) -> Array[Double] {
 }
 
 ///|
-pub fn Sphere::local_normal_at(_self : Sphere, local_point : Tuple) -> Tuple {
+pub impl Object for Sphere with local_normal_at(_self, local_point) {
   local_point - point(0, 0, 0)
 }
 
 ///|
-pub fn Sphere::bounds(_self : Sphere) -> Bounds {
+pub impl Object for Sphere with bounds(_self) {
   let min = point(-1, -1, -1)
   let max = point(1, 1, 1)
   { min, max }

@@ -3,7 +3,7 @@ pub(all) struct Cone {
   minimum : Double
   maximum : Double
   closed : Bool
-} derive(Eq)
+} derive(Show, Eq)
 
 ///|
 let _Cone : &Object = Cone::{ minimum: 0, maximum: 0, closed: false }
@@ -19,25 +19,15 @@ pub fn cone(
 }
 
 ///|
-pub fn bounds(self : Cone) -> Bounds {
+pub impl Object for Cone with bounds(self) {
   let min = point(self.minimum, self.minimum, self.minimum)
   let max = point(self.maximum, self.maximum, self.maximum)
   { min, max }
 }
 
 ///|
-pub fn Cone::op_equal(self : Cone, other : Cone) -> Bool {
-  self == other
-}
-
-///|
-pub fn Cone::to_string(_self : Cone) -> String {
+pub impl Show for Cone with to_string(_self) {
   "cone()"
-}
-
-///|
-pub fn output(self : Cone, logger : &Logger) -> Unit {
-  logger.write_string(self.to_string())
 }
 
 // a helper function to reduce duplication.
@@ -73,7 +63,7 @@ fn intersect_caps(self : Cone, ray : Ray, xs : Array[Double]) -> Unit {
 }
 
 ///|
-pub fn Cone::local_intersect(self : Cone, ray : Ray) -> Array[Double] {
+pub impl Object for Cone with local_intersect(self, ray) {
   let xs = []
   let o = ray.origin
   let d = ray.direction
@@ -123,7 +113,7 @@ pub fn Cone::local_intersect(self : Cone, ray : Ray) -> Array[Double] {
 }
 
 ///|
-pub fn local_normal_at(self : Cone, local_point : Tuple) -> Tuple {
+pub impl Object for Cone with local_normal_at(self, local_point) {
   let dist = local_point.x * local_point.x + local_point.z * local_point.z
   if dist < 1 && local_point.y >= self.maximum - EPSILON {
     return vector(0, 1, 0)

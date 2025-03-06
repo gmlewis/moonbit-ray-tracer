@@ -1,5 +1,5 @@
 ///| Plane represents an infinite plane along the x and z axes.
-pub(all) struct Plane {} derive(Eq)
+pub(all) struct Plane {} derive(Show, Eq)
 
 ///|
 let _Plane : &Object = Plane::{  }
@@ -11,22 +11,12 @@ pub fn plane() -> Shape {
 }
 
 ///|
-pub fn Plane::op_equal(self : Plane, other : Plane) -> Bool {
-  self == other
-}
-
-///|
-pub fn Plane::to_string(_self : Plane) -> String {
+pub impl Show for Plane with to_string(_self) {
   "plane()"
 }
 
 ///|
-pub fn Plane::output(self : Plane, logger : &Logger) -> Unit {
-  logger.write_string(self.to_string())
-}
-
-///|
-pub fn Plane::local_intersect(_self : Plane, ray : Ray) -> Array[Double] {
+pub impl Object for Plane with local_intersect(_self, ray) {
   if ray.direction.y.abs() < EPSILON {
     return []
   }
@@ -35,12 +25,12 @@ pub fn Plane::local_intersect(_self : Plane, ray : Ray) -> Array[Double] {
 }
 
 ///|
-pub fn Plane::local_normal_at(_self : Plane, _local_point : Tuple) -> Tuple {
+pub impl Object for Plane with local_normal_at(_self, _local_point) {
   vector(0, 1, 0)
 }
 
 ///|
-pub fn Plane::bounds(_self : Plane) -> Bounds {
+pub impl Object for Plane with bounds(_self) {
   let min = point(@double.neg_infinity, 0, @double.neg_infinity)
   let max = point(@double.infinity, 0, @double.infinity)
   { min, max }

@@ -12,7 +12,7 @@ fn test_tuples() -> (Tuple, Tuple, Tuple, Tuple, Tuple, Tuple) {
 ///|
 test "Constructing a smooth triangle (p.281)" {
   let (p1, p2, p3, n1, n2, n3) = test_tuples()
-  guard let SmoothTriangle(tri) = smooth_triangle(p1, p2, p3, n1, n2, n3).object
+  guard smooth_triangle(p1, p2, p3, n1, n2, n3).object is SmoothTriangle(tri)
   assert_eq!(tri.p1, p1)
   assert_eq!(tri.p2, p2)
   assert_eq!(tri.p3, p3)

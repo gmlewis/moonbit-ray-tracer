@@ -1,15 +1,4 @@
 ///|
-pub(open) trait Object {
-  local_intersect(Self, Ray) -> Array[Double] // Intersections
-  local_normal_at(Self, Tuple) -> Tuple
-  bounds(Self) -> Bounds
-  // https://github.com/moonbitlang/core/issues/1304
-  output(Self, &Logger) -> Unit
-  to_string(Self) -> String
-}
-// pub impl Eq for Object with op_equal(self, other) { self == other }
-
-///|
 pub(all) struct Shape {
   object : Renderable
   mut material : Material
@@ -53,17 +42,17 @@ pub fn Shape::bounds(self : Shape) -> Bounds {
 }
 
 ///|
-pub fn Shape::to_string(self : Shape) -> String {
+pub impl Show for Shape with to_string(self) {
   self.object.to_string()
 }
 
 ///|
-pub fn Shape::output(self : Shape, logger : &Logger) -> Unit {
+pub impl Show for Shape with output(self, logger) {
   logger.write_string(self.object.to_string())
 }
 
 ///|
-pub fn Shape::op_equal(self : Shape, other : Shape) -> Bool {
+pub impl Eq for Shape with op_equal(self, other) {
   // https://github.com/moonbitlang/core/issues/1304#issuecomment-2523373703
   // self.object == other.object &&
   self.material == other.material && self.transform == other.transform

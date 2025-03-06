@@ -69,17 +69,17 @@ test "A stripe pattern supports more than two colors" {
 struct TestPattern {}
 
 ///|
-fn TestPattern::clone(_self : TestPattern) -> Pattern {
+impl PatternTrait for TestPattern with clone(_self) {
   test_pattern()
 }
 
 ///|
-fn TestPattern::to_string(_self : TestPattern) -> String {
-  "test_pattern()"
-}
+// impl Show for TestPattern with to_string(_self) {
+//   "test_pattern()"
+// }
 
 ///|
-fn output(self : TestPattern, logger : &Logger) -> Unit {
+impl Show for TestPattern with output(self, logger) {
   logger.write_string(self.to_string())
 }
 
@@ -89,7 +89,7 @@ fn test_pattern() -> Pattern {
 }
 
 ///|
-fn TestPattern::pattern_at(_self : TestPattern, point : Tuple) -> Color {
+impl PatternTrait for TestPattern with pattern_at(_self, point) {
   color(point.x, point.y, point.z)
 }
 

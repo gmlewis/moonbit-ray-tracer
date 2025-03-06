@@ -158,12 +158,11 @@ pub(all) struct CheckersPattern {
   colors : Array[Color]
 }
 impl CheckersPattern {
-  clone(Self) -> Pattern
-  output(Self, &Logger) -> Unit
-  pattern_at(Self, Tuple) -> Color
   to_string(Self) -> String
 }
+impl PatternTrait for CheckersPattern
 impl Eq for CheckersPattern
+impl Show for CheckersPattern
 
 pub(all) struct Color {
   red : Double
@@ -174,11 +173,11 @@ impl Color {
   clone(Self) -> Self
   mul_scalar(Self, Double) -> Self
   op_add(Self, Self) -> Self
-  op_equal(Self, Self) -> Bool
   op_mul(Self, Self) -> Self
   op_sub(Self, Self) -> Self
   to_string(Self) -> String
 }
+impl Eq for Color
 impl Show for Color
 
 pub(all) struct Computations {
@@ -203,75 +202,54 @@ pub(all) struct Cone {
   maximum : Double
   closed : Bool
 }
-impl Cone {
-  bounds(Self) -> Bounds
-  local_intersect(Self, Ray) -> Array[Double]
-  local_normal_at(Self, Tuple) -> Tuple
-  op_equal(Self, Self) -> Bool
-  output(Self, &Logger) -> Unit
-  to_string(Self) -> String
-}
+impl Object for Cone
 impl Eq for Cone
+impl Show for Cone
 
 pub(all) struct Cube {
 }
-impl Cube {
-  bounds(Self) -> Bounds
-  local_intersect(Self, Ray) -> Array[Double]
-  local_normal_at(Self, Tuple) -> Tuple
-  op_equal(Self, Self) -> Bool
-  output(Self, &Logger) -> Unit
-  to_string(Self) -> String
-}
+impl Object for Cube
 impl Eq for Cube
+impl Show for Cube
 
 pub(all) struct Cylinder {
   minimum : Double
   maximum : Double
   closed : Bool
 }
-impl Cylinder {
-  bounds(Self) -> Bounds
-  local_intersect(Self, Ray) -> Array[Double]
-  local_normal_at(Self, Tuple) -> Tuple
-  op_equal(Self, Self) -> Bool
-  output(Self, &Logger) -> Unit
-  to_string(Self) -> String
-}
+impl Object for Cylinder
 impl Eq for Cylinder
+impl Show for Cylinder
 
 pub(all) struct GradientCheckersPattern {
   colors : Array[Color]
 }
 impl GradientCheckersPattern {
-  clone(Self) -> Pattern
-  output(Self, &Logger) -> Unit
-  pattern_at(Self, Tuple) -> Color
   to_string(Self) -> String
 }
+impl PatternTrait for GradientCheckersPattern
 impl Eq for GradientCheckersPattern
+impl Show for GradientCheckersPattern
 
 pub(all) struct GradientPattern {
   colors : Array[Color]
 }
 impl GradientPattern {
-  clone(Self) -> Pattern
-  output(Self, &Logger) -> Unit
-  pattern_at(Self, Tuple) -> Color
   to_string(Self) -> String
 }
+impl PatternTrait for GradientPattern
 impl Eq for GradientPattern
+impl Show for GradientPattern
 
 pub(all) struct GradientRingPattern {
   colors : Array[Color]
 }
 impl GradientRingPattern {
-  clone(Self) -> Pattern
-  output(Self, &Logger) -> Unit
-  pattern_at(Self, Tuple) -> Color
   to_string(Self) -> String
 }
+impl PatternTrait for GradientRingPattern
 impl Eq for GradientRingPattern
+impl Show for GradientRingPattern
 
 pub(all) struct Group {
   children : Array[Shape]
@@ -292,10 +270,10 @@ pub(all) struct Intersection {
   v : Double
 }
 impl Intersection {
-  op_equal(Self, Self) -> Bool
   prepare_computations(Self, Ray, xs~ : Intersections = ..) -> Computations
   to_string(Self) -> String
 }
+impl Eq for Intersection
 impl Show for Intersection
 
 pub(all) struct Intersections {
@@ -347,7 +325,6 @@ impl Matrix {
   mul_tuple(Self, Tuple) -> Tuple
   num_cols(Self) -> Int
   num_rows(Self) -> Int
-  op_equal(Self, Self) -> Bool
   op_get(Self, Int) -> MatrixRow
   op_mul(Self, Self) -> Self
   rotate_x(Self, Double) -> Self
@@ -360,6 +337,7 @@ impl Matrix {
   translate(Self, Double, Double, Double) -> Self
   transpose(Self) -> Self
 }
+impl Eq for Matrix
 impl Show for Matrix
 
 pub(all) type MatrixRow Array[Double]
@@ -398,35 +376,26 @@ pub(all) struct Pattern {
   inv_transform : Matrix
 }
 impl Pattern {
-  clone(Self) -> Self
   new(&PatternTrait) -> Self
-  op_equal(Self, Self) -> Bool
-  pattern_at(Self, Tuple) -> Color
   pattern_at_shape(Self, Shape, Tuple) -> Color
   set_pattern_transform(Self, Matrix) -> Unit
 }
+impl PatternTrait for Pattern
+impl Eq for Pattern
 impl Show for Pattern
 
 pub(all) struct Plane {
 }
-impl Plane {
-  bounds(Self) -> Bounds
-  local_intersect(Self, Ray) -> Array[Double]
-  local_normal_at(Self, Tuple) -> Tuple
-  op_equal(Self, Self) -> Bool
-  output(Self, &Logger) -> Unit
-  to_string(Self) -> String
-}
+impl Object for Plane
 impl Eq for Plane
+impl Show for Plane
 
 pub(all) struct Ray {
   origin : Tuple
   direction : Tuple
 }
 impl Ray {
-  op_equal(Self, Self) -> Bool
   position(Self, Double) -> Tuple
-  to_string(Self) -> String
   transform(Self, Matrix) -> Self
 }
 impl Eq for Ray
@@ -439,21 +408,17 @@ pub(all) enum Renderable {
   SmoothTriangle(SmoothTriangle)
   CSG(CSG)
 }
-impl Renderable {
-  output(Self, &Logger) -> Unit
-  to_string(Self) -> String
-}
+impl Show for Renderable
 
 pub(all) struct RingPattern {
   colors : Array[Color]
 }
 impl RingPattern {
-  clone(Self) -> Pattern
-  output(Self, &Logger) -> Unit
-  pattern_at(Self, Tuple) -> Color
   to_string(Self) -> String
 }
+impl PatternTrait for RingPattern
 impl Eq for RingPattern
+impl Show for RingPattern
 
 pub(all) struct Shape {
   object : Renderable
@@ -480,12 +445,11 @@ impl Shape {
   new_triangle(Triangle) -> Self
   normal_at(Self, Tuple, hit~ : Intersection? = ..) -> Tuple
   normal_to_world(Self, Tuple) -> Tuple
-  op_equal(Self, Self) -> Bool
-  output(Self, &Logger) -> Unit
   set_transform(Self, Matrix) -> Unit
-  to_string(Self) -> String
   world_to_object(Self, Tuple) -> Tuple
 }
+impl Eq for Shape
+impl Show for Shape
 
 pub(all) struct SmoothTriangle {
   p1 : Tuple
@@ -508,26 +472,19 @@ impl Show for SmoothTriangle
 
 pub(all) struct Sphere {
 }
-impl Sphere {
-  bounds(Self) -> Bounds
-  local_intersect(Self, Ray) -> Array[Double]
-  local_normal_at(Self, Tuple) -> Tuple
-  op_equal(Self, Self) -> Bool
-  output(Self, &Logger) -> Unit
-  to_string(Self) -> String
-}
+impl Object for Sphere
 impl Eq for Sphere
+impl Show for Sphere
 
 pub(all) struct StripePattern {
   colors : Array[Color]
 }
 impl StripePattern {
-  clone(Self) -> Pattern
-  output(Self, &Logger) -> Unit
-  pattern_at(Self, Tuple) -> Color
   to_string(Self) -> String
 }
+impl PatternTrait for StripePattern
 impl Eq for StripePattern
+impl Show for StripePattern
 
 pub(all) struct Triangle {
   p1 : Tuple
@@ -564,7 +521,6 @@ impl Tuple {
   normalize(Self) -> Self
   op_add(Self, Self) -> Self
   op_div(Self, Self) -> Self
-  op_equal(Self, Self) -> Bool
   op_get(Self, Int) -> Double
   op_mul(Self, Self) -> Self
   op_neg(Self) -> Self
@@ -573,6 +529,7 @@ impl Tuple {
   reflect(Self, Self) -> Self
   to_string(Self) -> String
 }
+impl Eq for Tuple
 impl Show for Tuple
 
 pub(all) struct World {
@@ -591,18 +548,14 @@ impl World {
 // Type aliases
 
 // Traits
-pub(open) trait Object {
+pub(open) trait Object : Show {
   local_intersect(Self, Ray) -> Array[Double]
   local_normal_at(Self, Tuple) -> Tuple
   bounds(Self) -> Bounds
-  output(Self, &Logger) -> Unit
-  to_string(Self) -> String
 }
 
-pub(open) trait PatternTrait {
+pub(open) trait PatternTrait : Show {
   pattern_at(Self, Tuple) -> Color
   clone(Self) -> Pattern
-  output(Self, &Logger) -> Unit
-  to_string(Self) -> String
 }
 

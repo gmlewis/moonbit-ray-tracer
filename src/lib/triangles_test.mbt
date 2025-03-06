@@ -3,7 +3,7 @@ test "Creating a triangle (p.267)" {
   let p1 = point(0, 1, 0)
   let p2 = point(-1, 0, 0)
   let p3 = point(1, 0, 0)
-  guard let Triangle(t) = triangle(p1, p2, p3).object
+  guard triangle(p1, p2, p3).object is Triangle(t)
   assert_eq!(t.p1, p1)
   assert_eq!(t.p2, p2)
   assert_eq!(t.p3, p3)
@@ -14,11 +14,8 @@ test "Creating a triangle (p.267)" {
 
 ///|
 test "Finding the normal on a triangle (p.267)" {
-  guard let Triangle(t) = triangle(
-      point(0, 1, 0),
-      point(-1, 0, 0),
-      point(1, 0, 0),
-    ).object
+  guard triangle(point(0, 1, 0), point(-1, 0, 0), point(1, 0, 0)).object
+    is Triangle(t)
   let n1 = t.local_normal_at(point(0, 0.5, 0))
   let n2 = t.local_normal_at(point(-0.5, 0.75, 0))
   let n3 = t.local_normal_at(point(0.5, 0.25, 0))

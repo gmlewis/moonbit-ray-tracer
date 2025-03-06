@@ -37,7 +37,7 @@ pub fn color(red : Double, green : Double, blue : Double) -> Color {
 }
 
 ///|
-pub fn op_equal(self : Color, other : Color) -> Bool {
+pub impl Eq for Color with op_equal(self, other) {
   let { red, green, blue } = self - other
   red.abs() < EPSILON && green.abs() < EPSILON && blue.abs() < EPSILON
 }

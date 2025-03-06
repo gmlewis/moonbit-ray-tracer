@@ -3,7 +3,7 @@ pub(all) struct Cylinder {
   minimum : Double
   maximum : Double
   closed : Bool
-} derive(Eq)
+} derive(Show, Eq)
 
 ///|
 let _Cylinder : &Object = Cylinder::{ minimum: 0, maximum: 0, closed: false }
@@ -19,18 +19,8 @@ pub fn cylinder(
 }
 
 ///|
-pub fn Cylinder::op_equal(self : Cylinder, other : Cylinder) -> Bool {
-  self == other
-}
-
-///|
-pub fn Cylinder::to_string(_self : Cylinder) -> String {
+pub impl Show for Cylinder with to_string(_self) {
   "cylinder()"
-}
-
-///|
-pub fn Cylinder::output(self : Cylinder, logger : &Logger) -> Unit {
-  logger.write_string(self.to_string())
 }
 
 // a helper function to reduce duplication.
@@ -69,7 +59,7 @@ fn Cylinder::intersect_caps(
 }
 
 ///|
-pub fn Cylinder::local_intersect(self : Cylinder, ray : Ray) -> Array[Double] {
+pub impl Object for Cylinder with local_intersect(self, ray) {
   let xs = []
   let a = ray.direction.x * ray.direction.x + ray.direction.z * ray.direction.z
   // ray is parallel to the y axis
@@ -108,7 +98,7 @@ pub fn Cylinder::local_intersect(self : Cylinder, ray : Ray) -> Array[Double] {
 }
 
 ///|
-pub fn Cylinder::local_normal_at(self : Cylinder, local_point : Tuple) -> Tuple {
+pub impl Object for Cylinder with local_normal_at(self, local_point) {
   let dist = local_point.x * local_point.x + local_point.z * local_point.z
   if dist < 1 && local_point.y >= self.maximum - EPSILON {
     return vector(0, 1, 0)
@@ -120,7 +110,7 @@ pub fn Cylinder::local_normal_at(self : Cylinder, local_point : Tuple) -> Tuple 
 }
 
 ///|
-pub fn Cylinder::bounds(self : Cylinder) -> Bounds {
+pub impl Object for Cylinder with bounds(self) {
   let min = point(-1, self.minimum, -1)
   let max = point(1, self.maximum, 1)
   { min, max }

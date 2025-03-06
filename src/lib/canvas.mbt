@@ -125,6 +125,6 @@ pub fn to_png(self : Canvas) -> Bytes!@image.SizeError {
     }
   }
   let b = @io.Buffer::new()
-  guard let None = @png.encode(b, img)
+  guard @png.encode(b, img) is None
   b.to_bytes()
 }

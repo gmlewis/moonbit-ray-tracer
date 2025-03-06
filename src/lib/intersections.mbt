@@ -17,10 +17,7 @@ pub fn intersection(
 }
 
 ///|
-pub fn Intersection::op_equal(
-  self : Intersection,
-  other : Intersection
-) -> Bool {
+pub impl Eq for Intersection with op_equal(self, other) {
   self.t == other.t // && self.object == other.object
 }
 
