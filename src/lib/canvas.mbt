@@ -97,10 +97,8 @@ pub fn to_ppm(self : Canvas) -> String {
       lines.push(line.to_string())
     }
   }
-  // lines.join("\n")
-  // YUCK! https://github.com/moonbitlang/core/pull/993
   lines.push("")
-  String::concat(lines, separator="\n")
+  lines.join("\n")
 }
 
 ///|

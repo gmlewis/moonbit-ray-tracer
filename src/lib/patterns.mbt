@@ -67,9 +67,7 @@ pub(all) struct StripePattern {
 ///|
 pub fn StripePattern::to_string(self : StripePattern) -> String {
   let colors = self.colors.map(fn(c) { "\{c}" })
-  //let colors = colors.join(",")
-  // YUCK! https://github.com/moonbitlang/core/pull/993
-  let colors = String::concat(colors, separator=",")
+  let colors = colors.join(",")
   "stripe(\{colors})"
 }
 
@@ -113,9 +111,7 @@ pub(all) struct GradientPattern {
 ///|
 pub fn GradientPattern::to_string(self : GradientPattern) -> String {
   let colors = self.colors.map(fn(c) { "\{c}" })
-  //let colors = colors.join(",")
-  // YUCK! https://github.com/moonbitlang/core/pull/993
-  let colors = String::concat(colors, separator=",")
+  let colors = colors.join(",")
   "gradient(\{colors})"
 }
 
@@ -163,9 +159,7 @@ pub(all) struct RingPattern {
 ///|
 pub fn RingPattern::to_string(self : RingPattern) -> String {
   let colors = self.colors.map(fn(c) { "\{c}" })
-  //let colors = colors.join(",")
-  // YUCK! https://github.com/moonbitlang/core/pull/993
-  let colors = String::concat(colors, separator=",")
+  let colors = colors.join(",")
   "ring(\{colors})"
 }
 
@@ -210,9 +204,7 @@ pub(all) struct GradientRingPattern {
 ///|
 pub fn GradientRingPattern::to_string(self : GradientRingPattern) -> String {
   let colors = self.colors.map(fn(c) { "\{c}" })
-  //let colors = colors.join(",")
-  // YUCK! https://github.com/moonbitlang/core/pull/993
-  let colors = String::concat(colors, separator=",")
+  let colors = colors.join(",")
   "ring(\{colors})"
 }
 
@@ -261,9 +253,7 @@ pub(all) struct CheckersPattern {
 ///|
 pub fn CheckersPattern::to_string(self : CheckersPattern) -> String {
   let colors = self.colors.map(fn(c) { "\{c}" })
-  //let colors = colors.join(",")
-  // YUCK! https://github.com/moonbitlang/core/pull/993
-  let colors = String::concat(colors, separator=",")
+  let colors = colors.join(",")
   "checkers(\{colors})"
 }
 
@@ -311,9 +301,7 @@ pub fn GradientCheckersPattern::to_string(
   self : GradientCheckersPattern
 ) -> String {
   let colors = self.colors.map(fn(c) { "\{c}" })
-  //let colors = colors.join(",")
-  // YUCK! https://github.com/moonbitlang/core/pull/993
-  let colors = String::concat(colors, separator=",")
+  let colors = colors.join(",")
   "gradient(\{colors})"
 }
 

@@ -1,6 +1,8 @@
-package gmlewis/ray-tracer/lib
+package "gmlewis/ray-tracer/lib"
 
-alias @gmlewis/image as @image
+import(
+  "gmlewis/image"
+)
 
 // Values
 const EPSILON : Double = 0.00001
@@ -243,8 +245,8 @@ fn write_pixel(Canvas, Int, Int, Color) -> Unit
 
 // Types and methods
 pub(all) struct Bounds {
-  min : Tuple
-  max : Tuple
+  mut min : Tuple
+  mut max : Tuple
 }
 impl Bounds {
   enlarge(Self, Self) -> Unit
@@ -271,7 +273,7 @@ pub(all) struct Camera {
   hsize : Int
   vsize : Int
   field_of_view : Double
-  transform : Matrix
+  mut transform : Matrix
   pixel_size : Double
   half_width : Double
   half_height : Double
@@ -397,7 +399,7 @@ impl Show for GradientRingPattern
 
 pub(all) struct Group {
   children : Array[Shape]
-  bounds : Bounds?
+  mut bounds : Bounds?
 }
 impl Group {
   bounds(Self) -> Bounds
@@ -440,15 +442,15 @@ impl Eq for Light
 impl Show for Light
 
 pub(all) struct Material {
-  color : Color
-  ambient : Double
-  diffuse : Double
-  specular : Double
-  shininess : Double
-  reflective : Double
-  transparency : Double
-  refractive_index : Double
-  pattern : Pattern?
+  mut color : Color
+  mut ambient : Double
+  mut diffuse : Double
+  mut specular : Double
+  mut shininess : Double
+  mut reflective : Double
+  mut transparency : Double
+  mut refractive_index : Double
+  mut pattern : Pattern?
 }
 impl Material {
   lighting(Self, Light, Tuple, Tuple, Tuple, in_shadow~ : Bool = .., shape~ : Shape? = ..) -> Color
@@ -516,8 +518,8 @@ impl Show for ParserError
 
 pub(all) struct Pattern {
   pattern : &PatternTrait
-  transform : Matrix
-  inv_transform : Matrix
+  mut transform : Matrix
+  mut inv_transform : Matrix
 }
 impl Pattern {
   new(&PatternTrait) -> Self
@@ -566,11 +568,11 @@ impl Show for RingPattern
 
 pub(all) struct Shape {
   object : Renderable
-  material : Material
-  transform : Matrix
-  inv_transform : Matrix
-  parent : Shape?
-  bounds : Bounds?
+  mut material : Material
+  mut transform : Matrix
+  mut inv_transform : Matrix
+  mut parent : Shape?
+  mut bounds : Bounds?
   id : UInt
 }
 impl Shape {
@@ -648,10 +650,10 @@ impl Eq for Triangle
 impl Show for Triangle
 
 pub(all) struct Tuple {
-  x : Double
-  y : Double
-  z : Double
-  w : Double
+  mut x : Double
+  mut y : Double
+  mut z : Double
+  mut w : Double
 }
 impl Tuple {
   abs(Self) -> Self
@@ -677,8 +679,8 @@ impl Eq for Tuple
 impl Show for Tuple
 
 pub(all) struct World {
-  shapes : Array[Shape]
-  lights : Array[Light]
+  mut shapes : Array[Shape]
+  mut lights : Array[Light]
 }
 impl World {
   color_at(Self, Ray, remaining~ : Int = ..) -> Color

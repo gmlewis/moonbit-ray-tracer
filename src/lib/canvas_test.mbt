@@ -23,9 +23,7 @@ test "Writing pixels to a canvas (p.46)" {
 test "Constructing the PPM header (p.48)" {
   let c = canvas(5, 3)
   let ppm = c.to_ppm()
-  // let lines1to3 = (ppm.split("\n")[0:3]).join("\n")
-  // YUCK! https://github.com/moonbitlang/core/pull/993
-  let lines1to3 = String::concat(ppm.split("\n")[0:3].collect(), separator="\n")
+  let lines1to3 = ppm.split("\n")[0:3].join("\n")
   inspect!(
     lines1to3,
     content=
@@ -47,9 +45,7 @@ test "Constructing the PPM pixel data (p.48)" {
     ..write_pixel(2, 1, c2)
     ..write_pixel(4, 2, c3)
     .to_ppm()
-  // let lines4to6 = (ppm.split("\n")[3:6]).join("\n")
-  // YUCK! https://github.com/moonbitlang/core/pull/993
-  let lines4to6 = String::concat(ppm.split("\n")[3:6].collect(), separator="\n")
+  let lines4to6 = ppm.split("\n")[3:6].join("\n")
   inspect!(
     lines4to6,
     content=
@@ -82,9 +78,7 @@ test "Constructing the PNG pixel data" {
 ///|
 test "Splitting long lines in PPM files (p.49)" {
   let ppm = canvas(10, 2)..clear(color(1, 0.8, 0.6)).to_ppm()
-  // let lines4to6 = (ppm.split("\n")[3:7]).join("\n")
-  // YUCK! https://github.com/moonbitlang/core/pull/993
-  let lines4to6 = String::concat(ppm.split("\n")[3:7].collect(), separator="\n")
+  let lines4to6 = ppm.split("\n")[3:7].join("\n")
   inspect!(
     lines4to6,
     content=
