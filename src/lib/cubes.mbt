@@ -1,4 +1,5 @@
-///| Cube represents a unit cube at the origin.
+///|
+/// Cube represents a unit cube at the origin.
 pub(all) struct Cube {} derive(Show, Eq)
 
 ///|

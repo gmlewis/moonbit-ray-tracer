@@ -1,4 +1,5 @@
-///| Sphere represents a sphere with radius 1.
+///|
+/// Sphere represents a sphere with radius 1.
 pub(all) struct Sphere {} derive(Show, Eq)
 
 ///|

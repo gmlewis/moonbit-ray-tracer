@@ -38,7 +38,8 @@ pub fn write_pixel(self : Canvas, x : Int, y : Int, color : Color) -> Unit {
   self.blue[off] = color.blue
 }
 
-///| clear clears the canvas to the provided color.
+///|
+/// clear clears the canvas to the provided color.
 pub fn clear(self : Canvas, color : Color) -> Unit {
   let mut off = 0
   for y in 0..<self.height {

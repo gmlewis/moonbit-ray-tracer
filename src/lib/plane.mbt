@@ -1,4 +1,5 @@
-///| Plane represents an infinite plane along the x and z axes.
+///|
+/// Plane represents an infinite plane along the x and z axes.
 pub(all) struct Plane {} derive(Show, Eq)
 
 ///|

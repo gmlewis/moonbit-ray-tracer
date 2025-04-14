@@ -1,4 +1,5 @@
-///| Cylinder represents a unit cylinder at the origin.
+///|
+/// Cylinder represents a unit cylinder at the origin.
 pub(all) struct Cylinder {
   minimum : Double
   maximum : Double

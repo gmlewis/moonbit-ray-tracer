@@ -81,7 +81,8 @@ pub impl Eq for Matrix with op_equal(self, other) {
   true
 }
 
-///| Matrix multiplication - currently, only 4x4 is handled.
+///|
+/// Matrix multiplication - currently, only 4x4 is handled.
 pub fn Matrix::op_mul(self : Matrix, o : Matrix) -> Matrix {
   let m = mat4zero()
   for row in 0..<4 {
@@ -135,7 +136,8 @@ pub fn transpose(self : Matrix) -> Matrix {
   result
 }
 
-///| Multiple matrix by single-column tuple.
+///|
+/// Multiple matrix by single-column tuple.
 /// Currently only 4x4 * 1x4 is handled.
 pub fn mul_tuple(self : Matrix, o : Tuple) -> Tuple {
   let m = tuple(0, 0, 0, 0)
@@ -232,7 +234,8 @@ fn my_pow(base : Double, exponent : Double) -> Double {
   @math.exp(exponent * @math.ln(base))
 }
 
-///| round_to_fixed rounds the double to the provided
+///|
+/// round_to_fixed rounds the double to the provided
 /// number of digits.
 pub fn round_to_fixed(v : Double, digits : Int) -> Double {
   let num = digits.to_double().abs()

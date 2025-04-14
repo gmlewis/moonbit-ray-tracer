@@ -1,4 +1,5 @@
-///| Ray represents an origin and direction.
+///|
+/// Ray represents an origin and direction.
 pub(all) struct Ray {
   origin : Tuple
   direction : Tuple

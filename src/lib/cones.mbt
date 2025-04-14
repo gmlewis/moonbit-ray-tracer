@@ -1,4 +1,5 @@
-///| Cone represents a unit cone at the origin.
+///|
+/// Cone represents a unit cone at the origin.
 pub(all) struct Cone {
   minimum : Double
   maximum : Double
