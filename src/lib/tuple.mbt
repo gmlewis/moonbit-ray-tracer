@@ -84,7 +84,7 @@ pub impl Eq for Tuple with op_equal(self, other) {
 }
 
 ///|
-pub fn Tuple::op_add(self : Tuple, other : Tuple) -> Tuple {
+pub impl Add for Tuple with op_add(self, other) {
   let x = self.x + other.x
   let y = self.y + other.y
   let z = self.z + other.z
@@ -93,7 +93,7 @@ pub fn Tuple::op_add(self : Tuple, other : Tuple) -> Tuple {
 }
 
 ///|
-pub fn Tuple::op_sub(self : Tuple, other : Tuple) -> Tuple {
+pub impl Sub for Tuple with op_sub(self, other) {
   let x = self.x - other.x
   let y = self.y - other.y
   let z = self.z - other.z
@@ -102,7 +102,7 @@ pub fn Tuple::op_sub(self : Tuple, other : Tuple) -> Tuple {
 }
 
 ///|
-pub fn op_neg(self : Tuple) -> Tuple {
+pub impl Neg for Tuple with op_neg(self) {
   let x = -self.x
   let y = -self.y
   let z = -self.z
@@ -111,7 +111,7 @@ pub fn op_neg(self : Tuple) -> Tuple {
 }
 
 ///|
-pub fn Tuple::op_mul(self : Tuple, other : Tuple) -> Tuple {
+pub impl Mul for Tuple with op_mul(self, other) {
   let x = self.x * other.x
   let y = self.y * other.y
   let z = self.z * other.z

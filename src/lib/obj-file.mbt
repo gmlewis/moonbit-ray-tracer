@@ -76,18 +76,18 @@ pub fn parse_obj_file(buf : String) -> ObjFile!ParserError {
     let line = line.trim_space()
     if line.length() == 0 {
       // silently ignored
-    } else if line.starts_with("v ") {
+    } else if line.has_prefix("v ") {
       parse_args!(line.substring(start=2), " ", add_vertex)
-    } else if line.starts_with("vn ") {
+    } else if line.has_prefix("vn ") {
       parse_args!(line.substring(start=3), " ", add_normal)
-    } else if line.starts_with("f ") {
+    } else if line.has_prefix("f ") {
       parse_args!(
         line.substring(start=2),
         " ",
         add_triangles,
         string_fn=add_triangle_faces,
       )
-    } else if line.starts_with("g ") {
+    } else if line.has_prefix("g ") {
       let group_name = line.substring(start=2).trim_space()
       last_group = group()
       named_groups[group_name] = last_group

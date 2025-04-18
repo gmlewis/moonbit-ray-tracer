@@ -127,19 +127,11 @@ fn num_rows(Matrix) -> Int
 
 fn obj_to_group(ObjFile) -> Shape
 
-fn op_add(Color, Color) -> Color
-
 fn op_div(Tuple, Tuple) -> Tuple
 
 fn op_get(Intersections, Int) -> Intersection
 
-fn op_mul(Color, Color) -> Color
-
-fn op_neg(Tuple) -> Tuple
-
 fn op_set(MatrixRow, Int, Double) -> Unit
-
-fn op_sub(Color, Color) -> Color
 
 fn parse_obj_file(String) -> ObjFile!ParserError
 
@@ -318,13 +310,13 @@ pub(all) struct Color {
 impl Color {
   clone(Self) -> Self
   mul_scalar(Self, Double) -> Self
-  op_add(Self, Self) -> Self
-  op_mul(Self, Self) -> Self
-  op_sub(Self, Self) -> Self
   to_string(Self) -> String
 }
+impl Add for Color
 impl Eq for Color
+impl Mul for Color
 impl Show for Color
+impl Sub for Color
 
 pub(all) struct Computations {
   t : Double
@@ -472,7 +464,6 @@ impl Matrix {
   num_cols(Self) -> Int
   num_rows(Self) -> Int
   op_get(Self, Int) -> MatrixRow
-  op_mul(Self, Self) -> Self
   rotate_x(Self, Double) -> Self
   rotate_y(Self, Double) -> Self
   rotate_z(Self, Double) -> Self
@@ -484,6 +475,7 @@ impl Matrix {
   transpose(Self) -> Self
 }
 impl Eq for Matrix
+impl Mul for Matrix
 impl Show for Matrix
 
 pub(all) type MatrixRow Array[Double]
@@ -665,18 +657,18 @@ impl Tuple {
   magnitude(Self) -> Double
   mul_scalar(Self, Double) -> Self
   normalize(Self) -> Self
-  op_add(Self, Self) -> Self
   op_div(Self, Self) -> Self
   op_get(Self, Int) -> Double
-  op_mul(Self, Self) -> Self
-  op_neg(Self) -> Self
   op_set(Self, Int, Double) -> Unit
-  op_sub(Self, Self) -> Self
   reflect(Self, Self) -> Self
   to_string(Self) -> String
 }
+impl Add for Tuple
 impl Eq for Tuple
+impl Mul for Tuple
+impl Neg for Tuple
 impl Show for Tuple
+impl Sub for Tuple
 
 pub(all) struct World {
   mut shapes : Array[Shape]

@@ -83,7 +83,7 @@ pub impl Eq for Matrix with op_equal(self, other) {
 
 ///|
 /// Matrix multiplication - currently, only 4x4 is handled.
-pub fn Matrix::op_mul(self : Matrix, o : Matrix) -> Matrix {
+pub impl Mul for Matrix with op_mul(self, o) {
   let m = mat4zero()
   for row in 0..<4 {
     for col in 0..<4 {

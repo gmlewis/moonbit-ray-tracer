@@ -43,7 +43,7 @@ pub impl Eq for Color with op_equal(self, other) {
 }
 
 ///|
-pub fn op_add(self : Color, other : Color) -> Color {
+pub impl Add for Color with op_add(self, other) {
   let red = self.red + other.red
   let green = self.green + other.green
   let blue = self.blue + other.blue
@@ -51,7 +51,7 @@ pub fn op_add(self : Color, other : Color) -> Color {
 }
 
 ///|
-pub fn op_sub(self : Color, other : Color) -> Color {
+pub impl Sub for Color with op_sub(self, other) {
   let red = self.red - other.red
   let green = self.green - other.green
   let blue = self.blue - other.blue
@@ -59,7 +59,7 @@ pub fn op_sub(self : Color, other : Color) -> Color {
 }
 
 ///|
-pub fn op_mul(self : Color, other : Color) -> Color {
+pub impl Mul for Color with op_mul(self, other) {
   let red = self.red * other.red
   let green = self.green * other.green
   let blue = self.blue * other.blue
