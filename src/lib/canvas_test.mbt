@@ -23,7 +23,7 @@ test "Writing pixels to a canvas (p.46)" {
 test "Constructing the PPM header (p.48)" {
   let c = canvas(5, 3)
   let ppm = c.to_ppm()
-  let lines1to3 = ppm.split("\n")[0:3].join("\n")
+  let lines1to3 = ppm.split("\n")[0:3].map(fn(s) { s.to_string() }).join("\n")
   inspect!(
     lines1to3,
     content=
@@ -45,7 +45,7 @@ test "Constructing the PPM pixel data (p.48)" {
     ..write_pixel(2, 1, c2)
     ..write_pixel(4, 2, c3)
     .to_ppm()
-  let lines4to6 = ppm.split("\n")[3:6].join("\n")
+  let lines4to6 = ppm.split("\n")[3:6].map(fn(s) { s.to_string() }).join("\n")
   inspect!(
     lines4to6,
     content=
@@ -78,7 +78,7 @@ test "Constructing the PNG pixel data" {
 ///|
 test "Splitting long lines in PPM files (p.49)" {
   let ppm = canvas(10, 2)..clear(color(1, 0.8, 0.6)).to_ppm()
-  let lines4to6 = ppm.split("\n")[3:7].join("\n")
+  let lines4to6 = ppm.split("\n")[3:7].map(fn(s) { s.to_string() }).join("\n")
   inspect!(
     lines4to6,
     content=

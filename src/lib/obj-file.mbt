@@ -73,7 +73,7 @@ pub fn parse_obj_file(buf : String) -> ObjFile!ParserError {
   //
   let lines = buf.split("\n")
   for line in lines {
-    let line = line.trim_space()
+    let line = line.trim_space().to_string()
     if line.length() == 0 {
       // silently ignored
     } else if line.has_prefix("v ") {
@@ -88,7 +88,7 @@ pub fn parse_obj_file(buf : String) -> ObjFile!ParserError {
         string_fn=add_triangle_faces,
       )
     } else if line.has_prefix("g ") {
-      let group_name = line.substring(start=2).trim_space()
+      let group_name = line.substring(start=2).trim_space().to_string()
       last_group = group()
       named_groups[group_name] = last_group
     } else {
@@ -124,7 +124,7 @@ fn parse_args(
   double_fn : (Array[Double]) -> Unit!ParserError,
   string_fn~ : (Array[String]) -> Unit!ParserError = fn(_args) {  }
 ) -> Unit!ParserError {
-  let parts = s.split(sep).map(fn(s) { s.trim_space() }).collect()
+  let parts = s.split(sep).map(fn(s) { s.trim_space().to_string() }).collect()
   let doubles = Array::new(capacity=parts.length())
   for arg in parts {
     if arg == "" {
