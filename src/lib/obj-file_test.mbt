@@ -85,8 +85,8 @@ test "Triangles in named groups in an OBJ file (p.275)" {
     #|g SecondGroup
     #|f 1 3 4
   let parser = parse_obj_file!(file)
-  let g1 = parser.named_groups["FirstGroup"].unwrap()
-  let g2 = parser.named_groups["SecondGroup"].unwrap()
+  let g1 = parser.named_groups.get("FirstGroup").unwrap()
+  let g2 = parser.named_groups.get("SecondGroup").unwrap()
   guard g1.children()[0].object is Triangle(t1)
   guard g2.children()[0].object is Triangle(t2)
   assert_eq!(t1.p1, parser.vertices[1])

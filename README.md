@@ -13,9 +13,9 @@ The code has been updated to support compiler:
 
 ```bash
 $ moon version --all
-moon 0.1.20250423 (5a215d2 2025-04-23) ~/.moon/bin/moon
-moonc v0.1.20250423+2af95d42c ~/.moon/bin/moonc
-moonrun 0.1.20250423 (5a215d2 2025-04-23) ~/.moon/bin/moonrun
+moon 0.1.20250513 (5aa200a 2025-05-13) ~/.moon/bin/moon
+moonc v0.1.20250514+8798a70d6 ~/.moon/bin/moonc
+moonrun 0.1.20250513 (5aa200a 2025-05-13) ~/.moon/bin/moonrun
 ```
 
 ----------------------------------------------------------------------
