@@ -61,31 +61,38 @@ fn main {
   ])
 
   //
-  let floor = plane()..set_transform(rotation_y(0.9))
+  let floor = plane()
+  floor..set_transform(rotation_y(0.9))
   floor.material.pattern = Some(
-    pattern
-    .clone()
-    ..set_pattern_transform(scaling(0.1, 1, 1) * rotation_y(@math.PI / 3)),
+    {
+      let p = pattern.clone()
+      p.set_pattern_transform(scaling(0.1, 1, 1) * rotation_y(@math.PI / 3))
+      p
+    },
   )
   floor.material.specular = 0
 
   //
-  let middle = sphere()..set_transform(
+  let middle = sphere()
+  middle..set_transform(
     translation(-0.5, 1, 0.5) *
     rotation_x(1.9) *
     rotation_y(0.9) *
     rotation_z(3.3),
   )
   middle.material.pattern = Some(
-    pattern
-    .clone()
-    ..set_pattern_transform(scaling(0.3, 1, 1) * rotation_y(@math.PI / 4)),
+    {
+      let p = pattern.clone()
+      p.set_pattern_transform(scaling(0.3, 1, 1) * rotation_y(@math.PI / 4))
+      p
+    },
   )
   middle.material.diffuse = 0.7
   middle.material.specular = 0.3
 
   //
-  let right = sphere()..set_transform(
+  let right = sphere()
+  right..set_transform(
     translation(1.5, 0.5, -0.5) *
     scaling(0.5, 0.5, 0.5) *
     rotation_x(0.9) *
@@ -93,15 +100,18 @@ fn main {
     rotation_z(1.9),
   )
   right.material.pattern = Some(
-    pattern
-    .clone()
-    ..set_pattern_transform(scaling(0.01, 1, 1) * rotation_y(@math.PI / 7)),
+    {
+      let p = pattern.clone()
+      p.set_pattern_transform(scaling(0.01, 1, 1) * rotation_y(@math.PI / 7))
+      p
+    },
   )
   right.material.diffuse = 0.7
   right.material.specular = 0.3
 
   //
-  let left = sphere()..set_transform(
+  let left = sphere()
+  left..set_transform(
     translation(-1.5, 0.33, -0.75) *
     scaling(0.33, 0.33, 0.33) *
     rotation_x(1.3) *
@@ -109,9 +119,11 @@ fn main {
     rotation_z(0.9),
   )
   left.material.pattern = Some(
-    pattern
-    .clone()
-    ..set_pattern_transform(scaling(0.7, 1, 1) * rotation_y(@math.PI + 0.3)),
+    {
+      let p = pattern.clone()
+      p.set_pattern_transform(scaling(0.7, 1, 1) * rotation_y(@math.PI + 0.3))
+      p
+    },
   )
   left.material.diffuse = 0.7
   left.material.specular = 0.3

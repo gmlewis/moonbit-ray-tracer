@@ -20,7 +20,11 @@ pub fn default_world() -> World {
   s1.material.color = color(0.8, 1, 0.6)
   s1.material.diffuse = 0.7
   s1.material.specular = 0.2
-  let s2 = sphere()..set_transform(scaling(0.5, 0.5, 0.5))
+  let s2 = {
+    let s = sphere()
+    s.set_transform(scaling(0.5, 0.5, 0.5))
+    s
+  }
   let shapes = [s1, s2]
   let light = point_light(point(-10, 10, -10), color(1, 1, 1))
   let lights = [light]

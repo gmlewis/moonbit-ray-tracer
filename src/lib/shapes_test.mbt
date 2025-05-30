@@ -114,8 +114,17 @@ test "A shape has a parent attribute (p.253)" {
 
 ///|
 test "Converting a point from world to object space (p.256)" {
-  let s = sphere()..set_transform(translation(5, 0, 0))
-  let g2 = @lib.group()..set_transform(scaling(2, 2, 2))..add_child(s)
+  let s = {
+    let s = sphere()
+    s.set_transform(translation(5, 0, 0))
+    s
+  }
+  let g2 = {
+    let g = @lib.group()
+    g.set_transform(scaling(2, 2, 2))
+    g.add_child(s)
+    g
+  }
   @lib.group()..set_transform(rotation_y(@math.PI / 2)).add_child(g2)
   let p = s.world_to_object(point(-2, 0, -10))
   assert_eq!(p, point(0, 0, -1))
@@ -123,8 +132,17 @@ test "Converting a point from world to object space (p.256)" {
 
 ///|
 test "Converting a normal from object to world space (p.257)" {
-  let s = sphere()..set_transform(translation(5, 0, 0))
-  let g2 = @lib.group()..set_transform(scaling(1, 2, 3))..add_child(s)
+  let s = {
+    let s = sphere()
+    s.set_transform(translation(5, 0, 0))
+    s
+  }
+  let g2 = {
+    let g = @lib.group()
+    g.set_transform(scaling(1, 2, 3))
+    g.add_child(s)
+    g
+  }
   @lib.group()..set_transform(rotation_y(@math.PI / 2)).add_child(g2)
   let sq3 = 3.0.sqrt() / 3
   let n = s.normal_to_world(vector(sq3, sq3, sq3))
@@ -133,8 +151,17 @@ test "Converting a normal from object to world space (p.257)" {
 
 ///|
 test "Finding the normal on a child object (p.258)" {
-  let s = sphere()..set_transform(translation(5, 0, 0))
-  let g2 = @lib.group()..set_transform(scaling(1, 2, 3))..add_child(s)
+  let s = {
+    let s = sphere()
+    s.set_transform(translation(5, 0, 0))
+    s
+  }
+  let g2 = {
+    let g = @lib.group()
+    g.set_transform(scaling(1, 2, 3))
+    g.add_child(s)
+    g
+  }
   @lib.group()..set_transform(rotation_y(@math.PI / 2)).add_child(g2)
   let n = s.normal_at(point(1.7321, 1.1547, -5.5774))
   assert_eq!(n, vector(0.2857, 0.42854, -0.85716))

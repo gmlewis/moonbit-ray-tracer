@@ -40,12 +40,14 @@ fn main {
   let height = 300
 
   //
-  let floor = sphere()..set_transform(scaling(10, 0.01, 10))
+  let floor = sphere()
+  floor..set_transform(scaling(10, 0.01, 10))
   floor.material.color = color(1, 0.9, 0.9)
   floor.material.specular = 0
 
   //
-  let left_wall = sphere()..set_transform(
+  let left_wall = sphere()
+  left_wall..set_transform(
     translation(0, 0, 5) *
     rotation_y(-@math.PI / 4) *
     rotation_x(@math.PI / 2) *
@@ -54,7 +56,8 @@ fn main {
   left_wall.material = floor.material
 
   //
-  let right_wall = sphere()..set_transform(
+  let right_wall = sphere()
+  right_wall..set_transform(
     translation(0, 0, 5) *
     rotation_y(@math.PI / 4) *
     rotation_x(@math.PI / 2) *
@@ -63,21 +66,22 @@ fn main {
   right_wall.material = floor.material
 
   //
-  let middle = sphere()..set_transform(translation(-0.5, 1, 0.5))
+  let middle = sphere()
+  middle..set_transform(translation(-0.5, 1, 0.5))
   middle.material.color = color(0.1, 1, 0.5)
   middle.material.diffuse = 0.7
   middle.material.specular = 0.3
 
   //
-  let right = sphere()..set_transform(
-    translation(1.5, 0.5, -0.5) * scaling(0.5, 0.5, 0.5),
-  )
+  let right = sphere()
+  right..set_transform(translation(1.5, 0.5, -0.5) * scaling(0.5, 0.5, 0.5))
   right.material.color = color(0.5, 1, 0.1)
   right.material.diffuse = 0.7
   right.material.specular = 0.3
 
   //
-  let left = sphere()..set_transform(
+  let left = sphere()
+  left..set_transform(
     translation(-1.5, 0.33, -0.75) * scaling(0.33, 0.33, 0.33),
   )
   left.material.color = color(1, 0.8, 0.1)

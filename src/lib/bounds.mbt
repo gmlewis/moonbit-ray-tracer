@@ -15,7 +15,8 @@ pub fn Bounds::new() -> Bounds {
 
 ///|
 pub fn transform(self : Bounds, transform : Matrix) -> Bounds {
-  Bounds::new()
+  let b = Bounds::new()
+  b
   ..update(transform.mul_tuple(point(self.min.x, self.min.y, self.min.z)))
   ..update(transform.mul_tuple(point(self.max.x, self.min.y, self.min.z)))
   ..update(transform.mul_tuple(point(self.max.x, self.max.y, self.min.z)))
@@ -24,6 +25,7 @@ pub fn transform(self : Bounds, transform : Matrix) -> Bounds {
   ..update(transform.mul_tuple(point(self.max.x, self.min.y, self.max.z)))
   ..update(transform.mul_tuple(point(self.max.x, self.max.y, self.max.z)))
   ..update(transform.mul_tuple(point(self.min.x, self.max.y, self.max.z)))
+  b
 }
 
 ///|
@@ -36,7 +38,7 @@ pub fn enlarge(self : Bounds, other : Bounds) -> Unit {
   ..update(point(other.min.x, other.min.y, other.max.z))
   ..update(point(other.max.x, other.min.y, other.max.z))
   ..update(point(other.max.x, other.max.y, other.max.z))
-  .update(point(other.min.x, other.max.y, other.max.z))
+  ..update(point(other.min.x, other.max.y, other.max.z))
 }
 
 ///|

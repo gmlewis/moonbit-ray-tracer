@@ -12,7 +12,11 @@ test "The default world (p.134)" {
   s1.material.color = color(0.8, 1, 0.6)
   s1.material.diffuse = 0.7
   s1.material.specular = 0.2
-  let s2 = sphere()..set_transform(scaling(0.5, 0.5, 0.5))
+  let s2 = {
+    let s = sphere()
+    s.set_transform(scaling(0.5, 0.5, 0.5))
+    s
+  }
   let w = default_world()
   assert_eq!(w.shapes, [s1, s2])
   assert_eq!(w.lights, [light])
@@ -114,7 +118,11 @@ test "shade_hit() is given an intersection in shadow (p.160)" {
   let w = world()
   w.lights = [point_light(point(0, 0, -10), color(1, 1, 1))]
   let s1 = sphere()
-  let s2 = sphere()..set_transform(translation(0, 0, 10))
+  let s2 = {
+    let s = sphere()
+    s.set_transform(translation(0, 0, 10))
+    s
+  }
   w.shapes = [s1, s2]
   let r = ray(point(0, 0, 5), vector(0, 0, 1))
   let i = @lib.intersection(4, s2)
@@ -138,7 +146,11 @@ test "The reflected color for a non-reflective material (p.197)" {
 ///|
 test "The reflected color for a reflective material (p.197)" {
   let w = default_world()
-  let shape = plane()..set_transform(translation(0, -1, 0))
+  let shape = {
+    let p = plane()
+    p.set_transform(translation(0, -1, 0))
+    p
+  }
   shape.material.reflective = 0.5
   w.shapes.push(shape)
   let sq2 = 2.0.sqrt() / 2
@@ -152,7 +164,11 @@ test "The reflected color for a reflective material (p.197)" {
 ///|
 test "shade_hit() with a reflective material (p.198)" {
   let w = default_world()
-  let shape = plane()..set_transform(translation(0, -1, 0))
+  let shape = {
+    let p = plane()
+    p.set_transform(translation(0, -1, 0))
+    p
+  }
   shape.material.reflective = 0.5
   w.shapes.push(shape)
   let sq2 = 2.0.sqrt() / 2
@@ -167,10 +183,18 @@ test "shade_hit() with a reflective material (p.198)" {
 test "color_at() with mutually reflective surfaces (p.199)" {
   let w = world()
   w.lights.push(point_light(point(0, 0, 0), color(1, 1, 1)))
-  let lower = plane()..set_transform(translation(0, -1, 0))
+  let lower = {
+    let p = plane()
+    p.set_transform(translation(0, -1, 0))
+    p
+  }
   lower.material.reflective = 1
   w.shapes.push(lower)
-  let upper = plane()..set_transform(translation(0, 1, 0))
+  let upper = {
+    let p = plane()
+    p.set_transform(translation(0, 1, 0))
+    p
+  }
   upper.material.reflective = 1
   w.shapes.push(upper)
   let r = ray(point(0, 0, 0), vector(0, 1, 0))
@@ -182,7 +206,11 @@ test "color_at() with mutually reflective surfaces (p.199)" {
 ///|
 test "The reflected color at the maximum recursive depth (p.200)" {
   let w = default_world()
-  let shape = plane()..set_transform(translation(0, -1, 0))
+  let shape = {
+    let p = plane()
+    p.set_transform(translation(0, -1, 0))
+    p
+  }
   shape.material.reflective = 0.5
   w.shapes.push(shape)
   let sq2 = 2.0.sqrt() / 2
@@ -266,11 +294,19 @@ test "The refracted color with a refracted ray (p.212)" {
 ///|
 test "shade_hit() with a transparent material (p.213)" {
   let w = default_world()
-  let floor = plane()..set_transform(translation(0, -1, 0))
+  let floor = {
+    let p = plane()
+    p.set_transform(translation(0, -1, 0))
+    p
+  }
   floor.material.transparency = 0.5
   floor.material.refractive_index = 1.5
   w.shapes.push(floor)
-  let ball = sphere()..set_transform(translation(0, -3.5, -0.5))
+  let ball = {
+    let s = sphere()
+    s.set_transform(translation(0, -3.5, -0.5))
+    s
+  }
   ball.material.color = color(1, 0, 0)
   ball.material.ambient = 0.5
   w.shapes.push(ball)
@@ -285,12 +321,20 @@ test "shade_hit() with a transparent material (p.213)" {
 ///|
 test "shade_hit() with a reflective, transparent material (p.218)" {
   let w = default_world()
-  let floor = plane()..set_transform(translation(0, -1, 0))
+  let floor = {
+    let p = plane()
+    p.set_transform(translation(0, -1, 0))
+    p
+  }
   floor.material.reflective = 0.5
   floor.material.transparency = 0.5
   floor.material.refractive_index = 1.5
   w.shapes.push(floor)
-  let ball = sphere()..set_transform(translation(0, -3.5, -0.5))
+  let ball = {
+    let s = sphere()
+    s.set_transform(translation(0, -3.5, -0.5))
+    s
+  }
   ball.material.color = color(1, 0, 0)
   ball.material.ambient = 0.5
   w.shapes.push(ball)

@@ -107,7 +107,11 @@ test "The hit, when an intersection occurs on the inside (p.136)" {
 ///|
 test "The hit should offset the point (p.161)" {
   let r = ray(point(0, 0, -5), vector(0, 0, 1))
-  let shape = sphere()..set_transform(translation(0, 0, 1))
+  let shape = {
+    let s = sphere()
+    s.set_transform(translation(0, 0, 1))
+    s
+  }
   let i = @lib.intersection(5, shape)
   let comps = i.prepare_computations(r)
   assert_true!(comps.over_point.z < -@lib.EPSILON / 2)
@@ -126,11 +130,23 @@ test "Precomputing the reflection vector (p.196)" {
 
 ///|
 test "Finding n1 and n2 at various intersections (p.205)" {
-  let a = glass_sphere()..set_transform(scaling(2, 2, 2))
+  let a = {
+    let s = glass_sphere()
+    s.set_transform(scaling(2, 2, 2))
+    s
+  }
   a.material.refractive_index = 1.5
-  let b = glass_sphere()..set_transform(translation(0, 0, -0.25))
+  let b = {
+    let s = glass_sphere()
+    s.set_transform(translation(0, 0, -0.25))
+    s
+  }
   b.material.refractive_index = 2.0
-  let c = glass_sphere()..set_transform(translation(0, 0, 0.25))
+  let c = {
+    let s = glass_sphere()
+    s.set_transform(translation(0, 0, 0.25))
+    s
+  }
   c.material.refractive_index = 2.5
   let r = ray(point(0, 0, -4), vector(0, 0, 1))
   let xs = intersections([
@@ -161,7 +177,11 @@ test "Finding n1 and n2 at various intersections (p.205)" {
 ///|
 test "The under point is offset below the surface (p.208)" {
   let r = ray(point(0, 0, -5), vector(0, 0, 1))
-  let shape = glass_sphere()..set_transform(translation(0, 0, 1))
+  let shape = {
+    let s = glass_sphere()
+    s.set_transform(translation(0, 0, 1))
+    s
+  }
   let i = @lib.intersection(5, shape)
   let xs = intersections([i])
   let comps = i.prepare_computations(r, xs~)

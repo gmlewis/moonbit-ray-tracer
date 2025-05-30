@@ -75,7 +75,11 @@ test "A ray misses a CSG object (p.299)" {
 ///|
 test "A ray hits a CSG object (p.299)" {
   let s1 = sphere()
-  let s2 = sphere()..set_transform(translation(0, 0, 0.5))
+  let s2 = {
+    let s = sphere()
+    s.set_transform(translation(0, 0, 0.5))
+    s
+  }
   let c = csg(Union, s1, s2)
   let r = ray(point(0, 0, -5), vector(0, 0, 1))
   let xs = c.local_intersect(r)

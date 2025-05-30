@@ -240,13 +240,11 @@ pub(all) struct Bounds {
   mut min : Tuple
   mut max : Tuple
 }
-impl Bounds {
-  enlarge(Self, Self) -> Unit
-  local_intersect(Self, Ray, Shape) -> Intersections
-  new() -> Self
-  transform(Self, Matrix) -> Self
-  update(Self, Tuple) -> Unit
-}
+fn Bounds::enlarge(Self, Self) -> Unit
+fn Bounds::local_intersect(Self, Ray, Shape) -> Intersections
+fn Bounds::new() -> Self
+fn Bounds::transform(Self, Matrix) -> Self
+fn Bounds::update(Self, Tuple) -> Unit
 impl Eq for Bounds
 impl Show for Bounds
 
@@ -255,9 +253,7 @@ pub(all) struct CSG {
   left : Shape
   right : Shape
 }
-impl CSG {
-  filter_intersections(Self, Intersections) -> Intersections
-}
+fn CSG::filter_intersections(Self, Intersections) -> Intersections
 impl Eq for CSG
 impl Show for CSG
 
@@ -270,10 +266,8 @@ pub(all) struct Camera {
   half_width : Double
   half_height : Double
 }
-impl Camera {
-  ray_for_pixel(Self, Int, Int) -> Ray
-  render(Self, World) -> Canvas
-}
+fn Camera::ray_for_pixel(Self, Int, Int) -> Ray
+fn Camera::render(Self, World) -> Canvas
 impl Eq for Camera
 impl Show for Camera
 
@@ -284,20 +278,16 @@ pub(all) struct Canvas {
   green : Array[Double]
   blue : Array[Double]
 }
-impl Canvas {
-  clear(Self, Color) -> Unit
-  pixel_at(Self, Int, Int) -> Color
-  to_png(Self) -> Bytes!@image.SizeError
-  to_ppm(Self) -> String
-  write_pixel(Self, Int, Int, Color) -> Unit
-}
+fn Canvas::clear(Self, Color) -> Unit
+fn Canvas::pixel_at(Self, Int, Int) -> Color
+fn Canvas::to_png(Self) -> Bytes!@image.SizeError
+fn Canvas::to_ppm(Self) -> String
+fn Canvas::write_pixel(Self, Int, Int, Color) -> Unit
 
 pub(all) struct CheckersPattern {
   colors : Array[Color]
 }
-impl CheckersPattern {
-  to_string(Self) -> String
-}
+fn CheckersPattern::to_string(Self) -> String
 impl PatternTrait for CheckersPattern
 impl Eq for CheckersPattern
 impl Show for CheckersPattern
@@ -307,11 +297,9 @@ pub(all) struct Color {
   green : Double
   blue : Double
 }
-impl Color {
-  clone(Self) -> Self
-  mul_scalar(Self, Double) -> Self
-  to_string(Self) -> String
-}
+fn Color::clone(Self) -> Self
+fn Color::mul_scalar(Self, Double) -> Self
+fn Color::to_string(Self) -> String
 impl Add for Color
 impl Eq for Color
 impl Mul for Color
@@ -331,9 +319,7 @@ pub(all) struct Computations {
   n1 : Double
   n2 : Double
 }
-impl Computations {
-  schlick(Self) -> Double
-}
+fn Computations::schlick(Self) -> Double
 
 pub(all) struct Cone {
   minimum : Double
@@ -362,9 +348,7 @@ impl Show for Cylinder
 pub(all) struct GradientCheckersPattern {
   colors : Array[Color]
 }
-impl GradientCheckersPattern {
-  to_string(Self) -> String
-}
+fn GradientCheckersPattern::to_string(Self) -> String
 impl PatternTrait for GradientCheckersPattern
 impl Eq for GradientCheckersPattern
 impl Show for GradientCheckersPattern
@@ -372,9 +356,7 @@ impl Show for GradientCheckersPattern
 pub(all) struct GradientPattern {
   colors : Array[Color]
 }
-impl GradientPattern {
-  to_string(Self) -> String
-}
+fn GradientPattern::to_string(Self) -> String
 impl PatternTrait for GradientPattern
 impl Eq for GradientPattern
 impl Show for GradientPattern
@@ -382,9 +364,7 @@ impl Show for GradientPattern
 pub(all) struct GradientRingPattern {
   colors : Array[Color]
 }
-impl GradientRingPattern {
-  to_string(Self) -> String
-}
+fn GradientRingPattern::to_string(Self) -> String
 impl PatternTrait for GradientRingPattern
 impl Eq for GradientRingPattern
 impl Show for GradientRingPattern
@@ -393,13 +373,11 @@ pub(all) struct Group {
   children : Array[Shape]
   mut bounds : Bounds?
 }
-impl Group {
-  bounds(Self) -> Bounds
-  local_intersect(Self, Shape, Ray) -> Intersections
-  local_normal_at(Self, Tuple) -> Tuple
-  output(Self, &Logger) -> Unit
-  to_string(Self) -> String
-}
+fn Group::bounds(Self) -> Bounds
+fn Group::local_intersect(Self, Shape, Ray) -> Intersections
+fn Group::local_normal_at(Self, Tuple) -> Tuple
+fn Group::output(Self, &Logger) -> Unit
+fn Group::to_string(Self) -> String
 
 pub(all) struct Intersection {
   t : Double
@@ -407,10 +385,8 @@ pub(all) struct Intersection {
   u : Double
   v : Double
 }
-impl Intersection {
-  prepare_computations(Self, Ray, xs~ : Intersections = ..) -> Computations
-  to_string(Self) -> String
-}
+fn Intersection::prepare_computations(Self, Ray, xs~ : Intersections = ..) -> Computations
+fn Intersection::to_string(Self) -> String
 impl Eq for Intersection
 impl Show for Intersection
 
@@ -419,12 +395,10 @@ pub(all) struct Intersections {
   xs : Array[Intersection]
   hit : Intersection?
 }
-impl Intersections {
-  from_ts(Array[Double], Shape) -> Self
-  hit(Self) -> Intersection?
-  op_get(Self, Int) -> Intersection
-  to_ts(Self) -> Array[Double]
-}
+fn Intersections::from_ts(Array[Double], Shape) -> Self
+fn Intersections::hit(Self) -> Intersection?
+fn Intersections::op_get(Self, Int) -> Intersection
+fn Intersections::to_ts(Self) -> Array[Double]
 
 pub(all) struct Light {
   position : Tuple
@@ -444,45 +418,39 @@ pub(all) struct Material {
   mut refractive_index : Double
   mut pattern : Pattern?
 }
-impl Material {
-  lighting(Self, Light, Tuple, Tuple, Tuple, in_shadow~ : Bool = .., shape~ : Shape? = ..) -> Color
-}
+fn Material::lighting(Self, Light, Tuple, Tuple, Tuple, in_shadow~ : Bool = .., shape~ : Shape? = ..) -> Color
 impl Eq for Material
 impl Show for Material
 
 pub(all) type Matrix Array[MatrixRow]
-impl Matrix {
-  clone(Self) -> Self
-  cofactor(Self, Int, Int) -> Double
-  copy(Self, Self) -> Unit
-  determinant(Self) -> Double
-  dump(Self) -> String
-  inverse(Self) -> Self
-  is_invertible(Self) -> Bool
-  minor(Self, Int, Int) -> Double
-  mul_tuple(Self, Tuple) -> Tuple
-  num_cols(Self) -> Int
-  num_rows(Self) -> Int
-  op_get(Self, Int) -> MatrixRow
-  rotate_x(Self, Double) -> Self
-  rotate_y(Self, Double) -> Self
-  rotate_z(Self, Double) -> Self
-  scale(Self, Double, Double, Double) -> Self
-  shear(Self, Double, Double, Double, Double, Double, Double) -> Self
-  submatrix(Self, Int, Int) -> Self
-  to_string(Self) -> String
-  translate(Self, Double, Double, Double) -> Self
-  transpose(Self) -> Self
-}
+fn Matrix::clone(Self) -> Self
+fn Matrix::cofactor(Self, Int, Int) -> Double
+fn Matrix::copy(Self, Self) -> Unit
+fn Matrix::determinant(Self) -> Double
+fn Matrix::dump(Self) -> String
+fn Matrix::inverse(Self) -> Self
+fn Matrix::is_invertible(Self) -> Bool
+fn Matrix::minor(Self, Int, Int) -> Double
+fn Matrix::mul_tuple(Self, Tuple) -> Tuple
+fn Matrix::num_cols(Self) -> Int
+fn Matrix::num_rows(Self) -> Int
+fn Matrix::op_get(Self, Int) -> MatrixRow
+fn Matrix::rotate_x(Self, Double) -> Self
+fn Matrix::rotate_y(Self, Double) -> Self
+fn Matrix::rotate_z(Self, Double) -> Self
+fn Matrix::scale(Self, Double, Double, Double) -> Self
+fn Matrix::shear(Self, Double, Double, Double, Double, Double, Double) -> Self
+fn Matrix::submatrix(Self, Int, Int) -> Self
+fn Matrix::to_string(Self) -> String
+fn Matrix::translate(Self, Double, Double, Double) -> Self
+fn Matrix::transpose(Self) -> Self
 impl Eq for Matrix
 impl Mul for Matrix
 impl Show for Matrix
 
 pub(all) type MatrixRow Array[Double]
-impl MatrixRow {
-  op_get(Self, Int) -> Double
-  op_set(Self, Int, Double) -> Unit
-}
+fn MatrixRow::op_get(Self, Int) -> Double
+fn MatrixRow::op_set(Self, Int, Double) -> Unit
 impl Show for MatrixRow
 
 pub(all) struct ObjFile {
@@ -492,9 +460,7 @@ pub(all) struct ObjFile {
   normals : Array[Tuple]
   named_groups : Map[String, Shape]
 }
-impl ObjFile {
-  obj_to_group(Self) -> Shape
-}
+fn ObjFile::obj_to_group(Self) -> Shape
 
 pub(all) enum Operation {
   Union
@@ -513,11 +479,9 @@ pub(all) struct Pattern {
   mut transform : Matrix
   mut inv_transform : Matrix
 }
-impl Pattern {
-  new(&PatternTrait) -> Self
-  pattern_at_shape(Self, Shape, Tuple) -> Color
-  set_pattern_transform(Self, Matrix) -> Unit
-}
+fn Pattern::new(&PatternTrait) -> Self
+fn Pattern::pattern_at_shape(Self, Shape, Tuple) -> Color
+fn Pattern::set_pattern_transform(Self, Matrix) -> Unit
 impl PatternTrait for Pattern
 impl Eq for Pattern
 impl Show for Pattern
@@ -532,10 +496,8 @@ pub(all) struct Ray {
   origin : Tuple
   direction : Tuple
 }
-impl Ray {
-  position(Self, Double) -> Tuple
-  transform(Self, Matrix) -> Self
-}
+fn Ray::position(Self, Double) -> Tuple
+fn Ray::transform(Self, Matrix) -> Self
 impl Eq for Ray
 impl Show for Ray
 
@@ -551,9 +513,7 @@ impl Show for Renderable
 pub(all) struct RingPattern {
   colors : Array[Color]
 }
-impl RingPattern {
-  to_string(Self) -> String
-}
+fn RingPattern::to_string(Self) -> String
 impl PatternTrait for RingPattern
 impl Eq for RingPattern
 impl Show for RingPattern
@@ -567,25 +527,23 @@ pub(all) struct Shape {
   mut bounds : Bounds?
   id : UInt
 }
-impl Shape {
-  add_child(Self, Self) -> Unit
-  bounds(Self) -> Bounds
-  children(Self) -> Array[Self]
-  includes_shape(Self, Self) -> Bool
-  intersect(Self, Ray) -> Intersections
-  local_intersect(Self, Ray) -> Intersections
-  local_normal_at(Self, Tuple, hit~ : Intersection? = ..) -> Tuple
-  new(Renderable) -> Self
-  new_csg(CSG) -> Self
-  new_group(Group) -> Self
-  new_object(&Object) -> Self
-  new_smooth_triangle(SmoothTriangle) -> Self
-  new_triangle(Triangle) -> Self
-  normal_at(Self, Tuple, hit~ : Intersection? = ..) -> Tuple
-  normal_to_world(Self, Tuple) -> Tuple
-  set_transform(Self, Matrix) -> Unit
-  world_to_object(Self, Tuple) -> Tuple
-}
+fn Shape::add_child(Self, Self) -> Unit
+fn Shape::bounds(Self) -> Bounds
+fn Shape::children(Self) -> Array[Self]
+fn Shape::includes_shape(Self, Self) -> Bool
+fn Shape::intersect(Self, Ray) -> Intersections
+fn Shape::local_intersect(Self, Ray) -> Intersections
+fn Shape::local_normal_at(Self, Tuple, hit~ : Intersection? = ..) -> Tuple
+fn Shape::new(Renderable) -> Self
+fn Shape::new_csg(CSG) -> Self
+fn Shape::new_group(Group) -> Self
+fn Shape::new_object(&Object) -> Self
+fn Shape::new_smooth_triangle(SmoothTriangle) -> Self
+fn Shape::new_triangle(Triangle) -> Self
+fn Shape::normal_at(Self, Tuple, hit~ : Intersection? = ..) -> Tuple
+fn Shape::normal_to_world(Self, Tuple) -> Tuple
+fn Shape::set_transform(Self, Matrix) -> Unit
+fn Shape::world_to_object(Self, Tuple) -> Tuple
 impl Eq for Shape
 impl Show for Shape
 
@@ -600,11 +558,9 @@ pub(all) struct SmoothTriangle {
   e2 : Tuple
   bounds : Bounds
 }
-impl SmoothTriangle {
-  bounds(Self) -> Bounds
-  local_intersect(Self, Ray) -> Array[(Double, Double, Double)]
-  local_normal_at(Self, Tuple, Intersection) -> Tuple
-}
+fn SmoothTriangle::bounds(Self) -> Bounds
+fn SmoothTriangle::local_intersect(Self, Ray) -> Array[(Double, Double, Double)]
+fn SmoothTriangle::local_normal_at(Self, Tuple, Intersection) -> Tuple
 impl Eq for SmoothTriangle
 impl Show for SmoothTriangle
 
@@ -617,9 +573,7 @@ impl Show for Sphere
 pub(all) struct StripePattern {
   colors : Array[Color]
 }
-impl StripePattern {
-  to_string(Self) -> String
-}
+fn StripePattern::to_string(Self) -> String
 impl PatternTrait for StripePattern
 impl Eq for StripePattern
 impl Show for StripePattern
@@ -633,11 +587,9 @@ pub(all) struct Triangle {
   normal : Tuple
   bounds : Bounds
 }
-impl Triangle {
-  bounds(Self) -> Bounds
-  local_intersect(Self, Ray) -> Array[(Double, Double, Double)]
-  local_normal_at(Self, Tuple) -> Tuple
-}
+fn Triangle::bounds(Self) -> Bounds
+fn Triangle::local_intersect(Self, Ray) -> Array[(Double, Double, Double)]
+fn Triangle::local_normal_at(Self, Tuple) -> Tuple
 impl Eq for Triangle
 impl Show for Triangle
 
@@ -647,22 +599,20 @@ pub(all) struct Tuple {
   mut z : Double
   mut w : Double
 }
-impl Tuple {
-  abs(Self) -> Self
-  cross(Self, Self) -> Self
-  div_scalar(Self, Double) -> Self
-  dot(Self, Self) -> Double
-  is_point(Self) -> Bool
-  is_vector(Self) -> Bool
-  magnitude(Self) -> Double
-  mul_scalar(Self, Double) -> Self
-  normalize(Self) -> Self
-  op_div(Self, Self) -> Self
-  op_get(Self, Int) -> Double
-  op_set(Self, Int, Double) -> Unit
-  reflect(Self, Self) -> Self
-  to_string(Self) -> String
-}
+fn Tuple::abs(Self) -> Self
+fn Tuple::cross(Self, Self) -> Self
+fn Tuple::div_scalar(Self, Double) -> Self
+fn Tuple::dot(Self, Self) -> Double
+fn Tuple::is_point(Self) -> Bool
+fn Tuple::is_vector(Self) -> Bool
+fn Tuple::magnitude(Self) -> Double
+fn Tuple::mul_scalar(Self, Double) -> Self
+fn Tuple::normalize(Self) -> Self
+fn Tuple::op_div(Self, Self) -> Self
+fn Tuple::op_get(Self, Int) -> Double
+fn Tuple::op_set(Self, Int, Double) -> Unit
+fn Tuple::reflect(Self, Self) -> Self
+fn Tuple::to_string(Self) -> String
 impl Add for Tuple
 impl Eq for Tuple
 impl Mul for Tuple
@@ -674,14 +624,12 @@ pub(all) struct World {
   mut shapes : Array[Shape]
   mut lights : Array[Light]
 }
-impl World {
-  color_at(Self, Ray, remaining~ : Int = ..) -> Color
-  intersect_world(Self, Ray) -> Intersections
-  is_shadowed(Self, Tuple, light~ : Light = ..) -> Bool
-  reflected_color(Self, Computations, Int) -> Color
-  refracted_color(Self, Computations, Int) -> Color
-  shade_hit(Self, Computations, remaining~ : Int = ..) -> Color
-}
+fn World::color_at(Self, Ray, remaining~ : Int = ..) -> Color
+fn World::intersect_world(Self, Ray) -> Intersections
+fn World::is_shadowed(Self, Tuple, light~ : Light = ..) -> Bool
+fn World::reflected_color(Self, Computations, Int) -> Color
+fn World::refracted_color(Self, Computations, Int) -> Color
+fn World::shade_hit(Self, Computations, remaining~ : Int = ..) -> Color
 
 // Type aliases
 

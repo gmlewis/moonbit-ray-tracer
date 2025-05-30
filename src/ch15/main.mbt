@@ -52,11 +52,14 @@ fn main {
   ])
 
   //
-  let floor = plane()..set_transform(rotation_y(0.9))
+  let floor = plane()
+  floor..set_transform(rotation_y(0.9))
   floor.material.pattern = Some(
-    pattern
-    .clone()
-    ..set_pattern_transform(scaling(0.1, 1, 1) * rotation_y(@math.PI / 3)),
+    {
+      let p = pattern.clone()
+      p.set_pattern_transform(scaling(0.1, 1, 1) * rotation_y(@math.PI / 3))
+      p
+    },
   )
   floor.material.specular = 0
 
@@ -67,9 +70,8 @@ fn main {
   } catch {
     e => return println(e)
   }
-  let obj = parser
-    .obj_to_group()
-    ..set_transform(rotation_x(-@math.PI / 2) * scaling(0.15, 0.15, 0.15))
+  let obj = parser.obj_to_group()
+  obj..set_transform(rotation_x(-@math.PI / 2) * scaling(0.15, 0.15, 0.15))
 
   //
   let world = world()
