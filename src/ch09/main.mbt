@@ -83,8 +83,8 @@ fn main {
 
   //
   try {
-    @fs.write_string_to_file!("ch9.ppm", canvas.to_ppm())
-    @fs.write_bytes_to_file!("ch9.png", canvas.to_png!())
+    @fs.write_string_to_file("ch9.ppm", canvas.to_ppm())
+    @fs.write_bytes_to_file("ch9.png", canvas.to_png())
   } catch {
     _ => println("error writing ch9.png")
   }

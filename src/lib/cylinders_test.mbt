@@ -10,7 +10,7 @@ test "A ray misses a cylinder (p.235)" {
     let direction = tt.1.normalize()
     let r = ray(tt.0, direction)
     let xs = cyl.local_intersect(r)
-    assert_eq!(xs.count, 0)
+    assert_eq(xs.count, 0)
   }
 }
 
@@ -26,9 +26,9 @@ test "A ray strikes a cylinder (p.236)" {
     let direction = tt.1.normalize()
     let r = ray(tt.0, direction)
     let xs = cyl.local_intersect(r)
-    assert_eq!(xs.count, 2)
-    assert_eq!(round_to_fixed(xs[0].t, 5), tt.2)
-    assert_eq!(round_to_fixed(xs[1].t, 5), tt.3)
+    assert_eq(xs.count, 2)
+    assert_eq(round_to_fixed(xs[0].t, 5), tt.2)
+    assert_eq(round_to_fixed(xs[1].t, 5), tt.3)
   }
 }
 
@@ -43,7 +43,7 @@ test "Normal vector on a cylinder (p.238)" {
   ]
   for tt in tests {
     let n = cyl.local_normal_at(tt.0)
-    assert_eq!(n, tt.1)
+    assert_eq(n, tt.1)
   }
 }
 
@@ -69,7 +69,7 @@ test "Intersecting a constrained cylinder (p.240)" {
     let direction = tt.1.normalize()
     let r = ray(tt.0, direction)
     let xs = cyl.local_intersect(r)
-    assert_eq!(xs.count, tt.2)
+    assert_eq(xs.count, tt.2)
   }
 }
 
@@ -93,7 +93,7 @@ test "Intersecting the caps of a closed cylinder (p.243)" {
     let direction = tt.1.normalize()
     let r = ray(tt.0, direction)
     let xs = cyl.local_intersect(r)
-    assert_eq!(xs.count, tt.2)
+    assert_eq(xs.count, tt.2)
   }
 }
 
@@ -110,6 +110,6 @@ test "The normal vector on a cylinder's end caps (p.245)" {
   ]
   for tt in tests {
     let n = cyl.local_normal_at(tt.0)
-    assert_eq!(n, tt.1)
+    assert_eq(n, tt.1)
   }
 }

@@ -110,8 +110,12 @@ pub(all) struct Computations {
 pub fn prepare_computations(
   self : Intersection,
   ray : Ray,
-  xs~ : Intersections = intersections([self])
+  xs? : Intersections
 ) -> Computations {
+  let xs = match xs {
+    None => intersections([self])
+    Some(xs) => xs
+  }
   let t = self.t
   let shape = self.shape
   let point = ray.position(t)

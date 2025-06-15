@@ -1,8 +1,8 @@
 ///|
 test "Creating a new group (p.253)" {
   let g = @lib.group()
-  assert_eq!(g.transform, mat4ident())
-  assert_eq!(g.children().length(), 0)
+  assert_eq(g.transform, mat4ident())
+  assert_eq(g.children().length(), 0)
 }
 
 ///|
@@ -11,9 +11,9 @@ test "Adding a child to a group (p.253)" {
   let s = test_shape()
   g.add_child(s)
   let children = g.children()
-  assert_eq!(children.length(), 1)
-  assert_eq!(children[0], s)
-  assert_eq!(s.parent, Some(g))
+  assert_eq(children.length(), 1)
+  assert_eq(children[0], s)
+  assert_eq(s.parent, Some(g))
 }
 
 ///|
@@ -21,7 +21,7 @@ test "Intersecting a ray with an empty group (p.253)" {
   let g = @lib.group()
   let r = ray(point(0, 0, 0), vector(0, 0, 1))
   let xs = g.local_intersect(r)
-  assert_eq!(xs.count, 0)
+  assert_eq(xs.count, 0)
 }
 
 ///|
@@ -44,11 +44,11 @@ test "Intersecting a ray with a non-empty group (p.254)" {
   }
   let r = ray(point(0, 0, -5), vector(0, 0, 1))
   let xs = g.local_intersect(r)
-  assert_eq!(xs.count, 4)
-  assert_eq!(xs[0].shape, s2)
-  assert_eq!(xs[1].shape, s2)
-  assert_eq!(xs[2].shape, s1)
-  assert_eq!(xs[3].shape, s1)
+  assert_eq(xs.count, 4)
+  assert_eq(xs[0].shape, s2)
+  assert_eq(xs[1].shape, s2)
+  assert_eq(xs[2].shape, s1)
+  assert_eq(xs[3].shape, s1)
 }
 
 ///|
@@ -65,5 +65,5 @@ test "Intersecting a transformed group (p.255)" {
   }
   let r = ray(point(10, 0, -10), vector(0, 0, 1))
   let xs = g.intersect(r)
-  assert_eq!(xs.count, 2)
+  assert_eq(xs.count, 2)
 }

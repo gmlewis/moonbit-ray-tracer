@@ -38,21 +38,21 @@ fn test_shape() -> Shape {
 ///|
 test "The default transformation (p.165)" {
   let s = test_shape()
-  assert_eq!(s.transform, mat4ident())
+  assert_eq(s.transform, mat4ident())
 }
 
 ///|
 test "Assigning a transformation (p.166)" {
   let s = test_shape()
   s.set_transform(translation(2, 3, 4))
-  assert_eq!(s.transform, translation(2, 3, 4))
+  assert_eq(s.transform, translation(2, 3, 4))
 }
 
 ///|
 test "The default material (p.166)" {
   let s = test_shape()
   let m = s.material
-  assert_eq!(m, material())
+  assert_eq(m, material())
 }
 
 ///|
@@ -61,7 +61,7 @@ test "Assiging a material (p.166)" {
   let m = material()
   m.ambient = 1
   s.material = m
-  assert_eq!(s.material, m)
+  assert_eq(s.material, m)
 }
 
 ///|
@@ -70,7 +70,7 @@ test "Intersecting a scaled shape with a ray (p.167)" {
   let s = test_shape()
   s.set_transform(scaling(2, 2, 2))
   let _ = s.intersect(r)
-  inspect!(
+  inspect(
     s.object,
     content="test_shape(ray(point(0, 0, -2.5), vector(0, 0, 0.5)))",
   )
@@ -82,7 +82,7 @@ test "Intersecting a translated shape with a ray (p.167)" {
   let s = test_shape()
   s.set_transform(translation(5, 0, 0))
   let _ = s.intersect(r)
-  inspect!(
+  inspect(
     s.object,
     content="test_shape(ray(point(-5, 0, -5), vector(0, 0, 1)))",
   )
@@ -93,7 +93,7 @@ test "Computing the normal on a translated shape (p.168)" {
   let s = test_shape()
   s.set_transform(translation(0, 1, 0))
   let n = s.normal_at(point(0, 1.70711, -0.70711))
-  assert_eq!(n, vector(0, 0.70711, -0.70711))
+  assert_eq(n, vector(0, 0.70711, -0.70711))
 }
 
 ///|
@@ -103,13 +103,13 @@ test "Computing the normal on a transformed shape (p.168)" {
   s.set_transform(m)
   let sq2 = 2.0.sqrt() / 2
   let n = s.normal_at(point(0, sq2, -sq2))
-  assert_eq!(n, vector(0, 0.97014, -0.24254))
+  assert_eq(n, vector(0, 0.97014, -0.24254))
 }
 
 ///|
 test "A shape has a parent attribute (p.253)" {
   let s = test_shape()
-  assert_eq!(s.parent, None)
+  assert_eq(s.parent, None)
 }
 
 ///|
@@ -127,7 +127,7 @@ test "Converting a point from world to object space (p.256)" {
   }
   @lib.group()..set_transform(rotation_y(@math.PI / 2)).add_child(g2)
   let p = s.world_to_object(point(-2, 0, -10))
-  assert_eq!(p, point(0, 0, -1))
+  assert_eq(p, point(0, 0, -1))
 }
 
 ///|
@@ -146,7 +146,7 @@ test "Converting a normal from object to world space (p.257)" {
   @lib.group()..set_transform(rotation_y(@math.PI / 2)).add_child(g2)
   let sq3 = 3.0.sqrt() / 3
   let n = s.normal_to_world(vector(sq3, sq3, sq3))
-  assert_eq!(n, vector(0.28571, 0.42857, -0.85714))
+  assert_eq(n, vector(0.28571, 0.42857, -0.85714))
 }
 
 ///|
@@ -164,5 +164,5 @@ test "Finding the normal on a child object (p.258)" {
   }
   @lib.group()..set_transform(rotation_y(@math.PI / 2)).add_child(g2)
   let n = s.normal_at(point(1.7321, 1.1547, -5.5774))
-  assert_eq!(n, vector(0.2857, 0.42854, -0.85716))
+  assert_eq(n, vector(0.2857, 0.42854, -0.85716))
 }

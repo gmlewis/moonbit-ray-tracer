@@ -87,7 +87,7 @@ fn is_invertible(Matrix) -> Bool
 
 fn is_point(Tuple) -> Bool
 
-fn is_shadowed(World, Tuple, light~ : Light = ..) -> Bool
+fn is_shadowed(World, Tuple, light? : Light) -> Bool
 
 fn is_vector(Tuple) -> Bool
 
@@ -133,7 +133,7 @@ fn op_get(Intersections, Int) -> Intersection
 
 fn op_set(MatrixRow, Int, Double) -> Unit
 
-fn parse_obj_file(String) -> ObjFile!ParserError
+fn parse_obj_file(String) -> ObjFile raise ParserError
 
 fn pattern_at_shape(Pattern, Shape, Tuple) -> Color
 
@@ -147,7 +147,7 @@ fn point_light(Tuple, Color) -> Light
 
 fn position(Ray, Double) -> Tuple
 
-fn prepare_computations(Intersection, Ray, xs~ : Intersections = ..) -> Computations
+fn prepare_computations(Intersection, Ray, xs? : Intersections) -> Computations
 
 fn ray(Tuple, Tuple) -> Ray
 
@@ -201,7 +201,7 @@ fn stripe_pattern(Array[Color]) -> Pattern
 
 fn submatrix(Matrix, Int, Int) -> Matrix
 
-fn to_png(Canvas) -> Bytes!@image.SizeError
+fn to_png(Canvas) -> Bytes raise @image.SizeError
 
 fn to_ppm(Canvas) -> String
 
@@ -280,7 +280,7 @@ pub(all) struct Canvas {
 }
 fn Canvas::clear(Self, Color) -> Unit
 fn Canvas::pixel_at(Self, Int, Int) -> Color
-fn Canvas::to_png(Self) -> Bytes!@image.SizeError
+fn Canvas::to_png(Self) -> Bytes raise @image.SizeError
 fn Canvas::to_ppm(Self) -> String
 fn Canvas::write_pixel(Self, Int, Int, Color) -> Unit
 
@@ -385,7 +385,7 @@ pub(all) struct Intersection {
   u : Double
   v : Double
 }
-fn Intersection::prepare_computations(Self, Ray, xs~ : Intersections = ..) -> Computations
+fn Intersection::prepare_computations(Self, Ray, xs? : Intersections) -> Computations
 fn Intersection::to_string(Self) -> String
 impl Eq for Intersection
 impl Show for Intersection
@@ -626,7 +626,7 @@ pub(all) struct World {
 }
 fn World::color_at(Self, Ray, remaining~ : Int = ..) -> Color
 fn World::intersect_world(Self, Ray) -> Intersections
-fn World::is_shadowed(Self, Tuple, light~ : Light = ..) -> Bool
+fn World::is_shadowed(Self, Tuple, light? : Light) -> Bool
 fn World::reflected_color(Self, Computations, Int) -> Color
 fn World::refracted_color(Self, Computations, Int) -> Color
 fn World::shade_hit(Self, Computations, remaining~ : Int = ..) -> Color

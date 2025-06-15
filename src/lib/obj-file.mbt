@@ -10,10 +10,10 @@ pub(all) struct ObjFile {
 }
 
 ///|
-type! ParserError String derive(Show, Eq)
+suberror ParserError String derive(Show, Eq)
 
 ///|
-pub fn parse_obj_file(buf : String) -> ObjFile!ParserError {
+pub fn parse_obj_file(buf : String) -> ObjFile raise ParserError {
   let default_group = group()
   let mut last_group = default_group
   let mut ignored_lines = 0
@@ -22,19 +22,19 @@ pub fn parse_obj_file(buf : String) -> ObjFile!ParserError {
   let named_groups = {}
 
   // helper functions
-  let add_vertex = fn(args : Array[Double]) -> Unit!ParserError {
+  let add_vertex = fn(args : Array[Double]) -> Unit raise ParserError {
     guard 3 == args.length() else {
       raise ParserError("add_vertex expected 3 doubles, got \{args.length()}")
     }
     vertices.push(point(args[0], args[1], args[2]))
   }
-  let add_normal = fn(args : Array[Double]) -> Unit!ParserError {
+  let add_normal = fn(args : Array[Double]) -> Unit raise ParserError {
     guard 3 == args.length() else {
       raise ParserError("add_normal expected 3 doubles, got \{args.length()}")
     }
     normals.push(vector(args[0], args[1], args[2]))
   }
-  let add_triangles = fn(args : Array[Double]) -> Unit!ParserError {
+  let add_triangles = fn(args : Array[Double]) -> Unit raise ParserError {
     guard args.length() >= 3 else {
       raise ParserError(
         "add_triangles expected at least 3 doubles, got \{args.length()}",
@@ -47,16 +47,16 @@ pub fn parse_obj_file(buf : String) -> ObjFile!ParserError {
       last_group.add_child(triangle(vertices[p1], vertices[p2], vertices[p3]))
     }
   }
-  let add_triangle_faces = fn(args : Array[String]) -> Unit!ParserError {
+  let add_triangle_faces = fn(args : Array[String]) -> Unit raise ParserError {
     guard args.length() >= 3 else {
       raise ParserError(
         "add_triangle_faces expected at least 3 strings, got \{args.length()}",
       )
     }
-    let (p1, n1) = parse_indices!(args[0])
+    let (p1, n1) = parse_indices(args[0])
     for i in 2..<args.length() {
-      let (p2, n2) = parse_indices!(args[i - 1])
-      let (p3, n3) = parse_indices!(args[i])
+      let (p2, n2) = parse_indices(args[i - 1])
+      let (p3, n3) = parse_indices(args[i])
       last_group.add_child(
         smooth_triangle(
           vertices[p1],
@@ -77,11 +77,11 @@ pub fn parse_obj_file(buf : String) -> ObjFile!ParserError {
     if line.length() == 0 {
       // silently ignored
     } else if line.has_prefix("v ") {
-      parse_args!(line.substring(start=2), " ", add_vertex)
+      parse_args(line.substring(start=2), " ", add_vertex)
     } else if line.has_prefix("vn ") {
-      parse_args!(line.substring(start=3), " ", add_normal)
+      parse_args(line.substring(start=3), " ", add_normal)
     } else if line.has_prefix("f ") {
-      parse_args!(
+      parse_args(
         line.substring(start=2),
         " ",
         add_triangles,
@@ -101,19 +101,19 @@ pub fn parse_obj_file(buf : String) -> ObjFile!ParserError {
 }
 
 ///|
-fn parse_indices(s : String) -> (Int, Int)!ParserError {
+fn parse_indices(s : String) -> (Int, Int) raise ParserError {
   let mut p = 0
   let mut n = 0
   let get_vert_and_normal_indices = fn(
     args : Array[Double]
-  ) -> Unit!ParserError {
+  ) -> Unit raise ParserError {
     guard args.length() == 3 else {
       raise ParserError("parse_indices expected 3 ints, got \{s}")
     }
     p = args[0].to_int()
     n = args[2].to_int()
   }
-  parse_args!(s, "/", get_vert_and_normal_indices)
+  parse_args(s, "/", get_vert_and_normal_indices)
   (p, n)
 }
 
@@ -121,9 +121,9 @@ fn parse_indices(s : String) -> (Int, Int)!ParserError {
 fn parse_args(
   s : String,
   sep : String,
-  double_fn : (Array[Double]) -> Unit!ParserError,
-  string_fn~ : (Array[String]) -> Unit!ParserError = fn(_args) {  }
-) -> Unit!ParserError {
+  double_fn : (Array[Double]) -> Unit raise ParserError,
+  string_fn~ : (Array[String]) -> Unit raise ParserError = fn(_args) {  }
+) -> Unit raise ParserError {
   let parts = s.split(sep).map(fn(s) { s.trim_space().to_string() }).collect()
   let doubles = Array::new(capacity=parts.length())
   for arg in parts {
@@ -134,13 +134,13 @@ fn parse_args(
       continue
     }
     try {
-      let v = @strconv.parse_double!(arg)
+      let v = @strconv.parse_double(arg)
       doubles.push(v)
     } catch {
-      _ => return string_fn!(parts)
+      _ => return string_fn(parts)
     }
   }
-  double_fn!(doubles)
+  double_fn(doubles)
 }
 
 ///|

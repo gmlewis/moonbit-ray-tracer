@@ -90,11 +90,11 @@ pub fn color_at(
 }
 
 ///|
-pub fn is_shadowed(
-  self : World,
-  point : Tuple,
-  light~ : Light = self.lights[0]
-) -> Bool {
+pub fn is_shadowed(self : World, point : Tuple, light? : Light) -> Bool {
+  let light = match light {
+    None => self.lights[0]
+    Some(x) => x
+  }
   let v = light.position - point
   let distance = v.magnitude()
   let direction = v.normalize()

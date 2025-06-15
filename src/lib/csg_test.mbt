@@ -4,10 +4,10 @@ test "CSG is created with an operation and two shapes (p.293)" {
   let s2 = cube()
   let parent = csg(Union, s1, s2)
   guard parent.object is CSG(c)
-  assert_eq!(c.operation, Union)
-  assert_eq!(c.left, s1)
-  assert_eq!(c.right, s2)
-  assert_eq!(s1.parent, Some(parent))
+  assert_eq(c.operation, Union)
+  assert_eq(c.left, s1)
+  assert_eq(c.right, s2)
+  assert_eq(s1.parent, Some(parent))
 }
 
 ///|
@@ -40,7 +40,7 @@ test "Evaluating the rule for a CSG operation (p.294)" {
   ]
   for tt in tests {
     let got = intersection_allowed(tt.0, tt.1, tt.2, tt.3)
-    assert_eq!((tt.0, tt.1, tt.2, tt.3, got), tt)
+    assert_eq((tt.0, tt.1, tt.2, tt.3, got), tt)
   }
 }
 
@@ -58,9 +58,9 @@ test "Filtering a list of intersections (p.297)" {
       @lib.intersection(4, s2),
     ])
     let result = c.filter_intersections(xs)
-    assert_eq!(result.count, 2)
-    assert_eq!(result[0], xs[tt.1])
-    assert_eq!(result[1], xs[tt.2])
+    assert_eq(result.count, 2)
+    assert_eq(result[0], xs[tt.1])
+    assert_eq(result[1], xs[tt.2])
   }
 }
 
@@ -69,7 +69,7 @@ test "A ray misses a CSG object (p.299)" {
   let c = csg(Union, sphere(), cube())
   let r = ray(point(0, 2, -5), vector(0, 0, 1))
   let xs = c.local_intersect(r)
-  assert_eq!(xs.count, 0)
+  assert_eq(xs.count, 0)
 }
 
 ///|
@@ -83,9 +83,9 @@ test "A ray hits a CSG object (p.299)" {
   let c = csg(Union, s1, s2)
   let r = ray(point(0, 0, -5), vector(0, 0, 1))
   let xs = c.local_intersect(r)
-  assert_eq!(xs.count, 2)
-  assert_eq!(xs[0].t, 4)
-  assert_eq!(xs[0].shape, s1)
-  assert_eq!(xs[1].t, 6.5)
-  assert_eq!(xs[1].shape, s2)
+  assert_eq(xs.count, 2)
+  assert_eq(xs[0].t, 4)
+  assert_eq(xs[0].shape, s1)
+  assert_eq(xs[1].t, 6.5)
+  assert_eq(xs[1].shape, s2)
 }

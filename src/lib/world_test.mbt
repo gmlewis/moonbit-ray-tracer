@@ -1,8 +1,8 @@
 ///|
 test "Creating a world (p.134)" {
   let w = world()
-  assert_eq!(w.shapes, [])
-  assert_eq!(w.lights, [])
+  assert_eq(w.shapes, [])
+  assert_eq(w.lights, [])
 }
 
 ///|
@@ -18,8 +18,8 @@ test "The default world (p.134)" {
     s
   }
   let w = default_world()
-  assert_eq!(w.shapes, [s1, s2])
-  assert_eq!(w.lights, [light])
+  assert_eq(w.shapes, [s1, s2])
+  assert_eq(w.lights, [light])
 }
 
 ///|
@@ -27,11 +27,11 @@ test "Intersect a world with a ray (p.134)" {
   let w = default_world()
   let r = ray(point(0, 0, -5), vector(0, 0, 1))
   let xs = w.intersect_world(r)
-  assert_eq!(xs.count, 4)
-  assert_eq!(xs[0].t, 4)
-  assert_eq!(xs[1].t, 4.5)
-  assert_eq!(xs[2].t, 5.5)
-  assert_eq!(xs[3].t, 6)
+  assert_eq(xs.count, 4)
+  assert_eq(xs[0].t, 4)
+  assert_eq(xs[1].t, 4.5)
+  assert_eq(xs[2].t, 5.5)
+  assert_eq(xs[3].t, 6)
 }
 
 ///|
@@ -42,7 +42,7 @@ test "Shading an intersection (p.137)" {
   let i = @lib.intersection(4, shape)
   let comps = i.prepare_computations(r)
   let c = w.shade_hit(comps)
-  assert_eq!(c, color(0.38066, 0.47583, 0.2855))
+  assert_eq(c, color(0.38066, 0.47583, 0.2855))
 }
 
 ///|
@@ -54,7 +54,7 @@ test "Shading an intersection from the inside (p.137)" {
   let i = @lib.intersection(0.5, shape)
   let comps = i.prepare_computations(r)
   let c = w.shade_hit(comps)
-  assert_eq!(c, color(0.90498, 0.90498, 0.90498))
+  assert_eq(c, color(0.90498, 0.90498, 0.90498))
 }
 
 ///|
@@ -62,7 +62,7 @@ test "The color when a ray misses (p.138)" {
   let w = default_world()
   let r = ray(point(0, 0, -5), vector(0, 1, 0))
   let c = w.color_at(r)
-  assert_eq!(c, color(0, 0, 0))
+  assert_eq(c, color(0, 0, 0))
 }
 
 ///|
@@ -70,7 +70,7 @@ test "The color when a ray hits (p.138)" {
   let w = default_world()
   let r = ray(point(0, 0, -5), vector(0, 0, 1))
   let c = w.color_at(r)
-  assert_eq!(c, color(0.38066, 0.47583, 0.2855))
+  assert_eq(c, color(0.38066, 0.47583, 0.2855))
 }
 
 ///|
@@ -82,35 +82,35 @@ test "The color with an intersection behind the ray (p.139)" {
   inner.material.ambient = 1
   let r = ray(point(0, 0, 0.75), vector(0, 0, -1))
   let c = w.color_at(r)
-  assert_eq!(c, inner.material.color)
+  assert_eq(c, inner.material.color)
 }
 
 ///|
 test "There is no shadow when nothing is collinear with point and light (p.157)" {
   let w = default_world()
   let p = point(0, 10, 0)
-  assert_false!(w.is_shadowed(p))
+  assert_false(w.is_shadowed(p))
 }
 
 ///|
 test "The shadow when an object is between the point and the light (p.157)" {
   let w = default_world()
   let p = point(10, -10, 10)
-  assert_true!(w.is_shadowed(p))
+  assert_true(w.is_shadowed(p))
 }
 
 ///|
 test "There is no shadow when an object is behind the light (p.158)" {
   let w = default_world()
   let p = point(-20, 20, -20)
-  assert_false!(w.is_shadowed(p))
+  assert_false(w.is_shadowed(p))
 }
 
 ///|
 test "There is no shadow when an object is behind the poiny (p.159)" {
   let w = default_world()
   let p = point(-2, 2, -2)
-  assert_false!(w.is_shadowed(p))
+  assert_false(w.is_shadowed(p))
 }
 
 ///|
@@ -128,7 +128,7 @@ test "shade_hit() is given an intersection in shadow (p.160)" {
   let i = @lib.intersection(4, s2)
   let comps = i.prepare_computations(r)
   let c = w.shade_hit(comps)
-  assert_eq!(c, color(0.1, 0.1, 0.1))
+  assert_eq(c, color(0.1, 0.1, 0.1))
 }
 
 ///|
@@ -140,7 +140,7 @@ test "The reflected color for a non-reflective material (p.197)" {
   let i = @lib.intersection(1, shape)
   let comps = i.prepare_computations(r)
   let color = w.reflected_color(comps, 5)
-  assert_eq!(color, black)
+  assert_eq(color, black)
 }
 
 ///|
@@ -158,7 +158,7 @@ test "The reflected color for a reflective material (p.197)" {
   let i = @lib.intersection(2.0.sqrt(), shape)
   let comps = i.prepare_computations(r)
   let c = w.reflected_color(comps, 5)
-  assert_eq!(c, color(0.19033, 0.23792, 0.14275))
+  assert_eq(c, color(0.19033, 0.23792, 0.14275))
 }
 
 ///|
@@ -176,7 +176,7 @@ test "shade_hit() with a reflective material (p.198)" {
   let i = @lib.intersection(2.0.sqrt(), shape)
   let comps = i.prepare_computations(r)
   let c = w.shade_hit(comps)
-  assert_eq!(c, color(0.87676, 0.92434, 0.82917))
+  assert_eq(c, color(0.87676, 0.92434, 0.82917))
 }
 
 ///|
@@ -218,7 +218,7 @@ test "The reflected color at the maximum recursive depth (p.200)" {
   let i = @lib.intersection(2.0.sqrt(), shape)
   let comps = i.prepare_computations(r)
   let c = w.reflected_color(comps, 0)
-  assert_eq!(c, black)
+  assert_eq(c, black)
 }
 
 ///|
@@ -232,7 +232,7 @@ test "The refracted color with an opaque surface (p.209)" {
   ])
   let comps = xs[0].prepare_computations(r, xs~)
   let c = w.refracted_color(comps, 5)
-  assert_eq!(c, black)
+  assert_eq(c, black)
 }
 
 ///|
@@ -248,7 +248,7 @@ test "The refracted color at the maximum recursive depth (p.209)" {
   ])
   let comps = xs[0].prepare_computations(r, xs~)
   let c = w.refracted_color(comps, 0)
-  assert_eq!(c, black)
+  assert_eq(c, black)
 }
 
 ///|
@@ -267,7 +267,7 @@ test "The refracted color under total internal reflection (p.210)" {
   // to look at the second intersection, xs[1], not xs[0].
   let comps = xs[1].prepare_computations(r, xs~)
   let c = w.refracted_color(comps, 5)
-  assert_eq!(c, color(0, 0, 0))
+  assert_eq(c, color(0, 0, 0))
 }
 
 ///|
@@ -288,7 +288,7 @@ test "The refracted color with a refracted ray (p.212)" {
   ])
   let comps = xs[2].prepare_computations(r, xs~)
   let c = w.refracted_color(comps, 5)
-  assert_eq!(c, color(0, 0.99888, 0.04722))
+  assert_eq(c, color(0, 0.99888, 0.04722))
 }
 
 ///|
@@ -315,7 +315,7 @@ test "shade_hit() with a transparent material (p.213)" {
   let xs = intersections([@lib.intersection(2.0.sqrt(), floor)])
   let comps = xs[0].prepare_computations(r, xs~)
   let c = w.shade_hit(comps, remaining=5)
-  assert_eq!(c, color(0.93642, 0.68642, 0.68642))
+  assert_eq(c, color(0.93642, 0.68642, 0.68642))
 }
 
 ///|
@@ -343,5 +343,5 @@ test "shade_hit() with a reflective, transparent material (p.218)" {
   let xs = intersections([@lib.intersection(2.0.sqrt(), floor)])
   let comps = xs[0].prepare_computations(r, xs~)
   let c = w.shade_hit(comps, remaining=5)
-  assert_eq!(c, color(0.93391, 0.69643, 0.69243))
+  assert_eq(c, color(0.93391, 0.69643, 0.69243))
 }

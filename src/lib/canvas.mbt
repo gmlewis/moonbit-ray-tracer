@@ -109,9 +109,9 @@ fn clamp2byte(v : Double) -> Byte {
 }
 
 ///|
-pub fn to_png(self : Canvas) -> Bytes!@image.SizeError {
+pub fn to_png(self : Canvas) -> Bytes raise @image.SizeError {
   let r = @image.rect(0, 0, self.width, self.height)
-  let img = @image.RGBA::new!(r)
+  let img = @image.RGBA::new(r)
   let mut off = 0
   for y in 0..<self.height {
     for x in 0..<self.width {

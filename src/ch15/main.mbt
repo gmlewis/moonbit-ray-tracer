@@ -65,8 +65,8 @@ fn main {
 
   //
   let parser = try {
-    let buf = @fs.read_file_to_string!("teapot.obj")
-    @lib.parse_obj_file!(buf)
+    let buf = @fs.read_file_to_string("teapot.obj")
+    @lib.parse_obj_file(buf)
   } catch {
     e => return println(e)
   }
@@ -92,8 +92,8 @@ fn main {
 
   //
   try {
-    @fs.write_string_to_file!("ch15.ppm", canvas.to_ppm())
-    @fs.write_bytes_to_file!("ch15.png", canvas.to_png!())
+    @fs.write_string_to_file("ch15.ppm", canvas.to_ppm())
+    @fs.write_bytes_to_file("ch15.png", canvas.to_png())
   } catch {
     _ => println("error writing ch15.png")
   }
