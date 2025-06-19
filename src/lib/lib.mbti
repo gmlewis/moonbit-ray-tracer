@@ -7,10 +7,6 @@ import(
 // Values
 const EPSILON : Double = 0.00001
 
-fn abs(Tuple) -> Tuple
-
-fn add_child(Shape, Shape) -> Unit
-
 let black : Color
 
 fn camera(Int, Int, Double) -> Camera
@@ -19,23 +15,9 @@ fn canvas(Int, Int) -> Canvas
 
 fn checkers_pattern(Array[Color]) -> Pattern
 
-fn children(Shape) -> Array[Shape]
-
-fn clear(Canvas, Color) -> Unit
-
-fn clone(Color) -> Color
-
-fn cofactor(Matrix, Int, Int) -> Double
-
 fn color(Double, Double, Double) -> Color
 
-fn color_at(World, Ray, remaining~ : Int = ..) -> Color
-
 fn cone(minimum~ : Double = .., maximum~ : Double = .., closed~ : Bool = ..) -> Shape
-
-fn copy(Matrix, Matrix) -> Unit
-
-fn cross(Tuple, Tuple) -> Tuple
 
 fn csg(Operation, Shape, Shape) -> Shape
 
@@ -44,18 +26,6 @@ fn cube() -> Shape
 fn cylinder(minimum~ : Double = .., maximum~ : Double = .., closed~ : Bool = ..) -> Shape
 
 fn default_world() -> World
-
-fn determinant(Matrix) -> Double
-
-fn div_scalar(Tuple, Double) -> Tuple
-
-fn dot(Tuple, Tuple) -> Double
-
-fn dump(Matrix) -> String
-
-fn enlarge(Bounds, Bounds) -> Unit
-
-fn filter_intersections(CSG, Intersections) -> Intersections
 
 fn glass_sphere() -> Shape
 
@@ -67,35 +37,11 @@ fn gradient_ring_pattern(Array[Color]) -> Pattern
 
 fn group() -> Shape
 
-fn hit(Intersections) -> Intersection?
-
-fn includes_shape(Shape, Shape) -> Bool
-
-fn intersect(Shape, Ray) -> Intersections
-
-fn intersect_world(World, Ray) -> Intersections
-
 fn intersection(Double, Shape, u~ : Double = .., v~ : Double = ..) -> Intersection
 
 fn intersection_allowed(Operation, Bool, Bool, Bool) -> Bool
 
 fn intersections(Array[Intersection]) -> Intersections
-
-fn inverse(Matrix) -> Matrix
-
-fn is_invertible(Matrix) -> Bool
-
-fn is_point(Tuple) -> Bool
-
-fn is_shadowed(World, Tuple, light? : Light) -> Bool
-
-fn is_vector(Tuple) -> Bool
-
-fn lighting(Material, Light, Tuple, Tuple, Tuple, in_shadow~ : Bool = .., shape~ : Shape? = ..) -> Color
-
-fn local_intersect(Bounds, Ray, Shape) -> Intersections
-
-fn magnitude(Tuple) -> Double
 
 fn mat2(Double, Double, Double, Double) -> Matrix
 
@@ -109,35 +55,7 @@ fn mat4zero() -> Matrix
 
 fn material() -> Material
 
-fn minor(Matrix, Int, Int) -> Double
-
-fn mul_scalar(Color, Double) -> Color
-
-fn mul_tuple(Matrix, Tuple) -> Tuple
-
-fn normal_at(Shape, Tuple, hit~ : Intersection? = ..) -> Tuple
-
-fn normal_to_world(Shape, Tuple) -> Tuple
-
-fn normalize(Tuple) -> Tuple
-
-fn num_cols(Matrix) -> Int
-
-fn num_rows(Matrix) -> Int
-
-fn obj_to_group(ObjFile) -> Shape
-
-fn op_div(Tuple, Tuple) -> Tuple
-
-fn op_get(Intersections, Int) -> Intersection
-
-fn op_set(MatrixRow, Int, Double) -> Unit
-
 fn parse_obj_file(String) -> ObjFile raise ParserError
-
-fn pattern_at_shape(Pattern, Shape, Tuple) -> Color
-
-fn pixel_at(Canvas, Int, Int) -> Color
 
 fn plane() -> Shape
 
@@ -145,29 +63,9 @@ fn point(Double, Double, Double) -> Tuple
 
 fn point_light(Tuple, Color) -> Light
 
-fn position(Ray, Double) -> Tuple
-
-fn prepare_computations(Intersection, Ray, xs? : Intersections) -> Computations
-
 fn ray(Tuple, Tuple) -> Ray
 
-fn ray_for_pixel(Camera, Int, Int) -> Ray
-
-fn reflect(Tuple, Tuple) -> Tuple
-
-fn reflected_color(World, Computations, Int) -> Color
-
-fn refracted_color(World, Computations, Int) -> Color
-
-fn render(Camera, World) -> Canvas
-
 fn ring_pattern(Array[Color]) -> Pattern
-
-fn rotate_x(Matrix, Double) -> Matrix
-
-fn rotate_y(Matrix, Double) -> Matrix
-
-fn rotate_z(Matrix, Double) -> Matrix
 
 fn rotation_x(Double) -> Matrix
 
@@ -177,19 +75,7 @@ fn rotation_z(Double) -> Matrix
 
 fn round_to_fixed(Double, Int) -> Double
 
-fn scale(Matrix, Double, Double, Double) -> Matrix
-
 fn scaling(Double, Double, Double) -> Matrix
-
-fn schlick(Computations) -> Double
-
-fn set_pattern_transform(Pattern, Matrix) -> Unit
-
-fn set_transform(Shape, Matrix) -> Unit
-
-fn shade_hit(World, Computations, remaining~ : Int = ..) -> Color
-
-fn shear(Matrix, Double, Double, Double, Double, Double, Double) -> Matrix
 
 fn shearing(Double, Double, Double, Double, Double, Double) -> Matrix
 
@@ -199,29 +85,11 @@ fn sphere() -> Shape
 
 fn stripe_pattern(Array[Color]) -> Pattern
 
-fn submatrix(Matrix, Int, Int) -> Matrix
-
-fn to_png(Canvas) -> Bytes raise @image.SizeError
-
-fn to_ppm(Canvas) -> String
-
-fn to_string(Color) -> String
-
-fn to_ts(Intersections) -> Array[Double]
-
-fn transform(Bounds, Matrix) -> Bounds
-
-fn translate(Matrix, Double, Double, Double) -> Matrix
-
 fn translation(Double, Double, Double) -> Matrix
-
-fn transpose(Matrix) -> Matrix
 
 fn triangle(Tuple, Tuple, Tuple) -> Shape
 
 fn tuple(Double, Double, Double, Double) -> Tuple
-
-fn update(Bounds, Tuple) -> Unit
 
 fn vector(Double, Double, Double) -> Tuple
 
@@ -230,10 +98,6 @@ fn view_transform(Tuple, Tuple, Tuple) -> Matrix
 let white : Color
 
 fn world() -> World
-
-fn world_to_object(Shape, Tuple) -> Tuple
-
-fn write_pixel(Canvas, Int, Int, Color) -> Unit
 
 // Types and methods
 pub(all) struct Bounds {
@@ -428,6 +292,7 @@ fn Matrix::cofactor(Self, Int, Int) -> Double
 fn Matrix::copy(Self, Self) -> Unit
 fn Matrix::determinant(Self) -> Double
 fn Matrix::dump(Self) -> String
+fn Matrix::inner(Self) -> Array[MatrixRow]
 fn Matrix::inverse(Self) -> Self
 fn Matrix::is_invertible(Self) -> Bool
 fn Matrix::minor(Self, Int, Int) -> Double
@@ -449,6 +314,7 @@ impl Mul for Matrix
 impl Show for Matrix
 
 pub(all) type MatrixRow Array[Double]
+fn MatrixRow::inner(Self) -> Array[Double]
 fn MatrixRow::op_get(Self, Int) -> Double
 fn MatrixRow::op_set(Self, Int, Double) -> Unit
 impl Show for MatrixRow

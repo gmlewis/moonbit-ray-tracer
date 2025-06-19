@@ -27,6 +27,7 @@ pub impl Show for Cylinder with to_string(_self) {
 // a helper function to reduce duplication.
 // checks to see if the intersection at `t` is within a radius
 // of 1 (the radius of the cylinders) from the y axis.
+
 ///|
 fn check_cylinder_cap(ray : Ray, t : Double) -> Bool {
   let x = ray.origin.x + t * ray.direction.x

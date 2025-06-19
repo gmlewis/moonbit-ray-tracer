@@ -3,12 +3,12 @@ pub(all) type MatrixRow Array[Double] derive(Show)
 
 ///|
 pub fn MatrixRow::op_get(self : MatrixRow, col : Int) -> Double {
-  self._[col]
+  self.inner()[col]
 }
 
 ///|
 pub fn op_set(self : MatrixRow, col : Int, v : Double) -> Unit {
-  self._[col] = v
+  self.inner()[col] = v
 }
 
 ///|
@@ -38,12 +38,12 @@ pub impl Show for Matrix with output(self, logger) {
 
 ///|
 pub fn Matrix::op_get(self : Matrix, row : Int) -> MatrixRow {
-  self._[row]
+  self.inner()[row]
 }
 
 ///|
 pub fn num_rows(self : Matrix) -> Int {
-  self._.length()
+  self.inner().length()
 }
 
 ///|
@@ -51,7 +51,7 @@ pub fn num_cols(self : Matrix) -> Int {
   if self.num_rows() == 0 {
     return 0
   }
-  self._[0]._.length()
+  self.inner()[0].inner().length()
 }
 
 ///|
@@ -72,7 +72,8 @@ pub impl Eq for Matrix with op_equal(self, other) {
   }
   for row in 0..<nrows {
     for col in 0..<ncols {
-      let delta = (self._[row]._[col] - other._[row]._[col]).abs()
+      let delta = (self.inner()[row].inner()[col] -
+      other.inner()[row].inner()[col]).abs()
       if delta >= EPSILON {
         return false
       }
