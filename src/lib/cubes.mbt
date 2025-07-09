@@ -23,8 +23,8 @@ pub impl Object for Cube with local_intersect(_self, ray) {
   let (ztmin, ztmax) = check_axis(ray.origin.z, ray.direction.z, -1, 1)
 
   //
-  let tmin = @math.maximum(@math.maximum(xtmin, ytmin), ztmin)
-  let tmax = @math.minimum(@math.minimum(xtmax, ytmax), ztmax)
+  let tmin = @cmp.maximum(@cmp.maximum(xtmin, ytmin), ztmin)
+  let tmax = @cmp.minimum(@cmp.minimum(xtmax, ytmax), ztmax)
   if tmin > tmax {
     return []
   }
@@ -56,7 +56,7 @@ pub impl Object for Cube with local_normal_at(_self, local_point) {
   let xabs = local_point.x.abs()
   let yabs = local_point.y.abs()
   let zabs = local_point.z.abs()
-  let maxc = @math.maximum(@math.maximum(xabs, yabs), zabs)
+  let maxc = @cmp.maximum(@cmp.maximum(xabs, yabs), zabs)
   if maxc == xabs {
     vector(local_point.x, 0, 0)
   } else if maxc == yabs {

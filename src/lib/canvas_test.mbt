@@ -26,11 +26,11 @@ test "Constructing the PPM header (p.48)" {
   let lines1to3 = ppm.split("\n")[0:3].map(fn(s) { s.to_string() }).join("\n")
   inspect(
     lines1to3,
-    content=
+    content=(
       #|P3
       #|5 3
       #|255
-    ,
+    ),
   )
 }
 
@@ -48,11 +48,11 @@ test "Constructing the PPM pixel data (p.48)" {
   let lines4to6 = ppm.split("\n")[3:6].map(fn(s) { s.to_string() }).join("\n")
   inspect(
     lines4to6,
-    content=
+    content=(
       #|255 0 0 0 0 0 0 0 0 0 0 0 0 0 0
       #|0 0 0 0 0 0 0 128 0 0 0 0 0 0 0
       #|0 0 0 0 0 0 0 0 0 0 0 0 0 0 255
-    ,
+    ),
   )
 }
 
@@ -69,9 +69,9 @@ test "Constructing the PNG pixel data" {
     .to_png()
   inspect(
     png,
-    content=
+    content=(
       #|b"\x89\x50\x4e\x47\x0d\x0a\x1a\x0a\x00\x00\x00\x0d\x49\x48\x44\x52\x00\x00\x00\x05\x00\x00\x00\x03\x08\x02\x00\x00\x00\xd4\x54\x52\xaf\x00\x00\x00\x20\x49\x44\x41\x54\x78\x01\x04\xc0\x01\x11\x00\x00\x08\x03\x21\xce\xe4\x36\xff\x71\x01\x00\x00\x0f\x00\x00\xb4\x00\x00\x00\xff\xff\x3c\x60\x02\x81\xd1\xde\x8a\xab\x00\x00\x00\x00\x49\x45\x4e\x44\xae\x42\x60\x82"
-    ,
+    ),
   )
 }
 
@@ -81,12 +81,12 @@ test "Splitting long lines in PPM files (p.49)" {
   let lines4to6 = ppm.split("\n")[3:7].map(fn(s) { s.to_string() }).join("\n")
   inspect(
     lines4to6,
-    content=
+    content=(
       #|255 204 153 255 204 153 255 204 153 255 204 153 255 204 153 255 204
       #|153 255 204 153 255 204 153 255 204 153 255 204 153
       #|255 204 153 255 204 153 255 204 153 255 204 153 255 204 153 255 204
       #|153 255 204 153 255 204 153 255 204 153 255 204 153
-    ,
+    ),
   )
 }
 

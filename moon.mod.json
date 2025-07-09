@@ -1,9 +1,9 @@
 {
   "name": "gmlewis/ray-tracer",
-  "version": "0.10.15",
+  "version": "0.10.16",
   "deps": {
-    "gmlewis/image": "0.16.16",
-    "gmlewis/io": "0.22.6",
+    "gmlewis/image": "0.16.17",
+    "gmlewis/io": "0.22.7",
     "moonbitlang/x": "0.4.29"
   },
   "readme": "README.md",

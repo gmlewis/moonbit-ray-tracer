@@ -3,7 +3,7 @@ test "Creating a stripe pattern (p.175)" {
   let pattern = stripe_pattern([white, black])
   inspect(
     pattern,
-    content=
+    content=(
       #|{pattern: stripe(color(1, 1, 1),color(0, 0, 0)), transform: mat4(
       #|1, 0, 0, 0, // row 0
       #|0, 1, 0, 0, // row 1
@@ -15,7 +15,7 @@ test "Creating a stripe pattern (p.175)" {
       #|0, 0, 1, 0, // row 2
       #|0, 0, 0, 1, // row 3
       #|)}
-    ,
+    ),
   )
 }
 

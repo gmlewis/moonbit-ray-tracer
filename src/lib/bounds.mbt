@@ -87,8 +87,8 @@ pub fn local_intersect(
     self.min.z,
     self.max.z,
   )
-  let tmin = @math.maximum(xtmin, @math.maximum(ytmin, ztmin))
-  let tmax = @math.minimum(xtmax, @math.minimum(ytmax, ztmax))
+  let tmin = @cmp.maximum(xtmin, @cmp.maximum(ytmin, ztmin))
+  let tmax = @cmp.minimum(xtmax, @cmp.minimum(ytmax, ztmax))
   if tmin > tmax {
     return intersections([])
   }
