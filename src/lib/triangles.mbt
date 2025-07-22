@@ -37,7 +37,7 @@ pub fn Triangle::local_normal_at(self : Triangle, _point : Tuple) -> Tuple {
 ///|
 pub fn Triangle::local_intersect(
   self : Triangle,
-  ray : Ray
+  ray : Ray,
 ) -> Array[(Double, Double, Double)] {
   let dir_cross_e2 = ray.direction.cross(self.e2)
   let det = self.e1.dot(dir_cross_e2)

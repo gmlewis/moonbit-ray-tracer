@@ -13,7 +13,7 @@ let _Cylinder : &Object = Cylinder::{ minimum: 0, maximum: 0, closed: false }
 pub fn cylinder(
   minimum~ : Double = @double.neg_infinity,
   maximum~ : Double = @double.infinity,
-  closed~ : Bool = false
+  closed~ : Bool = false,
 ) -> Shape {
   let cylinder = Cylinder::{ minimum, maximum, closed }
   Shape::new_object(cylinder)
@@ -39,7 +39,7 @@ fn check_cylinder_cap(ray : Ray, t : Double) -> Bool {
 fn Cylinder::intersect_caps(
   self : Cylinder,
   ray : Ray,
-  xs : Array[Double]
+  xs : Array[Double],
 ) -> Unit {
   // caps only matter if the cylinder is closed, and might possibly be
   // intersected by the ray.

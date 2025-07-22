@@ -45,7 +45,7 @@ pub fn intersect_world(self : World, ray : Ray) -> Intersections {
 pub fn shade_hit(
   self : World,
   comps : Computations,
-  remaining~ : Int = MAX_BOUNCES
+  remaining~ : Int = MAX_BOUNCES,
 ) -> Color {
   let mut c = color(0, 0, 0)
   for light in self.lights {
@@ -78,7 +78,7 @@ pub fn shade_hit(
 pub fn color_at(
   self : World,
   ray : Ray,
-  remaining~ : Int = MAX_BOUNCES
+  remaining~ : Int = MAX_BOUNCES,
 ) -> Color {
   let xs = self.intersect_world(ray)
   let hit = match xs.hit() {
@@ -111,7 +111,7 @@ pub fn is_shadowed(self : World, point : Tuple, light? : Light) -> Bool {
 pub fn reflected_color(
   self : World,
   comps : Computations,
-  remaining : Int
+  remaining : Int,
 ) -> Color {
   let reflective = comps.shape.material.reflective
   if remaining <= 0 || reflective == 0 {
@@ -127,7 +127,7 @@ pub fn reflected_color(
 pub fn refracted_color(
   self : World,
   comps : Computations,
-  remaining : Int
+  remaining : Int,
 ) -> Color {
   if remaining <= 0 || comps.shape.material.transparency == 0 {
     return color(0, 0, 0)

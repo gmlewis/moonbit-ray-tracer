@@ -36,7 +36,7 @@ pub fn shearing(
   yx : Double,
   yz : Double,
   zx : Double,
-  zy : Double
+  zy : Double,
 ) -> Matrix {
   mat4(1, xy, xz, 0, yx, 1, yz, 0, zx, zy, 1, 0, 0, 0, 0, 1)
 }

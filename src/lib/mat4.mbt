@@ -15,7 +15,7 @@ pub fn mat4(
   r3c0 : Double,
   r3c1 : Double,
   r3c2 : Double,
-  r3c3 : Double
+  r3c3 : Double,
 ) -> Matrix {
   [
     [r0c0, r0c1, r0c2, r0c3],

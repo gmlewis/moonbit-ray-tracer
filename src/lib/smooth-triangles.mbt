@@ -18,7 +18,7 @@ pub fn smooth_triangle(
   p3 : Tuple,
   n1 : Tuple,
   n2 : Tuple,
-  n3 : Tuple
+  n3 : Tuple,
 ) -> Shape {
   let bounds = Bounds::new()
   bounds..update(p1)..update(p2)..update(p3)
@@ -41,7 +41,7 @@ pub fn SmoothTriangle::bounds(self : SmoothTriangle) -> Bounds {
 pub fn SmoothTriangle::local_normal_at(
   self : SmoothTriangle,
   _point : Tuple,
-  hit : Intersection
+  hit : Intersection,
 ) -> Tuple {
   self.n2.mul_scalar(hit.u) +
   self.n3.mul_scalar(hit.v) +
@@ -51,7 +51,7 @@ pub fn SmoothTriangle::local_normal_at(
 ///|
 pub fn SmoothTriangle::local_intersect(
   self : SmoothTriangle,
-  ray : Ray
+  ray : Ray,
 ) -> Array[(Double, Double, Double)] {
   let dir_cross_e2 = ray.direction.cross(self.e2)
   let det = self.e1.dot(dir_cross_e2)

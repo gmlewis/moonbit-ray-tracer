@@ -67,7 +67,7 @@ pub fn update(self : Bounds, point : Tuple) -> Unit {
 pub fn local_intersect(
   self : Bounds,
   ray : Ray,
-  shape : Shape
+  shape : Shape,
 ) -> Intersections {
   let (xtmin, xtmax) = check_axis(
     ray.origin.x,

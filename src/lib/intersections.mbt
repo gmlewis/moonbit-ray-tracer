@@ -11,7 +11,7 @@ pub fn intersection(
   t : Double,
   shape : Shape,
   u~ : Double = 0,
-  v~ : Double = 0
+  v~ : Double = 0,
 ) -> Intersection {
   { t, shape, u, v }
 }
@@ -41,7 +41,7 @@ pub(all) struct Intersections {
 ///|
 pub fn Intersections::from_ts(
   ts : Array[Double],
-  shape : Shape
+  shape : Shape,
 ) -> Intersections {
   let xs = ts.map(fn(t) { intersection(t, shape) })
   intersections(xs)
@@ -110,7 +110,7 @@ pub(all) struct Computations {
 pub fn prepare_computations(
   self : Intersection,
   ray : Ray,
-  xs? : Intersections
+  xs? : Intersections,
 ) -> Computations {
   let xs = match xs {
     None => intersections([self])

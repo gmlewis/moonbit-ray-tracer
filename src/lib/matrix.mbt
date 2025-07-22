@@ -313,7 +313,7 @@ pub fn shear(
   yx : Double,
   yz : Double,
   zx : Double,
-  zy : Double
+  zy : Double,
 ) -> Matrix {
   shearing(xy, xz, yx, yz, zx, zy) * self
 }

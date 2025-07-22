@@ -105,7 +105,7 @@ fn parse_indices(s : String) -> (Int, Int) raise ParserError {
   let mut p = 0
   let mut n = 0
   let get_vert_and_normal_indices = fn(
-    args : Array[Double]
+    args : Array[Double],
   ) -> Unit raise ParserError {
     guard args.length() == 3 else {
       raise ParserError("parse_indices expected 3 ints, got \{s}")
@@ -122,7 +122,7 @@ fn parse_args(
   s : String,
   sep : String,
   double_fn : (Array[Double]) -> Unit raise ParserError,
-  string_fn~ : (Array[String]) -> Unit raise ParserError = fn(_args) {  }
+  string_fn~ : (Array[String]) -> Unit raise ParserError = fn(_args) {  },
 ) -> Unit raise ParserError {
   let parts = s.split(sep).map(fn(s) { s.trim_space().to_string() }).collect()
   let doubles = Array::new(capacity=parts.length())

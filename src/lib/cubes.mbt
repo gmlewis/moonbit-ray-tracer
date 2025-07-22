@@ -38,7 +38,7 @@ fn check_axis(
   origin : Double,
   direction : Double,
   min : Double,
-  max : Double
+  max : Double,
 ) -> (Double, Double) {
   let tmin_numerator = min - origin
   let tmax_numerator = max - origin

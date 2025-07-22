@@ -28,7 +28,7 @@ pub fn Group::output(self : Group, logger : &Logger) -> Unit {
 pub fn Group::local_intersect(
   self : Group,
   group_shape : Shape,
-  ray : Ray
+  ray : Ray,
 ) -> Intersections {
   if self.children.length() == 0 {
     return Intersections::from_ts([], group_shape)

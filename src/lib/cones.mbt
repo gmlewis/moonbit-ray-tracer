@@ -13,7 +13,7 @@ let _Cone : &Object = Cone::{ minimum: 0, maximum: 0, closed: false }
 pub fn cone(
   minimum~ : Double = @double.neg_infinity,
   maximum~ : Double = @double.infinity,
-  closed~ : Bool = false
+  closed~ : Bool = false,
 ) -> Shape {
   let cone = Cone::{ minimum, maximum, closed }
   Shape::new_object(cone)

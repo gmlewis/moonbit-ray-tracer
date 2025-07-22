@@ -49,7 +49,7 @@ pub fn set_pattern_transform(self : Pattern, transform : Matrix) -> Unit {
 pub fn pattern_at_shape(
   self : Pattern,
   shape : Shape,
-  world_point : Tuple
+  world_point : Tuple,
 ) -> Color {
   let object_point = shape.inv_transform.mul_tuple(world_point)
   let pattern_point = self.inv_transform.mul_tuple(object_point)
@@ -298,7 +298,7 @@ pub(all) struct GradientCheckersPattern {
 
 ///|
 pub fn GradientCheckersPattern::to_string(
-  self : GradientCheckersPattern
+  self : GradientCheckersPattern,
 ) -> String {
   let colors = self.colors.map(fn(c) { "\{c}" })
   let colors = colors.join(",")

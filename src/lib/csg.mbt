@@ -30,7 +30,7 @@ pub fn intersection_allowed(
   op : Operation,
   left_hit : Bool,
   inside_left : Bool,
-  inside_right : Bool
+  inside_right : Bool,
 ) -> Bool {
   match op {
     Union =>
