@@ -3,6 +3,8 @@ package "gmlewis/ray-tracer/ch01"
 
 // Values
 
+// Errors
+
 // Types and methods
 type Environment
 

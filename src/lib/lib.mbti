@@ -100,6 +100,11 @@ let white : Color
 
 fn world() -> World
 
+// Errors
+type ParserError
+impl Eq for ParserError
+impl Show for ParserError
+
 // Types and methods
 pub(all) struct Bounds {
   mut min : Tuple
@@ -336,10 +341,6 @@ pub(all) enum Operation {
 }
 impl Eq for Operation
 impl Show for Operation
-
-type ParserError
-impl Eq for ParserError
-impl Show for ParserError
 
 pub(all) struct Pattern {
   pattern : &PatternTrait
