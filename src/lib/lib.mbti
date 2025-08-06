@@ -18,13 +18,13 @@ fn checkers_pattern(Array[Color]) -> Pattern
 
 fn color(Double, Double, Double) -> Color
 
-fn cone(minimum~ : Double = .., maximum~ : Double = .., closed~ : Bool = ..) -> Shape
+fn cone(minimum? : Double, maximum? : Double, closed? : Bool) -> Shape
 
 fn csg(Operation, Shape, Shape) -> Shape
 
 fn cube() -> Shape
 
-fn cylinder(minimum~ : Double = .., maximum~ : Double = .., closed~ : Bool = ..) -> Shape
+fn cylinder(minimum? : Double, maximum? : Double, closed? : Bool) -> Shape
 
 fn default_world() -> World
 
@@ -38,7 +38,7 @@ fn gradient_ring_pattern(Array[Color]) -> Pattern
 
 fn group() -> Shape
 
-fn intersection(Double, Shape, u~ : Double = .., v~ : Double = ..) -> Intersection
+fn intersection(Double, Shape, u? : Double, v? : Double) -> Intersection
 
 fn intersection_allowed(Operation, Bool, Bool, Bool) -> Bool
 
@@ -288,11 +288,11 @@ pub(all) struct Material {
   mut refractive_index : Double
   mut pattern : Pattern?
 }
-fn Material::lighting(Self, Light, Tuple, Tuple, Tuple, in_shadow~ : Bool = .., shape~ : Shape? = ..) -> Color
+fn Material::lighting(Self, Light, Tuple, Tuple, Tuple, in_shadow? : Bool, shape? : Shape?) -> Color
 impl Eq for Material
 impl Show for Material
 
-pub(all) type Matrix Array[MatrixRow]
+pub(all) struct Matrix(Array[MatrixRow])
 fn Matrix::clone(Self) -> Self
 fn Matrix::cofactor(Self, Int, Int) -> Double
 fn Matrix::copy(Self, Self) -> Unit
@@ -319,7 +319,7 @@ impl Eq for Matrix
 impl Mul for Matrix
 impl Show for Matrix
 
-pub(all) type MatrixRow Array[Double]
+pub(all) struct MatrixRow(Array[Double])
 fn MatrixRow::inner(Self) -> Array[Double]
 fn MatrixRow::op_get(Self, Int) -> Double
 fn MatrixRow::op_set(Self, Int, Double) -> Unit
@@ -401,14 +401,14 @@ fn Shape::children(Self) -> Array[Self]
 fn Shape::includes_shape(Self, Self) -> Bool
 fn Shape::intersect(Self, Ray) -> Intersections
 fn Shape::local_intersect(Self, Ray) -> Intersections
-fn Shape::local_normal_at(Self, Tuple, hit~ : Intersection? = ..) -> Tuple
+fn Shape::local_normal_at(Self, Tuple, hit? : Intersection?) -> Tuple
 fn Shape::new(Renderable) -> Self
 fn Shape::new_csg(CSG) -> Self
 fn Shape::new_group(Group) -> Self
 fn Shape::new_object(&Object) -> Self
 fn Shape::new_smooth_triangle(SmoothTriangle) -> Self
 fn Shape::new_triangle(Triangle) -> Self
-fn Shape::normal_at(Self, Tuple, hit~ : Intersection? = ..) -> Tuple
+fn Shape::normal_at(Self, Tuple, hit? : Intersection?) -> Tuple
 fn Shape::normal_to_world(Self, Tuple) -> Tuple
 fn Shape::set_transform(Self, Matrix) -> Unit
 fn Shape::world_to_object(Self, Tuple) -> Tuple
@@ -492,12 +492,12 @@ pub(all) struct World {
   mut shapes : Array[Shape]
   mut lights : Array[Light]
 }
-fn World::color_at(Self, Ray, remaining~ : Int = ..) -> Color
+fn World::color_at(Self, Ray, remaining? : Int) -> Color
 fn World::intersect_world(Self, Ray) -> Intersections
 fn World::is_shadowed(Self, Tuple, light? : Light) -> Bool
 fn World::reflected_color(Self, Computations, Int) -> Color
 fn World::refracted_color(Self, Computations, Int) -> Color
-fn World::shade_hit(Self, Computations, remaining~ : Int = ..) -> Color
+fn World::shade_hit(Self, Computations, remaining? : Int) -> Color
 
 // Type aliases
 

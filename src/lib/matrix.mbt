@@ -1,5 +1,5 @@
 ///|
-pub(all) type MatrixRow Array[Double] derive(Show)
+pub(all) struct MatrixRow(Array[Double]) derive(Show)
 
 ///|
 pub fn MatrixRow::op_get(self : MatrixRow, col : Int) -> Double {
@@ -12,7 +12,7 @@ pub fn op_set(self : MatrixRow, col : Int, v : Double) -> Unit {
 }
 
 ///|
-pub(all) type Matrix Array[MatrixRow]
+pub(all) struct Matrix(Array[MatrixRow])
 
 ///|
 pub fn Matrix::to_string(self : Matrix) -> String {
