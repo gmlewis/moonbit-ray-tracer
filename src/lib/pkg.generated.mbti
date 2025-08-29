@@ -58,6 +58,10 @@ fn material() -> Material
 
 fn parse_obj_file(String) -> ObjFile raise ParserError
 
+fn parse_scene(String) -> ParsedScene raise SceneParseError
+
+fn parse_scene_file(String) -> ParsedScene raise SceneParseError
+
 fn plane() -> Shape
 
 fn point(Double, Double, Double) -> Tuple
@@ -104,6 +108,10 @@ fn world() -> World
 type ParserError
 impl Eq for ParserError
 impl Show for ParserError
+
+type SceneParseError
+impl Eq for SceneParseError
+impl Show for SceneParseError
 
 // Types and methods
 pub(all) struct Bounds {
@@ -342,6 +350,13 @@ pub(all) enum Operation {
 impl Eq for Operation
 impl Show for Operation
 
+pub(all) struct ParsedScene {
+  world : World
+  camera : Camera
+  render_settings : RenderSettings
+  metadata : SceneMetadata
+}
+
 pub(all) struct Pattern {
   pattern : &PatternTrait
   mut transform : Matrix
@@ -369,6 +384,16 @@ fn Ray::transform(Self, Matrix) -> Self
 impl Eq for Ray
 impl Show for Ray
 
+pub(all) struct RenderSettings {
+  width : Int
+  height : Int
+  samples : Int
+  max_bounces : Int
+  background : Color
+}
+impl Eq for RenderSettings
+impl Show for RenderSettings
+
 pub(all) enum Renderable {
   Object(&Object)
   Group(Group)
@@ -385,6 +410,14 @@ fn RingPattern::to_string(Self) -> String
 impl PatternTrait for RingPattern
 impl Eq for RingPattern
 impl Show for RingPattern
+
+pub(all) struct SceneMetadata {
+  name : String
+  description : String
+  version : String
+}
+impl Eq for SceneMetadata
+impl Show for SceneMetadata
 
 pub(all) struct Shape {
   object : Renderable
