@@ -4,7 +4,8 @@
   "deps": {
     "gmlewis/image": "0.16.21",
     "gmlewis/io": "0.22.11",
-    "moonbitlang/x": "0.4.32"
+    "moonbitlang/x": "0.4.32",
+    "bob/toml": "0.1.6"
   },
   "readme": "README.md",
   "repository": "",
