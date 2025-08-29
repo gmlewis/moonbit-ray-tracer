@@ -42,8 +42,8 @@ pub fn lighting(
   position : Tuple,
   eyev : Tuple,
   normalv : Tuple,
-  in_shadow~ : Bool = false,
-  shape~ : Shape? = None,
+  in_shadow? : Bool = false,
+  shape? : Shape? = None,
 ) -> Color {
   let clr = match (self.pattern, shape) {
     (Some(pattern), Some(shape)) => pattern.pattern_at_shape(shape, position)

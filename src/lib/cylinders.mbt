@@ -11,9 +11,9 @@ let _Cylinder : &Object = Cylinder::{ minimum: 0, maximum: 0, closed: false }
 
 ///|
 pub fn cylinder(
-  minimum~ : Double = @double.neg_infinity,
-  maximum~ : Double = @double.infinity,
-  closed~ : Bool = false,
+  minimum? : Double = @double.neg_infinity,
+  maximum? : Double = @double.infinity,
+  closed? : Bool = false,
 ) -> Shape {
   let cylinder = Cylinder::{ minimum, maximum, closed }
   Shape::new_object(cylinder)

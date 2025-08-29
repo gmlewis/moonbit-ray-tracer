@@ -1,0 +1,17 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "gmlewis/ray-tracer/ch02"
+
+// Values
+
+// Errors
+
+// Types and methods
+type Environment
+
+type Projectile
+impl Show for Projectile
+
+// Type aliases
+
+// Traits
+

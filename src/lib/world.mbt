@@ -45,7 +45,7 @@ pub fn intersect_world(self : World, ray : Ray) -> Intersections {
 pub fn shade_hit(
   self : World,
   comps : Computations,
-  remaining~ : Int = MAX_BOUNCES,
+  remaining? : Int = MAX_BOUNCES,
 ) -> Color {
   let mut c = color(0, 0, 0)
   for light in self.lights {
@@ -78,7 +78,7 @@ pub fn shade_hit(
 pub fn color_at(
   self : World,
   ray : Ray,
-  remaining~ : Int = MAX_BOUNCES,
+  remaining? : Int = MAX_BOUNCES,
 ) -> Color {
   let xs = self.intersect_world(ray)
   let hit = match xs.hit() {

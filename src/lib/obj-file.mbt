@@ -122,7 +122,7 @@ fn parse_args(
   s : String,
   sep : String,
   double_fn : (Array[Double]) -> Unit raise ParserError,
-  string_fn~ : (Array[String]) -> Unit raise ParserError = fn(_args) {  },
+  string_fn? : (Array[String]) -> Unit raise ParserError = fn(_args) {  },
 ) -> Unit raise ParserError {
   let parts = s.split(sep).map(fn(s) { s.trim_space().to_string() }).collect()
   let doubles = Array::new(capacity=parts.length())

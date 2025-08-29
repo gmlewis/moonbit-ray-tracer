@@ -123,7 +123,7 @@ pub fn Shape::local_intersect(self : Shape, local_ray : Ray) -> Intersections {
 pub fn normal_at(
   self : Shape,
   world_point : Tuple,
-  hit~ : Intersection? = None,
+  hit? : Intersection? = None,
 ) -> Tuple {
   let local_point = self.world_to_object(world_point)
   let local_normal = self.local_normal_at(local_point, hit~)
@@ -134,7 +134,7 @@ pub fn normal_at(
 pub fn Shape::local_normal_at(
   self : Shape,
   local_point : Tuple,
-  hit~ : Intersection? = None,
+  hit? : Intersection? = None,
 ) -> Tuple {
   match self.object {
     Object(object) => object.local_normal_at(local_point)
