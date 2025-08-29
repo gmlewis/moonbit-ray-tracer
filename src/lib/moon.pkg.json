@@ -3,6 +3,8 @@
     "gmlewis/image",
     "gmlewis/image/color",
     "gmlewis/image/png",
-    "gmlewis/io"
+    "gmlewis/io",
+    "bob/toml",
+    "moonbitlang/x/fs"
   ]
 }
