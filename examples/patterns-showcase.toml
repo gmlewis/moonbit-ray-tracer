@@ -71,15 +71,7 @@ colors = [
   [0.8, 0.3, 0.1]   # Warm orange
 ]
 
-# Base material for all spheres
-[materials.pattern_material]
-color = [1.0, 1.0, 1.0]
-ambient = 0.1
-diffuse = 0.8
-specular = 0.2
-shininess = 100.0
-reflective = 0.1
-
+# Base material for floor
 [materials.floor_material]
 color = [0.3, 0.3, 0.3]
 ambient = 0.1
@@ -95,8 +87,13 @@ material = "floor_material"
 # Back row - Y = 1.0
 [[objects]]
 type = "sphere"
-material = "pattern_material"
 [objects.material]
+color = [1.0, 1.0, 1.0]
+ambient = 0.1
+diffuse = 0.8
+specular = 0.2
+shininess = 100.0
+reflective = 0.1
 pattern = "stripes_red_white"
 [objects.transform]
 translation = [-5.0, 1.0, 2.0]
@@ -105,8 +102,13 @@ scale = [0.5, 1.0, 1.0]
 
 [[objects]]
 type = "sphere"
-material = "pattern_material"
 [objects.material]
+color = [1.0, 1.0, 1.0]
+ambient = 0.1
+diffuse = 0.8
+specular = 0.2
+shininess = 100.0
+reflective = 0.1
 pattern = "checkers_rainbow"
 [objects.transform]
 translation = [-2.5, 1.0, 2.0]
@@ -115,8 +117,13 @@ scale = [0.3, 0.3, 0.3]
 
 [[objects]]
 type = "sphere"
-material = "pattern_material"
 [objects.material]
+color = [1.0, 1.0, 1.0]
+ambient = 0.1
+diffuse = 0.8
+specular = 0.2
+shininess = 100.0
+reflective = 0.1
 pattern = "gradient_sunset"
 [objects.transform]
 translation = [0.0, 1.0, 2.0]
@@ -125,8 +132,13 @@ scale = [2.0, 1.0, 1.0]
 
 [[objects]]
 type = "sphere"
-material = "pattern_material"
 [objects.material]
+color = [1.0, 1.0, 1.0]
+ambient = 0.1
+diffuse = 0.8
+specular = 0.2
+shininess = 100.0
+reflective = 0.1
 pattern = "rings_bw"
 [objects.transform]
 translation = [2.5, 1.0, 2.0]
@@ -135,8 +147,13 @@ scale = [0.5, 0.5, 0.5]
 
 [[objects]]
 type = "sphere"
-material = "pattern_material"
 [objects.material]
+color = [1.0, 1.0, 1.0]
+ambient = 0.1
+diffuse = 0.8
+specular = 0.2
+shininess = 100.0
+reflective = 0.1
 pattern = "gradient_rings_rainbow"
 [objects.transform]
 translation = [5.0, 1.0, 2.0]
@@ -146,8 +163,13 @@ scale = [0.3, 0.3, 0.3]
 # Front row - Y = 1.0, different shapes
 [[objects]]
 type = "cube"
-material = "pattern_material"
 [objects.material]
+color = [1.0, 1.0, 1.0]
+ambient = 0.1
+diffuse = 0.8
+specular = 0.2
+shininess = 100.0
+reflective = 0.1
 pattern = "gradient_checkers_warm"
 [objects.transform]
 translation = [-3.0, 1.0, -1.0]
@@ -157,8 +179,13 @@ scale = [0.5, 0.5, 0.5]
 
 [[objects]]
 type = "cylinder"
-material = "pattern_material"
 [objects.material]
+color = [1.0, 1.0, 1.0]
+ambient = 0.1
+diffuse = 0.8
+specular = 0.2
+shininess = 100.0
+reflective = 0.1
 pattern = "stripes_red_white"
 [objects.properties]
 minimum = 0.0
@@ -171,8 +198,13 @@ rotation = [0.0, 0.0, 1.571]  # π/2 radians around Z (horizontal stripes)
 
 [[objects]]
 type = "cone"
-material = "pattern_material"
 [objects.material]
+color = [1.0, 1.0, 1.0]
+ambient = 0.1
+diffuse = 0.8
+specular = 0.2
+shininess = 100.0
+reflective = 0.1
 pattern = "rings_bw"
 [objects.properties]
 minimum = 0.0

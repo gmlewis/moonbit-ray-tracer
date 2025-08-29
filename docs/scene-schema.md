@@ -76,7 +76,7 @@ type = "sphere"                  # REQUIRED, enum: ["sphere", "plane", "cube", "
 name = "object_name"             # OPTIONAL, for debugging
 material = "material_name"       # OPTIONAL, reference to [materials.NAME]
 
-[objects.material]               # OPTIONAL, inline material (alternative to reference)
+[objects.material]               # OPTIONAL, inline material (mutually exclusive with material reference)
 # Same structure as [materials.NAME]
 
 [objects.transform]              # OPTIONAL, object transform  
@@ -142,6 +142,7 @@ file = "path/to/model.obj"       # REQUIRED for mesh, string path
 - Material references must point to existing `[materials.NAME]`
 - Pattern references must point to existing `[patterns.NAME]`
 - File references must point to existing files (validated at parse time)
+- Objects cannot have both `material = "name"` and `[objects.material]` (mutually exclusive)
 
 ### Transformation Rules
 - If `matrix` is specified, `translation`, `rotation`, and `scale` are ignored
@@ -171,6 +172,7 @@ file = "path/to/model.obj"       # REQUIRED for mesh, string path
 - Invalid enum values
 - Broken references
 - Missing required properties for object types
+- Conflicting material definitions (both reference and inline material)
 
 ### Runtime Errors
 - File not found for mesh objects

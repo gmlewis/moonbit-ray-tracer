@@ -204,11 +204,12 @@ rotation = [0.0, 0.785, 0.0]  # π/4 radians around Y
 ## Objects
 
 ```toml
+# Using a named material reference
 [[objects]]
 type = "sphere"
 material = "red_plastic"  # Reference to named material
 
-# Inline material definition (alternative to named reference)
+# Using an inline material definition (alternative to named reference)
 [[objects]]
 type = "plane"
 [objects.material]
@@ -216,7 +217,12 @@ color = [0.5, 0.5, 0.5]
 ambient = 0.1
 diffuse = 0.9
 specular = 0.0
+transparency = 0.0
+refractive_index = 1.0
 pattern = "checkers"  # Reference to named pattern
+
+# Note: You cannot use both 'material = "name"' and '[objects.material]' 
+# in the same object - they are mutually exclusive
 
 [[objects]]
 type = "cube"

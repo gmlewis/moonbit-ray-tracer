@@ -76,6 +76,7 @@ refractive_index = 1.0
 
 ### Adding Objects
 ```toml
+# Using named material
 [[objects]]
 type = "sphere"
 material = "my_material"
@@ -83,6 +84,21 @@ material = "my_material"
 translation = [1.0, 0.0, 0.0]
 scale = [2.0, 1.0, 1.0]
 rotation = [0.0, 1.571, 0.0]  # π/2 radians
+
+# Using inline material (cannot combine with material = "name")
+[[objects]]
+type = "cube"
+[objects.material]
+color = [0.8, 0.2, 0.2]
+ambient = 0.1
+diffuse = 0.9
+specular = 0.9
+shininess = 200.0
+reflective = 0.0
+transparency = 0.0
+refractive_index = 1.0
+[objects.transform]
+translation = [2.0, 0.0, 0.0]
 ```
 
 ### Defining Patterns
@@ -102,3 +118,30 @@ colors = [
 - Use `max_bounces = 4` for most scenes, increase to 8+ for heavy glass/mirror scenes
 - Background colors like `[0.1, 0.1, 0.15]` provide nice contrast
 - Material `reflective` and `transparency` values should generally sum to ≤ 1.0 for physically plausible results
+
+## Common TOML Validation Issues
+
+**❌ Don't mix material reference and inline material:**
+```toml
+[[objects]]
+type = "sphere"
+material = "my_material"    # ← This conflicts with the next line
+[objects.material]          # ← This conflicts with the previous line
+color = [1.0, 0.0, 0.0]
+```
+
+**✅ Use either a reference OR inline material:**
+```toml
+# Option 1: Use material reference only
+[[objects]]
+type = "sphere"
+material = "my_material"
+
+# Option 2: Use inline material only
+[[objects]]
+type = "cube"
+[objects.material]
+color = [1.0, 0.0, 0.0]
+ambient = 0.1
+diffuse = 0.9
+```

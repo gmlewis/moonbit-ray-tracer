@@ -76,6 +76,8 @@ diffuse = 0.8
 specular = 0.2
 shininess = 50.0
 reflective = 0.1
+transparency = 0.0
+refractive_index = 1.0
 pattern = "marble"
 
 # Glass sphere - large
