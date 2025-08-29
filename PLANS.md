@@ -5,12 +5,12 @@ This document outlines a comprehensive plan to take the MoonBit ray tracer to th
 ## Priority 1: Foundation & Usability (Critical for making the tool usable)
 
 ### Scene Description System
-- [ ] Design JSON/YAML scene description format
+- [x] Design TOML scene description format
 - [ ] Implement scene file parser
 - [ ] Create scene loader that builds World objects from descriptions
 - [ ] Add validation and error handling for scene files
-- [ ] Create example scene files for testing
-- [ ] Document scene format specification
+- [x] Create example scene files for testing
+- [x] Document scene format specification
 
 ### Command Line Interface
 - [ ] Design CLI argument structure and commands

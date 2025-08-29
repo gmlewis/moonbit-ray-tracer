@@ -1,0 +1,151 @@
+# CSG demonstration - constructive solid geometry operations
+[scene]
+name = "CSG Demo"
+description = "Demonstrates union, intersection, and difference operations"
+version = "1.0"
+
+[scene.render]
+width = 800
+height = 600
+samples = 1
+max_bounces = 4
+background = [0.05, 0.05, 0.1]
+
+[camera]
+position = [0.0, 3.0, -10.0]
+look_at = [0.0, 0.0, 0.0]
+up = [0.0, 1.0, 0.0]
+field_of_view = 0.785  # π/4 radians
+
+[[lights]]
+type = "point"
+position = [-10.0, 10.0, -10.0]
+intensity = [1.0, 1.0, 1.0]
+
+[[lights]]
+type = "point"
+position = [10.0, 10.0, -10.0]
+intensity = [0.8, 0.8, 1.0]
+
+# Materials
+[materials.red_metal]
+color = [0.8, 0.2, 0.2]
+ambient = 0.1
+diffuse = 0.6
+specular = 0.8
+shininess = 100.0
+reflective = 0.3
+
+[materials.blue_metal]
+color = [0.2, 0.2, 0.8]
+ambient = 0.1
+diffuse = 0.6
+specular = 0.8
+shininess = 100.0
+reflective = 0.3
+
+[materials.green_metal]
+color = [0.2, 0.8, 0.2]
+ambient = 0.1
+diffuse = 0.6
+specular = 0.8
+shininess = 100.0
+reflective = 0.3
+
+[materials.floor_material]
+color = [0.3, 0.3, 0.3]
+ambient = 0.1
+diffuse = 0.9
+specular = 0.1
+shininess = 50.0
+reflective = 0.1
+
+# Floor
+[[objects]]
+type = "plane"
+material = "floor_material"
+
+# CSG Union: Sphere + Cube
+[[objects]]
+type = "csg"
+material = "red_metal"
+[objects.properties]
+operation = "union"
+[objects.transform]
+translation = [-3.0, 1.5, 0.0]
+
+[[objects.left]]
+type = "sphere"
+
+[[objects.right]]
+type = "cube"
+[objects.right.transform]
+translation = [0.8, 0.0, 0.0]
+
+# CSG Intersection: Sphere ∩ Cube
+[[objects]]
+type = "csg"
+material = "blue_metal"
+[objects.properties]
+operation = "intersection"
+[objects.transform]
+translation = [0.0, 1.5, 0.0]
+
+[[objects.left]]
+type = "sphere"
+[objects.left.transform]
+scale = [1.2, 1.2, 1.2]
+
+[[objects.right]]
+type = "cube"
+
+# CSG Difference: Sphere - Cube
+[[objects]]
+type = "csg"
+material = "green_metal"
+[objects.properties]
+operation = "difference"
+[objects.transform]
+translation = [3.0, 1.5, 0.0]
+
+[[objects.left]]
+type = "sphere"
+[objects.left.transform]
+scale = [1.2, 1.2, 1.2]
+
+[[objects.right]]
+type = "cube"
+[objects.right.transform]
+scale = [0.8, 0.8, 0.8]
+
+# Complex CSG: ((Sphere ∪ Cube) - Cylinder)
+[[objects]]
+type = "csg"
+material = "red_metal"
+[objects.properties]
+operation = "difference"
+[objects.transform]
+translation = [0.0, 1.5, 3.0]
+
+# Left side: Union of sphere and cube
+[[objects.left]]
+type = "csg"
+[objects.left.properties]
+operation = "union"
+
+[[objects.left.left]]
+type = "sphere"
+
+[[objects.left.right]]
+type = "cube"
+[objects.left.right.transform]
+translation = [1.0, 0.0, 0.0]
+
+# Right side: Cylinder to subtract
+[[objects.right]]
+type = "cylinder"
+[objects.right.properties]
+minimum = -2.0
+maximum = 2.0
+[objects.right.transform]
+rotation = [1.571, 0.0, 0.0]  # π/2 radians around X (horizontal cylinder)

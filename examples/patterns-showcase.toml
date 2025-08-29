@@ -1,0 +1,184 @@
+# Pattern showcase - demonstrates all available patterns
+[scene]
+name = "Pattern Showcase"
+description = "Showcases all available pattern types and transformations"
+version = "1.0"
+
+[scene.render]
+width = 1000
+height = 600
+samples = 1
+max_bounces = 4
+background = [0.1, 0.1, 0.15]
+
+[camera]
+position = [0.0, 4.0, -12.0]
+look_at = [0.0, 1.0, 0.0]
+up = [0.0, 1.0, 0.0]
+field_of_view = 0.785  # π/4 radians
+
+[[lights]]
+type = "point"
+position = [-10.0, 10.0, -10.0]
+intensity = [1.0, 1.0, 1.0]
+
+# Pattern definitions
+[patterns.stripes_red_white]
+type = "stripes"
+colors = [
+  [1.0, 0.2, 0.2],  # Red
+  [1.0, 1.0, 1.0]   # White
+]
+
+[patterns.checkers_rainbow]
+type = "checkers"
+colors = [
+  [1.0, 0.0, 0.0],  # Red
+  [1.0, 0.5, 0.0],  # Orange
+  [1.0, 1.0, 0.0],  # Yellow
+  [0.0, 1.0, 0.0],  # Green
+  [0.0, 0.0, 1.0],  # Blue
+  [0.5, 0.0, 1.0],  # Purple
+]
+
+[patterns.gradient_sunset]
+type = "gradient"
+colors = [
+  [1.0, 0.3, 0.1],  # Orange
+  [0.8, 0.1, 0.8],  # Purple
+  [0.2, 0.2, 0.9]   # Blue
+]
+
+[patterns.rings_bw]
+type = "rings"
+colors = [
+  [1.0, 1.0, 1.0],  # White
+  [0.0, 0.0, 0.0]   # Black
+]
+
+[patterns.gradient_rings_rainbow]
+type = "gradient_rings"
+colors = [
+  [1.0, 0.0, 0.0],  # Red
+  [0.0, 1.0, 0.0],  # Green
+  [0.0, 0.0, 1.0]   # Blue
+]
+
+[patterns.gradient_checkers_warm]
+type = "gradient_checkers"
+colors = [
+  [1.0, 0.8, 0.2],  # Warm yellow
+  [0.8, 0.3, 0.1]   # Warm orange
+]
+
+# Base material for all spheres
+[materials.pattern_material]
+color = [1.0, 1.0, 1.0]
+ambient = 0.1
+diffuse = 0.8
+specular = 0.2
+shininess = 100.0
+reflective = 0.1
+
+[materials.floor_material]
+color = [0.3, 0.3, 0.3]
+ambient = 0.1
+diffuse = 0.9
+specular = 0.1
+shininess = 50.0
+
+# Floor
+[[objects]]
+type = "plane"
+material = "floor_material"
+
+# Back row - Y = 1.0
+[[objects]]
+type = "sphere"
+material = "pattern_material"
+[objects.material]
+pattern = "stripes_red_white"
+[objects.transform]
+translation = [-5.0, 1.0, 2.0]
+[objects.pattern_transform]
+scale = [0.5, 1.0, 1.0]
+
+[[objects]]
+type = "sphere"
+material = "pattern_material"
+[objects.material]
+pattern = "checkers_rainbow"
+[objects.transform]
+translation = [-2.5, 1.0, 2.0]
+[objects.pattern_transform]
+scale = [0.3, 0.3, 0.3]
+
+[[objects]]
+type = "sphere"
+material = "pattern_material"
+[objects.material]
+pattern = "gradient_sunset"
+[objects.transform]
+translation = [0.0, 1.0, 2.0]
+[objects.pattern_transform]
+scale = [2.0, 1.0, 1.0]
+
+[[objects]]
+type = "sphere"
+material = "pattern_material"
+[objects.material]
+pattern = "rings_bw"
+[objects.transform]
+translation = [2.5, 1.0, 2.0]
+[objects.pattern_transform]
+scale = [0.5, 0.5, 0.5]
+
+[[objects]]
+type = "sphere"
+material = "pattern_material"
+[objects.material]
+pattern = "gradient_rings_rainbow"
+[objects.transform]
+translation = [5.0, 1.0, 2.0]
+[objects.pattern_transform]
+scale = [0.3, 0.3, 0.3]
+
+# Front row - Y = 1.0, different shapes
+[[objects]]
+type = "cube"
+material = "pattern_material"
+[objects.material]
+pattern = "gradient_checkers_warm"
+[objects.transform]
+translation = [-3.0, 1.0, -1.0]
+rotation = [0.0, 0.785, 0.0]  # π/4 radians
+[objects.pattern_transform]
+scale = [0.5, 0.5, 0.5]
+
+[[objects]]
+type = "cylinder"
+material = "pattern_material"
+[objects.material]
+pattern = "stripes_red_white"
+[objects.properties]
+minimum = 0.0
+maximum = 2.0
+closed = true
+[objects.transform]
+translation = [0.0, 1.0, -1.0]
+[objects.pattern_transform]
+rotation = [0.0, 0.0, 1.571]  # π/2 radians around Z (horizontal stripes)
+
+[[objects]]
+type = "cone"
+material = "pattern_material"
+[objects.material]
+pattern = "rings_bw"
+[objects.properties]
+minimum = 0.0
+maximum = 2.0
+closed = true
+[objects.transform]
+translation = [3.0, 1.0, -1.0]
+[objects.pattern_transform]
+scale = [0.3, 0.3, 0.3]

@@ -1,0 +1,117 @@
+# Checkers scene - recreates the ch10-checkers example
+[scene]
+name = "Checkers Scene"
+description = "Multiple spheres with checkerboard patterns on a plane"
+version = "1.0"
+
+[scene.render]
+width = 600
+height = 300
+samples = 1
+max_bounces = 4
+background = [0.0, 0.0, 0.0]
+
+[camera]
+position = [0.0, 1.5, -5.0]
+look_at = [0.0, 1.0, 0.0]
+up = [0.0, 1.0, 0.0]
+field_of_view = 1.047  # π/3 radians
+
+[[lights]]
+type = "point"
+position = [-10.0, 10.0, -10.0]
+intensity = [1.0, 1.0, 1.0]
+
+# Pattern definitions
+[patterns.multicolor_checkers]
+type = "checkers"
+colors = [
+  [1.0, 1.0, 1.0],  # white
+  [0.0, 0.0, 0.0],  # black
+  [1.0, 0.0, 0.0],  # red
+  [0.0, 1.0, 0.0],  # green
+  [0.0, 0.0, 1.0],  # blue
+  [1.0, 1.0, 0.0],  # yellow
+  [0.0, 1.0, 1.0],  # cyan
+  [1.0, 0.0, 1.0],  # magenta
+  [1.0, 0.9, 0.9],  # light pink
+  [0.1, 1.0, 0.5],  # light green
+  [0.5, 1.0, 0.1],  # lime
+  [1.0, 0.8, 0.1]   # orange
+]
+
+# Material definitions
+[materials.floor_material]
+color = [1.0, 1.0, 1.0]
+ambient = 0.1
+diffuse = 0.9
+specular = 0.0
+shininess = 200.0
+reflective = 0.0
+transparency = 0.0
+refractive_index = 1.0
+pattern = "multicolor_checkers"
+
+[materials.sphere_material]
+color = [1.0, 1.0, 1.0]
+ambient = 0.1
+diffuse = 0.7
+specular = 0.3
+shininess = 200.0
+reflective = 0.0
+transparency = 0.0
+refractive_index = 1.0
+pattern = "multicolor_checkers"
+
+# Floor plane
+[[objects]]
+type = "plane"
+material = "floor_material"
+[objects.transform]
+rotation = [0.0, 0.9, 0.0]
+
+# Floor pattern transform
+[objects.pattern_transform]
+scale = [0.1, 1.0, 1.0]
+rotation = [0.0, 1.047, 0.0]  # π/3 radians
+
+# Middle sphere
+[[objects]]
+type = "sphere"
+material = "sphere_material"
+[objects.transform]
+translation = [-0.5, 1.0, 0.5]
+rotation = [1.9, 0.9, 3.3]
+
+# Middle sphere pattern transform
+[objects.pattern_transform]
+scale = [0.3, 1.0, 1.0]
+rotation = [0.0, 0.785, 0.0]  # π/4 radians
+
+# Right sphere
+[[objects]]
+type = "sphere"
+material = "sphere_material"
+[objects.transform]
+translation = [1.5, 0.5, -0.5]
+scale = [0.5, 0.5, 0.5]
+rotation = [0.9, 1.3, 1.9]
+
+# Right sphere pattern transform
+[objects.pattern_transform]
+scale = [0.01, 1.0, 1.0]
+rotation = [0.0, 0.449, 0.0]  # π/7 radians
+
+# Left sphere
+[[objects]]
+type = "sphere"
+material = "sphere_material"
+[objects.transform]
+translation = [-1.5, 0.33, -0.75]
+scale = [0.33, 0.33, 0.33]
+rotation = [1.3, 1.9, 0.9]
+
+# Left sphere pattern transform
+[objects.pattern_transform]
+scale = [0.7, 1.0, 1.0]
+rotation = [0.0, 3.442, 0.0]  # π + 0.3 radians

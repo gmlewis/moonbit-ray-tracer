@@ -1,0 +1,37 @@
+# Simple sphere scene - basic example
+[scene]
+name = "Simple Sphere"
+description = "A single sphere with basic lighting"
+version = "1.0"
+
+[scene.render]
+width = 400
+height = 400
+samples = 1
+max_bounces = 4
+background = [0.0, 0.0, 0.0]
+
+[camera]
+position = [0.0, 0.0, -5.0]
+look_at = [0.0, 0.0, 0.0]
+up = [0.0, 1.0, 0.0]
+field_of_view = 1.047  # π/3 radians
+
+[[lights]]
+type = "point"
+position = [-10.0, 10.0, -10.0]
+intensity = [1.0, 1.0, 1.0]
+
+[materials.red_sphere]
+color = [0.8, 0.2, 0.2]
+ambient = 0.1
+diffuse = 0.9
+specular = 0.9
+shininess = 200.0
+reflective = 0.0
+transparency = 0.0
+refractive_index = 1.0
+
+[[objects]]
+type = "sphere"
+material = "red_sphere"
