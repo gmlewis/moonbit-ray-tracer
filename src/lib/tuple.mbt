@@ -78,13 +78,13 @@ pub fn is_vector(self : Tuple) -> Bool {
 }
 
 ///|
-pub impl Eq for Tuple with op_equal(self, other) {
+pub impl Eq for Tuple with equal(self, other) {
   let { x, y, z, w } = (self - other).abs()
   x < EPSILON && y < EPSILON && z < EPSILON && w < EPSILON
 }
 
 ///|
-pub impl Add for Tuple with op_add(self, other) {
+pub impl Add for Tuple with add(self, other) {
   let x = self.x + other.x
   let y = self.y + other.y
   let z = self.z + other.z
@@ -93,7 +93,7 @@ pub impl Add for Tuple with op_add(self, other) {
 }
 
 ///|
-pub impl Sub for Tuple with op_sub(self, other) {
+pub impl Sub for Tuple with sub(self, other) {
   let x = self.x - other.x
   let y = self.y - other.y
   let z = self.z - other.z
@@ -102,7 +102,7 @@ pub impl Sub for Tuple with op_sub(self, other) {
 }
 
 ///|
-pub impl Neg for Tuple with op_neg(self) {
+pub impl Neg for Tuple with neg(self) {
   let x = -self.x
   let y = -self.y
   let z = -self.z
@@ -111,7 +111,7 @@ pub impl Neg for Tuple with op_neg(self) {
 }
 
 ///|
-pub impl Mul for Tuple with op_mul(self, other) {
+pub impl Mul for Tuple with mul(self, other) {
   let x = self.x * other.x
   let y = self.y * other.y
   let z = self.z * other.z

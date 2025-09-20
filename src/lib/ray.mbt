@@ -21,7 +21,7 @@ pub impl Show for Ray with output(self, logger) {
 }
 
 ///|
-pub impl Eq for Ray with op_equal(self, other) {
+pub impl Eq for Ray with equal(self, other) {
   self.origin == other.origin && self.direction == other.direction
 }
 

@@ -17,7 +17,7 @@ pub fn intersection(
 }
 
 ///|
-pub impl Eq for Intersection with op_equal(self, other) {
+pub impl Eq for Intersection with equal(self, other) {
   self.t == other.t // && self.object == other.object
 }
 

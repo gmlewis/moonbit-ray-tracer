@@ -37,13 +37,13 @@ pub fn color(red : Double, green : Double, blue : Double) -> Color {
 }
 
 ///|
-pub impl Eq for Color with op_equal(self, other) {
+pub impl Eq for Color with equal(self, other) {
   let { red, green, blue } = self - other
   red.abs() < EPSILON && green.abs() < EPSILON && blue.abs() < EPSILON
 }
 
 ///|
-pub impl Add for Color with op_add(self, other) {
+pub impl Add for Color with add(self, other) {
   let red = self.red + other.red
   let green = self.green + other.green
   let blue = self.blue + other.blue
@@ -51,7 +51,7 @@ pub impl Add for Color with op_add(self, other) {
 }
 
 ///|
-pub impl Sub for Color with op_sub(self, other) {
+pub impl Sub for Color with sub(self, other) {
   let red = self.red - other.red
   let green = self.green - other.green
   let blue = self.blue - other.blue
@@ -59,7 +59,7 @@ pub impl Sub for Color with op_sub(self, other) {
 }
 
 ///|
-pub impl Mul for Color with op_mul(self, other) {
+pub impl Mul for Color with mul(self, other) {
   let red = self.red * other.red
   let green = self.green * other.green
   let blue = self.blue * other.blue

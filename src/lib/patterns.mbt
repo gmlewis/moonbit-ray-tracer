@@ -25,7 +25,7 @@ pub impl PatternTrait for Pattern with pattern_at(self, point) {
 }
 
 ///|
-pub impl Eq for Pattern with op_equal(self, other) {
+pub impl Eq for Pattern with equal(self, other) {
   // https://github.com/moonbitlang/core/issues/1304#issuecomment-2523373703
   // self.pattern == other.pattern &&
   self.transform == other.transform

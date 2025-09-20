@@ -77,18 +77,29 @@ pub fn parse_obj_file(buf : String) -> ObjFile raise ParserError {
     if line.length() == 0 {
       // silently ignored
     } else if line.has_prefix("v ") {
-      parse_args(line.substring(start=2), " ", add_vertex)
+      parse_args(
+        line.unsafe_substring(start=2, end=line.length()),
+        " ",
+        add_vertex,
+      )
     } else if line.has_prefix("vn ") {
-      parse_args(line.substring(start=3), " ", add_normal)
+      parse_args(
+        line.unsafe_substring(start=3, end=line.length()),
+        " ",
+        add_normal,
+      )
     } else if line.has_prefix("f ") {
       parse_args(
-        line.substring(start=2),
+        line.unsafe_substring(start=2, end=line.length()),
         " ",
         add_triangles,
         string_fn=add_triangle_faces,
       )
     } else if line.has_prefix("g ") {
-      let group_name = line.substring(start=2).trim_space().to_string()
+      let group_name = line
+        .unsafe_substring(start=2, end=line.length())
+        .trim_space()
+        .to_string()
       last_group = group()
       named_groups[group_name] = last_group
     } else {

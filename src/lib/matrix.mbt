@@ -55,7 +55,7 @@ pub fn num_cols(self : Matrix) -> Int {
 }
 
 ///|
-pub impl Eq for Matrix with op_equal(self, other) {
+pub impl Eq for Matrix with equal(self, other) {
   let nrows = self.num_rows()
   if self.num_rows() != other.num_rows() {
     return false
@@ -84,7 +84,7 @@ pub impl Eq for Matrix with op_equal(self, other) {
 
 ///|
 /// Matrix multiplication - currently, only 4x4 is handled.
-pub impl Mul for Matrix with op_mul(self, o) {
+pub impl Mul for Matrix with mul(self, o) {
   let m = mat4zero()
   for row in 0..<4 {
     for col in 0..<4 {

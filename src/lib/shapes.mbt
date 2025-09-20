@@ -52,7 +52,7 @@ pub impl Show for Shape with output(self, logger) {
 }
 
 ///|
-pub impl Eq for Shape with op_equal(self, other) {
+pub impl Eq for Shape with equal(self, other) {
   // https://github.com/moonbitlang/core/issues/1304#issuecomment-2523373703
   // self.object == other.object &&
   self.material == other.material && self.transform == other.transform
