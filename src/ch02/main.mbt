@@ -1,5 +1,5 @@
 ///|
-typealias @lib.Tuple
+using @lib {type Tuple}
 
 ///|
 let canvas = @lib.canvas

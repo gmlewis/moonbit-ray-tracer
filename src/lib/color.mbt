@@ -7,7 +7,7 @@ pub(all) struct Color {
 }
 
 ///|
-pub fn clone(self : Color) -> Color {
+pub fn Color::clone(self : Color) -> Color {
   let { red, green, blue } = self
   { red, green, blue }
 }
@@ -19,7 +19,7 @@ pub let black : Color = color(0, 0, 0)
 pub let white : Color = color(1, 1, 1)
 
 ///|
-pub fn to_string(self : Color) -> String {
+pub fn Color::to_string(self : Color) -> String {
   let r = round_to_fixed(self.red, 5).to_string()
   let g = round_to_fixed(self.green, 5).to_string()
   let b = round_to_fixed(self.blue, 5).to_string()
@@ -67,7 +67,7 @@ pub impl Mul for Color with mul(self, other) {
 }
 
 ///|
-pub fn mul_scalar(self : Color, s : Double) -> Color {
+pub fn Color::mul_scalar(self : Color, s : Double) -> Color {
   let red = self.red * s
   let green = self.green * s
   let blue = self.blue * s

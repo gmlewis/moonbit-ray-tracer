@@ -40,13 +40,16 @@ pub impl PatternTrait for Pattern with clone(self) {
 }
 
 ///|
-pub fn set_pattern_transform(self : Pattern, transform : Matrix) -> Unit {
+pub fn Pattern::set_pattern_transform(
+  self : Pattern,
+  transform : Matrix,
+) -> Unit {
   self.transform = transform
   self.inv_transform = transform.inverse()
 }
 
 ///|
-pub fn pattern_at_shape(
+pub fn Pattern::pattern_at_shape(
   self : Pattern,
   shape : Shape,
   world_point : Tuple,

@@ -76,13 +76,13 @@ pub fn Shape::new(object : Renderable) -> Shape {
 }
 
 ///|
-pub fn set_transform(self : Shape, transform : Matrix) -> Unit {
+pub fn Shape::set_transform(self : Shape, transform : Matrix) -> Unit {
   self.transform = transform
   self.inv_transform = transform.inverse()
 }
 
 ///|
-pub fn intersect(self : Shape, ray : Ray) -> Intersections {
+pub fn Shape::intersect(self : Shape, ray : Ray) -> Intersections {
   let local_ray = ray.transform(self.inv_transform)
   self.local_intersect(local_ray)
 }
@@ -120,7 +120,7 @@ pub fn Shape::local_intersect(self : Shape, local_ray : Ray) -> Intersections {
 }
 
 ///|
-pub fn normal_at(
+pub fn Shape::normal_at(
   self : Shape,
   world_point : Tuple,
   hit? : Intersection? = None,
@@ -155,7 +155,7 @@ pub fn Shape::local_normal_at(
 }
 
 ///|
-pub fn children(self : Shape) -> Array[Shape] {
+pub fn Shape::children(self : Shape) -> Array[Shape] {
   match self.object {
     Object(_) => []
     Group(group) => group.children
@@ -166,7 +166,7 @@ pub fn children(self : Shape) -> Array[Shape] {
 }
 
 ///|
-pub fn add_child(self : Shape, child : Shape) -> Unit {
+pub fn Shape::add_child(self : Shape, child : Shape) -> Unit {
   match self.object {
     Group(group) => {
       group.children.push(child)
@@ -180,7 +180,7 @@ pub fn add_child(self : Shape, child : Shape) -> Unit {
 }
 
 ///|
-pub fn world_to_object(self : Shape, point : Tuple) -> Tuple {
+pub fn Shape::world_to_object(self : Shape, point : Tuple) -> Tuple {
   match self.parent {
     Some(parent) => {
       let point = parent.world_to_object(point)
@@ -191,7 +191,7 @@ pub fn world_to_object(self : Shape, point : Tuple) -> Tuple {
 }
 
 ///|
-pub fn normal_to_world(self : Shape, normal : Tuple) -> Tuple {
+pub fn Shape::normal_to_world(self : Shape, normal : Tuple) -> Tuple {
   let normal = self.inv_transform.transpose().mul_tuple(normal)
   normal.w = 0
   let normal = normal.normalize()
@@ -202,7 +202,7 @@ pub fn normal_to_world(self : Shape, normal : Tuple) -> Tuple {
 }
 
 ///|
-pub fn includes_shape(self : Shape, shape : Shape) -> Bool {
+pub fn Shape::includes_shape(self : Shape, shape : Shape) -> Bool {
   if self.id == shape.id {
     return true
   }

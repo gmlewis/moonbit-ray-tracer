@@ -42,7 +42,10 @@ pub fn intersection_allowed(
 }
 
 ///|
-pub fn filter_intersections(self : CSG, xs : Intersections) -> Intersections {
+pub fn CSG::filter_intersections(
+  self : CSG,
+  xs : Intersections,
+) -> Intersections {
   // begin outside of both children
   let mut inside_left = false
   let mut inside_right = false

@@ -48,7 +48,7 @@ pub fn Intersections::from_ts(
 }
 
 ///|
-pub fn to_ts(self : Intersections) -> Array[Double] {
+pub fn Intersections::to_ts(self : Intersections) -> Array[Double] {
   self.xs.map(fn(i) { i.t })
 }
 
@@ -82,12 +82,12 @@ pub fn intersections(xs : Array[Intersection]) -> Intersections {
 // }
 
 ///|
-pub fn op_get(self : Intersections, i : Int) -> Intersection {
+pub fn Intersections::op_get(self : Intersections, i : Int) -> Intersection {
   self.xs[i]
 }
 
 ///|
-pub fn hit(self : Intersections) -> Intersection? {
+pub fn Intersections::hit(self : Intersections) -> Intersection? {
   self.hit
 }
 
@@ -107,7 +107,7 @@ pub(all) struct Computations {
 }
 
 ///|
-pub fn prepare_computations(
+pub fn Intersection::prepare_computations(
   self : Intersection,
   ray : Ray,
   xs? : Intersections,
@@ -185,7 +185,7 @@ pub fn prepare_computations(
 }
 
 ///|
-pub fn schlick(self : Computations) -> Double {
+pub fn Computations::schlick(self : Computations) -> Double {
   // find the cosine of the angle between the eye and normal vectors
   let mut cos = self.eyev.dot(self.normalv)
   // total internal reflection can only occur if n1 > n2

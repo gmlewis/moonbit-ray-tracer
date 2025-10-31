@@ -36,7 +36,7 @@ pub fn material() -> Material {
 }
 
 ///|
-pub fn lighting(
+pub fn Material::lighting(
   self : Material,
   light : Light,
   position : Tuple,

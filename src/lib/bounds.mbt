@@ -14,7 +14,7 @@ pub fn Bounds::new() -> Bounds {
 }
 
 ///|
-pub fn transform(self : Bounds, transform : Matrix) -> Bounds {
+pub fn Bounds::transform(self : Bounds, transform : Matrix) -> Bounds {
   let b = Bounds::new()
   b
   ..update(transform.mul_tuple(point(self.min.x, self.min.y, self.min.z)))
@@ -29,7 +29,7 @@ pub fn transform(self : Bounds, transform : Matrix) -> Bounds {
 }
 
 ///|
-pub fn enlarge(self : Bounds, other : Bounds) -> Unit {
+pub fn Bounds::enlarge(self : Bounds, other : Bounds) -> Unit {
   self
   ..update(point(other.min.x, other.min.y, other.min.z))
   ..update(point(other.max.x, other.min.y, other.min.z))
@@ -42,7 +42,7 @@ pub fn enlarge(self : Bounds, other : Bounds) -> Unit {
 }
 
 ///|
-pub fn update(self : Bounds, point : Tuple) -> Unit {
+pub fn Bounds::update(self : Bounds, point : Tuple) -> Unit {
   if point.x < self.min.x {
     self.min.x = point.x
   }
@@ -64,7 +64,7 @@ pub fn update(self : Bounds, point : Tuple) -> Unit {
 }
 
 ///|
-pub fn local_intersect(
+pub fn Bounds::local_intersect(
   self : Bounds,
   ray : Ray,
   shape : Shape,

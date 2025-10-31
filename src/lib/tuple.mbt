@@ -63,7 +63,7 @@ pub fn point(x : Double, y : Double, z : Double) -> Tuple {
 }
 
 ///|
-pub fn is_point(self : Tuple) -> Bool {
+pub fn Tuple::is_point(self : Tuple) -> Bool {
   self.w == 1
 }
 
@@ -73,7 +73,7 @@ pub fn vector(x : Double, y : Double, z : Double) -> Tuple {
 }
 
 ///|
-pub fn is_vector(self : Tuple) -> Bool {
+pub fn Tuple::is_vector(self : Tuple) -> Bool {
   self.w == 0
 }
 
@@ -129,7 +129,7 @@ pub fn Tuple::mul_scalar(self : Tuple, other : Double) -> Tuple {
 }
 
 ///|
-pub fn op_div(self : Tuple, other : Tuple) -> Tuple {
+pub fn Tuple::op_div(self : Tuple, other : Tuple) -> Tuple {
   let x = self.x / other.x
   let y = self.y / other.y
   let z = self.z / other.z
@@ -138,7 +138,7 @@ pub fn op_div(self : Tuple, other : Tuple) -> Tuple {
 }
 
 ///|
-pub fn div_scalar(self : Tuple, other : Double) -> Tuple {
+pub fn Tuple::div_scalar(self : Tuple, other : Double) -> Tuple {
   let x = self.x / other
   let y = self.y / other
   let z = self.z / other
@@ -147,7 +147,7 @@ pub fn div_scalar(self : Tuple, other : Double) -> Tuple {
 }
 
 ///|
-pub fn abs(self : Tuple) -> Tuple {
+pub fn Tuple::abs(self : Tuple) -> Tuple {
   let x = self.x.abs()
   let y = self.y.abs()
   let z = self.z.abs()
@@ -156,19 +156,19 @@ pub fn abs(self : Tuple) -> Tuple {
 }
 
 ///|
-pub fn magnitude(self : Tuple) -> Double {
+pub fn Tuple::magnitude(self : Tuple) -> Double {
   let { x, y, z, w } = self
   (x * x + y * y + z * z + w * w).sqrt()
 }
 
 ///|
-pub fn normalize(self : Tuple) -> Tuple {
+pub fn Tuple::normalize(self : Tuple) -> Tuple {
   let len = self.magnitude()
   self.div_scalar(len)
 }
 
 ///|
-pub fn dot(self : Tuple, other : Tuple) -> Double {
+pub fn Tuple::dot(self : Tuple, other : Tuple) -> Double {
   let x = self.x * other.x
   let y = self.y * other.y
   let z = self.z * other.z
@@ -177,7 +177,7 @@ pub fn dot(self : Tuple, other : Tuple) -> Double {
 }
 
 ///|
-pub fn cross(self : Tuple, other : Tuple) -> Tuple {
+pub fn Tuple::cross(self : Tuple, other : Tuple) -> Tuple {
   let x = self.y * other.z - self.z * other.y
   let y = self.z * other.x - self.x * other.z
   let z = self.x * other.y - self.y * other.x
@@ -185,6 +185,6 @@ pub fn cross(self : Tuple, other : Tuple) -> Tuple {
 }
 
 ///|
-pub fn reflect(self : Tuple, normal : Tuple) -> Tuple {
+pub fn Tuple::reflect(self : Tuple, normal : Tuple) -> Tuple {
   self - normal.mul_scalar(self.dot(normal) * 2)
 }

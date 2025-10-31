@@ -17,12 +17,12 @@ pub fn canvas(width : Int, height : Int) -> Canvas {
 }
 
 ///|
-fn offset(self : Canvas, x : Int, y : Int) -> Int {
+fn Canvas::offset(self : Canvas, x : Int, y : Int) -> Int {
   y * self.width + x
 }
 
 ///|
-pub fn pixel_at(self : Canvas, x : Int, y : Int) -> Color {
+pub fn Canvas::pixel_at(self : Canvas, x : Int, y : Int) -> Color {
   let off = self.offset(x, y)
   let r = self.red[off]
   let g = self.green[off]
@@ -31,7 +31,12 @@ pub fn pixel_at(self : Canvas, x : Int, y : Int) -> Color {
 }
 
 ///|
-pub fn write_pixel(self : Canvas, x : Int, y : Int, color : Color) -> Unit {
+pub fn Canvas::write_pixel(
+  self : Canvas,
+  x : Int,
+  y : Int,
+  color : Color,
+) -> Unit {
   let off = self.offset(x, y)
   self.red[off] = color.red
   self.green[off] = color.green
@@ -40,7 +45,7 @@ pub fn write_pixel(self : Canvas, x : Int, y : Int, color : Color) -> Unit {
 
 ///|
 /// clear clears the canvas to the provided color.
-pub fn clear(self : Canvas, color : Color) -> Unit {
+pub fn Canvas::clear(self : Canvas, color : Color) -> Unit {
   let mut off = 0
   for y in 0..<self.height {
     for x in 0..<self.width {
@@ -63,7 +68,7 @@ fn clamp2ppm(v : Double) -> String {
 const MAX_PPM_LINE_LENGTH = 70
 
 ///|
-pub fn to_ppm(self : Canvas) -> String {
+pub fn Canvas::to_ppm(self : Canvas) -> String {
   let lines = Array::new(capacity=self.height + 4)
   lines.push("P3")
   lines.push("\{self.width} \{self.height}")
@@ -109,7 +114,7 @@ fn clamp2byte(v : Double) -> Byte {
 }
 
 ///|
-pub fn to_png(self : Canvas) -> Bytes raise @image.SizeError {
+pub fn Canvas::to_png(self : Canvas) -> Bytes raise @image.SizeError {
   let r = @image.rect(0, 0, self.width, self.height)
   let img = @image.RGBA::new(r)
   let mut off = 0

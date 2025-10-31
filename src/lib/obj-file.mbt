@@ -155,7 +155,7 @@ fn parse_args(
 }
 
 ///|
-pub fn obj_to_group(self : ObjFile) -> Shape {
+pub fn ObjFile::obj_to_group(self : ObjFile) -> Shape {
   let g = group()
   for child in self.default_group.children() {
     g.add_child(child)

@@ -3,12 +3,12 @@ pub(all) struct MatrixRow(Array[Double]) derive(Show)
 
 ///|
 pub fn MatrixRow::op_get(self : MatrixRow, col : Int) -> Double {
-  self.inner()[col]
+  self.0[col]
 }
 
 ///|
-pub fn op_set(self : MatrixRow, col : Int, v : Double) -> Unit {
-  self.inner()[col] = v
+pub fn MatrixRow::op_set(self : MatrixRow, col : Int, v : Double) -> Unit {
+  self.0[col] = v
 }
 
 ///|
@@ -38,20 +38,20 @@ pub impl Show for Matrix with output(self, logger) {
 
 ///|
 pub fn Matrix::op_get(self : Matrix, row : Int) -> MatrixRow {
-  self.inner()[row]
+  self.0[row]
 }
 
 ///|
-pub fn num_rows(self : Matrix) -> Int {
-  self.inner().length()
+pub fn Matrix::num_rows(self : Matrix) -> Int {
+  self.0.length()
 }
 
 ///|
-pub fn num_cols(self : Matrix) -> Int {
+pub fn Matrix::num_cols(self : Matrix) -> Int {
   if self.num_rows() == 0 {
     return 0
   }
-  self.inner()[0].inner().length()
+  self.0[0].0.length()
 }
 
 ///|
@@ -72,8 +72,7 @@ pub impl Eq for Matrix with equal(self, other) {
   }
   for row in 0..<nrows {
     for col in 0..<ncols {
-      let delta = (self.inner()[row].inner()[col] -
-      other.inner()[row].inner()[col]).abs()
+      let delta = (self.0[row].0[col] - other.0[row].0[col]).abs()
       if delta >= EPSILON {
         return false
       }
@@ -113,7 +112,7 @@ pub fn Matrix::clone(self : Matrix) -> Matrix {
 }
 
 ///|
-pub fn copy(self : Matrix, other : Matrix) -> Unit {
+pub fn Matrix::copy(self : Matrix, other : Matrix) -> Unit {
   let nrows = self.num_rows()
   let ncols = self.num_cols()
   guard other.num_rows() == nrows && other.num_cols() == ncols
@@ -125,7 +124,7 @@ pub fn copy(self : Matrix, other : Matrix) -> Unit {
 }
 
 ///|
-pub fn transpose(self : Matrix) -> Matrix {
+pub fn Matrix::transpose(self : Matrix) -> Matrix {
   let result = self.clone()
   let nrows = self.num_rows()
   let ncols = self.num_cols()
@@ -140,7 +139,7 @@ pub fn transpose(self : Matrix) -> Matrix {
 ///|
 /// Multiple matrix by single-column tuple.
 /// Currently only 4x4 * 1x4 is handled.
-pub fn mul_tuple(self : Matrix, o : Tuple) -> Tuple {
+pub fn Matrix::mul_tuple(self : Matrix, o : Tuple) -> Tuple {
   let m = tuple(0, 0, 0, 0)
   for row in 0..<4 {
     m[row] = self[row][0] * o.x +
@@ -152,7 +151,7 @@ pub fn mul_tuple(self : Matrix, o : Tuple) -> Tuple {
 }
 
 ///|
-pub fn determinant(self : Matrix) -> Double {
+pub fn Matrix::determinant(self : Matrix) -> Double {
   let nrows = self.num_rows()
   let ncols = self.num_cols()
   guard nrows == ncols
@@ -167,7 +166,7 @@ pub fn determinant(self : Matrix) -> Double {
 }
 
 ///|
-pub fn submatrix(self : Matrix, row : Int, col : Int) -> Matrix {
+pub fn Matrix::submatrix(self : Matrix, row : Int, col : Int) -> Matrix {
   let nrows = self.num_rows()
   let ncols = self.num_cols()
   guard nrows == ncols
@@ -189,13 +188,13 @@ pub fn submatrix(self : Matrix, row : Int, col : Int) -> Matrix {
 }
 
 ///|
-pub fn minor(self : Matrix, row : Int, col : Int) -> Double {
+pub fn Matrix::minor(self : Matrix, row : Int, col : Int) -> Double {
   let m = self.submatrix(row, col)
   m.determinant()
 }
 
 ///|
-pub fn cofactor(self : Matrix, row : Int, col : Int) -> Double {
+pub fn Matrix::cofactor(self : Matrix, row : Int, col : Int) -> Double {
   let m = self.minor(row, col)
   if (row + col) % 2 == 0 {
     m
@@ -205,13 +204,13 @@ pub fn cofactor(self : Matrix, row : Int, col : Int) -> Double {
 }
 
 ///|
-pub fn is_invertible(self : Matrix) -> Bool {
+pub fn Matrix::is_invertible(self : Matrix) -> Bool {
   let det = self.determinant()
   det != 0
 }
 
 ///|
-pub fn inverse(self : Matrix) -> Matrix {
+pub fn Matrix::inverse(self : Matrix) -> Matrix {
   let det = self.determinant()
   if det == 0 {
     return self
@@ -248,7 +247,7 @@ pub fn round_to_fixed(v : Double, digits : Int) -> Double {
 }
 
 ///|
-pub fn dump(self : Matrix) -> String {
+pub fn Matrix::dump(self : Matrix) -> String {
   let nrows = self.num_rows()
   let f = fn(v) { round_to_fixed(v, 5) }
   match nrows {
@@ -281,32 +280,42 @@ pub fn dump(self : Matrix) -> String {
 }
 
 ///|
-pub fn rotate_x(self : Matrix, rad : Double) -> Matrix {
+pub fn Matrix::rotate_x(self : Matrix, rad : Double) -> Matrix {
   rotation_x(rad) * self
 }
 
 ///|
-pub fn rotate_y(self : Matrix, rad : Double) -> Matrix {
+pub fn Matrix::rotate_y(self : Matrix, rad : Double) -> Matrix {
   rotation_y(rad) * self
 }
 
 ///|
-pub fn rotate_z(self : Matrix, rad : Double) -> Matrix {
+pub fn Matrix::rotate_z(self : Matrix, rad : Double) -> Matrix {
   rotation_z(rad) * self
 }
 
 ///|
-pub fn scale(self : Matrix, x : Double, y : Double, z : Double) -> Matrix {
+pub fn Matrix::scale(
+  self : Matrix,
+  x : Double,
+  y : Double,
+  z : Double,
+) -> Matrix {
   scaling(x, y, z) * self
 }
 
 ///|
-pub fn translate(self : Matrix, x : Double, y : Double, z : Double) -> Matrix {
+pub fn Matrix::translate(
+  self : Matrix,
+  x : Double,
+  y : Double,
+  z : Double,
+) -> Matrix {
   translation(x, y, z) * self
 }
 
 ///|
-pub fn shear(
+pub fn Matrix::shear(
   self : Matrix,
   xy : Double,
   xz : Double,

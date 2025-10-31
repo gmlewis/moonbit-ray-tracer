@@ -32,7 +32,7 @@ pub fn default_world() -> World {
 }
 
 ///|
-pub fn intersect_world(self : World, ray : Ray) -> Intersections {
+pub fn World::intersect_world(self : World, ray : Ray) -> Intersections {
   let xs = []
   for obj in self.shapes {
     let x = obj.intersect(ray)
@@ -42,7 +42,7 @@ pub fn intersect_world(self : World, ray : Ray) -> Intersections {
 }
 
 ///|
-pub fn shade_hit(
+pub fn World::shade_hit(
   self : World,
   comps : Computations,
   remaining? : Int = MAX_BOUNCES,
@@ -75,7 +75,7 @@ pub fn shade_hit(
 }
 
 ///|
-pub fn color_at(
+pub fn World::color_at(
   self : World,
   ray : Ray,
   remaining? : Int = MAX_BOUNCES,
@@ -90,7 +90,7 @@ pub fn color_at(
 }
 
 ///|
-pub fn is_shadowed(self : World, point : Tuple, light? : Light) -> Bool {
+pub fn World::is_shadowed(self : World, point : Tuple, light? : Light) -> Bool {
   let light = match light {
     None => self.lights[0]
     Some(x) => x
@@ -108,7 +108,7 @@ pub fn is_shadowed(self : World, point : Tuple, light? : Light) -> Bool {
 }
 
 ///|
-pub fn reflected_color(
+pub fn World::reflected_color(
   self : World,
   comps : Computations,
   remaining : Int,
@@ -124,7 +124,7 @@ pub fn reflected_color(
 }
 
 ///|
-pub fn refracted_color(
+pub fn World::refracted_color(
   self : World,
   comps : Computations,
   remaining : Int,

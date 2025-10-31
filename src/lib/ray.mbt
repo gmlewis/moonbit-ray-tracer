@@ -26,7 +26,7 @@ pub impl Eq for Ray with equal(self, other) {
 }
 
 ///|
-pub fn position(self : Ray, t : Double) -> Tuple {
+pub fn Ray::position(self : Ray, t : Double) -> Tuple {
   self.origin + self.direction.mul_scalar(t)
 }
 

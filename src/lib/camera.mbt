@@ -32,7 +32,7 @@ pub fn camera(hsize : Int, vsize : Int, field_of_view : Double) -> Camera {
 }
 
 ///|
-pub fn ray_for_pixel(self : Camera, px : Int, py : Int) -> Ray {
+pub fn Camera::ray_for_pixel(self : Camera, px : Int, py : Int) -> Ray {
   // the offset from the edge of the canvas to the pixel's center
   let xoffset = (px.to_double() + 0.5) * self.pixel_size
   let yoffset = (py.to_double() + 0.5) * self.pixel_size
@@ -52,7 +52,7 @@ pub fn ray_for_pixel(self : Camera, px : Int, py : Int) -> Ray {
 }
 
 ///|
-pub fn render(self : Camera, world : World) -> Canvas {
+pub fn Camera::render(self : Camera, world : World) -> Canvas {
   let image = canvas(self.hsize, self.vsize)
   for y in 0..<self.vsize {
     for x in 0..<self.hsize {
