@@ -93,5 +93,5 @@ test "Splitting long lines in PPM files (p.49)" {
 ///|
 test "PPM files are terminated by a newline character (p.49)" {
   let ppm = canvas(5, 3).to_ppm()
-  inspect(ppm[ppm.length() - 1], content="10")
+  inspect(ppm.code_unit_at(ppm.length() - 1), content="10")
 }

@@ -9,7 +9,7 @@ package "gmlewis/ray-tracer/ch02"
 type Environment
 
 type Projectile
-impl Show for Projectile
+pub impl Show for Projectile
 
 // Type aliases
 
