@@ -3,10 +3,13 @@ package "gmlewis/ray-tracer/lib"
 
 import(
   "gmlewis/image"
+  "gmlewis/ray-tracer/hdr"
 )
 
 // Values
 pub const EPSILON : Double = 0.00001
+
+pub fn area_light(Tuple, Tuple, Int, Tuple, Int, Color) -> Light
 
 pub let black : Color
 
@@ -24,7 +27,11 @@ pub fn csg(Operation, Shape, Shape) -> Shape
 
 pub fn cube() -> Shape
 
+pub fn cubic_map(Tuple) -> (Double, Double)
+
 pub fn cylinder(minimum? : Double, maximum? : Double, closed? : Bool) -> Shape
+
+pub fn cylindrical_map(Tuple) -> (Double, Double)
 
 pub fn default_world() -> World
 
@@ -62,6 +69,8 @@ pub fn parse_scene(String) -> ParsedScene raise SceneParseError
 
 pub async fn parse_scene_file(String) -> ParsedScene raise SceneParseError
 
+pub fn planar_map(Tuple) -> (Double, Double)
+
 pub fn plane() -> Shape
 
 pub fn point(Double, Double, Double) -> Tuple
@@ -88,6 +97,8 @@ pub fn smooth_triangle(Tuple, Tuple, Tuple, Tuple, Tuple, Tuple) -> Shape
 
 pub fn sphere() -> Shape
 
+pub fn spherical_map(Tuple) -> (Double, Double)
+
 pub fn stripe_pattern(Array[Color]) -> Pattern
 
 pub fn texture(Canvas, mapping? : &Mapping) -> Pattern
@@ -111,7 +122,7 @@ type ParserError
 pub impl Eq for ParserError
 pub impl Show for ParserError
 
-type SceneParseError
+pub suberror SceneParseError String
 pub impl Eq for SceneParseError
 pub impl Show for SceneParseError
 
@@ -136,6 +147,7 @@ pub(all) struct CSG {
   left : Shape
   right : Shape
 }
+pub fn CSG::clone(Self) -> Self
 pub fn CSG::filter_intersections(Self, Intersections) -> Intersections
 pub impl Eq for CSG
 pub impl Show for CSG
@@ -162,6 +174,7 @@ pub(all) struct Canvas {
   blue : Array[Double]
 }
 pub fn Canvas::clear(Self, Color) -> Unit
+pub fn Canvas::from_hdr(@hdr.HdrImage) -> Self
 pub fn Canvas::from_image(&@image.Image) -> Self
 pub fn Canvas::from_png(Bytes) -> Self?
 pub fn Canvas::pixel_at(Self, Int, Int) -> Color
@@ -273,6 +286,7 @@ pub(all) struct Group {
   mut bounds : Bounds?
 }
 pub fn Group::bounds(Self) -> Bounds
+pub fn Group::clone(Self) -> Self
 pub fn Group::divide(Self, Int) -> Unit
 pub fn Group::local_intersect(Self, Shape, Ray) -> Intersections
 pub fn Group::local_normal_at(Self, Tuple) -> Tuple
@@ -304,9 +318,19 @@ pub fn Intersections::to_ts(Self) -> Array[Double]
 pub(all) struct Light {
   position : Tuple
   intensity : Color
+  kind : LightKind
 }
+pub fn Light::point_at(Self, Int, Int) -> Tuple
+pub fn Light::samples(Self) -> Int
 pub impl Eq for Light
 pub impl Show for Light
+
+pub(all) enum LightKind {
+  Point
+  Area(Tuple, Int, Tuple, Int)
+}
+pub impl Eq for LightKind
+pub impl Show for LightKind
 
 pub(all) enum LightingMode {
   Phong
@@ -329,6 +353,7 @@ pub(all) struct Material {
   mut roughness : Double
   mut lighting_mode : LightingMode
 }
+pub fn Material::clone(Self) -> Self
 pub fn Material::lighting(Self, Light, Tuple, Tuple, Tuple, in_shadow? : Bool, shape? : Shape?) -> Color
 pub impl Eq for Material
 pub impl Show for Material
@@ -390,6 +415,7 @@ pub(all) struct ParsedScene {
   camera : Camera
   render_settings : RenderSettings
   metadata : SceneMetadata
+  templates : Map[String, Shape]
 }
 
 pub(all) struct Pattern {
@@ -473,6 +499,7 @@ pub(all) struct Shape {
 pub fn Shape::add_child(Self, Self) -> Unit
 pub fn Shape::bounds(Self) -> Bounds
 pub fn Shape::children(Self) -> Array[Self]
+pub fn Shape::clone(Self) -> Self
 pub fn Shape::divide(Self, Int) -> Unit
 pub fn Shape::includes_shape(Self, Self) -> Bool
 pub fn Shape::intersect(Self, Ray) -> Intersections
@@ -505,6 +532,7 @@ pub(all) struct SmoothTriangle {
   bounds : Bounds
 }
 pub fn SmoothTriangle::bounds(Self) -> Bounds
+pub fn SmoothTriangle::clone(Self) -> Self
 pub fn SmoothTriangle::local_intersect(Self, Ray) -> Array[(Double, Double, Double)]
 pub fn SmoothTriangle::local_normal_at(Self, Tuple, Intersection) -> Tuple
 pub impl Eq for SmoothTriangle
@@ -548,6 +576,7 @@ pub(all) struct Triangle {
   bounds : Bounds
 }
 pub fn Triangle::bounds(Self) -> Bounds
+pub fn Triangle::clone(Self) -> Self
 pub fn Triangle::local_intersect(Self, Ray) -> Array[(Double, Double, Double)]
 pub fn Triangle::local_normal_at(Self, Tuple) -> Tuple
 pub impl Eq for Triangle
@@ -584,10 +613,11 @@ pub(all) struct World {
   mut shapes : Array[Shape]
   mut lights : Array[Light]
   mut background : Color
+  mut environment_map : Pattern?
 }
 pub fn World::color_at(Self, Ray, remaining? : Int) -> Color
 pub fn World::intersect_world(Self, Ray) -> Intersections
-pub fn World::is_shadowed(Self, Tuple, light? : Light) -> Bool
+pub fn World::is_shadowed(Self, Tuple, Tuple) -> Bool
 pub fn World::reflected_color(Self, Computations, Int) -> Color
 pub fn World::refracted_color(Self, Computations, Int) -> Color
 pub fn World::shade_hit(Self, Computations, remaining? : Int) -> Color
@@ -603,6 +633,7 @@ pub(open) trait Object : Show {
   local_intersect(Self, Ray) -> Array[Double]
   local_normal_at(Self, Tuple) -> Tuple
   bounds(Self) -> Bounds
+  clone(Self) -> &Object
 }
 
 pub(open) trait PatternTrait : Show {

@@ -31,7 +31,15 @@ pub fn Triangle::bounds(self : Triangle) -> Bounds {
 
 ///|
 pub fn Triangle::clone(self : Triangle) -> Triangle {
-  { p1: self.p1, p2: self.p2, p3: self.p3, e1: self.e1, e2: self.e2, normal: self.normal, bounds: self.bounds }
+  {
+    p1: self.p1,
+    p2: self.p2,
+    p3: self.p3,
+    e1: self.e1,
+    e2: self.e2,
+    normal: self.normal,
+    bounds: self.bounds,
+  }
 }
 
 ///|

@@ -62,7 +62,6 @@ pub fn Pattern::pattern_at_shape(
 ) -> Color {
   let object_point = shape.world_to_object(world_point)
   let pattern_point = self.inv_transform.mul_tuple(object_point)
-  
   self.pattern.pattern_at(pattern_point)
 }
 
@@ -397,14 +396,24 @@ pub impl PatternTrait for Texture with pattern_at(self, point) {
   // Use modulo to wrap u and v to [0, 1]
   let u = u - @math.floor(u)
   let v = v - @math.floor(v)
-  
   let x = (u * self.canvas.width.to_double()).to_int()
   let y = ((1.0 - v) * self.canvas.height.to_double()).to_int()
-  
+
   // Clamp indices to avoid out of bounds
-  let x = if x < 0 { 0 } else if x >= self.canvas.width { self.canvas.width - 1 } else { x }
-  let y = if y < 0 { 0 } else if y >= self.canvas.height { self.canvas.height - 1 } else { y }
-  
+  let x = if x < 0 {
+    0
+  } else if x >= self.canvas.width {
+    self.canvas.width - 1
+  } else {
+    x
+  }
+  let y = if y < 0 {
+    0
+  } else if y >= self.canvas.height {
+    self.canvas.height - 1
+  } else {
+    y
+  }
   self.canvas.pixel_at(x, y)
 }
 
@@ -413,14 +422,24 @@ pub impl PatternTrait for Texture with uv_at(self, u, v) {
   // Use modulo to wrap u and v to [0, 1]
   let u = u - @math.floor(u)
   let v = v - @math.floor(v)
-  
   let x = (u * self.canvas.width.to_double()).to_int()
   let y = ((1.0 - v) * self.canvas.height.to_double()).to_int()
-  
+
   // Clamp indices to avoid out of bounds
-  let x = if x < 0 { 0 } else if x >= self.canvas.width { self.canvas.width - 1 } else { x }
-  let y = if y < 0 { 0 } else if y >= self.canvas.height { self.canvas.height - 1 } else { y }
-  
+  let x = if x < 0 {
+    0
+  } else if x >= self.canvas.width {
+    self.canvas.width - 1
+  } else {
+    x
+  }
+  let y = if y < 0 {
+    0
+  } else if y >= self.canvas.height {
+    self.canvas.height - 1
+  } else {
+    y
+  }
   self.canvas.pixel_at(x, y)
 }
 

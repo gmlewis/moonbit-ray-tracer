@@ -145,7 +145,7 @@ pub fn parse_scene(toml_content : String) -> ParsedScene raise SceneParseError {
   // Parse materials and patterns first (needed for objects)
   let materials = parse_materials(root_table)
   let patterns = parse_patterns(root_table)
-  
+
   // Resolve material patterns
   resolve_material_patterns(root_table, materials, patterns)
 
@@ -163,7 +163,6 @@ pub fn parse_scene(toml_content : String) -> ParsedScene raise SceneParseError {
   world.lights = lights
   world.shapes = shapes
   world.background = render_settings.background
-  
   if render_settings.divide > 0 {
     let g = group()
     for shape in world.shapes {
@@ -172,7 +171,6 @@ pub fn parse_scene(toml_content : String) -> ParsedScene raise SceneParseError {
     g.divide(render_settings.divide)
     world.shapes = [g]
   }
-  
   { world, camera, render_settings, metadata, templates }
 }
 
@@ -264,9 +262,7 @@ fn parse_materials(
   match root.get("materials") {
     Some(@toml.TomlTable(materials_table)) =>
       materials_table.each(fn(name, material_value) {
-        let material = try {
-          parse_material(material_value)
-        } catch {
+        let material = parse_material(material_value) catch {
           e => {
             println("Error parsing material \{name}: \{e}")
             material()
@@ -325,7 +321,6 @@ fn parse_material(value : @toml.TomlValue) -> Material raise SceneParseError {
   if mat.refractive_index < 1.0 {
     raise SceneParseError("material refractive_index must be at least 1.0")
   }
-
   mat.metallic = get_float_or_default(material_table, "metallic", 0.0)
   if mat.metallic < 0.0 || mat.metallic > 1.0 {
     raise SceneParseError("material metallic must be between 0 and 1")
@@ -334,10 +329,8 @@ fn parse_material(value : @toml.TomlValue) -> Material raise SceneParseError {
   if mat.roughness < 0.0 || mat.roughness > 1.0 {
     raise SceneParseError("material roughness must be between 0 and 1")
   }
-
-  mat.lighting_mode = match get_string_or_default(
-    material_table, "lighting_mode", "phong",
-  ) {
+  mat.lighting_mode = match
+    get_string_or_default(material_table, "lighting_mode", "phong") {
     "phong" => Phong
     "pbr" => PBR
     mode => raise SceneParseError("Unknown lighting mode: \{mode}")
@@ -355,24 +348,21 @@ fn resolve_material_patterns(
   patterns : Map[String, Pattern],
 ) -> Unit {
   match root.get("materials") {
-    Some(@toml.TomlTable(materials_table)) => {
+    Some(@toml.TomlTable(materials_table)) =>
       materials_table.each(fn(name, material_value) {
         match material_value {
-          @toml.TomlTable(table) => {
+          @toml.TomlTable(table) =>
             match table.get("pattern") {
-              Some(@toml.TomlString(pattern_name)) => {
+              Some(@toml.TomlString(pattern_name)) =>
                 match (materials.get(name), patterns.get(pattern_name)) {
                   (Some(mat), Some(p)) => mat.pattern = Some(p.clone())
                   _ => ()
                 }
-              }
               _ => ()
             }
-          }
           _ => ()
         }
       })
-    }
     _ => ()
   }
 }
@@ -410,9 +400,7 @@ fn parse_patterns(
       patterns_table.each(fn(name, _) { keys.push(name) })
       for name in keys {
         let pattern_value = patterns_table.get(name).unwrap()
-        let pattern = try {
-          parse_pattern(pattern_value)
-        } catch {
+        let pattern = parse_pattern(pattern_value) catch {
           e => {
             println("Error parsing pattern \{name}: \{e}")
             stripe_pattern([color(1, 0, 1), color(0, 0, 0)]) // fallback
@@ -443,13 +431,12 @@ fn parse_pattern(value : @toml.TomlValue) -> Pattern raise SceneParseError {
       colors
     }
     Some(_) => raise SceneParseError("pattern colors must be an array")
-    None => {
+    None =>
       if pattern_type == "texture" {
         []
       } else {
         raise SceneParseError("pattern colors are required")
       }
-    }
   }
   let pattern = match pattern_type {
     "checkers" => checkers_pattern(colors_array)
@@ -537,7 +524,9 @@ fn parse_objects(
   match root.get("objects") {
     Some(@toml.TomlArray(objects_array)) =>
       for i = 0; i < objects_array.length(); i = i + 1 {
-        shapes.push(parse_object(objects_array[i], materials, patterns, templates))
+        shapes.push(
+          parse_object(objects_array[i], materials, patterns, templates),
+        )
       }
     Some(_) => raise SceneParseError("objects section must be an array")
     None => () // No objects defined
@@ -641,7 +630,12 @@ fn parse_object(
       match object_table.get("children") {
         Some(@toml.TomlArray(children_array)) =>
           for i = 0; i < children_array.length(); i = i + 1 {
-            let child = parse_object(children_array[i], materials, patterns, templates)
+            let child = parse_object(
+              children_array[i],
+              materials,
+              patterns,
+              templates,
+            )
             g.add_child(child)
           }
         Some(_) => raise SceneParseError("group children must be an array")
@@ -660,11 +654,13 @@ fn parse_object(
             _ => raise SceneParseError("Unknown CSG operation: \{operation}")
           }
           let left_shape = match object_table.get("left") {
-            Some(left_value) => parse_object(left_value, materials, patterns, templates)
+            Some(left_value) =>
+              parse_object(left_value, materials, patterns, templates)
             None => raise SceneParseError("CSG left object is required")
           }
           let right_shape = match object_table.get("right") {
-            Some(right_value) => parse_object(right_value, materials, patterns, templates)
+            Some(right_value) =>
+              parse_object(right_value, materials, patterns, templates)
             None => raise SceneParseError("CSG right object is required")
           }
           csg(csg_op, left_shape, right_shape)
@@ -771,7 +767,6 @@ fn parse_object(
     }
     None => ()
   }
-
   shape
 }
 
@@ -780,12 +775,9 @@ fn parse_object(
 pub async fn parse_scene_file(
   file_path : String,
 ) -> ParsedScene raise SceneParseError {
-  let toml_content = try {
-    @fs.read_file(file_path).text()
-  } catch {
+  let toml_content = @fs.read_file(file_path).text() catch {
     e => raise SceneParseError("Failed to read file \{file_path}: \{e}")
   }
-  
   let toml_value = @toml.parse(toml_content) catch {
     e => raise SceneParseError("TOML parse error: \{e}")
   }
@@ -806,7 +798,7 @@ pub async fn parse_scene_file(
   // Parse materials and patterns first (needed for objects)
   let materials = parse_materials(root_table)
   let patterns = parse_patterns_async(root_table)
-  
+
   // Resolve material patterns
   resolve_material_patterns(root_table, materials, patterns)
 
@@ -824,7 +816,7 @@ pub async fn parse_scene_file(
   world.lights = lights
   world.shapes = shapes
   world.background = render_settings.background
-  
+
   // Parse environment map
   match root_table.get("environment") {
     Some(env_value) => {
@@ -833,7 +825,6 @@ pub async fn parse_scene_file(
     }
     None => ()
   }
-  
   if render_settings.divide > 0 {
     let g = group()
     for shape in world.shapes {
@@ -842,7 +833,6 @@ pub async fn parse_scene_file(
     g.divide(render_settings.divide)
     world.shapes = [g]
   }
-  
   { world, camera, render_settings, metadata, templates }
 }
 
@@ -870,7 +860,9 @@ async fn parse_patterns_async(
 }
 
 ///|
-async fn parse_pattern_async(value : @toml.TomlValue) -> Pattern raise SceneParseError {
+async fn parse_pattern_async(
+  value : @toml.TomlValue,
+) -> Pattern raise SceneParseError {
   let pattern_table = match value {
     @toml.TomlTable(table) => table
     _ => raise SceneParseError("pattern must be a table")
@@ -881,7 +873,6 @@ async fn parse_pattern_async(value : @toml.TomlValue) -> Pattern raise ScenePars
     let bytes = @fs.read_file(file).binary() catch {
       e => raise SceneParseError("Failed to read texture file \{file}: \{e}")
     }
-    
     let canvas = if file.has_suffix(".hdr") {
       let hdr_img = @hdr.decode(bytes) catch {
         e => raise SceneParseError("Failed to decode HDR texture \{file}: \{e}")
@@ -893,7 +884,6 @@ async fn parse_pattern_async(value : @toml.TomlValue) -> Pattern raise ScenePars
         None => raise SceneParseError("Failed to decode PNG texture \{file}")
       }
     }
-    
     let mapping_type = get_string_or_default(pattern_table, "mapping", "planar")
     let mapping : &Mapping = match mapping_type {
       "spherical" => SphericalMapping::{  } as &Mapping
@@ -902,7 +892,6 @@ async fn parse_pattern_async(value : @toml.TomlValue) -> Pattern raise ScenePars
       "cubic" => CubicMapping::{  } as &Mapping
       _ => raise SceneParseError("Unknown mapping type: \{mapping_type}")
     }
-    
     let pattern = texture(canvas, mapping~)
     // Apply pattern transform if specified
     match pattern_table.get("transform") {

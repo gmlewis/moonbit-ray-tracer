@@ -33,13 +33,13 @@ pub suberror HdrError String derive(Show)
 ///|
 pub fn decode(bytes : Bytes) -> HdrImage raise HdrError {
   let reader = @io.Buffer::from_bytes(bytes)
-  
+
   // 1. Read header
   let mut line = read_line(reader)
   if line != "#?RADIANCE" && line != "#?RGBE" {
     raise HdrError("Invalid HDR header: " + line)
   }
-  
+
   // Skip to resolution string
   while true {
     line = read_line(reader)
@@ -47,7 +47,7 @@ pub fn decode(bytes : Bytes) -> HdrImage raise HdrError {
       break
     }
   }
-  
+
   // 2. Read resolution
   line = read_line(reader)
   // Expecting e.g. "-Y 600 +X 1000"
@@ -55,26 +55,18 @@ pub fn decode(bytes : Bytes) -> HdrImage raise HdrError {
   if parts.length() != 4 {
     raise HdrError("Invalid resolution line: " + line)
   }
-  
-  let height = try {
-    @strconv.parse_int(parts[1].to_string())
-  } catch {
+  let height = @strconv.parse_int(parts[1].to_string()) catch {
     _ => raise HdrError("Invalid height: " + parts[1].to_string())
   }
-  
-  let width = try {
-    @strconv.parse_int(parts[3].to_string())
-  } catch {
+  let width = @strconv.parse_int(parts[3].to_string()) catch {
     _ => raise HdrError("Invalid width: " + parts[3].to_string())
   }
-  
   let data = Array::make(width * height * 3, 0.0)
-  
+
   // 3. Read scanlines
   for y in 0..<height {
     read_scanline(reader, width, data, y * width * 3)
   }
-  
   { width, height, data }
 }
 
@@ -103,30 +95,31 @@ fn next_byte(reader : @io.Buffer) -> Byte {
 }
 
 ///|
-fn read_scanline(reader : @io.Buffer, width : Int, data : Array[Double], offset : Int) -> Unit raise HdrError {
+fn read_scanline(
+  reader : @io.Buffer,
+  width : Int,
+  data : Array[Double],
+  offset : Int,
+) -> Unit raise HdrError {
   if width < 8 || width > 0x7fff {
     // Non-RLE or very small
     read_old_scanline(reader, width, data, offset)
     return
   }
-  
   let b1 = next_byte(reader)
   let b2 = next_byte(reader)
   let b3 = next_byte(reader)
   let b4 = next_byte(reader)
-  
   if b1 != (2).to_byte() || b2 != (2).to_byte() || (b3.to_int() & 0x80) != 0 {
     // Not new RLE format
     raise HdrError("Old HDR RLE format not supported")
   }
-  
   let found_width = (b3.to_int() << 8) | b4.to_int()
   if found_width != width {
     raise HdrError("Scanline width mismatch")
   }
-  
   let rgbe_buf : FixedArray[Byte] = FixedArray::make(width * 4, (0).to_byte())
-  
+
   // Read each component separately (R, G, B, E)
   for i in 0..<4 {
     let mut j = 0
@@ -155,7 +148,7 @@ fn read_scanline(reader : @io.Buffer, width : Int, data : Array[Double], offset 
       }
     }
   }
-  
+
   // Convert to double
   for i in 0..<width {
     let rgbe = RGBE::{
@@ -172,6 +165,11 @@ fn read_scanline(reader : @io.Buffer, width : Int, data : Array[Double], offset 
 }
 
 ///|
-fn read_old_scanline(_reader : @io.Buffer, _width : Int, _data : Array[Double], _offset : Int) -> Unit raise HdrError {
+fn read_old_scanline(
+  _reader : @io.Buffer,
+  _width : Int,
+  _data : Array[Double],
+  _offset : Int,
+) -> Unit raise HdrError {
   raise HdrError("Old HDR format not supported")
 }

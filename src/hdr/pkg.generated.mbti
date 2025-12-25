@@ -1,0 +1,29 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "gmlewis/ray-tracer/hdr"
+
+// Values
+pub fn decode(Bytes) -> HdrImage raise HdrError
+
+// Errors
+pub suberror HdrError String
+pub impl Show for HdrError
+
+// Types and methods
+pub(all) struct HdrImage {
+  width : Int
+  height : Int
+  data : Array[Double]
+}
+
+pub(all) struct RGBE {
+  r : Byte
+  g : Byte
+  b : Byte
+  e : Byte
+}
+pub fn RGBE::to_rgb(Self) -> (Double, Double, Double)
+
+// Type aliases
+
+// Traits
+

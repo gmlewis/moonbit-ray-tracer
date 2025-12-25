@@ -120,5 +120,9 @@ pub impl Object for Cylinder with bounds(self) {
 
 ///|
 pub impl Object for Cylinder with clone(self) {
-  Cylinder::{ minimum: self.minimum, maximum: self.maximum, closed: self.closed }
+  Cylinder::{
+    minimum: self.minimum,
+    maximum: self.maximum,
+    closed: self.closed,
+  }
 }
