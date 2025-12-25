@@ -5,6 +5,8 @@ pub(all) struct Canvas {
   red : Array[Double]
   green : Array[Double]
   blue : Array[Double]
+  mut exposure : Double
+  mut use_tone_mapping : Bool
 } derive(Show, Eq)
 
 ///|
@@ -13,7 +15,7 @@ pub fn canvas(width : Int, height : Int) -> Canvas {
   let red = Array::make(size, 0.0)
   let green = Array::make(size, 0.0)
   let blue = Array::make(size, 0.0)
-  { width, height, red, green, blue }
+  { width, height, red, green, blue, exposure: 1.0, use_tone_mapping: false }
 }
 
 ///|
@@ -58,10 +60,29 @@ pub fn Canvas::clear(self : Canvas, color : Color) -> Unit {
 }
 
 ///|
-fn clamp2ppm(v : Double) -> String {
-  let v = if v < 0 { 0.0 } else if v > 1 { 1.0 } else { v }
+fn tone_map_and_gamma(v : Double, exposure : Double) -> Double {
+  let v = v * exposure
+  // ACES Filmic Tone Mapping Curve approximation
+  let a = 2.51
+  let b = 0.03
+  let c = 2.43
+  let d = 0.59
+  let e = 0.14
+  let v = v * (a * v + b) / (v * (c * v + d) + e)
+
+  // Clamp to [0, 1]
+  let v = if v < 0.0 { 0.0 } else if v > 1.0 { 1.0 } else { v }
+
+  // Gamma Correction (approx 2.2)
+  @math.pow(v, 1.0 / 2.2)
+}
+
+///|
+fn clamp2ppm(v : Double, exposure : Double, use_tone_mapping : Bool) -> String {
+  let v = if use_tone_mapping { tone_map_and_gamma(v, exposure) } else { v }
+  let v = if v < 0.0 { 0.0 } else if v > 1.0 { 1.0 } else { v }
   let v = @math.round(v * 255).to_int()
-  "\{v}"
+  v.to_string()
 }
 
 ///|
@@ -78,7 +99,7 @@ pub fn Canvas::to_ppm(self : Canvas) -> String {
     let mut line = StringBuilder::new(size_hint=MAX_PPM_LINE_LENGTH)
     let mut len = 0
     let f = fn(v : Double) {
-      let s = clamp2ppm(v)
+      let s = clamp2ppm(v, self.exposure, self.use_tone_mapping)
       if len + 1 + s.length() > MAX_PPM_LINE_LENGTH {
         lines.push(line.to_string())
         line = StringBuilder::new(size_hint=MAX_PPM_LINE_LENGTH)
@@ -154,8 +175,9 @@ pub fn Canvas::from_hdr(hdr : @hdr.HdrImage) -> Canvas {
 }
 
 ///|
-fn clamp2byte(v : Double) -> Byte {
-  let v = if v < 0 { 0.0 } else if v > 1 { 1.0 } else { v }
+fn clamp2byte(v : Double, exposure : Double, use_tone_mapping : Bool) -> Byte {
+  let v = if use_tone_mapping { tone_map_and_gamma(v, exposure) } else { v }
+  let v = if v < 0.0 { 0.0 } else if v > 1.0 { 1.0 } else { v }
   @math.round(v * 255).to_int().to_byte()
 }
 
@@ -166,9 +188,9 @@ pub fn Canvas::to_png(self : Canvas) -> Bytes raise @image.SizeError {
   let mut off = 0
   for y in 0..<self.height {
     for x in 0..<self.width {
-      let r = clamp2byte(self.red[off])
-      let g = clamp2byte(self.green[off])
-      let b = clamp2byte(self.blue[off])
+      let r = clamp2byte(self.red[off], self.exposure, self.use_tone_mapping)
+      let g = clamp2byte(self.green[off], self.exposure, self.use_tone_mapping)
+      let b = clamp2byte(self.blue[off], self.exposure, self.use_tone_mapping)
       let c = @color.RGBA::new(r, g, b, 255)
       img.set_rgba(x, y, c)
       off += 1

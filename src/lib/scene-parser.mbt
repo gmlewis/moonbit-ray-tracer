@@ -21,6 +21,7 @@ pub(all) struct RenderSettings {
   mut max_bounces : Int
   mut background : Color
   mut divide : Int
+  mut exposure : Double
 } derive(Show, Eq)
 
 ///|
@@ -123,58 +124,6 @@ fn get_vector3(
 }
 
 ///|
-/// Parse a TOML scene file from a string
-pub fn parse_scene(toml_content : String) -> ParsedScene raise SceneParseError {
-  let toml_value = @toml.parse(toml_content) catch {
-    e => raise SceneParseError("TOML parse error: \{e}")
-  }
-  let root_table = match toml_value {
-    @toml.TomlTable(table) => table
-    _ => raise SceneParseError("Root must be a table")
-  }
-
-  // Parse metadata
-  let metadata = parse_scene_metadata(root_table)
-
-  // Parse render settings  
-  let render_settings = parse_render_settings(root_table)
-
-  // Parse camera
-  let camera = parse_camera(root_table, render_settings)
-
-  // Parse materials and patterns first (needed for objects)
-  let materials = parse_materials(root_table)
-  let patterns = parse_patterns(root_table)
-
-  // Resolve material patterns
-  resolve_material_patterns(root_table, materials, patterns)
-
-  // Parse templates (definitions)
-  let templates = parse_templates(root_table, materials, patterns)
-
-  // Parse lights
-  let lights = parse_lights(root_table)
-
-  // Parse objects (may reference materials, patterns and templates)
-  let shapes = parse_objects(root_table, materials, patterns, templates)
-
-  // Create world
-  let world = world()
-  world.lights = lights
-  world.shapes = shapes
-  world.background = render_settings.background
-  if render_settings.divide > 0 {
-    let g = group()
-    for shape in world.shapes {
-      g.add_child(shape)
-    }
-    g.divide(render_settings.divide)
-    world.shapes = [g]
-  }
-  { world, camera, render_settings, metadata, templates }
-}
-
-///|
 fn parse_scene_metadata(
   root : Map[String, @toml.TomlValue],
 ) -> SceneMetadata raise SceneParseError {
@@ -224,7 +173,8 @@ fn parse_render_settings(
     None => color(0.0, 0.0, 0.0) // Default black background
   }
   let divide = get_int_or_default(render_table, "divide", 0)
-  { width, height, samples, max_bounces, background, divide }
+  let exposure = get_float_or_default(render_table, "exposure", 1.0)
+  { width, height, samples, max_bounces, background, divide, exposure }
 }
 
 ///|
@@ -767,7 +717,94 @@ fn parse_object(
     }
     None => ()
   }
+
+  // Handle group children (DEPRECATED: handle in object creation match above)
+  if object_type == "group" {
+    // If the group itself has a material, apply it to all its descendants
+    // that don't have a material of their own.
+    // Note: shape is the group.
+    propagate_material(shape, shape.material)
+  }
   shape
+}
+
+///|
+fn propagate_material(shape : Shape, mat_to_propagate : Material) -> Unit {
+  let def_mat = material()
+  match shape.object {
+    Group(group) =>
+      for child in group.children {
+        // If child material is the default, replace it
+        if child.material == def_mat {
+          child.material = mat_to_propagate.clone()
+        }
+        // Recursively propagate
+        propagate_material(child, mat_to_propagate)
+      }
+    CSG(csg) => {
+      if csg.left.material == def_mat {
+        csg.left.material = mat_to_propagate.clone()
+      }
+      propagate_material(csg.left, mat_to_propagate)
+      if csg.right.material == def_mat {
+        csg.right.material = mat_to_propagate.clone()
+      }
+      propagate_material(csg.right, mat_to_propagate)
+    }
+    _ => ()
+  }
+}
+
+///|
+/// Parse a TOML scene file from a string
+pub fn parse_scene(toml_content : String) -> ParsedScene raise SceneParseError {
+  let toml_value = @toml.parse(toml_content) catch {
+    e => raise SceneParseError("TOML parse error: \{e}")
+  }
+  let root_table = match toml_value {
+    @toml.TomlTable(table) => table
+    _ => raise SceneParseError("Root must be a table")
+  }
+
+  // Parse metadata
+  let metadata = parse_scene_metadata(root_table)
+
+  // Parse render settings  
+  let render_settings = parse_render_settings(root_table)
+
+  // Parse camera
+  let camera = parse_camera(root_table, render_settings)
+
+  // Parse materials and patterns first (needed for objects)
+  let materials = parse_materials(root_table)
+  let patterns = parse_patterns(root_table)
+
+  // Resolve material patterns
+  resolve_material_patterns(root_table, materials, patterns)
+
+  // Parse templates (definitions)
+  let templates = parse_templates(root_table, materials, patterns)
+
+  // Parse lights
+  let lights = parse_lights(root_table)
+
+  // Parse objects (may reference materials, patterns and templates)
+  let shapes = parse_objects(root_table, materials, patterns, templates)
+
+  // Create world
+  let world = world()
+  world.lights = lights
+  world.shapes = shapes
+  world.background = render_settings.background
+  if render_settings.divide > 0 {
+    let g = group()
+    for shape in world.shapes {
+      g.add_child(shape)
+    }
+    g.divide(render_settings.divide)
+    world.shapes = [g]
+  }
+  { world, camera, render_settings, metadata, templates }
 }
 
 ///|
@@ -816,6 +853,8 @@ pub async fn parse_scene_file(
   world.lights = lights
   world.shapes = shapes
   world.background = render_settings.background
+
+  // Note: Exposure will be applied during tone mapping in the render loop or final stage
 
   // Parse environment map
   match root_table.get("environment") {
@@ -906,55 +945,6 @@ async fn parse_pattern_async(
 
   // For other patterns, use the synchronous version
   parse_pattern(value)
-}
-
-///|
-fn parse_transform(value : @toml.TomlValue) -> Matrix raise SceneParseError {
-  let transform_table = match value {
-    @toml.TomlTable(table) => table
-    _ => raise SceneParseError("transform must be a table")
-  }
-
-  // Check if matrix is specified (takes precedence)
-  match transform_table.get("matrix") {
-    Some(matrix_value) => parse_matrix4x4(matrix_value)
-    None => {
-      // Build transform from translation, rotation, scale
-      let mut transform = mat4ident()
-
-      // Apply scale first
-      match transform_table.get("scale") {
-        Some(scale_value) => {
-          let scale = parse_vector3(scale_value)
-          transform = transform * scaling(scale.0, scale.1, scale.2)
-        }
-        None => ()
-      }
-
-      // Apply rotation second
-      match transform_table.get("rotation") {
-        Some(rotation_value) => {
-          let rotation = parse_vector3(rotation_value)
-          transform = transform *
-            rotation_x(rotation.0) *
-            rotation_y(rotation.1) *
-            rotation_z(rotation.2)
-        }
-        None => ()
-      }
-
-      // Apply translation last
-      match transform_table.get("translation") {
-        Some(translation_value) => {
-          let trans_vec = parse_vector3(translation_value)
-          transform = transform *
-            translation(trans_vec.0, trans_vec.1, trans_vec.2)
-        }
-        None => ()
-      }
-      transform
-    }
-  }
 }
 
 ///|
@@ -1078,4 +1068,53 @@ fn parse_matrix4x4(value : @toml.TomlValue) -> Matrix raise SceneParseError {
     matrix_values[14],
     matrix_values[15],
   )
+}
+
+///|
+fn parse_transform(value : @toml.TomlValue) -> Matrix raise SceneParseError {
+  let transform_table = match value {
+    @toml.TomlTable(table) => table
+    _ => raise SceneParseError("transform must be a table")
+  }
+
+  // Check if matrix is specified (takes precedence)
+  match transform_table.get("matrix") {
+    Some(matrix_value) => parse_matrix4x4(matrix_value)
+    None => {
+      // Build transform from translation, rotation, scale
+      let mut transform = mat4ident()
+
+      // Apply scale first
+      match transform_table.get("scale") {
+        Some(scale_value) => {
+          let scale = parse_vector3(scale_value)
+          transform = transform * scaling(scale.0, scale.1, scale.2)
+        }
+        None => ()
+      }
+
+      // Apply rotation second
+      match transform_table.get("rotation") {
+        Some(rotation_value) => {
+          let rotation = parse_vector3(rotation_value)
+          transform = transform *
+            rotation_x(rotation.0) *
+            rotation_y(rotation.1) *
+            rotation_z(rotation.2)
+        }
+        None => ()
+      }
+
+      // Apply translation last
+      match transform_table.get("translation") {
+        Some(translation_value) => {
+          let trans_vec = parse_vector3(translation_value)
+          transform = transform *
+            translation(trans_vec.0, trans_vec.1, trans_vec.2)
+        }
+        None => ()
+      }
+      transform
+    }
+  }
 }

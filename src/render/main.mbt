@@ -80,6 +80,7 @@ async fn main {
       }
     }
   })
+  canvas.use_tone_mapping = true
 
   // Determine output path
   let output_path = match args.string_opt("output") {

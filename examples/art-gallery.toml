@@ -1,0 +1,117 @@
+# Stunning PBR showcase - Modern Art Gallery
+[scene]
+name = "The Poolside Gallery"
+description = "A sophisticated scene demonstrating high-end PBR materials and lighting"
+version = "1.1"
+
+[scene.render]
+width = 1000
+height = 500
+samples = 4
+max_bounces = 5
+background = [0, 0, 0]
+divide = 1
+
+[camera]
+position = [0.0, 3.5, -10.0]
+look_at = [0.0, 1.5, 0.0]
+up = [0.0, 1.0, 0.0]
+field_of_view = 0.7
+
+[[lights]]
+type = "point"
+position = [-5.0, 10.0, -10.0]
+intensity = [1.0, 1.0, 1.0]
+
+[[lights]]
+type = "point"
+position = [10.0, 10.0, -5.0]
+intensity = [0.8, 0.8, 1.0]
+
+[environment]
+type = "texture"
+file = "examples/assets/pool_1k.hdr"
+mapping = "spherical"
+
+# Material definitions
+[materials.gold]
+lighting_mode = "pbr"
+color = [1.0, 0.84, 0.0]
+ambient = 0.0
+metallic = 1.0
+roughness = 0.1
+reflective = 0.3
+
+[materials.chrome]
+lighting_mode = "pbr"
+color = [1.0, 1.0, 1.0]
+ambient = 0.0
+metallic = 1.0
+roughness = 0.05
+reflective = 0.9
+
+[materials.glass]
+lighting_mode = "phong"
+color = [1.0, 1.0, 1.0]
+ambient = 0.0
+diffuse = 0.1
+specular = 0.9
+shininess = 300.0
+reflective = 0.9
+transparency = 0.9
+refractive_index = 1.5
+
+[materials.marble]
+lighting_mode = "pbr"
+color = [0.9, 0.9, 0.9]
+ambient = 0.1
+metallic = 0.0
+roughness = 0.05
+reflective = 0.2
+
+# Shape templates
+[definitions.pedestal]
+type = "group"
+children = [
+    # Base
+    { type = "cube", transform = { scale = [1.2, 0.1, 1.2] }, material = { color = [0.1, 0.1, 0.1], roughness = 0.2, reflective = 0.1 } },
+    # Column
+    { type = "cylinder", properties = { minimum = 0.0, maximum = 1.5, closed = true }, transform = { translation = [0.0, 0.1, 0.0], scale = [0.8, 1.0, 0.8] }, material = { color = [0.2, 0.2, 0.2], roughness = 0.3, reflective = 0.05 } },
+    # Top
+    { type = "cube", transform = { translation = [0.0, 1.6, 0.0], scale = [1.0, 0.05, 1.0] }, material = { color = [0.1, 0.1, 0.1], roughness = 0.2, reflective = 0.1 } }
+]
+
+# Scene objects
+[[objects]]
+type = "plane"
+material = "marble"
+
+# Sculpture 1: Gold abstract (Spheres)
+[[objects]]
+type = "group"
+transform = { translation = [-4.5, 0.0, 2.0] }
+children = [
+    { type = "reference", name = "pedestal" },
+    { type = "sphere", material = "gold", transform = { translation = [0.0, 2.4, 0.0], scale = [0.75, 0.75, 0.75] } },
+    { type = "sphere", material = "gold", transform = { translation = [0.0, 3.6, 0.0], scale = [0.5, 0.5, 0.5] } }
+]
+
+# Sculpture 2: Chrome abstract (Cones)
+[[objects]]
+type = "group"
+transform = { translation = [0.0, 0.0, 0.0] }
+children = [
+    { type = "reference", name = "pedestal" },
+    { type = "cone", properties = { minimum = 0.0, maximum = 1.0, closed = true }, material = "chrome", transform = { translation = [0.0, 3.2, 0.0], scale = [0.8, 1.5, 0.8], rotation = [3.14159, 0.0, 0.0] } },
+    { type = "sphere", material = "chrome", transform = { translation = [0.0, 1.8, 0.0], scale = [0.2, 0.2, 0.2] } }
+]
+
+# Sculpture 3: Glass abstract (Cube & Sphere)
+[[objects]]
+type = "group"
+transform = { translation = [4.5, 0.0, 2.0] }
+children = [
+    { type = "reference", name = "pedestal" },
+    { type = "cube", material = "glass", transform = { translation = [0.0, 2.4, 0.0], scale = [0.6, 0.6, 0.6], rotation = [0.0, 0.785, 0.0] } },
+    { type = "sphere", material = "glass", transform = { translation = [0.0, 3.6, 0.0], scale = [0.4, 0.4, 0.4] } }
+]

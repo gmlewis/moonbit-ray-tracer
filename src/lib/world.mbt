@@ -61,11 +61,18 @@ pub fn World::shade_hit(
     _ => comps.shape.material.color
   }
 
-  // Add ambient light once
-
-  let mut surface = clr.mul_scalar(comps.shape.material.ambient)
+  // Add ambient light from environment map or background
+  let ambient_color = match self.environment_map {
+    Some(env) => {
+      let (u, v) = spherical_map(comps.normalv)
+      env.uv_at(u, v)
+    }
+    None => self.background
+  }
+  let mut surface = clr * ambient_color.mul_scalar(comps.shape.material.ambient)
   for light in self.lights {
     let mut light_sum = color(0, 0, 0)
+    let ambient = clr * light.intensity.mul_scalar(comps.shape.material.ambient)
     match light.kind {
       Point => {
         let in_shadow = self.is_shadowed(comps.over_point, light.position)
@@ -85,7 +92,6 @@ pub fn World::shade_hit(
             let in_shadow = self.is_shadowed(comps.over_point, light_pos)
 
             // Temporarily use a fake light for the sample position
-
             let sample_light = {
               position: light_pos,
               intensity: light.intensity,
@@ -105,7 +111,7 @@ pub fn World::shade_hit(
         light_sum = light_sum.mul_scalar(1.0 / light.samples().to_double())
       }
     }
-    surface = surface + light_sum
+    surface = surface + ambient + light_sum
   }
   let reflected = self.reflected_color(comps, remaining)
   let refracted = self.refracted_color(comps, remaining)
@@ -131,9 +137,7 @@ pub fn World::color_at(
     None =>
       match self.environment_map {
         Some(env) => {
-
           // Map ray direction to UV
-
           let (u, v) = spherical_map(ray.direction)
           return env.uv_at(u, v)
         }
@@ -158,7 +162,7 @@ pub fn World::is_shadowed(
   let xs = self.intersect_world(r)
   let h = xs.hit()
   match h {
-    Some(hit) => hit.t < distance
+    Some(hit) => hit.t < distance - 0.0001
     _ => false
   }
 }
@@ -169,14 +173,20 @@ pub fn World::reflected_color(
   comps : Computations,
   remaining : Int,
 ) -> Color {
-  let reflective = comps.shape.material.reflective
+  let material = comps.shape.material
+  let reflective = material.reflective
   if remaining <= 0 || reflective == 0 {
     return color(0, 0, 0)
   }
-
-  //
   let reflect_ray = ray(comps.over_point, comps.reflectv)
-  self.color_at(reflect_ray, remaining=remaining - 1).mul_scalar(reflective)
+  let reflected = self.color_at(reflect_ray, remaining=remaining - 1)
+  if material.metallic > 0 {
+    // Tint reflection by material color for metals
+    let tint = material.color.mul_scalar(material.metallic) +
+      color(1, 1, 1).mul_scalar(1.0 - material.metallic)
+    return (reflected * tint).mul_scalar(reflective)
+  }
+  reflected.mul_scalar(reflective)
 }
 
 ///|

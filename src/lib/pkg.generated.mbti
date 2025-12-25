@@ -172,6 +172,8 @@ pub(all) struct Canvas {
   red : Array[Double]
   green : Array[Double]
   blue : Array[Double]
+  mut exposure : Double
+  mut use_tone_mapping : Bool
 }
 pub fn Canvas::clear(Self, Color) -> Unit
 pub fn Canvas::from_hdr(@hdr.HdrImage) -> Self
@@ -458,6 +460,7 @@ pub(all) struct RenderSettings {
   mut max_bounces : Int
   mut background : Color
   mut divide : Int
+  mut exposure : Double
 }
 pub impl Eq for RenderSettings
 pub impl Show for RenderSettings
