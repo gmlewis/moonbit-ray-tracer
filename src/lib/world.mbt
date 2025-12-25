@@ -5,13 +5,15 @@ const MAX_BOUNCES = 4
 pub(all) struct World {
   mut shapes : Array[Shape]
   mut lights : Array[Light]
+  mut background : Color
 }
 
 ///|
 pub fn world() -> World {
   let shapes = []
   let lights = []
-  { shapes, lights }
+  let background = color(0, 0, 0)
+  { shapes, lights, background }
 }
 
 ///|
@@ -28,7 +30,8 @@ pub fn default_world() -> World {
   let shapes = [s1, s2]
   let light = point_light(point(-10, 10, -10), color(1, 1, 1))
   let lights = [light]
-  { shapes, lights }
+  let background = color(0, 0, 0)
+  { shapes, lights, background }
 }
 
 ///|
@@ -82,7 +85,7 @@ pub fn World::color_at(
 ) -> Color {
   let xs = self.intersect_world(ray)
   let hit = match xs.hit() {
-    None => return color(0, 0, 0)
+    None => return self.background
     Some(hit) => hit
   }
   let comps = hit.prepare_computations(ray, xs~)

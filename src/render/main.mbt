@@ -35,6 +35,7 @@ async fn main {
   let world = parsed_scene.world
   let mut camera = parsed_scene.camera
   let settings = parsed_scene.render_settings
+  world.background = settings.background
 
   // Apply overrides
   let w = args.int("width")
@@ -74,6 +75,7 @@ async fn main {
 
   let canvas = camera.render(
     world,
+    samples=settings.samples,
     progress=async fn(y) {
       if y % 10 == 0 || y == settings.height {
         let pct = y.to_double() * 100.0 / settings.height.to_double()

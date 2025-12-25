@@ -32,10 +32,16 @@ pub fn camera(hsize : Int, vsize : Int, field_of_view : Double) -> Camera {
 }
 
 ///|
-pub fn Camera::ray_for_pixel(self : Camera, px : Int, py : Int) -> Ray {
+pub fn Camera::ray_for_pixel(
+  self : Camera,
+  px : Int,
+  py : Int,
+  offset_x? : Double = 0.5,
+  offset_y? : Double = 0.5
+) -> Ray {
   // the offset from the edge of the canvas to the pixel's center
-  let xoffset = (px.to_double() + 0.5) * self.pixel_size
-  let yoffset = (py.to_double() + 0.5) * self.pixel_size
+  let xoffset = (px.to_double() + offset_x) * self.pixel_size
+  let yoffset = (py.to_double() + offset_y) * self.pixel_size
   // the untransformed coordinates of the pixel in world space
   // (the camera looks toward -z, so +x is to the *left*)
   let world_x = self.half_width - xoffset
@@ -55,13 +61,28 @@ pub fn Camera::ray_for_pixel(self : Camera, px : Int, py : Int) -> Ray {
 pub async fn Camera::render(
   self : Camera,
   world : World,
+  samples? : Int = 1,
   progress? : async (Int) -> Unit
 ) -> Canvas {
   let image = canvas(self.hsize, self.vsize)
+  let samples = if samples < 1 { 1 } else { samples }
+  let rng = @random.Rand::chacha8()
+  
   for y in 0..<self.vsize {
     for x in 0..<self.hsize {
-      let ray = self.ray_for_pixel(x, y)
-      let color = world.color_at(ray)
+      let mut color = color(0, 0, 0)
+      if samples == 1 {
+        let ray = self.ray_for_pixel(x, y)
+        color = world.color_at(ray)
+      } else {
+        for s in 0..<samples {
+          let rx = rng.double()
+          let ry = rng.double()
+          let ray = self.ray_for_pixel(x, y, offset_x=rx, offset_y=ry)
+          color = color + world.color_at(ray)
+        }
+        color = color.mul_scalar(1.0 / samples.to_double())
+      }
       image.write_pixel(x, y, color)
     }
     match progress {

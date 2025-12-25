@@ -64,6 +64,7 @@ pub fn parse_scene(toml_content : String) -> ParsedScene raise SceneParseError {
   let world = world()
   world.lights = lights
   world.shapes = shapes
+  world.background = render_settings.background
   
   if render_settings.divide > 0 {
     let g = group()
