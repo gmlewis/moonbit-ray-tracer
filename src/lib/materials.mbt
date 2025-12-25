@@ -100,89 +100,85 @@ pub fn Material::lighting(
   in_shadow? : Bool = false,
   shape? : Shape? = None,
 ) -> Color {
-    let clr = match (self.pattern, shape) {
-      (Some(pattern), Some(shape)) => pattern.pattern_at_shape(shape, position)
-      _ => self.color
-    }
-  
-    // Ambient is added once per light by World::shade_hit, 
-    // which isn't ideal but we'll scale it to look okay.
-    let ambient = clr.mul_scalar(self.ambient) * light.intensity
-  
-    match self.lighting_mode {
-      Phong => {
-        if in_shadow {
-          return ambient
-        }
-        // combine the surface color with the light's color/intensity
-        let effective_color = clr * light.intensity
-        // find the direction to the light source
-        let lightv = (light.position - position).normalize()
-        // light_dot_normal represents the cosine of the angle between the
-        // light vector and the normal vector. A negative number means the
-        // light is on the other side of the surface.
-        let light_dot_normal = lightv.dot(normalv)
-        let mut diffuse = color(0, 0, 0)
-        let mut specular = color(0, 0, 0)
-        if light_dot_normal >= 0 {
-          // compute the diffuse contribution
-          diffuse = effective_color.mul_scalar(self.diffuse * light_dot_normal)
-          // reflect_dot_eye represents the cosine of the angle between the
-          // reflection vector and the eye vector. A negative number means the
-          // light reflects away from the eye.
-          let reflectv = (-lightv).reflect(normalv)
-          let reflect_dot_eye = reflectv.dot(eyev)
-          if reflect_dot_eye >= 0 {
-            // compute the specular contribution
-            let factor = @math.pow(reflect_dot_eye, self.shininess)
-            specular = light.intensity.mul_scalar(self.specular * factor)
+      let clr = match (self.pattern, shape) {
+        (Some(pattern), Some(shape)) => pattern.pattern_at_shape(shape, position)
+        _ => self.color
+      }
+    
+      match self.lighting_mode {
+        Phong => {
+          if in_shadow {
+            return color(0, 0, 0)
           }
+          // combine the surface color with the light's color/intensity
+          let effective_color = clr * light.intensity
+          // find the direction to the light source
+          let lightv = (light.position - position).normalize()
+          // light_dot_normal represents the cosine of the angle between the
+          // light vector and the normal vector. A negative number means the
+          // light is on the other side of the surface.
+          let light_dot_normal = lightv.dot(normalv)
+          let mut diffuse = color(0, 0, 0)
+          let mut specular = color(0, 0, 0)
+          if light_dot_normal >= 0 {
+            // compute the diffuse contribution
+            diffuse = effective_color.mul_scalar(self.diffuse * light_dot_normal)
+            // reflect_dot_eye represents the cosine of the angle between the
+            // reflection vector and the eye vector. A negative number means the
+            // light reflects away from the eye.
+            let reflectv = (-lightv).reflect(normalv)
+            let reflect_dot_eye = reflectv.dot(eyev)
+            if reflect_dot_eye >= 0 {
+              // compute the specular contribution
+              let factor = @math.pow(reflect_dot_eye, self.shininess)
+              specular = light.intensity.mul_scalar(self.specular * factor)
+            }
+          }
+          diffuse + specular
         }
-        ambient + diffuse + specular
-      }
-      PBR => {
-        if in_shadow {
-          return ambient
+        PBR => {
+          if in_shadow {
+            return color(0, 0, 0)
+          }
+          // Find the direction to the light source
+          let lightv = (light.position - position).normalize()
+          let halfv = (eyev + lightv).normalize()
+    
+          // Dot products
+          let n_dot_l = @cmp.maximum(normalv.dot(lightv), 0.0)
+          if n_dot_l <= 0.0 {
+            return color(0, 0, 0)
+          }
+          let n_dot_v = @cmp.maximum(normalv.dot(eyev), 0.0)
+          let h_dot_v = @cmp.maximum(halfv.dot(eyev), 0.0)
+    
+          // Fresnel at zero incidence
+          let mut f0 = color(0.04, 0.04, 0.04)
+          f0 = f0 * (color(1.0, 1.0, 1.0).mul_scalar(1.0 - self.metallic)) +
+            clr.mul_scalar(self.metallic)
+    
+          // Cook-Torrance BRDF components
+          let ndf = distribution_ggx(normalv, halfv, self.roughness)
+          let g = geometry_smith(normalv, eyev, lightv, self.roughness)
+          let f = fresnel_schlick(h_dot_v, f0)
+    
+          let numerator = f.mul_scalar(ndf * g)
+          let denominator = 4.0 * n_dot_v * n_dot_l + 0.0001
+          let specular_brdf = numerator.mul_scalar(1.0 / denominator)
+    
+          // Energy conservation
+          let ks = f
+          let mut kd = color(1.0, 1.0, 1.0) - ks
+          kd = kd.mul_scalar(1.0 - self.metallic)
+    
+          // Final color
+          let diffuse_brdf = clr * kd // Omit 1/PI for "classic" brightness
+          let brdf = diffuse_brdf + specular_brdf
+          
+          // Use double intensity for better visibility
+          let effective_intensity = light.intensity.mul_scalar(2.0)
+          
+          brdf * effective_intensity.mul_scalar(n_dot_l)
         }
-        // Find the direction to the light source
-        let lightv = (light.position - position).normalize()
-        let halfv = (eyev + lightv).normalize()
-  
-        // Dot products
-        let n_dot_l = @cmp.maximum(normalv.dot(lightv), 0.0)
-        if n_dot_l <= 0.0 {
-          return ambient
-        }
-        let n_dot_v = @cmp.maximum(normalv.dot(eyev), 0.0)
-        let h_dot_v = @cmp.maximum(halfv.dot(eyev), 0.0)
-  
-        // Fresnel at zero incidence
-        let mut f0 = color(0.04, 0.04, 0.04)
-        f0 = f0 * (color(1.0, 1.0, 1.0).mul_scalar(1.0 - self.metallic)) +
-          clr.mul_scalar(self.metallic)
-  
-        // Cook-Torrance BRDF components
-        let ndf = distribution_ggx(normalv, halfv, self.roughness)
-        let g = geometry_smith(normalv, eyev, lightv, self.roughness)
-        let f = fresnel_schlick(h_dot_v, f0)
-  
-        let numerator = f.mul_scalar(ndf * g)
-        let denominator = 4.0 * n_dot_v * n_dot_l + 0.0001
-        let specular_brdf = numerator.mul_scalar(1.0 / denominator)
-  
-        // Energy conservation
-        let ks = f
-        let mut kd = color(1.0, 1.0, 1.0) - ks
-        kd = kd.mul_scalar(1.0 - self.metallic)
-  
-        // Final color
-        let diffuse_brdf = clr * kd // Omit 1/PI for "classic" brightness
-        let brdf = diffuse_brdf + specular_brdf
-        
-        // Use double intensity for better visibility
-        let effective_intensity = light.intensity.mul_scalar(2.0)
-        
-        ambient + brdf * effective_intensity.mul_scalar(n_dot_l)
       }
     }
-  }

@@ -96,7 +96,7 @@ pub impl Mapping for SphericalMapping with map(_self, p) {
   let raw_u = theta / (2.0 * @math.PI)
 
   // 0 <= u < 1
-  let u = 1.0 - (raw_u + 0.5)
+  let u = raw_u + 0.5
 
   // we want v to be 0 at the south pole and 1 at the north pole
   // 0 <= v <= 1

@@ -50,10 +50,18 @@ pub fn World::shade_hit(
   comps : Computations,
   remaining? : Int = MAX_BOUNCES,
 ) -> Color {
-  let mut c = color(0, 0, 0)
+  // Get surface color including pattern
+  let clr = match (comps.shape.material.pattern, Some(comps.shape)) {
+    (Some(pattern), Some(shape)) => pattern.pattern_at_shape(shape, comps.point)
+    _ => comps.shape.material.color
+  }
+  
+  // Add ambient light once
+  let mut surface = clr.mul_scalar(comps.shape.material.ambient)
+  
   for light in self.lights {
     let in_shadow = self.is_shadowed(comps.over_point, light~)
-    let surface = comps.shape.material.lighting(
+    surface = surface + comps.shape.material.lighting(
       light,
       comps.point,
       comps.eyev,
@@ -61,20 +69,19 @@ pub fn World::shade_hit(
       in_shadow~,
       shape=Some(comps.shape),
     )
-    let reflected = self.reflected_color(comps, remaining)
-    let refracted = self.refracted_color(comps, remaining)
-    let material = comps.shape.material
-    if material.reflective > 0 && material.transparency > 0 {
-      let reflectance = comps.schlick()
-      c = c +
-        surface +
-        reflected.mul_scalar(reflectance) +
-        refracted.mul_scalar(1.0 - reflectance)
-    } else {
-      c = c + surface + reflected + refracted
-    }
   }
-  c
+  
+  let reflected = self.reflected_color(comps, remaining)
+  let refracted = self.refracted_color(comps, remaining)
+  let material = comps.shape.material
+  if material.reflective > 0 && material.transparency > 0 {
+    let reflectance = comps.schlick()
+    surface +
+      reflected.mul_scalar(reflectance) +
+      refracted.mul_scalar(1.0 - reflectance)
+  } else {
+    surface + reflected + refracted
+  }
 }
 
 ///|

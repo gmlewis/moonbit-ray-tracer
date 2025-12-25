@@ -23,7 +23,7 @@ test "Intersecting a cone with a ray parallel to one of its halves (p.248)" {
   let r = ray(point(0, 0, -1), direction)
   let xs = shape.local_intersect(r)
   assert_eq(xs.count, 1)
-  assert_eq(round_to_fixed(xs[0].t, 5), 0.35355)
+  assert_eq(round_to_fixed(xs[0].t, 5), 0.70711)
 }
 
 ///|

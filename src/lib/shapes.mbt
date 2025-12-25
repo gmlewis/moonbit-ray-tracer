@@ -31,8 +31,8 @@ pub fn Shape::bounds(self : Shape) -> Bounds {
     Triangle(triangle) => triangle.bounds()
     SmoothTriangle(triangle) => triangle.bounds()
     CSG(csg) => {
-      let left_bounds = csg.left.bounds().transform(csg.left.transform)
-      let right_bounds = csg.right.bounds().transform(csg.right.transform)
+      let left_bounds = csg.left.parent_space_bounds()
+      let right_bounds = csg.right.parent_space_bounds()
       left_bounds.enlarge(right_bounds)
       left_bounds
     }
