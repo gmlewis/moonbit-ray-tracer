@@ -20,6 +20,11 @@ impl Object for TestShape with local_normal_at(_self, point) -> Tuple {
 }
 
 ///|
+impl Object for TestShape with clone(self) {
+  TestShape::{ saved_ray: { origin: point(self.saved_ray.origin.x, self.saved_ray.origin.y, self.saved_ray.origin.z), direction: vector(self.saved_ray.direction.x, self.saved_ray.direction.y, self.saved_ray.direction.z) } }
+}
+
+///|
 impl Show for TestShape with to_string(self) {
   "test_shape(\{self.saved_ray})"
 }

@@ -51,6 +51,28 @@ pub fn material() -> Material {
 }
 
 ///|
+pub fn Material::clone(self : Material) -> Material {
+  let pattern = match self.pattern {
+    Some(p) => Some(p.clone())
+    None => None
+  }
+  {
+    color: self.color.clone(),
+    ambient: self.ambient,
+    diffuse: self.diffuse,
+    specular: self.specular,
+    shininess: self.shininess,
+    reflective: self.reflective,
+    transparency: self.transparency,
+    refractive_index: self.refractive_index,
+    pattern,
+    metallic: self.metallic,
+    roughness: self.roughness,
+    lighting_mode: self.lighting_mode,
+  }
+}
+
+///|
 fn distribution_ggx(n : Tuple, h : Tuple, roughness : Double) -> Double {
   let a = roughness * roughness
   let a2 = a * a

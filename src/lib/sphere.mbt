@@ -53,3 +53,8 @@ pub impl Object for Sphere with bounds(_self) {
   let max = point(1, 1, 1)
   { min, max }
 }
+
+///|
+pub impl Object for Sphere with clone(_self) {
+  Sphere::{  }
+}

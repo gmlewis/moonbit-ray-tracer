@@ -38,6 +38,11 @@ pub fn SmoothTriangle::bounds(self : SmoothTriangle) -> Bounds {
 }
 
 ///|
+pub fn SmoothTriangle::clone(self : SmoothTriangle) -> SmoothTriangle {
+  { p1: self.p1, p2: self.p2, p3: self.p3, n1: self.n1, n2: self.n2, n3: self.n3, e1: self.e1, e2: self.e2, bounds: self.bounds }
+}
+
+///|
 pub fn SmoothTriangle::local_normal_at(
   self : SmoothTriangle,
   _point : Tuple,

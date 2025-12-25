@@ -72,3 +72,8 @@ pub impl Object for Cube with bounds(_self) {
   let max = point(1, 1, 1)
   { min, max }
 }
+
+///|
+pub impl Object for Cube with clone(_self) {
+  Cube::{  }
+}

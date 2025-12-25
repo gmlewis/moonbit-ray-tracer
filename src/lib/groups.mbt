@@ -47,6 +47,12 @@ pub fn Group::local_normal_at(_self : Group, _point : Tuple) -> Tuple {
 }
 
 ///|
+pub fn Group::clone(self : Group) -> Group {
+  let children = self.children.map(fn(c) { c.clone() })
+  { children, bounds: None }
+}
+
+///|
 pub fn Group::bounds(self : Group) -> Bounds {
   match self.bounds {
     Some(bounds) => return bounds
@@ -88,6 +94,7 @@ pub fn Group::partition_children(self : Group) -> (Array[Shape], Array[Shape]) {
       'y' => (cb.min.y + cb.max.y) / 2.0
       _ => (cb.min.z + cb.max.z) / 2.0
     }
+
     if center < mid {
       left.push(child)
     } else {
@@ -102,6 +109,7 @@ pub fn Group::partition_children(self : Group) -> (Array[Shape], Array[Shape]) {
     let r = self.children.iter().drop(mid_idx).collect()
     return (l, r)
   }
+
   (left, right)
 }
 
@@ -110,6 +118,7 @@ pub fn Group::divide(self : Group, limit : Int) -> Unit {
   if self.children.length() > limit {
     let (left, right) = self.partition_children()
     self.children.clear()
+
     if left.length() > 0 {
       let g = group()
       for child in left {
@@ -117,6 +126,7 @@ pub fn Group::divide(self : Group, limit : Int) -> Unit {
       }
       self.children.push(g)
     }
+
     if right.length() > 0 {
       let g = group()
       for child in right {
@@ -125,6 +135,7 @@ pub fn Group::divide(self : Group, limit : Int) -> Unit {
       self.children.push(g)
     }
   }
+
   for child in self.children {
     child.divide(limit)
   }

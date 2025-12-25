@@ -72,6 +72,7 @@ pub impl Object for Cone with local_intersect(self, ray) {
   let a = d.x * d.x - d.y * d.y + d.z * d.z
   let b = o.x * d.x * 2 - o.y * d.y * 2 + o.z * d.z * 2
   let c = o.x * o.x - o.y * o.y + o.z * o.z
+
   if a.abs() < EPSILON {
     if b.abs() >= EPSILON {
       let t = -c / b
@@ -112,12 +113,11 @@ pub impl Object for Cone with local_intersect(self, ray) {
 ///|
 pub impl Object for Cone with local_normal_at(self, local_point) {
   let dist_sq = local_point.x * local_point.x + local_point.z * local_point.z
-  if dist_sq < self.maximum * self.maximum &&
-    local_point.y >= self.maximum - EPSILON {
+  
+  if dist_sq < self.maximum * self.maximum && local_point.y >= self.maximum - EPSILON {
     return vector(0, 1, 0)
   }
-  if dist_sq < self.minimum * self.minimum &&
-    local_point.y <= self.minimum + EPSILON {
+  if dist_sq < self.minimum * self.minimum && local_point.y <= self.minimum + EPSILON {
     return vector(0, -1, 0)
   }
 
@@ -127,4 +127,9 @@ pub impl Object for Cone with local_normal_at(self, local_point) {
     y = -y
   }
   vector(local_point.x, y, local_point.z)
+}
+
+///|
+pub impl Object for Cone with clone(self) {
+  Cone::{ minimum: self.minimum, maximum: self.maximum, closed: self.closed }
 }

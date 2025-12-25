@@ -36,3 +36,8 @@ pub impl Object for Plane with bounds(_self) {
   let max = point(@double.infinity, 0, @double.infinity)
   { min, max }
 }
+
+///|
+pub impl Object for Plane with clone(_self) {
+  Plane::{  }
+}

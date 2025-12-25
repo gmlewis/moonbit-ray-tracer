@@ -98,6 +98,23 @@ pub fn Shape::new(object : Renderable) -> Shape {
 }
 
 ///|
+pub fn Shape::clone(self : Shape) -> Shape {
+  let object = match self.object {
+    Object(o) => Renderable::Object(o.clone())
+    Group(g) => Renderable::Group(g.clone())
+    Triangle(t) => Renderable::Triangle(t.clone())
+    SmoothTriangle(t) => Renderable::SmoothTriangle(t.clone())
+    CSG(c) => Renderable::CSG(c.clone())
+  }
+  let s = Shape::new(object)
+  s.material = self.material.clone()
+  s.transform = self.transform.clone()
+  s.inv_transform = self.inv_transform.clone()
+  // Parent is intentionally not cloned to avoid cycles or incorrect linking
+  s
+}
+
+///|
 pub fn Shape::set_transform(self : Shape, transform : Matrix) -> Unit {
   self.transform = transform
   self.inv_transform = transform.inverse()

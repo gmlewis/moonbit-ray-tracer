@@ -42,6 +42,11 @@ pub fn intersection_allowed(
 }
 
 ///|
+pub fn CSG::clone(self : CSG) -> CSG {
+  { operation: self.operation, left: self.left.clone(), right: self.right.clone() }
+}
+
+///|
 pub fn CSG::filter_intersections(
   self : CSG,
   xs : Intersections,

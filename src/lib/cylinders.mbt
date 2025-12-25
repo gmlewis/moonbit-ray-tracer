@@ -117,3 +117,8 @@ pub impl Object for Cylinder with bounds(self) {
   let max = point(1, self.maximum, 1)
   { min, max }
 }
+
+///|
+pub impl Object for Cylinder with clone(self) {
+  Cylinder::{ minimum: self.minimum, maximum: self.maximum, closed: self.closed }
+}
