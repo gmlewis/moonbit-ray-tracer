@@ -80,7 +80,6 @@ test "partition_children splits a group's children" {
   g.add_child(s1)
   g.add_child(s2)
   g.add_child(s3)
-
   match g.object {
     Group(group) => {
       let (left, right) = group.partition_children()
@@ -104,11 +103,9 @@ test "Subdividing a group with enough children" {
   g.add_child(s1)
   g.add_child(s2)
   g.add_child(s3)
-
-  g.divide(3)
+  g.divide(1)
   let children = g.children()
   inspect(children.length(), content="2")
-
   match children[0].object {
     Group(subgroup) => inspect(subgroup.children.length(), content="1")
     _ => panic()

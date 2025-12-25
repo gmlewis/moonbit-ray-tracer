@@ -6,14 +6,16 @@ async fn main {
     "width": @cli.opt_int(0, short='w', help="Override output width"),
     "height": @cli.opt_int(0, short='H', help="Override output height"),
     "samples": @cli.opt_int(0, help="Override samples per pixel"),
-    "divide": @cli.opt_int(0, help="Subdivide groups with at least this many children"),
+    "divide": @cli.opt_int(
+      0,
+      help="Subdivide groups with at least this many children",
+    ),
   }
-
-  let args = match @cli.parse(args_spec, prog="render", description="MoonBit Ray Tracer") {
+  let args = match
+    @cli.parse(args_spec, prog="render", description="MoonBit Ray Tracer") {
     Some(a) => a
     None => return
   }
-
   let scene_path = match args.string_opt("scene") {
     Some(path) => path
     None => {
@@ -23,15 +25,12 @@ async fn main {
   }
 
   // Load scene
-  let parsed_scene = try {
-    @lib.parse_scene_file(scene_path)
-  } catch {
+  let parsed_scene = @lib.parse_scene_file(scene_path) catch {
     e => {
       @cli.eprintln("error loading scene: \{e}")
       abort("")
     }
   }
-
   let world = parsed_scene.world
   let mut camera = parsed_scene.camera
   let settings = parsed_scene.render_settings
@@ -44,19 +43,16 @@ async fn main {
     camera = @lib.camera(w, settings.height, camera.field_of_view)
     camera.transform = parsed_scene.camera.transform
   }
-
   let h = args.int("height")
   if h > 0 {
     settings.height = h
     camera = @lib.camera(settings.width, h, camera.field_of_view)
     camera.transform = parsed_scene.camera.transform
   }
-
   let s = args.int("samples")
   if s > 0 {
     settings.samples = s
   }
-
   let d = args.int("divide")
   if d > 0 {
     settings.divide = d
@@ -72,21 +68,18 @@ async fn main {
   println("Rendering \{parsed_scene.metadata.name}...")
   println("Resolution: \{settings.width}x\{settings.height}")
   println("Samples: \{settings.samples}")
-
-  let canvas = camera.render(
-    world,
-    samples=settings.samples,
-    progress=async fn(y) {
-      if y % 10 == 0 || y == settings.height {
-        let pct = y.to_double() * 100.0 / settings.height.to_double()
-        let msg = "\rProgress: \{pct.to_int()}% (\{y}/\{settings.height})"
-        @stdio.stdout.write(msg)
-        if y == settings.height {
-          println("")
-        }
+  let canvas = camera.render(world, samples=settings.samples, progress=async fn(
+    y,
+  ) {
+    if y % 10 == 0 || y == settings.height {
+      let pct = y.to_double() * 100.0 / settings.height.to_double()
+      let msg = "\rProgress: \{pct.to_int()}% (\{y}/\{settings.height})"
+      @stdio.stdout.write(msg)
+      if y == settings.height {
+        println("")
       }
-    },
-  )
+    }
+  })
 
   // Determine output path
   let output_path = match args.string_opt("output") {
@@ -116,6 +109,5 @@ async fn main {
       abort("")
     }
   }
-
   println("Done.")
 }

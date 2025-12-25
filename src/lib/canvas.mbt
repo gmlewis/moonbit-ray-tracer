@@ -5,7 +5,7 @@ pub(all) struct Canvas {
   red : Array[Double]
   green : Array[Double]
   blue : Array[Double]
-}
+} derive(Show, Eq)
 
 ///|
 pub fn canvas(width : Int, height : Int) -> Canvas {
@@ -105,6 +105,37 @@ pub fn Canvas::to_ppm(self : Canvas) -> String {
   }
   lines.push("")
   lines.join("\n")
+}
+
+///|
+pub fn Canvas::from_image(img : &@image.Image) -> Canvas {
+  let rect = img.bounds()
+  let width = rect.dx()
+  let height = rect.dy()
+  let c = canvas(width, height)
+  for y in 0..<height {
+    for x in 0..<width {
+      let clr = img.at(rect.min.x + x, rect.min.y + y)
+      let (r, g, b, _) = clr.rgba()
+      // rgba() returns values in range [0, 65535]
+      let r = r.to_double() / 65535.0
+      let g = g.to_double() / 65535.0
+      let b = b.to_double() / 65535.0
+      c.write_pixel(x, y, color(r, g, b))
+    }
+  }
+  c
+}
+
+///|
+pub fn Canvas::from_png(png_data : Bytes) -> Canvas? {
+  let b = @io.Buffer::from_bytes(png_data)
+  let (img, err) = @png.decode(b)
+  if err is None {
+    Some(Canvas::from_image(img))
+  } else {
+    None
+  }
 }
 
 ///|

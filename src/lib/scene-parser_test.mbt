@@ -220,4 +220,3 @@ test "parse error - invalid color" {
     }
   }
 }
-

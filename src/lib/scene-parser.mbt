@@ -65,7 +65,6 @@ pub fn parse_scene(toml_content : String) -> ParsedScene raise SceneParseError {
   world.lights = lights
   world.shapes = shapes
   world.background = render_settings.background
-  
   if render_settings.divide > 0 {
     let g = group()
     for shape in world.shapes {
@@ -74,7 +73,6 @@ pub fn parse_scene(toml_content : String) -> ParsedScene raise SceneParseError {
     g.divide(render_settings.divide)
     world.shapes = [g]
   }
-  
   { world, camera, render_settings, metadata }
 }
 
@@ -220,7 +218,6 @@ fn parse_material(value : @toml.TomlValue) -> Material raise SceneParseError {
   if mat.refractive_index < 1.0 {
     raise SceneParseError("material refractive_index must be at least 1.0")
   }
-
   mat.metallic = get_float_or_default(material_table, "metallic", 0.0)
   if mat.metallic < 0.0 || mat.metallic > 1.0 {
     raise SceneParseError("material metallic must be between 0 and 1")
@@ -228,6 +225,12 @@ fn parse_material(value : @toml.TomlValue) -> Material raise SceneParseError {
   mat.roughness = get_float_or_default(material_table, "roughness", 0.5)
   if mat.roughness < 0.0 || mat.roughness > 1.0 {
     raise SceneParseError("material roughness must be between 0 and 1")
+  }
+  mat.lighting_mode = match
+    get_string_or_default(material_table, "lighting_mode", "phong") {
+    "phong" => Phong
+    "pbr" => PBR
+    mode => raise SceneParseError("Unknown lighting mode: \{mode}")
   }
 
   // Pattern will be set later when patterns are resolved
@@ -277,6 +280,11 @@ fn parse_pattern(value : @toml.TomlValue) -> Pattern raise SceneParseError {
     "rings" => ring_pattern(colors_array)
     "gradient_rings" => gradient_ring_pattern(colors_array)
     "gradient_checkers" => gradient_checkers_pattern(colors_array)
+    "texture" => {
+      let _file = get_string_required(pattern_table, "file")
+      // Texture loading is only supported in async parse_scene_file
+      texture(canvas(1, 1))
+    }
     _ => raise SceneParseError("Unknown pattern type: \{pattern_type}")
   }
 
@@ -733,6 +741,73 @@ fn parse_matrix4x4(value : @toml.TomlValue) -> Matrix raise SceneParseError {
 }
 
 ///|
+async fn parse_patterns_async(
+  root : Map[String, @toml.TomlValue],
+) -> Map[String, Pattern] raise SceneParseError {
+  let patterns = Map::new()
+  match root.get("patterns") {
+    Some(@toml.TomlTable(patterns_table)) => {
+      // iterate is synchronous, so we can't await inside. 
+      // Use an array of keys to iterate asynchronously.
+      let keys = []
+      patterns_table.each(fn(name, _) { keys.push(name) })
+      for name in keys {
+        let pattern_value = patterns_table.get(name).unwrap()
+        let pattern = parse_pattern_async(pattern_value)
+        patterns.set(name, pattern)
+      }
+    }
+    Some(_) => raise SceneParseError("patterns section must be a table")
+    None => () // No patterns defined
+  }
+  patterns
+}
+
+///|
+async fn parse_pattern_async(
+  value : @toml.TomlValue,
+) -> Pattern raise SceneParseError {
+  let pattern_table = match value {
+    @toml.TomlTable(table) => table
+    _ => raise SceneParseError("pattern must be a table")
+  }
+  let pattern_type = get_string_required(pattern_table, "type")
+  if pattern_type == "texture" {
+    let file = get_string_required(pattern_table, "file")
+    let png_bytes = @fs.read_file(file).binary() catch {
+      e => raise SceneParseError("Failed to read texture file \{file}: \{e}")
+    }
+    let canvas = match Canvas::from_png(png_bytes) {
+      Some(c) => c
+      None => raise SceneParseError("Failed to decode PNG texture \{file}")
+    }
+    
+    let mapping_type = get_string_or_default(pattern_table, "mapping", "planar")
+    let mapping : &Mapping = match mapping_type {
+      "spherical" => SphericalMapping::{  } as &Mapping
+      "planar" => PlanarMapping::{  } as &Mapping
+      "cylindrical" => CylindricalMapping::{  } as &Mapping
+      "cubic" => CubicMapping::{  } as &Mapping
+      _ => raise SceneParseError("Unknown mapping type: \{mapping_type}")
+    }
+    
+    let pattern = texture(canvas, mapping~)
+    // Apply pattern transform if specified
+    match pattern_table.get("transform") {
+      Some(transform_value) => {
+        let transform = parse_transform(transform_value)
+        pattern.set_pattern_transform(transform)
+      }
+      None => ()
+    }
+    return pattern
+  }
+
+  // For other patterns, use the synchronous version
+  parse_pattern(value)
+}
+
+///|
 /// Helper functions for extracting values from TOML tables
 fn get_string_or_default(
   table : Map[String, @toml.TomlValue],
@@ -828,10 +903,48 @@ fn get_vector3(
 pub async fn parse_scene_file(
   file_path : String,
 ) -> ParsedScene raise SceneParseError {
-  let content = try {
-    @fs.read_file(file_path).text()
-  } catch {
+  let toml_content = @fs.read_file(file_path).text() catch {
     e => raise SceneParseError("Failed to read file \{file_path}: \{e}")
   }
-  parse_scene(content)
+  let toml_value = @toml.parse(toml_content) catch {
+    e => raise SceneParseError("TOML parse error: \{e}")
+  }
+  let root_table = match toml_value {
+    @toml.TomlTable(table) => table
+    _ => raise SceneParseError("Root must be a table")
+  }
+
+  // Parse metadata
+  let metadata = parse_scene_metadata(root_table)
+
+  // Parse render settings  
+  let render_settings = parse_render_settings(root_table)
+
+  // Parse camera
+  let camera = parse_camera(root_table, render_settings)
+
+  // Parse materials and patterns first (needed for objects)
+  let materials = parse_materials(root_table)
+  let patterns = parse_patterns_async(root_table)
+
+  // Parse lights
+  let lights = parse_lights(root_table)
+
+  // Parse objects (may reference materials and patterns)
+  let shapes = parse_objects(root_table, materials, patterns)
+
+  // Create world
+  let world = world()
+  world.lights = lights
+  world.shapes = shapes
+  world.background = render_settings.background
+  if render_settings.divide > 0 {
+    let g = group()
+    for shape in world.shapes {
+      g.add_child(shape)
+    }
+    g.divide(render_settings.divide)
+    world.shapes = [g]
+  }
+  { world, camera, render_settings, metadata }
 }

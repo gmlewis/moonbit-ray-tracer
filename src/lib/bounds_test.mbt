@@ -21,7 +21,6 @@ test "intersecting a ray with a bounding box at the origin" {
   let b = @lib.Bounds::new()
   b.update(@lib.point(-1, -1, -1))
   b.update(@lib.point(1, 1, 1))
-  
   let tests = [
     (@lib.point(0, 0, -5), @lib.vector(0, 0, 1), true),
     (@lib.point(0, 0, 5), @lib.vector(0, 0, -1), true),
@@ -36,7 +35,6 @@ test "intersecting a ray with a bounding box at the origin" {
     (@lib.point(0, 5, 0), @lib.vector(0, 0, 1), false),
     (@lib.point(0, 0, -5), @lib.vector(0, 1, 0), false),
   ]
-  
   for t in tests {
     let ray = @lib.ray(t.0, t.1.normalize())
     let result = b.local_intersect(ray)

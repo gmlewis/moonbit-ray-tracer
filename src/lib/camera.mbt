@@ -37,7 +37,7 @@ pub fn Camera::ray_for_pixel(
   px : Int,
   py : Int,
   offset_x? : Double = 0.5,
-  offset_y? : Double = 0.5
+  offset_y? : Double = 0.5,
 ) -> Ray {
   // the offset from the edge of the canvas to the pixel's center
   let xoffset = (px.to_double() + offset_x) * self.pixel_size
@@ -62,12 +62,11 @@ pub async fn Camera::render(
   self : Camera,
   world : World,
   samples? : Int = 1,
-  progress? : async (Int) -> Unit
+  progress? : async (Int) -> Unit,
 ) -> Canvas {
   let image = canvas(self.hsize, self.vsize)
   let samples = if samples < 1 { 1 } else { samples }
   let rng = @random.Rand::chacha8()
-  
   for y in 0..<self.vsize {
     for x in 0..<self.hsize {
       let mut color = color(0, 0, 0)
