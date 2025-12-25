@@ -295,9 +295,7 @@ pub impl PatternTrait for Texture with pattern_at(self, point) {
 pub impl PatternTrait for Texture with uv_at(self, u, v) {
   let u = u - @math.floor(u)
   let v = v - @math.floor(v)
-  let x = (u * (self.canvas.width - 1).to_double()).to_int()
-  let y = ((1.0 - v) * (self.canvas.height - 1).to_double()).to_int()
-  self.canvas.pixel_at(x, y)
+  self.canvas.pixel_at_bilinear(u, v)
 }
 
 ///|

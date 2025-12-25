@@ -68,7 +68,7 @@ pattern = "multicolor_checkers"
 type = "plane"
 material = "floor_material"
 transform = { rotation = [0.0, 0.9, 0.0] }
-pattern_transform = { scale = [0.1, 1.0, 1.0], rotation = [0.0, 1.047, 0.0] }
+pattern_transform = { scale = [1.0, 1.0, 1.0], rotation = [0.0, 1.047, 0.0] }
 
 # Middle sphere
 [[objects]]

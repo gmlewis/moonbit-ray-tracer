@@ -16,13 +16,12 @@
 # moon run src/ch15
 
 # Scene examples using the render CLI
-RENDER="moon run src/render --"
-$RENDER -s examples/checkers-scene.toml -o checkers-scene.png --samples 4 --divide 1
-$RENDER -s examples/csg-demo.toml -o csg-demo.png --samples 4 --divide 1
-$RENDER -s examples/environment-demo.toml -o environment-demo.png --samples 4 --divide 1
-$RENDER -s examples/glass-spheres.toml -o glass-spheres.png --samples 4 --divide 1
-$RENDER -s examples/patterns-showcase.toml -o patterns-showcase.png --samples 4 --divide 1
-$RENDER -s examples/pbr-demo.toml -o pbr-demo.png --samples 4 --divide 1
-$RENDER -s examples/simple-sphere.toml -o simple-sphere.png --samples 4 --divide 1
-$RENDER -s examples/texture-demo.toml -o texture-demo.png --samples 4 --divide 1
-$RENDER -s examples/art-gallery.toml -o art-gallery.png --samples 4 --divide 1
+moon run src/render -- -s examples/checkers-scene.toml -o checkers-scene.png --samples 8 --divide 1
+moon run src/render -- -s examples/csg-demo.toml -o csg-demo.png --samples 4 --divide 1
+moon run src/render -- -s examples/environment-demo.toml -o environment-demo.png --samples 4 --divide 1
+moon run src/render -- -s examples/glass-spheres.toml -o glass-spheres.png --samples 4 --divide 1
+moon run src/render -- -s examples/patterns-showcase.toml -o patterns-showcase.png --samples 4 --divide 1
+moon run src/render -- -s examples/pbr-demo.toml -o pbr-demo.png --samples 4 --divide 1
+moon run src/render -- -s examples/simple-sphere.toml -o simple-sphere.png --samples 4 --divide 1
+moon run src/render -- -s examples/texture-demo.toml -o texture-demo.png --samples 4 --divide 1
+moon run src/render -- -s examples/art-gallery.toml -o art-gallery.png --samples 4 --divide 1

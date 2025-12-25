@@ -180,6 +180,7 @@ pub fn Canvas::from_hdr(@hdr.HdrImage) -> Self
 pub fn Canvas::from_image(&@image.Image) -> Self
 pub fn Canvas::from_png(Bytes) -> Self?
 pub fn Canvas::pixel_at(Self, Int, Int) -> Color
+pub fn Canvas::pixel_at_bilinear(Self, Double, Double) -> Color
 pub fn Canvas::to_png(Self) -> Bytes raise @image.SizeError
 pub fn Canvas::to_ppm(Self) -> String
 pub fn Canvas::write_pixel(Self, Int, Int, Color) -> Unit

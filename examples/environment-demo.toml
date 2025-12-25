@@ -36,11 +36,6 @@ metallic = 1.0
 roughness = 0.05
 reflective = 0.9
 
-# Floor
-[[objects]]
-type = "plane"
-material = { color = [0.3, 0.3, 0.3], ambient = 0.1, diffuse = 0.9, roughness = 0.9 }
-
 # Reflective sphere to show skybox
 [[objects]]
 type = "sphere"

@@ -25,11 +25,36 @@ fn Canvas::offset(self : Canvas, x : Int, y : Int) -> Int {
 
 ///|
 pub fn Canvas::pixel_at(self : Canvas, x : Int, y : Int) -> Color {
+  let x = if x < 0 { 0 } else if x >= self.width { self.width - 1 } else { x }
+  let y = if y < 0 { 0 } else if y >= self.height { self.height - 1 } else { y }
   let off = self.offset(x, y)
   let r = self.red[off]
   let g = self.green[off]
   let b = self.blue[off]
   color(r, g, b)
+}
+
+///|
+pub fn Canvas::pixel_at_bilinear(
+  self : Canvas,
+  u : Double,
+  v : Double,
+) -> Color {
+  let x = u * (self.width - 1).to_double()
+  let y = (1.0 - v) * (self.height - 1).to_double()
+  let x1 = @math.floor(x).to_int()
+  let y1 = @math.floor(y).to_int()
+  let x2 = @cmp.minimum(x1 + 1, self.width - 1)
+  let y2 = @cmp.minimum(y1 + 1, self.height - 1)
+  let dx = x - @math.floor(x)
+  let dy = y - @math.floor(y)
+  let c11 = self.pixel_at(x1, y1)
+  let c21 = self.pixel_at(x2, y1)
+  let c12 = self.pixel_at(x1, y2)
+  let c22 = self.pixel_at(x2, y2)
+  let r1 = c11.mul_scalar(1.0 - dx) + c21.mul_scalar(dx)
+  let r2 = c12.mul_scalar(1.0 - dx) + c22.mul_scalar(dx)
+  r1.mul_scalar(1.0 - dy) + r2.mul_scalar(dy)
 }
 
 ///|
