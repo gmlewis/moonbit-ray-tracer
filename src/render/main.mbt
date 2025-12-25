@@ -6,6 +6,7 @@ async fn main {
     "width": @cli.opt_int(0, short='w', help="Override output width"),
     "height": @cli.opt_int(0, short='H', help="Override output height"),
     "samples": @cli.opt_int(0, help="Override samples per pixel"),
+    "divide": @cli.opt_int(0, help="Subdivide groups with at least this many children"),
   }
 
   let args = match @cli.parse(args_spec, prog="render", description="MoonBit Ray Tracer") {
@@ -55,8 +56,18 @@ async fn main {
     settings.samples = s
   }
 
+  let d = args.int("divide")
+  if d > 0 {
+    settings.divide = d
+    let g = @lib.group()
+    for shape in world.shapes {
+      g.add_child(shape)
+    }
+    g.divide(d)
+    world.shapes = [g]
+  }
+
   // TODO: Implement multi-sampling if settings.samples > 1
-  // For now, just basic render
   println("Rendering \{parsed_scene.metadata.name}...")
   println("Resolution: \{settings.width}x\{settings.height}")
   println("Samples: \{settings.samples}")

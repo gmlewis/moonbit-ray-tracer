@@ -31,10 +31,10 @@ This document outlines a comprehensive plan to take the MoonBit ray tracer to th
 ## Priority 2: Performance (Critical for practical use)
 
 ### Spatial Acceleration Structures
-- [ ] Axis-Aligned Bounding Box (AABB) system
-- [ ] Bounding Volume Hierarchy (BVH) builder
-- [ ] BVH traversal for ray intersection
-- [ ] Spatial partitioning for scene objects
+- [x] Axis-Aligned Bounding Box (AABB) system
+- [x] Bounding Volume Hierarchy (BVH) builder
+- [x] BVH traversal for ray intersection
+- [x] Spatial partitioning for scene objects
 - [ ] Optimize BVH construction for different scene types
 - [ ] Benchmark intersection performance improvements
 

@@ -69,44 +69,28 @@ colors = [
 # Floor
 [[objects]]
 type = "plane"
-[objects.material]
-color = [0.8, 0.8, 0.8]
-ambient = 0.1
-diffuse = 0.8
-specular = 0.2
-shininess = 50.0
-reflective = 0.1
-transparency = 0.0
-refractive_index = 1.0
-pattern = "marble"
+material = { color = [0.8, 0.8, 0.8], ambient = 0.1, diffuse = 0.8, specular = 0.2, shininess = 50.0, reflective = 0.1, transparency = 0.0, refractive_index = 1.0, pattern = "marble" }
 
 # Glass sphere - large
 [[objects]]
 type = "sphere"
 material = "glass"
-[objects.transform]
-translation = [0.0, 1.0, 0.0]
+transform = { translation = [0.0, 1.0, 0.0] }
 
 # Glass sphere - small
 [[objects]]
 type = "sphere"
 material = "glass"
-[objects.transform]
-translation = [2.5, 0.5, 1.0]
-scale = [0.5, 0.5, 0.5]
+transform = { translation = [2.5, 0.5, 1.0], scale = [0.5, 0.5, 0.5] }
 
 # Mirror sphere
 [[objects]]
 type = "sphere"
 material = "mirror"
-[objects.transform]
-translation = [-2.0, 1.5, 2.0]
-scale = [1.5, 1.5, 1.5]
+transform = { translation = [-2.0, 1.5, 2.0], scale = [1.5, 1.5, 1.5] }
 
 # Glass cube
 [[objects]]
 type = "cube"
 material = "glass"
-[objects.transform]
-translation = [3.0, 1.0, -1.0]
-rotation = [0.0, 0.785, 0.0]  # π/4 radians
+transform = { translation = [3.0, 1.0, -1.0], rotation = [0.0, 0.785, 0.0] }

@@ -69,83 +69,34 @@ material = "floor_material"
 [[objects]]
 type = "csg"
 material = "red_metal"
-[objects.properties]
-operation = "union"
-[objects.transform]
-translation = [-3.0, 1.5, 0.0]
-
-[[objects.left]]
-type = "sphere"
-
-[[objects.right]]
-type = "cube"
-[objects.right.transform]
-translation = [0.8, 0.0, 0.0]
+properties = { operation = "union" }
+transform = { translation = [-3.0, 1.5, 0.0] }
+left = { type = "sphere" }
+right = { type = "cube", transform = { translation = [0.8, 0.0, 0.0] } }
 
 # CSG Intersection: Sphere ∩ Cube
 [[objects]]
 type = "csg"
 material = "blue_metal"
-[objects.properties]
-operation = "intersection"
-[objects.transform]
-translation = [0.0, 1.5, 0.0]
-
-[[objects.left]]
-type = "sphere"
-[objects.left.transform]
-scale = [1.2, 1.2, 1.2]
-
-[[objects.right]]
-type = "cube"
+properties = { operation = "intersection" }
+transform = { translation = [0.0, 1.5, 0.0] }
+left = { type = "sphere", transform = { scale = [1.2, 1.2, 1.2] } }
+right = { type = "cube" }
 
 # CSG Difference: Sphere - Cube
 [[objects]]
 type = "csg"
 material = "green_metal"
-[objects.properties]
-operation = "difference"
-[objects.transform]
-translation = [3.0, 1.5, 0.0]
-
-[[objects.left]]
-type = "sphere"
-[objects.left.transform]
-scale = [1.2, 1.2, 1.2]
-
-[[objects.right]]
-type = "cube"
-[objects.right.transform]
-scale = [0.8, 0.8, 0.8]
+properties = { operation = "difference" }
+transform = { translation = [3.0, 1.5, 0.0] }
+left = { type = "sphere", transform = { scale = [1.2, 1.2, 1.2] } }
+right = { type = "cube", transform = { scale = [0.8, 0.8, 0.8] } }
 
 # Complex CSG: ((Sphere ∪ Cube) - Cylinder)
 [[objects]]
 type = "csg"
 material = "red_metal"
-[objects.properties]
-operation = "difference"
-[objects.transform]
-translation = [0.0, 1.5, 3.0]
-
-# Left side: Union of sphere and cube
-[[objects.left]]
-type = "csg"
-[objects.left.properties]
-operation = "union"
-
-[[objects.left.left]]
-type = "sphere"
-
-[[objects.left.right]]
-type = "cube"
-[objects.left.right.transform]
-translation = [1.0, 0.0, 0.0]
-
-# Right side: Cylinder to subtract
-[[objects.right]]
-type = "cylinder"
-[objects.right.properties]
-minimum = -2.0
-maximum = 2.0
-[objects.right.transform]
-rotation = [1.571, 0.0, 0.0]  # π/2 radians around X (horizontal cylinder)
+properties = { operation = "difference" }
+transform = { translation = [0.0, 1.5, 3.0] }
+left = { type = "csg", properties = { operation = "union" }, left = { type = "sphere" }, right = { type = "cube", transform = { translation = [1.0, 0.0, 0.0] } } }
+right = { type = "cylinder", properties = { minimum = -2.0, maximum = 2.0 }, transform = { rotation = [1.571, 0.0, 0.0] } }

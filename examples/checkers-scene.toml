@@ -67,51 +67,26 @@ pattern = "multicolor_checkers"
 [[objects]]
 type = "plane"
 material = "floor_material"
-[objects.transform]
-rotation = [0.0, 0.9, 0.0]
-
-# Floor pattern transform
-[objects.pattern_transform]
-scale = [0.1, 1.0, 1.0]
-rotation = [0.0, 1.047, 0.0]  # π/3 radians
+transform = { rotation = [0.0, 0.9, 0.0] }
+pattern_transform = { scale = [0.1, 1.0, 1.0], rotation = [0.0, 1.047, 0.0] }
 
 # Middle sphere
 [[objects]]
 type = "sphere"
 material = "sphere_material"
-[objects.transform]
-translation = [-0.5, 1.0, 0.5]
-rotation = [1.9, 0.9, 3.3]
-
-# Middle sphere pattern transform
-[objects.pattern_transform]
-scale = [0.3, 1.0, 1.0]
-rotation = [0.0, 0.785, 0.0]  # π/4 radians
+transform = { translation = [-0.5, 1.0, 0.5], rotation = [1.9, 0.9, 3.3] }
+pattern_transform = { scale = [0.3, 1.0, 1.0], rotation = [0.0, 0.785, 0.0] }
 
 # Right sphere
 [[objects]]
 type = "sphere"
 material = "sphere_material"
-[objects.transform]
-translation = [1.5, 0.5, -0.5]
-scale = [0.5, 0.5, 0.5]
-rotation = [0.9, 1.3, 1.9]
-
-# Right sphere pattern transform
-[objects.pattern_transform]
-scale = [0.01, 1.0, 1.0]
-rotation = [0.0, 0.449, 0.0]  # π/7 radians
+transform = { translation = [1.5, 0.5, -0.5], scale = [0.5, 0.5, 0.5], rotation = [0.9, 1.3, 1.9] }
+pattern_transform = { scale = [0.01, 1.0, 1.0], rotation = [0.0, 0.449, 0.0] }
 
 # Left sphere
 [[objects]]
 type = "sphere"
 material = "sphere_material"
-[objects.transform]
-translation = [-1.5, 0.33, -0.75]
-scale = [0.33, 0.33, 0.33]
-rotation = [1.3, 1.9, 0.9]
-
-# Left sphere pattern transform
-[objects.pattern_transform]
-scale = [0.7, 1.0, 1.0]
-rotation = [0.0, 3.442, 0.0]  # π + 0.3 radians
+transform = { translation = [-1.5, 0.33, -0.75], scale = [0.33, 0.33, 0.33], rotation = [1.3, 1.9, 0.9] }
+pattern_transform = { scale = [0.7, 1.0, 1.0], rotation = [0.0, 3.442, 0.0] }

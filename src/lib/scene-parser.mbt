@@ -19,6 +19,7 @@ pub(all) struct RenderSettings {
   mut samples : Int
   mut max_bounces : Int
   mut background : Color
+  mut divide : Int
 } derive(Show, Eq)
 
 ///|
@@ -63,6 +64,16 @@ pub fn parse_scene(toml_content : String) -> ParsedScene raise SceneParseError {
   let world = world()
   world.lights = lights
   world.shapes = shapes
+  
+  if render_settings.divide > 0 {
+    let g = group()
+    for shape in world.shapes {
+      g.add_child(shape)
+    }
+    g.divide(render_settings.divide)
+    world.shapes = [g]
+  }
+  
   { world, camera, render_settings, metadata }
 }
 
@@ -115,7 +126,8 @@ fn parse_render_settings(
     Some(value) => parse_color(value)
     None => color(0.0, 0.0, 0.0) // Default black background
   }
-  { width, height, samples, max_bounces, background }
+  let divide = get_int_or_default(render_table, "divide", 0)
+  { width, height, samples, max_bounces, background, divide }
 }
 
 ///|

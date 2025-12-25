@@ -64,6 +64,21 @@ pub fn Bounds::update(self : Bounds, point : Tuple) -> Unit {
 }
 
 ///|
+pub fn Bounds::width(self : Bounds) -> Double {
+  self.max.x - self.min.x
+}
+
+///|
+pub fn Bounds::height(self : Bounds) -> Double {
+  self.max.y - self.min.y
+}
+
+///|
+pub fn Bounds::depth(self : Bounds) -> Double {
+  self.max.z - self.min.z
+}
+
+///|
 pub fn Bounds::local_intersect(self : Bounds, ray : Ray) -> Bool {
   let (xtmin, xtmax) = check_axis(
     ray.origin.x,

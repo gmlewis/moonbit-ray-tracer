@@ -201,6 +201,18 @@ pub fn Shape::add_child(self : Shape, child : Shape) -> Unit {
 }
 
 ///|
+pub fn Shape::divide(self : Shape, limit : Int) -> Unit {
+  match self.object {
+    Group(group) => group.divide(limit)
+    CSG(csg) => {
+      csg.left.divide(limit)
+      csg.right.divide(limit)
+    }
+    _ => ()
+  }
+}
+
+///|
 pub fn Shape::world_to_object(self : Shape, point : Tuple) -> Tuple {
   match self.parent {
     Some(parent) => {

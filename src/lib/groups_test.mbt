@@ -67,3 +67,54 @@ test "Intersecting a transformed group (p.255)" {
   let xs = g.intersect(r)
   assert_eq(xs.count, 2)
 }
+
+///|
+test "partition_children splits a group's children" {
+  let s1 = sphere()
+  s1.set_transform(translation(-2, 0, 0))
+  let s2 = sphere()
+  s2.set_transform(translation(2, 0, 0))
+  let s3 = sphere()
+  s3.set_transform(translation(0, 0, 0))
+  let g = group()
+  g.add_child(s1)
+  g.add_child(s2)
+  g.add_child(s3)
+
+  match g.object {
+    Group(group) => {
+      let (left, right) = group.partition_children()
+      inspect(left.length(), content="1")
+      inspect(right.length(), content="2")
+      assert_eq(left[0].id, s1.id)
+    }
+    _ => panic()
+  }
+}
+
+///|
+test "Subdividing a group with enough children" {
+  let s1 = sphere()
+  s1.set_transform(translation(-2, 0, 0))
+  let s2 = sphere()
+  s2.set_transform(translation(2, 0, 0))
+  let s3 = sphere()
+  s3.set_transform(translation(0, 0, 0))
+  let g = group()
+  g.add_child(s1)
+  g.add_child(s2)
+  g.add_child(s3)
+
+  g.divide(3)
+  let children = g.children()
+  inspect(children.length(), content="2")
+
+  match children[0].object {
+    Group(subgroup) => inspect(subgroup.children.length(), content="1")
+    _ => panic()
+  }
+  match children[1].object {
+    Group(subgroup) => inspect(subgroup.children.length(), content="2")
+    _ => panic()
+  }
+}
