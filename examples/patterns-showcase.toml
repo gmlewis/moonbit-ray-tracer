@@ -89,38 +89,38 @@ shininess = 50.0
 type = "plane"
 material = "floor_material"
 
-# Spheres row - Y = 1.0, Z = -5.0
+# Spheres row - Y = 1.0, Z = -2.0 (Front)
 [[objects]]
 type = "sphere"
 material = { color = [1.0, 1.0, 1.0], ambient = 0.1, diffuse = 0.8, specular = 0.2, shininess = 100.0, reflective = 0.1, pattern = "stripes_red_white" }
-transform = { translation = [-5.0, 1.0, -5.0] }
+transform = { translation = [-5.0, 1.0, -2.0] }
 pattern_transform = { scale = [0.5, 1.0, 1.0] }
 
 [[objects]]
 type = "sphere"
 material = { color = [1.0, 1.0, 1.0], ambient = 0.1, diffuse = 0.8, specular = 0.2, shininess = 100.0, reflective = 0.1, pattern = "checkers_rainbow" }
-transform = { translation = [-2.5, 1.0, -5.0] }
+transform = { translation = [-2.5, 1.0, -2.0] }
 pattern_transform = { scale = [0.3, 0.3, 0.3] }
 
 [[objects]]
 type = "sphere"
 material = { color = [1.0, 1.0, 1.0], ambient = 0.1, diffuse = 0.8, specular = 0.2, shininess = 100.0, reflective = 0.1, pattern = "gradient_sunset" }
-transform = { translation = [0.0, 1.0, -5.0] }
+transform = { translation = [0.0, 1.0, -2.0] }
 pattern_transform = { scale = [2.0, 1.0, 1.0] }
 
 [[objects]]
 type = "sphere"
 material = { color = [1.0, 1.0, 1.0], ambient = 0.1, diffuse = 0.8, specular = 0.2, shininess = 100.0, reflective = 0.1, pattern = "rings_bw" }
-transform = { translation = [2.5, 1.0, -5.0] }
+transform = { translation = [2.5, 1.0, -2.0] }
 pattern_transform = { scale = [0.5, 0.5, 0.5] }
 
 [[objects]]
 type = "sphere"
 material = { color = [1.0, 1.0, 1.0], ambient = 0.1, diffuse = 0.8, specular = 0.2, shininess = 100.0, reflective = 0.1, pattern = "gradient_rings_rainbow" }
-transform = { translation = [5.0, 1.0, -5.0] }
+transform = { translation = [5.0, 1.0, -2.0] }
 pattern_transform = { scale = [0.3, 0.3, 0.3] }
 
-# Back row - Y = 1.0, Z = 2.0, different shapes
+# Back row - Y = 1.0, Z = 2.0 (Behind)
 [[objects]]
 type = "cube"
 material = { color = [1.0, 1.0, 1.0], ambient = 0.1, diffuse = 0.8, specular = 0.2, shininess = 100.0, reflective = 0.1, pattern = "gradient_checkers_warm" }

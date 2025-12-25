@@ -220,3 +220,31 @@ test "parse error - invalid color" {
     }
   }
 }
+
+///|
+test "parse material with pattern reference" {
+  let toml_content =
+    #|[scene]
+    #|name = "Material Pattern Reference Scene"
+    #|[camera]
+    #|position = [0,0,-5]
+    #|look_at = [0,0,0]
+    #|up = [0,1,0]
+    #|field_of_view = 1.0
+    #|[patterns.stripes]
+    #|type = "stripes"
+    #|colors = [[1,1,1], [0,0,0]]
+    #|[materials.patterned]
+    #|pattern = "stripes"
+    #|[[objects]]
+    #|type = "sphere"
+    #|material = "patterned"
+    #|
+  let scene = @lib.parse_scene(toml_content)
+  inspect(scene.world.shapes.length(), content="1")
+  let mat = scene.world.shapes[0].material
+  match mat.pattern {
+    Some(_) => inspect("has_pattern", content="has_pattern")
+    None => inspect("no_pattern", content="has_pattern")
+  }
+}

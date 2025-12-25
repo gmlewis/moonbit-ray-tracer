@@ -53,6 +53,9 @@ pub fn parse_scene(toml_content : String) -> ParsedScene raise SceneParseError {
   // Parse materials and patterns first (needed for objects)
   let materials = parse_materials(root_table)
   let patterns = parse_patterns(root_table)
+  
+  // Resolve material patterns
+  resolve_material_patterns(root_table, materials, patterns)
 
   // Parse lights
   let lights = parse_lights(root_table)
@@ -76,6 +79,35 @@ pub fn parse_scene(toml_content : String) -> ParsedScene raise SceneParseError {
   }
   
   { world, camera, render_settings, metadata }
+}
+
+///|
+fn resolve_material_patterns(
+  root : Map[String, @toml.TomlValue],
+  materials : Map[String, Material],
+  patterns : Map[String, Pattern],
+) -> Unit {
+  match root.get("materials") {
+    Some(@toml.TomlTable(materials_table)) => {
+      materials_table.each(fn(name, material_value) {
+        match material_value {
+          @toml.TomlTable(table) => {
+            match table.get("pattern") {
+              Some(@toml.TomlString(pattern_name)) => {
+                match (materials.get(name), patterns.get(pattern_name)) {
+                  (Some(mat), Some(p)) => mat.pattern = Some(p.clone())
+                  _ => ()
+                }
+              }
+              _ => ()
+            }
+          }
+          _ => ()
+        }
+      })
+    }
+    _ => ()
+  }
 }
 
 ///|
@@ -897,6 +929,9 @@ pub async fn parse_scene_file(
   // Parse materials and patterns first (needed for objects)
   let materials = parse_materials(root_table)
   let patterns = parse_patterns_async(root_table)
+  
+  // Resolve material patterns
+  resolve_material_patterns(root_table, materials, patterns)
 
   // Parse lights
   let lights = parse_lights(root_table)
@@ -938,7 +973,7 @@ async fn parse_patterns_async(
   let patterns = Map::new()
   match root.get("patterns") {
     Some(@toml.TomlTable(patterns_table)) => {
-      // iterate is synchronous, so we can't await inside. 
+      // iterate is synchronous, so we can't inside. 
       // Use an array of keys to iterate asynchronously.
       let keys = []
       patterns_table.each(fn(name, _) { keys.push(name) })
