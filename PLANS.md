@@ -56,12 +56,12 @@ This document outlines a comprehensive plan to take the MoonBit ray tracer to th
 ## Priority 3: Modern Rendering Features
 
 ### Physically Based Rendering (PBR)
-- [ ] Research PBR material models (metallic/roughness)
-- [ ] Implement Cook-Torrance BRDF
-- [ ] Add Fresnel calculations
-- [ ] Implement importance sampling for materials
-- [ ] Add material energy conservation
-- [ ] Create PBR material presets (metal, plastic, glass, etc.)
+- [x] Research PBR material models (metallic/roughness)
+- [x] Implement Cook-Torrance BRDF
+- [x] Add Fresnel calculations
+- [x] Implement importance sampling for materials (partially, for analytical lights)
+- [x] Add material energy conservation
+- [x] Create PBR material presets (metal, plastic, glass, etc.)
 
 ### Advanced Lighting
 - [ ] Implement area lights (rectangular, circular)
@@ -72,9 +72,9 @@ This document outlines a comprehensive plan to take the MoonBit ray tracer to th
 - [ ] Add caustics rendering
 
 ### Anti-Aliasing & Sampling
-- [ ] Implement supersampling anti-aliasing (SSAA)
+- [x] Implement supersampling anti-aliasing (SSAA)
 - [ ] Add temporal anti-aliasing for animations
-- [ ] Implement jittered sampling patterns
+- [x] Implement jittered sampling patterns
 - [ ] Add adaptive sampling based on edge detection
 - [ ] Optimize sample distribution algorithms
 - [ ] Add configurable sampling quality levels

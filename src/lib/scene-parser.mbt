@@ -221,6 +221,15 @@ fn parse_material(value : @toml.TomlValue) -> Material raise SceneParseError {
     raise SceneParseError("material refractive_index must be at least 1.0")
   }
 
+  mat.metallic = get_float_or_default(material_table, "metallic", 0.0)
+  if mat.metallic < 0.0 || mat.metallic > 1.0 {
+    raise SceneParseError("material metallic must be between 0 and 1")
+  }
+  mat.roughness = get_float_or_default(material_table, "roughness", 0.5)
+  if mat.roughness < 0.0 || mat.roughness > 1.0 {
+    raise SceneParseError("material roughness must be between 0 and 1")
+  }
+
   // Pattern will be set later when patterns are resolved
 
   mat
