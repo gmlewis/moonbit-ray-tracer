@@ -14,7 +14,7 @@ let ray = @lib.ray
 let sphere = @lib.sphere
 
 ///|
-fn main {
+async fn main {
   let width = 300
   let height = 300
   let c = canvas(width, height)
@@ -55,8 +55,8 @@ fn main {
 
   //
   try {
-    @fs.write_string_to_file("ch5.ppm", c.to_ppm())
-    @fs.write_bytes_to_file("ch5.png", c.to_png())
+    @fs.write_file("ch5.ppm", c.to_ppm(), create=0o644)
+    @fs.write_file("ch5.png", c.to_png(), create=0o644)
   } catch {
     _ => println("error writing ch5.png")
   }

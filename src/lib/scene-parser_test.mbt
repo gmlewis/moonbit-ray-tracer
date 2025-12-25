@@ -45,124 +45,114 @@ test "parse simple scene" {
 }
 
 ///|
-// test "parse scene with inline material" {
-//   let toml_content =
-//     #|[scene]
-//     #|name = "Inline Material Scene"
-//     #|
-//     #|[camera]
-//     #|position = [0.0, 0.0, -5.0]
-//     #|look_at = [0.0, 0.0, 0.0]
-//     #|up = [0.0, 1.0, 0.0]
-//     #|field_of_view = 1.047
-//     #|
-//     #|[[objects]]
-//     #|type = "sphere"
-//     #|[objects.material]
-//     #|color = [0.0, 1.0, 0.0]
-//     #|ambient = 0.2
-//     #|diffuse = 0.8
-//     #|
-//   let scene = parse_scene(toml_content)
+test "parse scene with inline material" {
+  let toml_content =
+    #|[scene]
+    #|name = "Inline Material Scene"
+    #|
+    #|[camera]
+    #|position = [0.0, 0.0, -5.0]
+    #|look_at = [0.0, 0.0, 0.0]
+    #|up = [0.0, 1.0, 0.0]
+    #|field_of_view = 1.047
+    #|
+    #|[[objects]]
+    #|type = "sphere"
+    #|material = { color = [0.0, 1.0, 0.0], ambient = 0.2, diffuse = 0.8 }
+    #|
+  let scene = @lib.parse_scene(toml_content)
 
-//   // Check that the sphere has the correct material
-//   inspect(scene.world.shapes.length(), content="1")
-//   let sphere_material = scene.world.shapes[0].material
-//   inspect(sphere_material.color, content="color(0, 1, 0)")
-//   inspect(sphere_material.ambient, content="0.2")
-//   inspect(sphere_material.diffuse, content="0.8")
-// }
+  // Check that the sphere has the correct material
+  inspect(scene.world.shapes.length(), content="1")
+  let sphere_material = scene.world.shapes[0].material
+  inspect(sphere_material.color, content="color(0, 1, 0)")
+  inspect(sphere_material.ambient, content="0.2")
+  inspect(sphere_material.diffuse, content="0.8")
+}
 
 ///|
-// test "parse scene with pattern" {
-//   let toml_content =
-//     #|[scene]
-//     #|name = "Pattern Scene"
-//     #|
-//     #|[camera]
-//     #|position = [0.0, 0.0, -5.0]
-//     #|look_at = [0.0, 0.0, 0.0]
-//     #|up = [0.0, 1.0, 0.0]
-//     #|field_of_view = 1.047
-//     #|
-//     #|[patterns.stripes]
-//     #|type = "stripes"
-//     #|colors = [
-//     #|  [1.0, 0.0, 0.0],
-//     #|  [1.0, 1.0, 1.0]
-//     #|]
-//     #|
-//     #|[[objects]]
-//     #|type = "sphere"
-//     #|[objects.material]
-//     #|pattern = "stripes"
-//     #|
-//   let scene = parse_scene(toml_content)
+test "parse scene with pattern" {
+  let toml_content =
+    #|[scene]
+    #|name = "Pattern Scene"
+    #|
+    #|[camera]
+    #|position = [0.0, 0.0, -5.0]
+    #|look_at = [0.0, 0.0, 0.0]
+    #|up = [0.0, 1.0, 0.0]
+    #|field_of_view = 1.047
+    #|
+    #|[patterns.stripes]
+    #|type = "stripes"
+    #|colors = [
+    #|  [1.0, 0.0, 0.0],
+    #|  [1.0, 1.0, 1.0]
+    #|]
+    #|
+    #|[[objects]]
+    #|type = "sphere"
+    #|material = { pattern = "stripes" }
+    #|
+  let scene = @lib.parse_scene(toml_content)
 
-//   // Check that the sphere has a pattern
-//   inspect(scene.world.shapes.length(), content="1")
-//   let sphere_material = scene.world.shapes[0].material
-//   match sphere_material.pattern {
-//     Some(_) => inspect("has_pattern", content="has_pattern")
-//     None => inspect("no_pattern", content="has_pattern")
-//   }
-// }
-
-///|
-// test "parse scene with cylinder properties" {
-//   let toml_content =
-//     #|[scene]
-//     #|name = "Cylinder Scene"
-//     #|
-//     #|[camera]
-//     #|position = [0.0, 0.0, -5.0]
-//     #|look_at = [0.0, 0.0, 0.0]
-//     #|up = [0.0, 1.0, 0.0]
-//     #|field_of_view = 1.047
-//     #|
-//     #|[[objects]]
-//     #|type = "cylinder"
-//     #|[objects.properties]
-//     #|minimum = -2.0
-//     #|maximum = 2.0
-//     #|closed = true
-//     #|
-//   let scene = parse_scene(toml_content)
-
-//   // Check that we have a cylinder
-//   inspect(scene.world.shapes.length(), content="1")
-//   // We can't easily test the cylinder properties since they're internal to the shape
-//   // but the fact that it parses without error is a good sign
-// }
+  // Check that the sphere has a pattern
+  inspect(scene.world.shapes.length(), content="1")
+  let sphere_material = scene.world.shapes[0].material
+  match sphere_material.pattern {
+    Some(_) => inspect("has_pattern", content="has_pattern")
+    None => inspect("no_pattern", content="has_pattern")
+  }
+}
 
 ///|
-// test "parse scene with transforms" {
-//   let toml_content =
-//     #|[scene]
-//     #|name = "Transform Scene"
-//     #|
-//     #|[camera]
-//     #|position = [0.0, 0.0, -5.0]
-//     #|look_at = [0.0, 0.0, 0.0]
-//     #|up = [0.0, 1.0, 0.0]
-//     #|field_of_view = 1.047
-//     #|
-//     #|[[objects]]
-//     #|type = "sphere"
-//     #|[objects.transform]
-//     #|translation = [1.0, 2.0, 3.0]
-//     #|scale = [2.0, 2.0, 2.0]
-//     #|rotation = [0.0, 1.571, 0.0]
-//     #|
-//   let scene = parse_scene(toml_content)
+test "parse scene with cylinder properties" {
+  let toml_content =
+    #|[scene]
+    #|name = "Cylinder Scene"
+    #|
+    #|[camera]
+    #|position = [0.0, 0.0, -5.0]
+    #|look_at = [0.0, 0.0, 0.0]
+    #|up = [0.0, 1.0, 0.0]
+    #|field_of_view = 1.047
+    #|
+    #|[[objects]]
+    #|type = "cylinder"
+    #|properties = { minimum = -2.0, maximum = 2.0, closed = true }
+    #|
+  let scene = @lib.parse_scene(toml_content)
 
-//   // Check that we have a sphere with a transform
-//   inspect(scene.world.shapes.length(), content="1")
-//   let sphere = scene.world.shapes[0]
-//   // The transform should not be the identity matrix
-//   let is_identity = sphere.transform == @lib.mat4ident()
-//   inspect(is_identity, content="false")
-// }
+  // Check that we have a cylinder
+  inspect(scene.world.shapes.length(), content="1")
+  // We can't easily test the cylinder properties since they're internal to the shape
+  // but the fact that it parses without error is a good sign
+}
+
+///|
+test "parse scene with transforms" {
+  let toml_content =
+    #|[scene]
+    #|name = "Transform Scene"
+    #|
+    #|[camera]
+    #|position = [0.0, 0.0, -5.0]
+    #|look_at = [0.0, 0.0, 0.0]
+    #|up = [0.0, 1.0, 0.0]
+    #|field_of_view = 1.047
+    #|
+    #|[[objects]]
+    #|type = "sphere"
+    #|transform = { translation = [1.0, 2.0, 3.0], scale = [2.0, 2.0, 2.0], rotation = [0.0, 1.571, 0.0] }
+    #|
+  let scene = @lib.parse_scene(toml_content)
+
+  // Check that we have a sphere with a transform
+  inspect(scene.world.shapes.length(), content="1")
+  let sphere = scene.world.shapes[0]
+  // The transform should not be the identity matrix
+  let is_identity = sphere.transform == @lib.mat4ident()
+  inspect(is_identity, content="false")
+}
 
 ///|
 test "parse error - missing required field" {
@@ -179,3 +169,55 @@ test "parse error - missing required field" {
     _ => inspect("correctly_failed", content="correctly_failed")
   }
 }
+
+///|
+test "parse error - unknown object type" {
+  let toml_content =
+    #|[scene]
+    #|name = "Unknown Object Scene"
+    #|[camera]
+    #|position = [0,0,-5]
+    #|look_at = [0,0,0]
+    #|up = [0,1,0]
+    #|field_of_view = 1.0
+    #|[[objects]]
+    #|type = "unknown_type"
+    #|
+  try {
+    let _scene = @lib.parse_scene(toml_content)
+    inspect("should_fail", content="correctly_failed")
+  } catch {
+    e => {
+      let msg = e.to_string()
+      let is_unknown = msg.contains("Unknown object type: unknown_type")
+      inspect(is_unknown, content="true")
+    }
+  }
+}
+
+///|
+test "parse error - invalid color" {
+  let toml_content =
+    #|[scene]
+    #|name = "Invalid Color Scene"
+    #|[camera]
+    #|position = [0,0,-5]
+    #|look_at = [0,0,0]
+    #|up = [0,1,0]
+    #|field_of_view = 1.0
+    #|[[objects]]
+    #|type = "sphere"
+    #|material = { color = [1.0, 0.0] } # Only 2 components
+    #|
+  try {
+    let _scene = @lib.parse_scene(toml_content)
+    inspect("should_fail", content="correctly_failed")
+  } catch {
+    e => {
+      let msg = e.to_string()
+      let is_invalid = msg.contains("color must have exactly 3 components")
+      inspect(is_invalid, content="true")
+    }
+  }
+}
+

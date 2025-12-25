@@ -52,7 +52,11 @@ pub fn Camera::ray_for_pixel(self : Camera, px : Int, py : Int) -> Ray {
 }
 
 ///|
-pub fn Camera::render(self : Camera, world : World) -> Canvas {
+pub async fn Camera::render(
+  self : Camera,
+  world : World,
+  progress? : async (Int) -> Unit
+) -> Canvas {
   let image = canvas(self.hsize, self.vsize)
   for y in 0..<self.vsize {
     for x in 0..<self.hsize {
@@ -60,6 +64,11 @@ pub fn Camera::render(self : Camera, world : World) -> Canvas {
       let color = world.color_at(ray)
       image.write_pixel(x, y, color)
     }
+    match progress {
+      Some(f) => f(y + 1)
+      None => ()
+    }
+    pause() // Yield to allow progress reporting/event loop to run
   }
   image
 }

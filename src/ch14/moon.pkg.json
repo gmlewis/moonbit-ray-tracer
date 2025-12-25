@@ -2,6 +2,7 @@
   "is-main": true,
   "import": [
     "gmlewis/ray-tracer/lib",
-    "moonbitlang/x/fs"
+    "moonbitlang/async",
+    "moonbitlang/async/fs"
   ]
 }

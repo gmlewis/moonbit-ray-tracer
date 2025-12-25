@@ -60,7 +60,7 @@ pub fn parse_obj_file(String) -> ObjFile raise ParserError
 
 pub fn parse_scene(String) -> ParsedScene raise SceneParseError
 
-pub fn parse_scene_file(String) -> ParsedScene raise SceneParseError
+pub async fn parse_scene_file(String) -> ParsedScene raise SceneParseError
 
 pub fn plane() -> Shape
 

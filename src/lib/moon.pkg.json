@@ -5,6 +5,7 @@
     "gmlewis/image/png",
     "gmlewis/io",
     "bob/toml",
-    "moonbitlang/x/fs"
+    "moonbitlang/async",
+    "moonbitlang/async/fs"
   ]
 }

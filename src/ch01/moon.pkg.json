@@ -2,5 +2,8 @@
   "is-main": true,
   "import": [
     "gmlewis/ray-tracer/lib"
+  ],
+  "supported-targets": [
+    "native"
   ]
 }

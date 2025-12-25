@@ -1,0 +1,7 @@
+{
+  "import": [
+    "TheWaWaR/clap",
+    "moonbitlang/async/io",
+    "moonbitlang/async/stdio"
+  ]
+}

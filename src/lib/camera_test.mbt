@@ -49,7 +49,7 @@ test "Constructing a ray when the camera is transformed (p.146)" {
 }
 
 ///|
-test "Rendering a world with a camera (p.148)" {
+async test "rendering a world with a camera" {
   let w = default_world()
   let c = camera(11, 11, @math.PI / 2)
   let from = point(0, 0, -5)
@@ -57,5 +57,8 @@ test "Rendering a world with a camera (p.148)" {
   let up = vector(0, 1, 0)
   c.transform = view_transform(from, to, up)
   let image = c.render(w)
-  assert_eq(image.pixel_at(5, 5), color(0.38066, 0.47583, 0.2855))
+  let pixel = image.pixel_at(5, 5)
+  let expected = color(0.38066, 0.47583, 0.2855)
+  inspect(pixel, content="color(0.38066, 0.47583, 0.2855)")
+  inspect(pixel == expected, content="true")
 }

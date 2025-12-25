@@ -8,7 +8,7 @@ let color = @lib.color
 let point = @lib.point
 
 ///|
-fn main {
+async fn main {
   let width = 900
   let height = 550
   let r = height.to_double() * 3 / 8
@@ -32,8 +32,8 @@ fn main {
 
   //
   try {
-    @fs.write_string_to_file("ch4.ppm", c.to_ppm())
-    @fs.write_bytes_to_file("ch4.png", c.to_png())
+    @fs.write_file("ch4.ppm", c.to_ppm(), create=0o644)
+    @fs.write_file("ch4.png", c.to_png(), create=0o644)
   } catch {
     _ => println("error writing ch4.png")
   }

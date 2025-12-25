@@ -36,7 +36,7 @@ fn environment(gravity : Tuple, wind : Tuple) -> Environment {
 }
 
 ///|
-fn main {
+async fn main {
   // projectile starts one unit above the origin.
   // velocity is normalized to 1 unit/tick.
   let mut p = projectile(
@@ -66,10 +66,10 @@ fn main {
 
   //
   try {
-    @fs.write_string_to_file("ch2.ppm", c.to_ppm())
-    @fs.write_bytes_to_file("ch2.png", c.to_png())
+    @fs.write_file("ch2.ppm", c.to_ppm(), create=0o644)
+    @fs.write_file("ch2.png", c.to_png(), create=0o644)
   } catch {
-    _ => println("error writing ch2.png")
+    e => println("error writing files: \{e}")
   }
 }
 

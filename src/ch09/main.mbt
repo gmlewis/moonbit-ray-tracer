@@ -32,7 +32,7 @@ let view_transform = @lib.view_transform
 let world = @lib.world
 
 ///|
-fn main {
+async fn main {
   let width = 600
   let height = 300
 
@@ -83,8 +83,8 @@ fn main {
 
   //
   try {
-    @fs.write_string_to_file("ch9.ppm", canvas.to_ppm())
-    @fs.write_bytes_to_file("ch9.png", canvas.to_png())
+    @fs.write_file("ch9.ppm", canvas.to_ppm(), create=0o644)
+    @fs.write_file("ch9.png", canvas.to_png(), create=0o644)
   } catch {
     _ => println("error writing ch9.png")
   }

@@ -6,19 +6,19 @@ This document outlines a comprehensive plan to take the MoonBit ray tracer to th
 
 ### Scene Description System
 - [x] Design TOML scene description format
-- [ ] Implement scene file parser
-- [ ] Create scene loader that builds World objects from descriptions
-- [ ] Add validation and error handling for scene files
+- [x] Implement scene file parser
+- [x] Create scene loader that builds World objects from descriptions
+- [x] Add validation and error handling for scene files
 - [x] Create example scene files for testing
 - [x] Document scene format specification
 
 ### Command Line Interface
-- [ ] Design CLI argument structure and commands
-- [ ] Implement basic `render` command with scene file input
-- [ ] Add output format options (PNG, PPM)
-- [ ] Add basic rendering options (resolution, samples)
-- [ ] Implement progress reporting during rendering
-- [ ] Add `--help` and usage documentation
+- [x] Design CLI argument structure and commands
+- [x] Implement basic `render` command with scene file input
+- [x] Add output format options (PNG, PPM)
+- [x] Add basic rendering options (resolution, samples)
+- [x] Implement progress reporting during rendering
+- [x] Add `--help` and usage documentation
 
 ### Web Interface (Basic)
 - [ ] Create basic HTML/JS frontend for scene editing
@@ -30,21 +30,20 @@ This document outlines a comprehensive plan to take the MoonBit ray tracer to th
 
 ## Priority 2: Performance (Critical for practical use)
 
-### Parallel Rendering
-- [ ] Research MoonBit concurrency and threading capabilities
-- [ ] Implement tile-based parallel rendering
-- [ ] Add thread pool management
-- [ ] Optimize memory usage for parallel execution
-- [ ] Add configuration for thread count
-- [ ] Benchmark performance improvements
-
 ### Spatial Acceleration Structures
-- [ ] Implement Axis-Aligned Bounding Box (AABB) system
-- [ ] Create Bounding Volume Hierarchy (BVH) builder
-- [ ] Implement BVH traversal for ray intersection
-- [ ] Add spatial partitioning for scene objects
+- [ ] Axis-Aligned Bounding Box (AABB) system
+- [ ] Bounding Volume Hierarchy (BVH) builder
+- [ ] BVH traversal for ray intersection
+- [ ] Spatial partitioning for scene objects
 - [ ] Optimize BVH construction for different scene types
 - [ ] Benchmark intersection performance improvements
+
+### Parallel Rendering (Cooperative Multitasking)
+- [x] Implement tile-based / line-based asynchronous rendering
+- [x] Add yielding (`pause()`) for responsiveness
+- [ ] Research future MoonBit threading capabilities
+- [ ] Optimize memory usage for long-running renders
+- [ ] Benchmark overhead of cooperative multitasking
 
 ### Progressive Rendering
 - [ ] Implement progressive pixel sampling

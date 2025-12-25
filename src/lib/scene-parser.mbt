@@ -14,11 +14,11 @@ pub(all) struct ParsedScene {
 ///|
 /// Render settings from scene file
 pub(all) struct RenderSettings {
-  width : Int
-  height : Int
-  samples : Int
-  max_bounces : Int
-  background : Color
+  mut width : Int
+  mut height : Int
+  mut samples : Int
+  mut max_bounces : Int
+  mut background : Color
 } derive(Show, Eq)
 
 ///|
@@ -96,9 +96,21 @@ fn parse_render_settings(
     None => Map::new() // Use defaults if not specified
   }
   let width = get_int_or_default(render_table, "width", 800)
+  if width <= 0 {
+    raise SceneParseError("scene.render.width must be positive")
+  }
   let height = get_int_or_default(render_table, "height", 600)
+  if height <= 0 {
+    raise SceneParseError("scene.render.height must be positive")
+  }
   let samples = get_int_or_default(render_table, "samples", 1)
+  if samples < 1 {
+    raise SceneParseError("scene.render.samples must be at least 1")
+  }
   let max_bounces = get_int_or_default(render_table, "max_bounces", 4)
+  if max_bounces < 0 {
+    raise SceneParseError("scene.render.max_bounces must be non-negative")
+  }
   let background = match render_table.get("background") {
     Some(value) => parse_color(value)
     None => color(0.0, 0.0, 0.0) // Default black background
@@ -166,14 +178,35 @@ fn parse_material(value : @toml.TomlValue) -> Material raise SceneParseError {
 
   // Parse material properties
   mat.ambient = get_float_or_default(material_table, "ambient", 0.1)
+  if mat.ambient < 0.0 {
+    raise SceneParseError("material ambient must be non-negative")
+  }
   mat.diffuse = get_float_or_default(material_table, "diffuse", 0.9)
+  if mat.diffuse < 0.0 {
+    raise SceneParseError("material diffuse must be non-negative")
+  }
   mat.specular = get_float_or_default(material_table, "specular", 0.9)
+  if mat.specular < 0.0 {
+    raise SceneParseError("material specular must be non-negative")
+  }
   mat.shininess = get_float_or_default(material_table, "shininess", 200.0)
+  if mat.shininess < 0.0 {
+    raise SceneParseError("material shininess must be non-negative")
+  }
   mat.reflective = get_float_or_default(material_table, "reflective", 0.0)
+  if mat.reflective < 0.0 || mat.reflective > 1.0 {
+    raise SceneParseError("material reflective must be between 0 and 1")
+  }
   mat.transparency = get_float_or_default(material_table, "transparency", 0.0)
+  if mat.transparency < 0.0 || mat.transparency > 1.0 {
+    raise SceneParseError("material transparency must be between 0 and 1")
+  }
   mat.refractive_index = get_float_or_default(
     material_table, "refractive_index", 1.0,
   )
+  if mat.refractive_index < 1.0 {
+    raise SceneParseError("material refractive_index must be at least 1.0")
+  }
 
   // Pattern will be set later when patterns are resolved
 
@@ -770,10 +803,12 @@ fn get_vector3(
 
 ///|
 /// Parse a TOML scene file from a file path
-pub fn parse_scene_file(
+pub async fn parse_scene_file(
   file_path : String,
 ) -> ParsedScene raise SceneParseError {
-  let content = @fs.read_file_to_string(file_path) catch {
+  let content = try {
+    @fs.read_file(file_path).text()
+  } catch {
     e => raise SceneParseError("Failed to read file \{file_path}: \{e}")
   }
   parse_scene(content)

@@ -32,7 +32,7 @@ let view_transform = @lib.view_transform
 let world = @lib.world
 
 ///|
-fn main {
+async fn main {
   let width = 200
   let height = 100
   let white = color(1, 1, 1)
@@ -65,7 +65,7 @@ fn main {
 
   //
   let parser = try {
-    let buf = @fs.read_file_to_string("teapot.obj")
+    let buf = @fs.read_file("teapot.obj").text()
     @lib.parse_obj_file(buf)
   } catch {
     e => return println(e)
@@ -92,8 +92,8 @@ fn main {
 
   //
   try {
-    @fs.write_string_to_file("ch15.ppm", canvas.to_ppm())
-    @fs.write_bytes_to_file("ch15.png", canvas.to_png())
+    @fs.write_file("ch15.ppm", canvas.to_ppm(), create=0o644)
+    @fs.write_file("ch15.png", canvas.to_png(), create=0o644)
   } catch {
     _ => println("error writing ch15.png")
   }

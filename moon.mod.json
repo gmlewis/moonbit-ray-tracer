@@ -4,13 +4,19 @@
   "deps": {
     "gmlewis/image": "0.16.29",
     "gmlewis/io": "0.22.18",
-    "moonbitlang/x": "0.4.38",
-    "bob/toml": "0.1.6"
+    "bob/toml": "0.1.6",
+    "moonbitlang/async": "0.15.0",
+    "TheWaWaR/clap": "0.2.6"
   },
   "readme": "README.md",
   "repository": "",
   "license": "Apache-2.0",
-  "keywords": [],
+  "keywords": [
+    "3d",
+    "graphics",
+    "ray tracing"
+  ],
   "description": "",
-  "source": "src"
+  "source": "src",
+  "preferred-target": "native"
 }
