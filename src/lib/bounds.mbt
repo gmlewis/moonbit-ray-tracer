@@ -64,11 +64,7 @@ pub fn Bounds::update(self : Bounds, point : Tuple) -> Unit {
 }
 
 ///|
-pub fn Bounds::local_intersect(
-  self : Bounds,
-  ray : Ray,
-  shape : Shape,
-) -> Intersections {
+pub fn Bounds::local_intersect(self : Bounds, ray : Ray) -> Bool {
   let (xtmin, xtmax) = check_axis(
     ray.origin.x,
     ray.direction.x,
@@ -89,8 +85,5 @@ pub fn Bounds::local_intersect(
   )
   let tmin = @cmp.maximum(xtmin, @cmp.maximum(ytmin, ztmin))
   let tmax = @cmp.minimum(xtmax, @cmp.minimum(ytmax, ztmax))
-  if tmin > tmax {
-    return intersections([])
-  }
-  intersections([intersection(tmin, shape), intersection(tmax, shape)])
+  tmin <= tmax
 }

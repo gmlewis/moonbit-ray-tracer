@@ -25,20 +25,42 @@ pub fn Shape::bounds(self : Shape) -> Bounds {
     Some(bounds) => return bounds
     _ => ()
   }
-  let bounds = match self.object {
-    Object(object) => object.bounds().transform(self.transform)
-    Group(group) => group.bounds().transform(self.transform)
-    Triangle(triangle) => triangle.bounds().transform(self.transform)
-    SmoothTriangle(triangle) => triangle.bounds().transform(self.transform)
+  let local_bounds = match self.object {
+    Object(object) => object.bounds()
+    Group(group) => group.bounds()
+    Triangle(triangle) => triangle.bounds()
+    SmoothTriangle(triangle) => triangle.bounds()
     CSG(csg) => {
-      let left_bounds = csg.left.bounds().transform(self.transform)
-      let right_bounds = csg.right.bounds().transform(self.transform)
+      let left_bounds = csg.left.bounds().transform(csg.left.transform)
+      let right_bounds = csg.right.bounds().transform(csg.right.transform)
       left_bounds.enlarge(right_bounds)
       left_bounds
     }
   }
+  let bounds = local_bounds.transform(self.transform)
   self.bounds = Some(bounds)
   bounds
+}
+
+///|
+pub fn Shape::parent_space_bounds(self : Shape) -> Bounds {
+  self.object_space_bounds().transform(self.transform)
+}
+
+///|
+pub fn Shape::object_space_bounds(self : Shape) -> Bounds {
+  match self.object {
+    Object(object) => object.bounds()
+    Group(group) => group.bounds()
+    Triangle(triangle) => triangle.bounds()
+    SmoothTriangle(triangle) => triangle.bounds()
+    CSG(csg) => {
+      let left_bounds = csg.left.parent_space_bounds()
+      let right_bounds = csg.right.parent_space_bounds()
+      left_bounds.enlarge(right_bounds)
+      left_bounds
+    }
+  }
 }
 
 ///|
@@ -96,9 +118,8 @@ pub fn Shape::local_intersect(self : Shape, local_ray : Ray) -> Intersections {
     }
     Group(group) => {
       let bounds = group.bounds()
-      let xs = bounds.local_intersect(local_ray, self)
-      if xs.count == 0 {
-        return xs
+      if not(bounds.local_intersect(local_ray)) {
+        return intersections([])
       }
       group.local_intersect(self, local_ray)
     }
