@@ -26,12 +26,12 @@ intensity = [1.0, 1.0, 1.0]
 # Texture definitions
 [patterns.earth_texture]
 type = "texture"
-file = "test-pbr.png"  # Using an existing PNG as a placeholder
+file = "examples/assets/pool_1k.hdr"
 mapping = "spherical"
 
 [patterns.box_texture]
 type = "texture"
-file = "test-sphere-aa.png"
+file = "examples/assets/pool_1k.hdr"
 mapping = "cubic"
 
 # Floor

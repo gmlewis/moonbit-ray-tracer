@@ -1,0 +1,48 @@
+# Environment map demonstration
+[scene]
+name = "Environment Showcase"
+description = "Uses pool_1k.hdr as a skybox and texture"
+version = "1.0"
+
+[scene.render]
+width = 800
+height = 400
+samples = 4
+max_bounces = 4
+background = [0.0, 0.0, 0.0]
+divide = 1
+
+[camera]
+position = [0.0, 2.0, -10.0]
+look_at = [0.0, 1.0, 0.0]
+up = [0.0, 1.0, 0.0]
+field_of_view = 0.785  # π/4 radians
+
+[[lights]]
+type = "point"
+position = [-10.0, 10.0, -10.0]
+intensity = [1.0, 1.0, 1.0]
+
+[environment]
+type = "texture"
+file = "examples/assets/pool_1k.hdr"
+mapping = "spherical"
+
+# Materials
+[materials.chrome]
+color = [1.0, 1.0, 1.0]
+ambient = 0.0
+metallic = 1.0
+roughness = 0.05
+reflective = 0.9
+
+# Floor
+[[objects]]
+type = "plane"
+material = { color = [0.3, 0.3, 0.3], ambient = 0.1, diffuse = 0.9, roughness = 0.9 }
+
+# Reflective sphere to show skybox
+[[objects]]
+type = "sphere"
+material = "chrome"
+transform = { translation = [0.0, 1.0, 0.0], scale = [2.0, 2.0, 2.0] }

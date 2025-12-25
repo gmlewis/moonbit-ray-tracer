@@ -139,6 +139,21 @@ pub fn Canvas::from_png(png_data : Bytes) -> Canvas? {
 }
 
 ///|
+pub fn Canvas::from_hdr(hdr : @hdr.HdrImage) -> Canvas {
+  let c = canvas(hdr.width, hdr.height)
+  for y in 0..<hdr.height {
+    for x in 0..<hdr.width {
+      let offset = (y * hdr.width + x) * 3
+      let r = hdr.data[offset + 0]
+      let g = hdr.data[offset + 1]
+      let b = hdr.data[offset + 2]
+      c.write_pixel(x, y, color(r, g, b))
+    }
+  }
+  c
+}
+
+///|
 fn clamp2byte(v : Double) -> Byte {
   let v = if v < 0 { 0.0 } else if v > 1 { 1.0 } else { v }
   @math.round(v * 255).to_int().to_byte()
