@@ -391,6 +391,20 @@ fn parse_light(value : @toml.TomlValue) -> Light raise SceneParseError {
   match light_type {
     "point" =>
       point_light(point(position.0, position.1, position.2), intensity_color)
+    "area" => {
+      let u_vec = get_vector3(light_table, "u_vec")
+      let v_vec = get_vector3(light_table, "v_vec")
+      let u_steps = get_int_or_default(light_table, "u_steps", 1)
+      let v_steps = get_int_or_default(light_table, "v_steps", 1)
+      area_light(
+        point(position.0, position.1, position.2),
+        vector(u_vec.0, u_vec.1, u_vec.2),
+        u_steps,
+        vector(v_vec.0, v_vec.1, v_vec.2),
+        v_steps,
+        intensity_color,
+      )
+    }
     _ => raise SceneParseError("Unknown light type: \{light_type}")
   }
 }

@@ -48,84 +48,207 @@ pub fn World::intersect_world(self : World, ray : Ray) -> Intersections {
 }
 
 ///|
+
 pub fn World::shade_hit(
+
   self : World,
+
   comps : Computations,
+
   remaining? : Int = MAX_BOUNCES,
+
 ) -> Color {
+
   // Get surface color including pattern
+
   let clr = match (comps.shape.material.pattern, Some(comps.shape)) {
+
     (Some(pattern), Some(shape)) => pattern.pattern_at_shape(shape, comps.point)
+
     _ => comps.shape.material.color
+
   }
+
+
 
   // Add ambient light once
+
   let mut surface = clr.mul_scalar(comps.shape.material.ambient)
+
+  
+
   for light in self.lights {
-    let in_shadow = self.is_shadowed(comps.over_point, light~)
-    surface = surface +
-      comps.shape.material.lighting(
-        light,
-        comps.point,
-        comps.eyev,
-        comps.normalv,
-        in_shadow~,
-        shape=Some(comps.shape),
-      )
-  }
-  let reflected = self.reflected_color(comps, remaining)
-  let refracted = self.refracted_color(comps, remaining)
-  let material = comps.shape.material
-  if material.reflective > 0 && material.transparency > 0 {
-    let reflectance = comps.schlick()
-    surface +
-    reflected.mul_scalar(reflectance) +
-    refracted.mul_scalar(1.0 - reflectance)
-  } else {
-    surface + reflected + refracted
-  }
-}
 
-///|
-pub fn World::color_at(
-  self : World,
-  ray : Ray,
-  remaining? : Int = MAX_BOUNCES,
-) -> Color {
-  let xs = self.intersect_world(ray)
-  let hit = match xs.hit() {
-    None => {
-      match self.environment_map {
-        Some(env) => {
-          // Map ray direction to UV
-          let (u, v) = spherical_map(ray.direction)
-          return env.uv_at(u, v)
-        }
-        None => return self.background
+    let mut light_sum = color(0, 0, 0)
+
+    match light.kind {
+
+      Point => {
+
+        let in_shadow = self.is_shadowed(comps.over_point, light.position)
+
+        light_sum = comps.shape.material.lighting(
+
+          light,
+
+          comps.point,
+
+          comps.eyev,
+
+          comps.normalv,
+
+          in_shadow~,
+
+          shape=Some(comps.shape),
+
+        )
+
       }
+
+      Area(_, u_steps, _, v_steps) => {
+
+        for v in 0..<v_steps {
+
+          for u in 0..<u_steps {
+
+            let light_pos = light.point_at(u, v)
+
+            let in_shadow = self.is_shadowed(comps.over_point, light_pos)
+
+            // Temporarily use a fake light for the sample position
+
+            let sample_light = { position: light_pos, intensity: light.intensity, kind: Point }
+
+            light_sum = light_sum + comps.shape.material.lighting(
+
+              sample_light,
+
+              comps.point,
+
+              comps.eyev,
+
+              comps.normalv,
+
+              in_shadow~,
+
+              shape=Some(comps.shape),
+
+            )
+
+          }
+
+        }
+
+        light_sum = light_sum.mul_scalar(1.0 / light.samples().to_double())
+
+      }
+
     }
-    Some(hit) => hit
+
+    surface = surface + light_sum
+
   }
-  let comps = hit.prepare_computations(ray, xs~)
-  self.shade_hit(comps, remaining~)
+
+  
+
+  let reflected = self.reflected_color(comps, remaining)
+
+  let refracted = self.refracted_color(comps, remaining)
+
+  let material = comps.shape.material
+
+  if material.reflective > 0 && material.transparency > 0 {
+
+    let reflectance = comps.schlick()
+
+    surface +
+
+    reflected.mul_scalar(reflectance) +
+
+    refracted.mul_scalar(1.0 - reflectance)
+
+  } else {
+
+    surface + reflected + refracted
+
+  }
+
 }
 
+
+
 ///|
-pub fn World::is_shadowed(self : World, point : Tuple, light? : Light) -> Bool {
-  let light = match light {
-    None => self.lights[0]
-    Some(x) => x
+
+pub fn World::color_at(
+
+  self : World,
+
+  ray : Ray,
+
+  remaining? : Int = MAX_BOUNCES,
+
+) -> Color {
+
+  let xs = self.intersect_world(ray)
+
+  let hit = match xs.hit() {
+
+    None => {
+
+      match self.environment_map {
+
+        Some(env) => {
+
+          // Map ray direction to UV
+
+          let (u, v) = spherical_map(ray.direction)
+
+          return env.uv_at(u, v)
+
+        }
+
+        None => return self.background
+
+      }
+
+    }
+
+    Some(hit) => hit
+
   }
-  let v = light.position - point
+
+  let comps = hit.prepare_computations(ray, xs~)
+
+  self.shade_hit(comps, remaining~)
+
+}
+
+
+
+///|
+
+pub fn World::is_shadowed(self : World, point : Tuple, light_pos : Tuple) -> Bool {
+
+  let v = light_pos - point
+
   let distance = v.magnitude()
+
   let direction = v.normalize()
+
   let r = ray(point, direction)
+
   let xs = self.intersect_world(r)
+
   let h = xs.hit()
+
   match h {
+
     Some(hit) => hit.t < distance
+
     _ => false
+
   }
+
 }
 
 ///|

@@ -64,8 +64,8 @@ This document outlines a comprehensive plan to take the MoonBit ray tracer to th
 - [x] Create PBR material presets (metal, plastic, glass, etc.)
 
 ### Advanced Lighting
-- [ ] Implement area lights (rectangular, circular)
-- [ ] Add environment/IBL (Image-Based Lighting)
+- [x] Implement area lights (rectangular, circular)
+- [x] Add environment/IBL (Image-Based Lighting)
 - [ ] Implement global illumination (path tracing)
 - [ ] Add light importance sampling
 - [ ] Implement volumetric lighting effects
