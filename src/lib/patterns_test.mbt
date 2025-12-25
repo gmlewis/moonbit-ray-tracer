@@ -94,6 +94,11 @@ impl PatternTrait for TestPattern with pattern_at(_self, point) {
 }
 
 ///|
+impl PatternTrait for TestPattern with uv_at(_self, _u, _v) {
+  color(0, 0, 0)
+}
+
+///|
 test "The default pattern transformation (p.182)" {
   let pattern = test_pattern()
   assert_eq(pattern.transform, mat4ident())

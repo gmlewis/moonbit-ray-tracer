@@ -1,6 +1,7 @@
 ///|
 pub(open) trait PatternTrait: Show {
   pattern_at(Self, Tuple) -> Color
+  uv_at(Self, Double, Double) -> Color
   clone(Self) -> Pattern // `clone(Self) -> Self` causes a compiler error
 }
 
@@ -22,6 +23,11 @@ pub fn Pattern::new(pattern : &PatternTrait) -> Pattern {
 ///|
 pub impl PatternTrait for Pattern with pattern_at(self, point) {
   self.pattern.pattern_at(point)
+}
+
+///|
+pub impl PatternTrait for Pattern with uv_at(self, u, v) {
+  self.pattern.uv_at(u, v)
 }
 
 ///|
@@ -56,6 +62,7 @@ pub fn Pattern::pattern_at_shape(
 ) -> Color {
   let object_point = shape.world_to_object(world_point)
   let pattern_point = self.inv_transform.mul_tuple(object_point)
+  
   self.pattern.pattern_at(pattern_point)
 }
 
@@ -185,6 +192,11 @@ pub impl PatternTrait for StripePattern with clone(self) {
 }
 
 ///|
+pub impl PatternTrait for StripePattern with uv_at(_self, _u, _v) {
+  color(0, 0, 0)
+}
+
+///|
 pub fn stripe_pattern(colors : Array[Color]) -> Pattern {
   let pattern = StripePattern::{ colors, }
   Pattern::new(pattern)
@@ -228,6 +240,11 @@ pub impl Show for GradientPattern with output(self, logger) {
 ///|
 pub impl PatternTrait for GradientPattern with clone(self) {
   gradient_pattern(self.colors)
+}
+
+///|
+pub impl PatternTrait for GradientPattern with uv_at(_self, _u, _v) {
+  color(0, 0, 0)
 }
 
 ///|
@@ -281,6 +298,11 @@ pub impl PatternTrait for RingPattern with clone(self) {
 }
 
 ///|
+pub impl PatternTrait for RingPattern with uv_at(_self, _u, _v) {
+  color(0, 0, 0)
+}
+
+///|
 pub fn ring_pattern(colors : Array[Color]) -> Pattern {
   let pattern = RingPattern::{ colors, }
   Pattern::new(pattern)
@@ -325,6 +347,11 @@ pub impl Show for GradientRingPattern with output(self, logger) {
 ///|
 pub impl PatternTrait for GradientRingPattern with clone(self) {
   gradient_ring_pattern(self.colors)
+}
+
+///|
+pub impl PatternTrait for GradientRingPattern with uv_at(_self, _u, _v) {
+  color(0, 0, 0)
 }
 
 ///|
@@ -379,6 +406,11 @@ pub impl PatternTrait for CheckersPattern with clone(self) {
 }
 
 ///|
+pub impl PatternTrait for CheckersPattern with uv_at(_self, _u, _v) {
+  color(0, 0, 0)
+}
+
+///|
 pub fn checkers_pattern(colors : Array[Color]) -> Pattern {
   let pattern = CheckersPattern::{ colors, }
   Pattern::new(pattern)
@@ -421,8 +453,30 @@ pub impl PatternTrait for Texture with pattern_at(self, point) {
   // Use modulo to wrap u and v to [0, 1]
   let u = u - @math.floor(u)
   let v = v - @math.floor(v)
-  let x = (u * (self.canvas.width - 1).to_double()).to_int()
-  let y = ((1.0 - v) * (self.canvas.height - 1).to_double()).to_int()
+  
+  let x = (u * self.canvas.width.to_double()).to_int()
+  let y = ((1.0 - v) * self.canvas.height.to_double()).to_int()
+  
+  // Clamp indices to avoid out of bounds
+  let x = if x < 0 { 0 } else if x >= self.canvas.width { self.canvas.width - 1 } else { x }
+  let y = if y < 0 { 0 } else if y >= self.canvas.height { self.canvas.height - 1 } else { y }
+  
+  self.canvas.pixel_at(x, y)
+}
+
+///|
+pub impl PatternTrait for Texture with uv_at(self, u, v) {
+  // Use modulo to wrap u and v to [0, 1]
+  let u = u - @math.floor(u)
+  let v = v - @math.floor(v)
+  
+  let x = (u * self.canvas.width.to_double()).to_int()
+  let y = ((1.0 - v) * self.canvas.height.to_double()).to_int()
+  
+  // Clamp indices to avoid out of bounds
+  let x = if x < 0 { 0 } else if x >= self.canvas.width { self.canvas.width - 1 } else { x }
+  let y = if y < 0 { 0 } else if y >= self.canvas.height { self.canvas.height - 1 } else { y }
+  
   self.canvas.pixel_at(x, y)
 }
 
@@ -440,7 +494,7 @@ pub impl Eq for Texture with equal(self, other) {
 pub fn texture(canvas : Canvas, mapping? : &Mapping) -> Pattern {
   let m : &Mapping = match mapping {
     Some(m) => m
-    None => PlanarMapping::{  }
+    None => PlanarMapping::{  } as &Mapping
   }
   let pattern = Texture::{ canvas, mapping: m }
   Pattern::new(pattern)
@@ -473,6 +527,11 @@ pub impl Show for GradientCheckersPattern with output(self, logger) {
 ///|
 pub impl PatternTrait for GradientCheckersPattern with clone(self) {
   gradient_checkers_pattern(self.colors)
+}
+
+///|
+pub impl PatternTrait for GradientCheckersPattern with uv_at(_self, _u, _v) {
+  color(0, 0, 0)
 }
 
 ///|
