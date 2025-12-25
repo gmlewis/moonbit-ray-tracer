@@ -288,7 +288,7 @@ test "The refracted color with a refracted ray (p.212)" {
   ])
   let comps = xs[2].prepare_computations(r, xs~)
   let c = w.refracted_color(comps, 5)
-  assert_eq(c, color(0.8, 1, 0.6))
+  inspect(c, content="color(0, 0.99888, 0.04722)")
 }
 
 ///|

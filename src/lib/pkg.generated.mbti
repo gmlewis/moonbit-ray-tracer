@@ -90,6 +90,8 @@ pub fn sphere() -> Shape
 
 pub fn stripe_pattern(Array[Color]) -> Pattern
 
+pub fn texture(Canvas, mapping? : &Mapping) -> Pattern
+
 pub fn translation(Double, Double, Double) -> Matrix
 
 pub fn triangle(Tuple, Tuple, Tuple) -> Shape
@@ -118,11 +120,14 @@ pub(all) struct Bounds {
   mut min : Tuple
   mut max : Tuple
 }
+pub fn Bounds::depth(Self) -> Double
 pub fn Bounds::enlarge(Self, Self) -> Unit
-pub fn Bounds::local_intersect(Self, Ray, Shape) -> Intersections
+pub fn Bounds::height(Self) -> Double
+pub fn Bounds::local_intersect(Self, Ray) -> Bool
 pub fn Bounds::new() -> Self
 pub fn Bounds::transform(Self, Matrix) -> Self
 pub fn Bounds::update(Self, Tuple) -> Unit
+pub fn Bounds::width(Self) -> Double
 pub impl Eq for Bounds
 pub impl Show for Bounds
 
@@ -144,8 +149,8 @@ pub(all) struct Camera {
   half_width : Double
   half_height : Double
 }
-pub fn Camera::ray_for_pixel(Self, Int, Int) -> Ray
-pub fn Camera::render(Self, World) -> Canvas
+pub fn Camera::ray_for_pixel(Self, Int, Int, offset_x? : Double, offset_y? : Double) -> Ray
+pub async fn Camera::render(Self, World, samples? : Int, progress? : async (Int) -> Unit) -> Canvas
 pub impl Eq for Camera
 pub impl Show for Camera
 
@@ -157,10 +162,14 @@ pub(all) struct Canvas {
   blue : Array[Double]
 }
 pub fn Canvas::clear(Self, Color) -> Unit
+pub fn Canvas::from_image(&@image.Image) -> Self
+pub fn Canvas::from_png(Bytes) -> Self?
 pub fn Canvas::pixel_at(Self, Int, Int) -> Color
 pub fn Canvas::to_png(Self) -> Bytes raise @image.SizeError
 pub fn Canvas::to_ppm(Self) -> String
 pub fn Canvas::write_pixel(Self, Int, Int, Color) -> Unit
+pub impl Eq for Canvas
+pub impl Show for Canvas
 
 pub(all) struct CheckersPattern {
   colors : Array[Color]
@@ -214,6 +223,12 @@ pub impl Object for Cube
 pub impl Eq for Cube
 pub impl Show for Cube
 
+pub(all) struct CubicMapping {
+}
+pub impl Mapping for CubicMapping
+pub impl Eq for CubicMapping
+pub impl Show for CubicMapping
+
 pub(all) struct Cylinder {
   minimum : Double
   maximum : Double
@@ -222,6 +237,12 @@ pub(all) struct Cylinder {
 pub impl Object for Cylinder
 pub impl Eq for Cylinder
 pub impl Show for Cylinder
+
+pub(all) struct CylindricalMapping {
+}
+pub impl Mapping for CylindricalMapping
+pub impl Eq for CylindricalMapping
+pub impl Show for CylindricalMapping
 
 pub(all) struct GradientCheckersPattern {
   colors : Array[Color]
@@ -252,9 +273,11 @@ pub(all) struct Group {
   mut bounds : Bounds?
 }
 pub fn Group::bounds(Self) -> Bounds
+pub fn Group::divide(Self, Int) -> Unit
 pub fn Group::local_intersect(Self, Shape, Ray) -> Intersections
 pub fn Group::local_normal_at(Self, Tuple) -> Tuple
 pub fn Group::output(Self, &Logger) -> Unit
+pub fn Group::partition_children(Self) -> (Array[Shape], Array[Shape])
 pub fn Group::to_string(Self) -> String
 
 pub(all) struct Intersection {
@@ -285,6 +308,13 @@ pub(all) struct Light {
 pub impl Eq for Light
 pub impl Show for Light
 
+pub(all) enum LightingMode {
+  Phong
+  PBR
+}
+pub impl Eq for LightingMode
+pub impl Show for LightingMode
+
 pub(all) struct Material {
   mut color : Color
   mut ambient : Double
@@ -295,6 +325,9 @@ pub(all) struct Material {
   mut transparency : Double
   mut refractive_index : Double
   mut pattern : Pattern?
+  mut metallic : Double
+  mut roughness : Double
+  mut lighting_mode : LightingMode
 }
 pub fn Material::lighting(Self, Light, Tuple, Tuple, Tuple, in_shadow? : Bool, shape? : Shape?) -> Color
 pub impl Eq for Material
@@ -371,6 +404,12 @@ pub impl PatternTrait for Pattern
 pub impl Eq for Pattern
 pub impl Show for Pattern
 
+pub(all) struct PlanarMapping {
+}
+pub impl Mapping for PlanarMapping
+pub impl Eq for PlanarMapping
+pub impl Show for PlanarMapping
+
 pub(all) struct Plane {
 }
 pub impl Object for Plane
@@ -387,11 +426,12 @@ pub impl Eq for Ray
 pub impl Show for Ray
 
 pub(all) struct RenderSettings {
-  width : Int
-  height : Int
-  samples : Int
-  max_bounces : Int
-  background : Color
+  mut width : Int
+  mut height : Int
+  mut samples : Int
+  mut max_bounces : Int
+  mut background : Color
+  mut divide : Int
 }
 pub impl Eq for RenderSettings
 pub impl Show for RenderSettings
@@ -433,6 +473,7 @@ pub(all) struct Shape {
 pub fn Shape::add_child(Self, Self) -> Unit
 pub fn Shape::bounds(Self) -> Bounds
 pub fn Shape::children(Self) -> Array[Self]
+pub fn Shape::divide(Self, Int) -> Unit
 pub fn Shape::includes_shape(Self, Self) -> Bool
 pub fn Shape::intersect(Self, Ray) -> Intersections
 pub fn Shape::local_intersect(Self, Ray) -> Intersections
@@ -445,6 +486,8 @@ pub fn Shape::new_smooth_triangle(SmoothTriangle) -> Self
 pub fn Shape::new_triangle(Triangle) -> Self
 pub fn Shape::normal_at(Self, Tuple, hit? : Intersection?) -> Tuple
 pub fn Shape::normal_to_world(Self, Tuple) -> Tuple
+pub fn Shape::object_space_bounds(Self) -> Bounds
+pub fn Shape::parent_space_bounds(Self) -> Bounds
 pub fn Shape::set_transform(Self, Matrix) -> Unit
 pub fn Shape::world_to_object(Self, Tuple) -> Tuple
 pub impl Eq for Shape
@@ -473,6 +516,12 @@ pub impl Object for Sphere
 pub impl Eq for Sphere
 pub impl Show for Sphere
 
+pub(all) struct SphericalMapping {
+}
+pub impl Mapping for SphericalMapping
+pub impl Eq for SphericalMapping
+pub impl Show for SphericalMapping
+
 pub(all) struct StripePattern {
   colors : Array[Color]
 }
@@ -480,6 +529,14 @@ pub fn StripePattern::to_string(Self) -> String
 pub impl PatternTrait for StripePattern
 pub impl Eq for StripePattern
 pub impl Show for StripePattern
+
+pub(all) struct Texture {
+  canvas : Canvas
+  mapping : &Mapping
+}
+pub impl PatternTrait for Texture
+pub impl Eq for Texture
+pub impl Show for Texture
 
 pub(all) struct Triangle {
   p1 : Tuple
@@ -526,6 +583,7 @@ pub impl Sub for Tuple
 pub(all) struct World {
   mut shapes : Array[Shape]
   mut lights : Array[Light]
+  mut background : Color
 }
 pub fn World::color_at(Self, Ray, remaining? : Int) -> Color
 pub fn World::intersect_world(Self, Ray) -> Intersections
@@ -537,6 +595,10 @@ pub fn World::shade_hit(Self, Computations, remaining? : Int) -> Color
 // Type aliases
 
 // Traits
+pub(open) trait Mapping : Show {
+  map(Self, Tuple) -> (Double, Double)
+}
+
 pub(open) trait Object : Show {
   local_intersect(Self, Ray) -> Array[Double]
   local_normal_at(Self, Tuple) -> Tuple
@@ -545,6 +607,7 @@ pub(open) trait Object : Show {
 
 pub(open) trait PatternTrait : Show {
   pattern_at(Self, Tuple) -> Color
+  uv_at(Self, Double, Double) -> Color
   clone(Self) -> Pattern
 }
 

@@ -781,7 +781,6 @@ async fn parse_pattern_async(
       Some(c) => c
       None => raise SceneParseError("Failed to decode PNG texture \{file}")
     }
-    
     let mapping_type = get_string_or_default(pattern_table, "mapping", "planar")
     let mapping : &Mapping = match mapping_type {
       "spherical" => SphericalMapping::{  } as &Mapping
@@ -790,7 +789,6 @@ async fn parse_pattern_async(
       "cubic" => CubicMapping::{  } as &Mapping
       _ => raise SceneParseError("Unknown mapping type: \{mapping_type}")
     }
-    
     let pattern = texture(canvas, mapping~)
     // Apply pattern transform if specified
     match pattern_table.get("transform") {

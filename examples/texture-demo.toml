@@ -43,10 +43,17 @@ material = { color = [0.3, 0.3, 0.3], ambient = 0.1, diffuse = 0.9, specular = 0
 [[objects]]
 type = "sphere"
 material = { pattern = "earth_texture", ambient = 0.1, diffuse = 0.9, specular = 0.1 }
-transform = { translation = [-3.0, 1.5, 0.0], scale = [1.5, 1.5, 1.5] }
+transform = { translation = [-3.0, 1.0, -5.0] }
 
 # Textured cube
 [[objects]]
 type = "cube"
 material = { pattern = "box_texture", ambient = 0.1, diffuse = 0.9, specular = 0.1 }
-transform = { translation = [3.0, 1.5, 0.0], scale = [1.5, 1.5, 1.5], rotation = [0.4, 0.4, 0.0] }
+transform = { translation = [3.0, 1.0, -5.0], rotation = [0.4, 0.4, 0.0] }
+
+# Back row shapes
+[[objects]]
+type = "cylinder"
+material = { color = [1.0, 0.0, 0.0], ambient = 0.1, diffuse = 0.9, specular = 0.1 }
+transform = { translation = [0.0, 1.0, 2.0] }
+properties = { minimum = 0.0, maximum = 2.0, closed = true }
