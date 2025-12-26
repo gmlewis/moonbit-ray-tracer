@@ -155,6 +155,32 @@ test "parse scene with transforms" {
 }
 
 ///|
+test "parse scene with multiple transforms and verify order" {
+  let toml_content =
+    #|[scene]
+    #|name = "Transform Order Scene"
+    #|[camera]
+    #|position = [0.0, 0.0, -5.0]
+    #|look_at = [0.0, 0.0, 0.0]
+    #|up = [0.0, 1.0, 0.0]
+    #|field_of_view = 1.047
+    #|[[objects]]
+    #|type = "sphere"
+    #|transform = { translation = [10.0, 5.0, 7.0], scale = [5.0, 5.0, 5.0], rotation = [1.5707963267948966, 0.0, 0.0] }
+    #|
+  let scene = @lib.parse_scene(toml_content)
+  let sphere = scene.world.shapes[0]
+
+  // From Page 87 of The Ray Tracer Challenge:
+  // p = point(1, 0, 1)
+  // rotation_x(pi/2) then scale(5, 5, 5) then translate(10, 5, 7)
+  // results in point(15, 0, 7)
+  let p = @lib.point(1, 0, 1)
+  let result = sphere.transform.mul_tuple(p)
+  assert_eq(result, @lib.point(15, 0, 7))
+}
+
+///|
 test "parse error - missing required field" {
   let toml_content =
     #|[scene]

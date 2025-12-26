@@ -1088,7 +1088,7 @@ fn parse_transform(value : @toml.TomlValue) -> Matrix raise SceneParseError {
       match transform_table.get("scale") {
         Some(scale_value) => {
           let scale = parse_vector3(scale_value)
-          transform = transform * scaling(scale.0, scale.1, scale.2)
+          transform = transform.scale(scale.0, scale.1, scale.2)
         }
         None => ()
       }
@@ -1097,10 +1097,10 @@ fn parse_transform(value : @toml.TomlValue) -> Matrix raise SceneParseError {
       match transform_table.get("rotation") {
         Some(rotation_value) => {
           let rotation = parse_vector3(rotation_value)
-          transform = transform *
-            rotation_x(rotation.0) *
-            rotation_y(rotation.1) *
-            rotation_z(rotation.2)
+          transform = transform
+            .rotate_x(rotation.0)
+            .rotate_y(rotation.1)
+            .rotate_z(rotation.2)
         }
         None => ()
       }
@@ -1109,8 +1109,7 @@ fn parse_transform(value : @toml.TomlValue) -> Matrix raise SceneParseError {
       match transform_table.get("translation") {
         Some(translation_value) => {
           let trans_vec = parse_vector3(translation_value)
-          transform = transform *
-            translation(trans_vec.0, trans_vec.1, trans_vec.2)
+          transform = transform.translate(trans_vec.0, trans_vec.1, trans_vec.2)
         }
         None => ()
       }
