@@ -1,8 +1,8 @@
 {
   "name": "gmlewis/ray-tracer",
-  "version": "0.10.26",
+  "version": "0.10.27",
   "deps": {
-    "gmlewis/image": "0.16.29",
+    "gmlewis/image": "0.16.30",
     "gmlewis/io": "0.22.18",
     "bob/toml": "0.1.6",
     "moonbitlang/async": "0.15.0",
