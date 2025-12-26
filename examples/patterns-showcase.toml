@@ -93,7 +93,7 @@ material = "floor_material"
 [[objects]]
 type = "sphere"
 material = { color = [1.0, 1.0, 1.0], ambient = 0.1, diffuse = 0.8, specular = 0.2, shininess = 100.0, reflective = 0.1, pattern = "stripes_red_white" }
-transform = { translation = [-5.0, 1.0, -2.0] }
+transform = { translation = [-5.0, 1.0, 2.0] }
 pattern_transform = { scale = [0.5, 1.0, 1.0] }
 
 [[objects]]
@@ -117,14 +117,14 @@ pattern_transform = { scale = [0.5, 0.5, 0.5] }
 [[objects]]
 type = "sphere"
 material = { color = [1.0, 1.0, 1.0], ambient = 0.1, diffuse = 0.8, specular = 0.2, shininess = 100.0, reflective = 0.1, pattern = "gradient_rings_rainbow" }
-transform = { translation = [5.0, 1.0, -2.0] }
+transform = { translation = [5.0, 1.0, 2.0] }
 pattern_transform = { scale = [0.3, 0.3, 0.3] }
 
 # Back row - Y = 1.0, Z = 2.0 (Behind)
 [[objects]]
 type = "cube"
 material = { color = [1.0, 1.0, 1.0], ambient = 0.1, diffuse = 0.8, specular = 0.2, shininess = 100.0, reflective = 0.1, pattern = "gradient_checkers_warm" }
-transform = { translation = [-3.0, 1.0, 2.0], rotation = [0.0, 0.785, 0.0] }
+transform = { translation = [-5.0, 1.0, 2.0], rotation = [0.0, 0.785, 0.0] }
 pattern_transform = { scale = [0.5, 0.5, 0.5] }
 
 [[objects]]
