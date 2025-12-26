@@ -5,6 +5,8 @@ pub(all) enum Renderable {
   Triangle(Triangle)
   SmoothTriangle(SmoothTriangle)
   CSG(CSG)
+  TriangleUV(TriangleUV)
+  SmoothTriangleUV(SmoothTriangleUV)
 }
 
 ///|
@@ -15,6 +17,8 @@ pub impl Show for Renderable with to_string(self) {
     Triangle(triangle) => triangle.to_string()
     SmoothTriangle(triangle) => triangle.to_string()
     CSG(csg) => csg.to_string()
+    TriangleUV(_) => "triangle_uv()"
+    SmoothTriangleUV(_) => "smooth_triangle_uv()"
   }
 }
 

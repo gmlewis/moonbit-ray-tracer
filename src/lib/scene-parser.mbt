@@ -618,6 +618,16 @@ fn parse_object(
         Some(_) => raise SceneParseError("CSG properties must be a table")
         None => raise SceneParseError("CSG properties are required")
       }
+    "gltf" => {
+      let _file = get_string_required(object_table, "file")
+      // Only supported in parse_scene_file
+      group()
+    }
+    "obj" => {
+      let _file = get_string_required(object_table, "file")
+      // Only supported in parse_scene_file
+      group()
+    }
     _ => raise SceneParseError("Unknown object type: \{object_type}")
   }
 
@@ -840,13 +850,13 @@ pub async fn parse_scene_file(
   resolve_material_patterns(root_table, materials, patterns)
 
   // Parse templates (definitions)
-  let templates = parse_templates(root_table, materials, patterns)
+  let templates = parse_templates_async(root_table, materials, patterns)
 
   // Parse lights
   let lights = parse_lights(root_table)
 
   // Parse objects (may reference materials, patterns and templates)
-  let shapes = parse_objects(root_table, materials, patterns, templates)
+  let shapes = parse_objects_async(root_table, materials, patterns, templates)
 
   // Create world
   let world = world()
@@ -869,7 +879,9 @@ pub async fn parse_scene_file(
     for shape in world.shapes {
       g.add_child(shape)
     }
+    println("Dividing world into BVH (limit=\{render_settings.divide})...")
     g.divide(render_settings.divide)
+    println("World divided.")
     world.shapes = [g]
   }
   { world, camera, render_settings, metadata, templates }

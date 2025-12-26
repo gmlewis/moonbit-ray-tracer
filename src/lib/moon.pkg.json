@@ -4,6 +4,7 @@
     "gmlewis/image/color",
     "gmlewis/image/png",
     "gmlewis/io",
+    "gmlewis/base64",
     "gmlewis/ray-tracer/hdr",
     "bob/toml",
     "moonbitlang/async",

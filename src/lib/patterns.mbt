@@ -57,7 +57,12 @@ pub fn Pattern::pattern_at_shape(
   self : Pattern,
   shape : Shape,
   world_point : Tuple,
+  uv? : (Double, Double),
 ) -> Color {
+  match uv {
+    Some((u, v)) => if u != 0 || v != 0 { return self.uv_at(u, v) }
+    None => ()
+  }
   let object_point = shape.world_to_object(world_point)
   let pattern_point = self.inv_transform.mul_tuple(object_point)
   self.pattern.pattern_at(pattern_point)

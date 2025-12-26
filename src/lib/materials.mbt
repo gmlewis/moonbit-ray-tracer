@@ -121,9 +121,11 @@ pub fn Material::lighting(
   normalv : Tuple,
   in_shadow? : Bool = false,
   shape? : Shape? = None,
+  uv? : (Double, Double),
 ) -> Color {
   let clr = match (self.pattern, shape) {
-    (Some(pattern), Some(shape)) => pattern.pattern_at_shape(shape, position)
+    (Some(pattern), Some(shape)) =>
+      pattern.pattern_at_shape(shape, position, uv?)
     _ => self.color
   }
   match self.lighting_mode {

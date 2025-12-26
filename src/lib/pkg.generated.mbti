@@ -33,7 +33,11 @@ pub fn cylinder(minimum? : Double, maximum? : Double, closed? : Bool) -> Shape
 
 pub fn cylindrical_map(Tuple) -> (Double, Double)
 
+pub fn decode_base64_uri(String) -> Bytes?
+
 pub fn default_world() -> World
+
+pub fn get_directory(String) -> String
 
 pub fn glass_sphere() -> Shape
 
@@ -51,6 +55,8 @@ pub fn intersection_allowed(Operation, Bool, Bool, Bool) -> Bool
 
 pub fn intersections(Array[Intersection]) -> Intersections
 
+pub async fn load_gltf_file(String) -> Shape raise SceneParseError
+
 pub fn mat2(Double, Double, Double, Double) -> Matrix
 
 pub fn mat3(Double, Double, Double, Double, Double, Double, Double, Double, Double) -> Matrix
@@ -62,6 +68,8 @@ pub fn mat4ident() -> Matrix
 pub fn mat4zero() -> Matrix
 
 pub fn material() -> Material
+
+pub fn parse_gltf(Json) -> Gltf?
 
 pub fn parse_obj_file(String) -> ObjFile raise ParserError
 
@@ -95,6 +103,8 @@ pub fn shearing(Double, Double, Double, Double, Double, Double) -> Matrix
 
 pub fn smooth_triangle(Tuple, Tuple, Tuple, Tuple, Tuple, Tuple) -> Shape
 
+pub fn smooth_triangle_uv(Tuple, Tuple, Tuple, Tuple, Tuple, Tuple, (Double, Double), (Double, Double), (Double, Double)) -> Shape
+
 pub fn sphere() -> Shape
 
 pub fn spherical_map(Tuple) -> (Double, Double)
@@ -106,6 +116,8 @@ pub fn texture(Canvas, mapping? : &Mapping) -> Pattern
 pub fn translation(Double, Double, Double) -> Matrix
 
 pub fn triangle(Tuple, Tuple, Tuple) -> Shape
+
+pub fn triangle_uv(Tuple, Tuple, Tuple, (Double, Double), (Double, Double), (Double, Double)) -> Shape
 
 pub fn tuple(Double, Double, Double, Double) -> Tuple
 
@@ -127,6 +139,16 @@ pub impl Eq for SceneParseError
 pub impl Show for SceneParseError
 
 // Types and methods
+pub(all) struct BinaryReader {
+  bytes : Bytes
+  mut offset : Int
+}
+pub fn BinaryReader::new(Bytes, offset? : Int) -> Self
+pub fn BinaryReader::read_float32(Self) -> Float
+pub fn BinaryReader::read_uint16(Self) -> UInt
+pub fn BinaryReader::read_uint32(Self) -> UInt
+pub fn BinaryReader::read_uint8(Self) -> UInt
+
 pub(all) struct Bounds {
   mut min : Tuple
   mut max : Tuple
@@ -221,6 +243,8 @@ pub(all) struct Computations {
   under_point : Tuple
   n1 : Double
   n2 : Double
+  uv_u : Double
+  uv_v : Double
 }
 pub fn Computations::schlick(Self) -> Double
 
@@ -259,6 +283,116 @@ pub(all) struct CylindricalMapping {
 pub impl Mapping for CylindricalMapping
 pub impl Eq for CylindricalMapping
 pub impl Show for CylindricalMapping
+
+pub(all) struct Gltf {
+  accessors : Array[GltfAccessor]
+  buffer_views : Array[GltfBufferView]
+  buffers : Array[GltfBuffer]
+  meshes : Array[GltfMesh]
+  nodes : Array[GltfNode]
+  scenes : Array[GltfScene]
+  scene : Int?
+  materials : Array[GltfMaterial]
+  textures : Array[GltfTexture]
+  images : Array[GltfImage]
+}
+
+pub(all) struct GltfAccessor {
+  buffer_view : Int?
+  byte_offset : Int
+  component_type : Int
+  count : Int
+  max : Array[Double]?
+  min : Array[Double]?
+  type_ : String
+}
+
+pub(all) struct GltfBuffer {
+  uri : String?
+  byte_length : Int
+}
+
+pub(all) struct GltfBufferView {
+  buffer : Int
+  byte_offset : Int
+  byte_length : Int
+  byte_stride : Int?
+  target : Int?
+}
+
+pub(all) struct GltfData {
+  gltf : Gltf
+  buffers : Array[Bytes]
+}
+pub fn GltfData::get_accessor_reader(Self, Int) -> (BinaryReader, Int)?
+pub fn GltfData::load_material(Self, Int) -> Material
+pub fn GltfData::load_material_texture(Self, Int) -> Pattern?
+pub fn GltfData::load_mesh(Self, Int) -> Shape
+pub fn GltfData::load_node(Self, Int) -> Shape
+pub fn GltfData::read_indices(Self, Int) -> Array[Int]
+pub fn GltfData::read_vec2(Self, Int) -> Array[(Double, Double)]
+
+pub(all) struct GltfImage {
+  uri : String?
+  buffer_view : Int?
+  mime_type : String?
+  name : String?
+}
+
+pub(all) struct GltfMaterial {
+  pbr_metallic_roughness : GltfMaterialPbr?
+  normal_texture : GltfTextureInfo?
+  occlusion_texture : GltfTextureInfo?
+  emissive_texture : GltfTextureInfo?
+  emissive_factor : Array[Double]?
+  name : String?
+}
+
+pub(all) struct GltfMaterialPbr {
+  base_color_factor : Array[Double]?
+  base_color_texture : GltfTextureInfo?
+  metallic_factor : Double?
+  roughness_factor : Double?
+  metallic_roughness_texture : GltfTextureInfo?
+}
+
+pub(all) struct GltfMesh {
+  primitives : Array[GltfMeshPrimitive]
+  name : String?
+}
+
+pub(all) struct GltfMeshPrimitive {
+  attributes : Map[String, Int]
+  indices : Int?
+  material : Int?
+  mode : Int
+}
+
+pub(all) struct GltfNode {
+  mesh : Int?
+  children : Array[Int]?
+  matrix : Array[Double]?
+  translation : Array[Double]?
+  rotation : Array[Double]?
+  scale : Array[Double]?
+  name : String?
+}
+
+pub(all) struct GltfScene {
+  nodes : Array[Int]
+  name : String?
+}
+
+pub(all) struct GltfTexture {
+  sampler : Int?
+  source : Int?
+  name : String?
+}
+
+pub(all) struct GltfTextureInfo {
+  index : Int
+  tex_coord : Int?
+}
 
 pub(all) struct GradientCheckersPattern {
   colors : Array[Color]
@@ -302,6 +436,8 @@ pub(all) struct Intersection {
   shape : Shape
   u : Double
   v : Double
+  mut uv_u : Double
+  mut uv_v : Double
 }
 pub fn Intersection::prepare_computations(Self, Ray, xs? : Intersections) -> Computations
 pub fn Intersection::to_string(Self) -> String
@@ -357,7 +493,7 @@ pub(all) struct Material {
   mut lighting_mode : LightingMode
 }
 pub fn Material::clone(Self) -> Self
-pub fn Material::lighting(Self, Light, Tuple, Tuple, Tuple, in_shadow? : Bool, shape? : Shape?) -> Color
+pub fn Material::lighting(Self, Light, Tuple, Tuple, Tuple, in_shadow? : Bool, shape? : Shape?, uv? : (Double, Double)) -> Color
 pub impl Eq for Material
 pub impl Show for Material
 
@@ -427,7 +563,7 @@ pub(all) struct Pattern {
   mut inv_transform : Matrix
 }
 pub fn Pattern::new(&PatternTrait) -> Self
-pub fn Pattern::pattern_at_shape(Self, Shape, Tuple) -> Color
+pub fn Pattern::pattern_at_shape(Self, Shape, Tuple, uv? : (Double, Double)) -> Color
 pub fn Pattern::set_pattern_transform(Self, Matrix) -> Unit
 pub impl PatternTrait for Pattern
 pub impl Eq for Pattern
@@ -472,6 +608,8 @@ pub(all) enum Renderable {
   Triangle(Triangle)
   SmoothTriangle(SmoothTriangle)
   CSG(CSG)
+  TriangleUV(TriangleUV)
+  SmoothTriangleUV(SmoothTriangleUV)
 }
 pub impl Show for Renderable
 
@@ -542,6 +680,27 @@ pub fn SmoothTriangle::local_normal_at(Self, Tuple, Intersection) -> Tuple
 pub impl Eq for SmoothTriangle
 pub impl Show for SmoothTriangle
 
+pub(all) struct SmoothTriangleUV {
+  p1 : Tuple
+  p2 : Tuple
+  p3 : Tuple
+  n1 : Tuple
+  n2 : Tuple
+  n3 : Tuple
+  uv1 : (Double, Double)
+  uv2 : (Double, Double)
+  uv3 : (Double, Double)
+  e1 : Tuple
+  e2 : Tuple
+  bounds : Bounds
+}
+pub fn SmoothTriangleUV::bounds(Self) -> Bounds
+pub fn SmoothTriangleUV::clone(Self) -> Self
+pub fn SmoothTriangleUV::local_intersect(Self, Ray) -> Array[(Double, Double, Double)]
+pub fn SmoothTriangleUV::local_normal_at(Self, Tuple, Intersection) -> Tuple
+pub impl Eq for SmoothTriangleUV
+pub impl Show for SmoothTriangleUV
+
 pub(all) struct Sphere {
 }
 pub impl Object for Sphere
@@ -585,6 +744,25 @@ pub fn Triangle::local_intersect(Self, Ray) -> Array[(Double, Double, Double)]
 pub fn Triangle::local_normal_at(Self, Tuple) -> Tuple
 pub impl Eq for Triangle
 pub impl Show for Triangle
+
+pub(all) struct TriangleUV {
+  p1 : Tuple
+  p2 : Tuple
+  p3 : Tuple
+  uv1 : (Double, Double)
+  uv2 : (Double, Double)
+  uv3 : (Double, Double)
+  e1 : Tuple
+  e2 : Tuple
+  normal : Tuple
+  bounds : Bounds
+}
+pub fn TriangleUV::bounds(Self) -> Bounds
+pub fn TriangleUV::clone(Self) -> Self
+pub fn TriangleUV::local_intersect(Self, Ray) -> Array[(Double, Double, Double)]
+pub fn TriangleUV::local_normal_at(Self, Tuple) -> Tuple
+pub impl Eq for TriangleUV
+pub impl Show for TriangleUV
 
 pub(all) struct Tuple {
   mut x : Double

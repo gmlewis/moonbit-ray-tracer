@@ -1,0 +1,28 @@
+# Textured Box Demo Scene
+[scene]
+name = "Textured Box"
+description = "A demo of a textured GLB model using PNG"
+version = "1.0"
+
+[scene.render]
+width = 400
+height = 400
+samples = 4
+divide = 5
+background = [0.1, 0.1, 0.1]
+
+[camera]
+position = [0.0, 1.0, -3.0]
+look_at = [0.0, 0.0, 0.0]
+up = [0.0, 1.0, 0.0]
+field_of_view = 0.8
+
+[[lights]]
+type = "point"
+position = [10.0, 10.0, -10.0]
+intensity = [1.0, 1.0, 1.0]
+
+[[objects]]
+type = "gltf"
+file = "examples/assets/BoxTextured.glb"
+transform = { rotation = [0.4, 0.4, 0.0] }

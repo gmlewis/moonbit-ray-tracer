@@ -4,6 +4,7 @@
   "deps": {
     "gmlewis/image": "0.16.30",
     "gmlewis/io": "0.22.18",
+    "gmlewis/base64": "0.15.4",
     "bob/toml": "0.1.6",
     "moonbitlang/async": "0.15.0",
     "TheWaWaR/clap": "0.2.6"

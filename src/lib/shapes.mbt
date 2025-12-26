@@ -30,6 +30,8 @@ pub fn Shape::bounds(self : Shape) -> Bounds {
     Group(group) => group.bounds()
     Triangle(triangle) => triangle.bounds()
     SmoothTriangle(triangle) => triangle.bounds()
+    TriangleUV(triangle) => triangle.bounds()
+    SmoothTriangleUV(triangle) => triangle.bounds()
     CSG(csg) => {
       let left_bounds = csg.left.parent_space_bounds()
       let right_bounds = csg.right.parent_space_bounds()
@@ -54,6 +56,8 @@ pub fn Shape::object_space_bounds(self : Shape) -> Bounds {
     Group(group) => group.bounds()
     Triangle(triangle) => triangle.bounds()
     SmoothTriangle(triangle) => triangle.bounds()
+    TriangleUV(triangle) => triangle.bounds()
+    SmoothTriangleUV(triangle) => triangle.bounds()
     CSG(csg) => {
       let left_bounds = csg.left.parent_space_bounds()
       let right_bounds = csg.right.parent_space_bounds()
@@ -104,6 +108,8 @@ pub fn Shape::clone(self : Shape) -> Shape {
     Group(g) => Renderable::Group(g.clone())
     Triangle(t) => Renderable::Triangle(t.clone())
     SmoothTriangle(t) => Renderable::SmoothTriangle(t.clone())
+    TriangleUV(t) => Renderable::TriangleUV(t.clone())
+    SmoothTriangleUV(t) => Renderable::SmoothTriangleUV(t.clone())
     CSG(c) => Renderable::CSG(c.clone())
   }
   let s = Shape::new(object)
@@ -148,6 +154,40 @@ pub fn Shape::local_intersect(self : Shape, local_ray : Ray) -> Intersections {
       let ts = triangle.local_intersect(local_ray)
       intersections(ts.map(fn(t) { intersection(t.0, self, u=t.1, v=t.2) }))
     }
+    TriangleUV(triangle) => {
+      let ts = triangle.local_intersect(local_ray)
+      intersections(
+        ts.map(fn(t) {
+          let hit = intersection(t.0, self, u=t.1, v=t.2)
+          let uv_u = triangle.uv2.0 * t.1 +
+            triangle.uv3.0 * t.2 +
+            triangle.uv1.0 * (1.0 - t.1 - t.2)
+          let uv_v = triangle.uv2.1 * t.1 +
+            triangle.uv3.1 * t.2 +
+            triangle.uv1.1 * (1.0 - t.1 - t.2)
+          hit.uv_u = uv_u
+          hit.uv_v = uv_v
+          hit
+        }),
+      )
+    }
+    SmoothTriangleUV(triangle) => {
+      let ts = triangle.local_intersect(local_ray)
+      intersections(
+        ts.map(fn(t) {
+          let hit = intersection(t.0, self, u=t.1, v=t.2)
+          let uv_u = triangle.uv2.0 * t.1 +
+            triangle.uv3.0 * t.2 +
+            triangle.uv1.0 * (1.0 - t.1 - t.2)
+          let uv_v = triangle.uv2.1 * t.1 +
+            triangle.uv3.1 * t.2 +
+            triangle.uv1.1 * (1.0 - t.1 - t.2)
+          hit.uv_u = uv_u
+          hit.uv_v = uv_v
+          hit
+        }),
+      )
+    }
     CSG(csg) => {
       let xs = csg.left.intersect(local_ray)
       let right_xs = csg.right.intersect(local_ray)
@@ -188,6 +228,17 @@ pub fn Shape::local_normal_at(
           vector(0, 0, 0)
         }
       }
+    TriangleUV(triangle) => triangle.local_normal_at(local_point)
+    SmoothTriangleUV(triangle) =>
+      match hit {
+        Some(hit) => triangle.local_normal_at(local_point, hit)
+        _ => {
+          println(
+            "smooth_triangle_uv \{triangle} called local_normal_at without hit point",
+          )
+          vector(0, 0, 0)
+        }
+      }
     CSG(_) => vector(0, 0, 0) // never called directly since intersections report left or right object.
   }
 }
@@ -199,6 +250,8 @@ pub fn Shape::children(self : Shape) -> Array[Shape] {
     Group(group) => group.children
     Triangle(_) => []
     SmoothTriangle(_) => []
+    TriangleUV(_) => []
+    SmoothTriangleUV(_) => []
     CSG(_) => []
   }
 }
@@ -213,6 +266,8 @@ pub fn Shape::add_child(self : Shape, child : Shape) -> Unit {
     Object(_) => ()
     Triangle(_) => ()
     SmoothTriangle(_) => ()
+    TriangleUV(_) => ()
+    SmoothTriangleUV(_) => ()
     CSG(_) => ()
   }
 }
@@ -225,6 +280,8 @@ pub fn Shape::divide(self : Shape, limit : Int) -> Unit {
       csg.left.divide(limit)
       csg.right.divide(limit)
     }
+    TriangleUV(_) => ()
+    SmoothTriangleUV(_) => ()
     _ => ()
   }
 }
@@ -266,6 +323,8 @@ pub fn Shape::includes_shape(self : Shape, shape : Shape) -> Bool {
     Object(_) => ()
     Triangle(_) => ()
     SmoothTriangle(_) => ()
+    TriangleUV(_) => ()
+    SmoothTriangleUV(_) => ()
     CSG(csg) =>
       return csg.left.includes_shape(shape) || csg.right.includes_shape(shape)
   }

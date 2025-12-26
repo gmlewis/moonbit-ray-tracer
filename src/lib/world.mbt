@@ -57,7 +57,8 @@ pub fn World::shade_hit(
   // Get surface color including pattern
 
   let clr = match (comps.shape.material.pattern, Some(comps.shape)) {
-    (Some(pattern), Some(shape)) => pattern.pattern_at_shape(shape, comps.point)
+    (Some(pattern), Some(shape)) =>
+      pattern.pattern_at_shape(shape, comps.point, uv=(comps.uv_u, comps.uv_v))
     _ => comps.shape.material.color
   }
 
@@ -113,6 +114,7 @@ pub fn World::shade_hit(
           comps.normalv,
           in_shadow~,
           shape=Some(comps.shape),
+          uv=(comps.uv_u, comps.uv_v),
         )
       }
       Area(_, u_steps, _, v_steps) => {
@@ -135,6 +137,7 @@ pub fn World::shade_hit(
                 comps.normalv,
                 in_shadow~,
                 shape=Some(comps.shape),
+                uv=(comps.uv_u, comps.uv_v),
               )
           }
         }
@@ -239,7 +242,11 @@ pub fn World::reflected_color(
     let mut f0 = color(0.04, 0.04, 0.04)
     let clr = match (material.pattern, Some(comps.shape)) {
       (Some(pattern), Some(shape)) =>
-        pattern.pattern_at_shape(shape, comps.point)
+        pattern.pattern_at_shape(
+          shape,
+          comps.point,
+          uv=(comps.uv_u, comps.uv_v),
+        )
       _ => material.color
     }
     f0 = f0 * color(1.0, 1.0, 1.0).mul_scalar(1.0 - material.metallic) +
