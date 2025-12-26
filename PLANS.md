@@ -47,9 +47,7 @@ This document outlines a comprehensive plan to take the MoonBit ray tracer to th
 
 ### Progressive Rendering
 - [ ] Implement progressive pixel sampling
-- [ ] Add real-time image updates during rendering
 - [ ] Create adaptive sampling based on image variance
-- [ ] Add render cancellation and pause/resume
 - [ ] Implement render time estimation
 - [ ] Add progressive quality indicators
 
