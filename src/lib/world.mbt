@@ -62,14 +62,44 @@ pub fn World::shade_hit(
   }
 
   // Add ambient light from environment map or background
-  let ambient_color = match self.environment_map {
+  let (ambient_diffuse, ambient_specular) = match self.environment_map {
     Some(env) => {
-      let (u, v) = spherical_map(comps.normalv)
-      env.uv_at(u, v)
+      let (u_diff, v_diff) = spherical_map(comps.normalv)
+      let (u_spec, v_spec) = spherical_map(comps.reflectv)
+      (env.uv_at(u_diff, v_diff), env.uv_at(u_spec, v_spec))
     }
-    None => self.background
+    None => (self.background, self.background)
   }
-  let mut surface = clr * ambient_color.mul_scalar(comps.shape.material.ambient)
+  let material = comps.shape.material
+  let mut surface = if material.lighting_mode == PBR {
+    let n_dot_v = @cmp.maximum(comps.normalv.dot(comps.eyev), 0.0)
+    let mut f0 = color(0.04, 0.04, 0.04)
+    f0 = f0 * color(1.0, 1.0, 1.0).mul_scalar(1.0 - material.metallic) +
+      clr.mul_scalar(material.metallic)
+
+    // Fresnel Schlick for IBL
+    let f = f0 +
+      (color(1.0, 1.0, 1.0) - f0).mul_scalar(@math.pow(1.0 - n_dot_v, 5.0))
+    let ks = f
+    let mut kd = color(1.0, 1.0, 1.0) - ks
+    kd = kd.mul_scalar(1.0 - material.metallic)
+    let diffuse_ibl = clr * ambient_diffuse * kd
+    // For rough materials, we should ideally use a blurred environment map.
+    // As a simple approximation, we blend between specular and diffuse IBL based on roughness.
+    let specular_ibl = ambient_specular.mul_scalar(1.0 - material.roughness) +
+      ambient_diffuse.mul_scalar(material.roughness)
+    let specular_ibl = specular_ibl * ks
+
+    // Ambient property scales the whole IBL. If it's 0, use a small default for PBR.
+    let ambient_scale = if material.ambient == 0 {
+      0.1
+    } else {
+      material.ambient
+    }
+    (diffuse_ibl + specular_ibl).mul_scalar(ambient_scale)
+  } else {
+    clr * ambient_diffuse.mul_scalar(material.ambient)
+  }
   for light in self.lights {
     let mut light_sum = color(0, 0, 0)
     let ambient = clr * light.intensity.mul_scalar(comps.shape.material.ambient)
@@ -168,18 +198,58 @@ pub fn World::is_shadowed(
 }
 
 ///|
+fn pseudo_random_vector(p : Tuple) -> Tuple {
+  let x = @math.sin(p.x * 12.9898 + p.y * 78.233 + p.z * 37.719) * 43758.5453
+  let x = x - x.floor()
+  let y = @math.sin(p.x * 39.346 + p.y * 11.135 + p.z * 83.221) * 43758.5453
+  let y = y - y.floor()
+  let z = @math.sin(p.x * 73.156 + p.y * 52.234 + p.z * 21.337) * 43758.5453
+  let z = z - z.floor()
+  vector(x * 2.0 - 1.0, y * 2.0 - 1.0, z * 2.0 - 1.0)
+}
+
+///|
 pub fn World::reflected_color(
   self : World,
   comps : Computations,
   remaining : Int,
 ) -> Color {
   let material = comps.shape.material
-  let reflective = material.reflective
+  let mut reflective = material.reflective
+
+  // For PBR materials, they are inherently reflective.
+  // If reflective is not set, we use a default based on metallic property.
+  if material.lighting_mode == PBR && reflective == 0 {
+    reflective = 0.04 + 0.96 * material.metallic
+  }
   if remaining <= 0 || reflective == 0 {
     return color(0, 0, 0)
   }
-  let reflect_ray = ray(comps.over_point, comps.reflectv)
+  let mut reflect_dir = comps.reflectv
+  if material.lighting_mode == PBR && material.roughness > 0 {
+    let jitter = pseudo_random_vector(comps.point).mul_scalar(
+      material.roughness * material.roughness,
+    )
+    reflect_dir = (reflect_dir + jitter).normalize()
+  }
+  let reflect_ray = ray(comps.over_point, reflect_dir)
   let reflected = self.color_at(reflect_ray, remaining=remaining - 1)
+  if material.lighting_mode == PBR {
+    let n_dot_v = @cmp.maximum(comps.normalv.dot(comps.eyev), 0.0)
+    let mut f0 = color(0.04, 0.04, 0.04)
+    let clr = match (material.pattern, Some(comps.shape)) {
+      (Some(pattern), Some(shape)) =>
+        pattern.pattern_at_shape(shape, comps.point)
+      _ => material.color
+    }
+    f0 = f0 * color(1.0, 1.0, 1.0).mul_scalar(1.0 - material.metallic) +
+      clr.mul_scalar(material.metallic)
+    let f = f0 +
+      (color(1.0, 1.0, 1.0) - f0).mul_scalar(@math.pow(1.0 - n_dot_v, 5.0))
+
+    // For PBR, reflective scales the overall reflection contribution
+    return reflected * f.mul_scalar(reflective)
+  }
   if material.metallic > 0 {
     // Tint reflection by material color for metals
     let tint = material.color.mul_scalar(material.metallic) +

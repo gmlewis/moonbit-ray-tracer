@@ -9,7 +9,7 @@ width = 800
 height = 400
 samples = 4
 max_bounces = 4
-background = [0.02, 0.02, 0.05]
+background = [0.0, 0.0, 0.0]
 divide = 1
 
 [camera]
@@ -28,38 +28,51 @@ type = "point"
 position = [10.0, 10.0, -10.0]
 intensity = [0.5, 0.5, 0.5]
 
+[environment]
+type = "texture"
+file = "examples/assets/pool_1k.hdr"
+mapping = "spherical"
+
 # Gold material
 [materials.gold]
+lighting_mode = "pbr"
 color = [1.0, 0.84, 0.0]
 ambient = 0.0
 metallic = 1.0
 roughness = 0.1
+reflective = 0.6
 
 # Silver material
 [materials.silver]
+lighting_mode = "pbr"
 color = [0.75, 0.75, 0.75]
 ambient = 0.0
 metallic = 1.0
 roughness = 0.3
+reflective = 0.5
 
 # Plastic material
 [materials.red_plastic]
+lighting_mode = "pbr"
 color = [1.0, 0.0, 0.0]
 ambient = 0.0
 metallic = 0.0
 roughness = 0.2
+reflective = 0.1
 
 # Rough metal
 [materials.rough_metal]
+lighting_mode = "pbr"
 color = [0.5, 0.5, 0.5]
 ambient = 0.0
 metallic = 1.0
 roughness = 0.8
+reflective = 0.2
 
 # Floor
-[[objects]]
-type = "plane"
-material = { color = [0.3, 0.3, 0.3], ambient = 0.0, metallic = 0.0, roughness = 0.9 }
+# [[objects]]
+# type = "plane"
+# material = { color = [0.3, 0.3, 0.3], ambient = 0.0, metallic = 0.0, roughness = 0.9, lighting_mode = "pbr" }
 
 # Gold sphere
 [[objects]]
