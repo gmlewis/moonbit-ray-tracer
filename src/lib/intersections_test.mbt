@@ -230,3 +230,17 @@ test "An intersection can encapsulate 'u' and 'v' (p.281)" {
   assert_eq(i.u, 0.2)
   assert_eq(i.v, 0.4)
 }
+
+///|
+test "prepare_computations preserves UV coordinates and has_uv flag" {
+  let r = ray(point(0, 0, -5), vector(0, 0, 1))
+  let s = sphere()
+  let i = @lib.intersection(4, s)
+  i.uv_u = 0.2
+  i.uv_v = 0.4
+  i.has_uv = true
+  let comps = i.prepare_computations(r)
+  assert_eq(comps.uv_u, 0.2)
+  assert_eq(comps.uv_v, 0.4)
+  assert_eq(comps.has_uv, true)
+}

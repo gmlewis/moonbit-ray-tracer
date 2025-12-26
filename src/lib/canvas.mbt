@@ -154,7 +154,10 @@ pub fn Canvas::to_ppm(self : Canvas) -> String {
 }
 
 ///|
-pub fn Canvas::from_image(img : &@image.Image) -> Canvas {
+pub fn Canvas::from_image(
+  img : &@image.Image,
+  linear? : Bool = false,
+) -> Canvas {
   let rect = img.bounds()
   let width = rect.dx()
   let height = rect.dy()
@@ -167,18 +170,30 @@ pub fn Canvas::from_image(img : &@image.Image) -> Canvas {
       let r = r.to_double() / 65535.0
       let g = g.to_double() / 65535.0
       let b = b.to_double() / 65535.0
-      c.write_pixel(x, y, color(r, g, b))
+      let c1 = color(r, g, b)
+      c.write_pixel(x, y, if linear { c1 } else { c1.srgb_to_linear() })
     }
   }
   c
 }
 
 ///|
-pub fn Canvas::from_png(png_data : Bytes) -> Canvas? {
+pub fn Canvas::from_png(png_data : Bytes, linear? : Bool = false) -> Canvas? {
   let b = @io.Buffer::from_bytes(png_data)
   let (img, err) = @png.decode(b)
   if err is None {
-    Some(Canvas::from_image(img))
+    Some(Canvas::from_image(img, linear~))
+  } else {
+    None
+  }
+}
+
+///|
+pub fn Canvas::from_jpeg(jpeg_data : Bytes, linear? : Bool = false) -> Canvas? {
+  let b = @io.Buffer::from_bytes(jpeg_data)
+  let (img, err) = @jpeg.decode(b)
+  if err is None {
+    Some(Canvas::from_image(img, linear~))
   } else {
     None
   }

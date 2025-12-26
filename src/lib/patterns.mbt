@@ -60,7 +60,7 @@ pub fn Pattern::pattern_at_shape(
   uv? : (Double, Double),
 ) -> Color {
   match uv {
-    Some((u, v)) => if u != 0 || v != 0 { return self.uv_at(u, v) }
+    Some((u, v)) => return self.uv_at(u, v)
     None => ()
   }
   let object_point = shape.world_to_object(world_point)

@@ -350,8 +350,8 @@ pub fn GltfData::read_vec2(
     let start_offset = reader.offset
     let u = reader.read_float32().to_double()
     let v = reader.read_float32().to_double()
-    // GLTF UVs are top-left origin
-    res.push((u, v))
+    // GLTF UVs are top-left origin, flip to bottom-left for ray tracer
+    res.push((u, 1.0 - v))
     if stride > 8 {
       reader.offset = start_offset + stride
     }
@@ -491,7 +491,10 @@ pub fn GltfData::load_material(self : GltfData, mat_idx : Int) -> Material {
   match g_mat.pbr_metallic_roughness {
     Some(pbr) => {
       match pbr.base_color_factor {
-        Some(c) => if c.length() >= 3 { mat.color = color(c[0], c[1], c[2]) }
+        Some(c) =>
+          if c.length() >= 3 {
+            mat.color = color(c[0], c[1], c[2]).srgb_to_linear()
+          }
         None => ()
       }
       mat.metallic = match pbr.metallic_factor {
@@ -504,13 +507,51 @@ pub fn GltfData::load_material(self : GltfData, mat_idx : Int) -> Material {
       }
       match pbr.base_color_texture {
         Some(info) =>
-          match self.load_material_texture(info.index) {
+          match self.load_material_texture(info.index, linear=false) {
             Some(tex) => mat.pattern = Some(tex)
             None => ()
           }
         None => ()
       }
+      match pbr.metallic_roughness_texture {
+        Some(info) =>
+          match self.load_material_texture(info.index, linear=true) {
+            // TODO: Use metallic_roughness_texture
+            Some(_tex) => ()
+            None => ()
+          }
+        None => ()
+      }
     }
+    None => ()
+  }
+
+  // Handle other textures
+  match g_mat.normal_texture {
+    Some(info) =>
+      match self.load_material_texture(info.index, linear=true) {
+        // TODO: Use normal_texture
+        Some(_tex) => ()
+        None => ()
+      }
+    None => ()
+  }
+  match g_mat.occlusion_texture {
+    Some(info) =>
+      match self.load_material_texture(info.index, linear=true) {
+        // TODO: Use occlusion_texture
+        Some(_tex) => ()
+        None => ()
+      }
+    None => ()
+  }
+  match g_mat.emissive_texture {
+    Some(info) =>
+      match self.load_material_texture(info.index, linear=false) {
+        // emissive is usually sRGB
+        Some(_tex) => ()
+        None => ()
+      }
     None => ()
   }
   mat
@@ -520,6 +561,7 @@ pub fn GltfData::load_material(self : GltfData, mat_idx : Int) -> Material {
 pub fn GltfData::load_material_texture(
   self : GltfData,
   tex_idx : Int,
+  linear? : Bool = false,
 ) -> Pattern? {
   let tex = match self.gltf.textures.get(tex_idx) {
     Some(t) => t
@@ -533,28 +575,36 @@ pub fn GltfData::load_material_texture(
     Some(img) => img
     None => return None
   }
-
-  // Skip JPEG decoding if mime type is known, as it will just fail and spam logs
-  match image.mime_type {
-    Some("image/jpeg") => return None
-    _ => ()
-  }
   let bytes = match self.load_image(image) {
     Some(b) => b
     None => return None
   }
 
-  // Check PNG magic
-  if bytes.length() < 8 ||
-    bytes[0] != (0x89).to_byte() ||
-    bytes[1] != (0x50).to_byte() {
-    return None
+  // Check PNG magic: 89 50 4E 47 0D 0A 1A 0A
+  if bytes.length() >= 8 &&
+    bytes[0] == (0x89).to_byte() &&
+    bytes[1] == (0x50).to_byte() &&
+    bytes[2] == (0x4E).to_byte() &&
+    bytes[3] == (0x47).to_byte() {
+    let canvas = match Canvas::from_png(bytes, linear~) {
+      Some(c) => c
+      None => return None
+    }
+    return Some(texture(canvas))
   }
-  let canvas = match Canvas::from_png(bytes) {
-    Some(c) => c
-    None => return None
+
+  // Check JPEG magic: FF D8 FF
+  if bytes.length() >= 3 &&
+    bytes[0] == (0xFF).to_byte() &&
+    bytes[1] == (0xD8).to_byte() &&
+    bytes[2] == (0xFF).to_byte() {
+    let canvas = match Canvas::from_jpeg(bytes, linear~) {
+      Some(c) => c
+      None => return None
+    }
+    return Some(texture(canvas))
   }
-  Some(texture(canvas))
+  None
 }
 
 ///|

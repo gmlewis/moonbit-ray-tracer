@@ -6,6 +6,7 @@ pub(all) struct Intersection {
   v : Double
   mut uv_u : Double
   mut uv_v : Double
+  mut has_uv : Bool
 }
 
 ///|
@@ -15,7 +16,7 @@ pub fn intersection(
   u? : Double = 0,
   v? : Double = 0,
 ) -> Intersection {
-  { t, shape, u, v, uv_u: 0.0, uv_v: 0.0 }
+  { t, shape, u, v, uv_u: 0.0, uv_v: 0.0, has_uv: false }
 }
 
 ///|
@@ -108,6 +109,7 @@ pub(all) struct Computations {
   n2 : Double // leaving index of refraction
   uv_u : Double
   uv_v : Double
+  has_uv : Bool
 }
 
 ///|
@@ -187,6 +189,7 @@ pub fn Intersection::prepare_computations(
     n2,
     uv_u: self.uv_u,
     uv_v: self.uv_v,
+    has_uv: self.has_uv,
   }
 }
 

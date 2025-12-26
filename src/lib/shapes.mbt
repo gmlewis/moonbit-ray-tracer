@@ -159,14 +159,15 @@ pub fn Shape::local_intersect(self : Shape, local_ray : Ray) -> Intersections {
       intersections(
         ts.map(fn(t) {
           let hit = intersection(t.0, self, u=t.1, v=t.2)
-          let uv_u = triangle.uv2.0 * t.1 +
-            triangle.uv3.0 * t.2 +
-            triangle.uv1.0 * (1.0 - t.1 - t.2)
-          let uv_v = triangle.uv2.1 * t.1 +
-            triangle.uv3.1 * t.2 +
-            triangle.uv1.1 * (1.0 - t.1 - t.2)
+          let uv_u = triangle.uv1.0 * (1.0 - t.1 - t.2) +
+            triangle.uv2.0 * t.1 +
+            triangle.uv3.0 * t.2
+          let uv_v = triangle.uv1.1 * (1.0 - t.1 - t.2) +
+            triangle.uv2.1 * t.1 +
+            triangle.uv3.1 * t.2
           hit.uv_u = uv_u
           hit.uv_v = uv_v
+          hit.has_uv = true
           hit
         }),
       )
@@ -176,14 +177,15 @@ pub fn Shape::local_intersect(self : Shape, local_ray : Ray) -> Intersections {
       intersections(
         ts.map(fn(t) {
           let hit = intersection(t.0, self, u=t.1, v=t.2)
-          let uv_u = triangle.uv2.0 * t.1 +
-            triangle.uv3.0 * t.2 +
-            triangle.uv1.0 * (1.0 - t.1 - t.2)
-          let uv_v = triangle.uv2.1 * t.1 +
-            triangle.uv3.1 * t.2 +
-            triangle.uv1.1 * (1.0 - t.1 - t.2)
+          let uv_u = triangle.uv1.0 * (1.0 - t.1 - t.2) +
+            triangle.uv2.0 * t.1 +
+            triangle.uv3.0 * t.2
+          let uv_v = triangle.uv1.1 * (1.0 - t.1 - t.2) +
+            triangle.uv2.1 * t.1 +
+            triangle.uv3.1 * t.2
           hit.uv_u = uv_u
           hit.uv_v = uv_v
+          hit.has_uv = true
           hit
         }),
       )

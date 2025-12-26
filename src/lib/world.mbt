@@ -55,10 +55,10 @@ pub fn World::shade_hit(
 ) -> Color {
 
   // Get surface color including pattern
-
+  let uv = if comps.has_uv { Some((comps.uv_u, comps.uv_v)) } else { None }
   let clr = match (comps.shape.material.pattern, Some(comps.shape)) {
     (Some(pattern), Some(shape)) =>
-      pattern.pattern_at_shape(shape, comps.point, uv=(comps.uv_u, comps.uv_v))
+      pattern.pattern_at_shape(shape, comps.point, uv?)
     _ => comps.shape.material.color
   }
 
@@ -99,11 +99,15 @@ pub fn World::shade_hit(
     }
     (diffuse_ibl + specular_ibl).mul_scalar(ambient_scale)
   } else {
-    clr * ambient_diffuse.mul_scalar(material.ambient)
+    color(0, 0, 0)
   }
   for light in self.lights {
     let mut light_sum = color(0, 0, 0)
-    let ambient = clr * light.intensity.mul_scalar(comps.shape.material.ambient)
+    let ambient = if material.lighting_mode == Phong {
+      clr * light.intensity.mul_scalar(comps.shape.material.ambient)
+    } else {
+      color(0, 0, 0)
+    }
     match light.kind {
       Point => {
         let in_shadow = self.is_shadowed(comps.over_point, light.position)
@@ -114,7 +118,7 @@ pub fn World::shade_hit(
           comps.normalv,
           in_shadow~,
           shape=Some(comps.shape),
-          uv=(comps.uv_u, comps.uv_v),
+          uv?,
         )
       }
       Area(_, u_steps, _, v_steps) => {
@@ -137,7 +141,7 @@ pub fn World::shade_hit(
                 comps.normalv,
                 in_shadow~,
                 shape=Some(comps.shape),
-                uv=(comps.uv_u, comps.uv_v),
+                uv?,
               )
           }
         }
@@ -240,13 +244,10 @@ pub fn World::reflected_color(
   if material.lighting_mode == PBR {
     let n_dot_v = @cmp.maximum(comps.normalv.dot(comps.eyev), 0.0)
     let mut f0 = color(0.04, 0.04, 0.04)
+    let uv = if comps.has_uv { Some((comps.uv_u, comps.uv_v)) } else { None }
     let clr = match (material.pattern, Some(comps.shape)) {
       (Some(pattern), Some(shape)) =>
-        pattern.pattern_at_shape(
-          shape,
-          comps.point,
-          uv=(comps.uv_u, comps.uv_v),
-        )
+        pattern.pattern_at_shape(shape, comps.point, uv?)
       _ => material.color
     }
     f0 = f0 * color(1.0, 1.0, 1.0).mul_scalar(1.0 - material.metallic) +

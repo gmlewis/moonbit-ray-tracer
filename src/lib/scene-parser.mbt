@@ -632,6 +632,50 @@ fn parse_object(
   }
 
   // Apply material (either reference or inline)
+  if (object_type != "gltf" && object_type != "obj") ||
+    object_table.get("material") is Some(_) {
+    apply_material_and_transform_sync(shape, object_table, materials, patterns)
+  } else {
+    // Still need to apply transform
+    apply_transform_sync(shape, object_table)
+  }
+  shape
+}
+
+///|
+fn apply_transform_sync(
+  shape : Shape,
+  object_table : Map[String, @toml.TomlValue],
+) -> Unit raise SceneParseError {
+  // Apply object transform if specified
+  match object_table.get("transform") {
+    Some(t) => {
+      let transform = parse_transform(t)
+      shape.set_transform(transform)
+    }
+    _ => ()
+  }
+
+  // Apply pattern transform if specified
+  match object_table.get("pattern_transform") {
+    Some(t) => {
+      let transform = parse_transform(t)
+      match shape.material.pattern {
+        Some(pattern) => pattern.set_pattern_transform(transform)
+        None => () // No pattern to transform
+      }
+    }
+    _ => ()
+  }
+}
+
+///|
+fn apply_material_and_transform_sync(
+  shape : Shape,
+  object_table : Map[String, @toml.TomlValue],
+  materials : Map[String, Material],
+  patterns : Map[String, Pattern],
+) -> Unit raise SceneParseError {
   let has_material_ref = match object_table.get("material") {
     Some(@toml.TomlString(_)) => true
     _ => false
@@ -707,35 +751,14 @@ fn parse_object(
     }
   }
 
-  // Apply object transform if specified
-  match object_table.get("transform") {
-    Some(transform_value) => {
-      let transform = parse_transform(transform_value)
-      shape.set_transform(transform)
-    }
-    None => ()
-  }
+  // Finalize with transforms
+  apply_transform_sync(shape, object_table)
 
-  // Apply pattern transform if specified
-  match object_table.get("pattern_transform") {
-    Some(transform_value) => {
-      let transform = parse_transform(transform_value)
-      match shape.material.pattern {
-        Some(pattern) => pattern.set_pattern_transform(transform)
-        None => () // No pattern to transform
-      }
-    }
-    None => ()
-  }
-
-  // Handle group and CSG children
+  // Handle group and CSG children material propagation
+  let object_type = get_string_required(object_table, "type")
   if object_type == "group" || object_type == "csg" {
-    // If the group or CSG itself has a material, apply it to all its descendants
-    // that don't have a material of their own.
-    // Note: shape is the group or CSG.
     propagate_material(shape, shape.material)
   }
-  shape
 }
 
 ///|

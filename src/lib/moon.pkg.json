@@ -2,6 +2,7 @@
   "import": [
     "gmlewis/image",
     "gmlewis/image/color",
+    "gmlewis/image/jpeg",
     "gmlewis/image/png",
     "gmlewis/io",
     "gmlewis/base64",

@@ -199,8 +199,9 @@ pub(all) struct Canvas {
 }
 pub fn Canvas::clear(Self, Color) -> Unit
 pub fn Canvas::from_hdr(@hdr.HdrImage) -> Self
-pub fn Canvas::from_image(&@image.Image) -> Self
-pub fn Canvas::from_png(Bytes) -> Self?
+pub fn Canvas::from_image(&@image.Image, linear? : Bool) -> Self
+pub fn Canvas::from_jpeg(Bytes, linear? : Bool) -> Self?
+pub fn Canvas::from_png(Bytes, linear? : Bool) -> Self?
 pub fn Canvas::pixel_at(Self, Int, Int) -> Color
 pub fn Canvas::pixel_at_bilinear(Self, Double, Double) -> Color
 pub fn Canvas::to_png(Self) -> Bytes raise @image.SizeError
@@ -222,8 +223,10 @@ pub(all) struct Color {
   green : Double
   blue : Double
 }
+pub fn Color::clamp_valid(Self) -> Self
 pub fn Color::clone(Self) -> Self
 pub fn Color::mul_scalar(Self, Double) -> Self
+pub fn Color::srgb_to_linear(Self) -> Self
 pub fn Color::to_string(Self) -> String
 pub impl Add for Color
 pub impl Eq for Color
@@ -245,6 +248,7 @@ pub(all) struct Computations {
   n2 : Double
   uv_u : Double
   uv_v : Double
+  has_uv : Bool
 }
 pub fn Computations::schlick(Self) -> Double
 
@@ -326,7 +330,7 @@ pub(all) struct GltfData {
 }
 pub fn GltfData::get_accessor_reader(Self, Int) -> (BinaryReader, Int)?
 pub fn GltfData::load_material(Self, Int) -> Material
-pub fn GltfData::load_material_texture(Self, Int) -> Pattern?
+pub fn GltfData::load_material_texture(Self, Int, linear? : Bool) -> Pattern?
 pub fn GltfData::load_mesh(Self, Int) -> Shape
 pub fn GltfData::load_node(Self, Int) -> Shape
 pub fn GltfData::read_indices(Self, Int) -> Array[Int]
@@ -438,6 +442,7 @@ pub(all) struct Intersection {
   v : Double
   mut uv_u : Double
   mut uv_v : Double
+  mut has_uv : Bool
 }
 pub fn Intersection::prepare_computations(Self, Ray, xs? : Intersections) -> Computations
 pub fn Intersection::to_string(Self) -> String

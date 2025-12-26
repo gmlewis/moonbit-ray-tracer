@@ -1,4 +1,7 @@
 target/
 .moonagent/
 .mooncakes/
+*.glb
+*.md
 *.obj
+*.png

@@ -71,5 +71,36 @@ pub fn Color::mul_scalar(self : Color, s : Double) -> Color {
   let red = self.red * s
   let green = self.green * s
   let blue = self.blue * s
-  { red, green, blue }
+  color(red, green, blue).clamp_valid()
+}
+
+///|
+pub fn Color::clamp_valid(self : Color) -> Color {
+  let r = if self.red.is_nan() || self.red.is_inf() { 0.0 } else { self.red }
+  let g = if self.green.is_nan() || self.green.is_inf() {
+    0.0
+  } else {
+    self.green
+  }
+  let b = if self.blue.is_nan() || self.blue.is_inf() { 0.0 } else { self.blue }
+  color(r, g, b)
+}
+
+///|
+fn srgb_to_linear_value(v : Double) -> Double {
+  let v = if v < 0 { 0.0 } else { v }
+  if v <= 0.04045 {
+    v / 12.92
+  } else {
+    @math.pow((v + 0.055) / 1.055, 2.4)
+  }
+}
+
+///|
+pub fn Color::srgb_to_linear(self : Color) -> Color {
+  color(
+    srgb_to_linear_value(self.red),
+    srgb_to_linear_value(self.green),
+    srgb_to_linear_value(self.blue),
+  )
 }
