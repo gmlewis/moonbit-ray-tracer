@@ -16,6 +16,7 @@
 # moon run src/ch15
 
 # Scene examples using the render CLI
+moon run src/render -- -s examples/area-light-demo.toml -o area-light-demo.png --samples 4 --divide 1
 moon run src/render -- -s examples/art-gallery.toml -o art-gallery.png --samples 4 --divide 1
 moon run src/render -- -s examples/checkers-scene.toml -o checkers-scene.png --samples 8 --divide 1
 moon run src/render -- -s examples/csg-demo.toml -o csg-demo.png --samples 4 --divide 1
