@@ -718,11 +718,11 @@ fn parse_object(
     None => ()
   }
 
-  // Handle group children (DEPRECATED: handle in object creation match above)
-  if object_type == "group" {
-    // If the group itself has a material, apply it to all its descendants
+  // Handle group and CSG children
+  if object_type == "group" || object_type == "csg" {
+    // If the group or CSG itself has a material, apply it to all its descendants
     // that don't have a material of their own.
-    // Note: shape is the group.
+    // Note: shape is the group or CSG.
     propagate_material(shape, shape.material)
   }
   shape

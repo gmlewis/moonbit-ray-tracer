@@ -248,3 +248,32 @@ test "parse material with pattern reference" {
     None => inspect("no_pattern", content="has_pattern")
   }
 }
+
+///|
+test "propagate material to CSG children" {
+  let toml_content =
+    #|[scene]
+    #|name = "CSG Material Propagation Scene"
+    #|[camera]
+    #|position = [0,0,-10]
+    #|look_at = [0,0,0]
+    #|up = [0,1,0]
+    #|field_of_view = 1.0
+    #|[[objects]]
+    #|type = "csg"
+    #|material = { color = [1, 0, 0] }
+    #|properties = { operation = "union" }
+    #|left = { type = "sphere" }
+    #|right = { type = "cube" }
+    #|
+  let scene = @lib.parse_scene(toml_content)
+  inspect(scene.world.shapes.length(), content="1")
+  let csg_shape = scene.world.shapes[0]
+  match csg_shape.object {
+    CSG(c) => {
+      inspect(c.left.material.color, content="color(1, 0, 0)")
+      inspect(c.right.material.color, content="color(1, 0, 0)")
+    }
+    _ => abort("expected CSG object")
+  }
+}
