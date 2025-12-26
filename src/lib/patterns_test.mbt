@@ -182,3 +182,17 @@ test "Checkers should repeat in z (p.189)" {
   assert_eq(pattern.pattern_at(point(0, 0, 0.99)), white)
   assert_eq(pattern.pattern_at(point(0, 0, 1)), black)
 }
+
+///|
+test "GradientCheckersPattern should interpolate smoothly in 3D" {
+  let pattern = gradient_checkers_pattern([white, black])
+  // Cell (0,0,0) index 0 (white), next_index 1 (black)
+  assert_eq(pattern.pattern_at(point(0, 0, 0)), white)
+  // t = (0.5+0+0)/3 = 1/6
+  assert_eq(
+    pattern.pattern_at(point(0.5, 0, 0)),
+    color(1.0 - 1.0 / 6.0, 1.0 - 1.0 / 6.0, 1.0 - 1.0 / 6.0),
+  )
+  // t = (0.5+0.5+0.5)/3 = 0.5
+  assert_eq(pattern.pattern_at(point(0.5, 0.5, 0.5)), color(0.5, 0.5, 0.5))
+}

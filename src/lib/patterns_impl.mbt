@@ -349,19 +349,17 @@ pub impl PatternTrait for GradientCheckersPattern with clone(self) {
 ///|
 pub impl PatternTrait for GradientCheckersPattern with pattern_at(self, point) {
   let ncols = self.colors.length()
-  let index = @math.floor(point.x).to_int() +
-    @math.floor(point.y).to_int() +
-    @math.floor(point.z).to_int()
+  let x_floor = @math.floor(point.x)
+  let y_floor = @math.floor(point.y)
+  let z_floor = @math.floor(point.z)
+  let index = x_floor.to_int() + y_floor.to_int() + z_floor.to_int()
   let index = if index >= 0 {
     index % ncols
   } else {
     (index % ncols + ncols) % ncols
   }
   let next_index = (index + 1) % ncols
-  let t = point.x +
-    point.y +
-    point.z -
-    (@math.floor(point.x) + @math.floor(point.y) + @math.floor(point.z))
+  let t = (point.x - x_floor + point.y - y_floor + point.z - z_floor) / 3.0
   self.colors[index] +
   (self.colors[next_index] - self.colors[index]).mul_scalar(t)
 }
