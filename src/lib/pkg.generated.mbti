@@ -327,7 +327,6 @@ pub(all) struct GltfBufferView {
 pub(all) struct GltfData {
   gltf : Gltf
   buffers : Array[Bytes]
-  debug_canvases : Array[(String, Canvas)]
 }
 pub fn GltfData::get_accessor_reader(Self, Int) -> (BinaryReader, Int)?
 pub fn GltfData::load_material(Self, Int) -> Material
