@@ -1,8 +1,8 @@
 {
   "name": "gmlewis/ray-tracer",
-  "version": "0.10.28",
+  "version": "0.10.29",
   "deps": {
-    "gmlewis/image": "0.16.31",
+    "gmlewis/image": "0.16.32",
     "gmlewis/io": "0.22.18",
     "gmlewis/base64": "0.15.4",
     "bob/toml": "0.1.6",
@@ -10,7 +10,7 @@
     "TheWaWaR/clap": "0.2.6"
   },
   "readme": "README.md",
-  "repository": "",
+  "repository": "https://github.com/gmlewis/moonbit-ray-tracer",
   "license": "Apache-2.0",
   "keywords": [
     "3d",

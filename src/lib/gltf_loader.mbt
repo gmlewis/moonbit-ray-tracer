@@ -2,6 +2,8 @@
 pub(all) struct GltfData {
   gltf : Gltf
   buffers : Array[Bytes]
+  debug_canvases : Map[String, Canvas]
+  debug_jpegs : Map[String, Bytes]
 }
 
 ///|
@@ -170,12 +172,29 @@ pub async fn load_gltf_file(path : String) -> Shape raise SceneParseError {
       None => ()
     }
   }
-  let data = GltfData::{ gltf, buffers }
-  data.to_shape()
+  let data = GltfData::{ gltf, buffers, debug_canvases: {}, debug_jpegs: {} }
+  let shape = data.to_shape()
+  for name, canvas in data.debug_canvases {
+    if canvas.width > 0 && canvas.height > 0 {
+      println(
+        "Writing debug texture \{name} (\{canvas.width}x\{canvas.height})...",
+      )
+      // @fs.write_file(name, canvas.to_png(), create=0o644) catch {
+      //   e => println("Failed to write \{name}: \{e}")
+      // }
+    }
+  }
+  for name, jpeg in data.debug_jpegs {
+    println("Writing debug texture \{name}...")
+    @fs.write_file(name, jpeg, create=0o644) catch {
+      e => println("Failed to write \{name}: \{e}")
+    }
+  }
+  shape
 }
 
 ///|
-fn load_glb(bytes : Bytes, _path : String) -> Shape raise SceneParseError {
+async fn load_glb(bytes : Bytes, _path : String) -> Shape raise SceneParseError {
   let reader = BinaryReader::new(bytes)
   let _magic = reader.read_uint32()
   let _version = reader.read_uint32()
@@ -211,8 +230,25 @@ fn load_glb(bytes : Bytes, _path : String) -> Shape raise SceneParseError {
     Some(g) => g
     None => raise SceneParseError("GLB missing JSON chunk")
   }
-  let data = GltfData::{ gltf, buffers }
-  data.to_shape()
+  let data = GltfData::{ gltf, buffers, debug_canvases: {}, debug_jpegs: {} }
+  let shape = data.to_shape()
+  for name, canvas in data.debug_canvases {
+    if canvas.width > 0 && canvas.height > 0 {
+      println(
+        "Writing debug texture \{name} (\{canvas.width}x\{canvas.height})...",
+      )
+      // @fs.write_file(name, canvas.to_png(), create=0o644) catch {
+      //   e => println("Failed to write \{name}: \{e}")
+      // }
+    }
+  }
+  for name, jpeg in data.debug_jpegs {
+    println("Writing debug texture \{name}...")
+    @fs.write_file(name, jpeg, create=0o644) catch {
+      e => println("Failed to write \{name}: \{e}")
+    }
+  }
+  shape
 }
 
 ///|
@@ -565,19 +601,37 @@ pub fn GltfData::load_material_texture(
 ) -> Pattern? {
   let tex = match self.gltf.textures.get(tex_idx) {
     Some(t) => t
-    None => return None
+    None => {
+      println("Warning: load_material_texture(\{tex_idx}): texture not found")
+      return None
+    }
   }
   let source_idx = match tex.source {
     Some(i) => i
-    None => return None
+    None => {
+      println(
+        "Warning: load_material_texture(\{tex_idx}): texture source index missing",
+      )
+      return None
+    }
   }
   let image = match self.gltf.images.get(source_idx) {
     Some(img) => img
-    None => return None
+    None => {
+      println(
+        "Warning: load_material_texture(\{tex_idx}): image source \{source_idx} not found",
+      )
+      return None
+    }
   }
   let bytes = match self.load_image(image) {
     Some(b) => b
-    None => return None
+    None => {
+      println(
+        "Warning: load_material_texture(\{tex_idx}): failed to load image data for image \{source_idx}",
+      )
+      return None
+    }
   }
 
   // Check PNG magic: 89 50 4E 47 0D 0A 1A 0A
@@ -588,8 +642,14 @@ pub fn GltfData::load_material_texture(
     bytes[3] == (0x47).to_byte() {
     let canvas = match Canvas::from_png(bytes, linear~) {
       Some(c) => c
-      None => return None
+      None => {
+        println(
+          "Warning: load_material_texture(\{tex_idx}): failed to decode PNG",
+        )
+        return None
+      }
     }
+    self.debug_canvases.set("debug_tex_\{tex_idx}_png.png", canvas)
     return Some(texture(canvas))
   }
 
@@ -598,12 +658,22 @@ pub fn GltfData::load_material_texture(
     bytes[0] == (0xFF).to_byte() &&
     bytes[1] == (0xD8).to_byte() &&
     bytes[2] == (0xFF).to_byte() {
+    self.debug_jpegs.set("debug_tex_\{tex_idx}_jpeg.jpg", bytes)
     let canvas = match Canvas::from_jpeg(bytes, linear~) {
       Some(c) => c
-      None => return None
+      None => {
+        println(
+          "Warning: load_material_texture(\{tex_idx}): failed to decode JPEG",
+        )
+        return None
+      }
     }
+    self.debug_canvases.set("debug_tex_\{tex_idx}_jpeg.png", canvas)
     return Some(texture(canvas))
   }
+  println(
+    "Warning: load_material_texture(\{tex_idx}): unknown image format (magic: \{bytes[0].to_int()}, \{bytes[1].to_int()}, \{bytes[2].to_int()})",
+  )
   None
 }
 

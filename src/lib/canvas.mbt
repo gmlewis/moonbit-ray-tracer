@@ -184,6 +184,7 @@ pub fn Canvas::from_png(png_data : Bytes, linear? : Bool = false) -> Canvas? {
   if err is None {
     Some(Canvas::from_image(img, linear~))
   } else {
+    println("Error decoding PNG: \{err}")
     None
   }
 }
@@ -195,6 +196,7 @@ pub fn Canvas::from_jpeg(jpeg_data : Bytes, linear? : Bool = false) -> Canvas? {
   if err is None {
     Some(Canvas::from_image(img, linear~))
   } else {
+    println("Error decoding JPEG: \{err}")
     None
   }
 }

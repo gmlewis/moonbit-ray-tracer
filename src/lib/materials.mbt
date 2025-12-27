@@ -109,6 +109,13 @@ fn geometry_smith(
 
 ///|
 fn fresnel_schlick(cos_theta : Double, f0 : Color) -> Color {
+  let cos_theta = if cos_theta < 0 {
+    0.0
+  } else if cos_theta > 1.0 {
+    1.0
+  } else {
+    cos_theta
+  }
   f0 + (color(1.0, 1.0, 1.0) - f0).mul_scalar(@math.pow(1.0 - cos_theta, 5.0))
 }
 
@@ -168,8 +175,8 @@ pub fn Material::lighting(
       let g = geometry_smith(normalv, eyev, lightv, self.roughness)
       let f = fresnel_schlick(h_dot_v, f0)
       let numerator = f.mul_scalar(ndf * g)
-      let denominator = 4.0 * n_dot_v * n_dot_l + 0.0001
-      let specular_brdf = numerator.mul_scalar(1.0 / denominator)
+      let denominator = 4.0 * n_dot_v * n_dot_l + 0.001
+      let specular_brdf = numerator.mul_scalar(1.0 / denominator).clamp_valid()
       let ks = f
       let mut kd = color(1.0, 1.0, 1.0) - ks
       kd = kd.mul_scalar(1.0 - self.metallic)

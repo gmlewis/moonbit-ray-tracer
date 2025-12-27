@@ -155,11 +155,11 @@ pub fn World::shade_hit(
   let material = comps.shape.material
   if material.reflective > 0 && material.transparency > 0 {
     let reflectance = comps.schlick()
-    surface +
+    (surface +
     reflected.mul_scalar(reflectance) +
-    refracted.mul_scalar(1.0 - reflectance)
+    refracted.mul_scalar(1.0 - reflectance)).clamp_valid()
   } else {
-    surface + reflected + refracted
+    (surface + reflected + refracted).clamp_valid()
   }
 }
 
