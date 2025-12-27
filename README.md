@@ -7,6 +7,30 @@ programming language.
 
 [MoonBit]: https://www.moonbitlang.com/
 
+## Example Renders
+
+![area-light-demo](examples/renders/area-light-demo.png)
+
+![art-gallery](examples/renders/art-gallery.png)
+
+![checkers-scene](examples/renders/checkers-scene.png)
+
+![csg-demo](examples/renders/csg-demo.png)
+
+![environment-demo](examples/renders/environment-demo.png)
+
+![glass-spheres](examples/renders/glass-spheres.png)
+
+![glb-demo](examples/renders/glb-demo.png)
+
+![patterns-showcase](examples/renders/patterns-showcase.png)
+
+![pbr-demo](examples/renders/pbr-demo.png)
+
+![simple-sphere](examples/renders/simple-sphere.png)
+
+![texture-demo](examples/renders/texture-demo.png)
+
 ## Status
 
 The code has been updated to support compiler:
