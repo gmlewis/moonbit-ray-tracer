@@ -80,12 +80,12 @@ This document outlines a comprehensive plan to take the MoonBit ray tracer to th
 ## Priority 4: Advanced Features
 
 ### Texture & Material System
-- [ ] Implement texture loading (PNG, JPG, HDR)
-- [ ] Add UV mapping for all primitive types
+- [x] Implement texture loading (PNG, JPG, HDR) (decode + sampling)
+- [x] Add UV mapping support (spherical/planar/cylindrical/cubic + mesh UVs)
 - [ ] Implement normal mapping
 - [ ] Add displacement mapping
-- [ ] Create procedural texture system (noise, patterns)
-- [ ] Implement material layering/blending
+- [ ] Create extensive procedural texture system (noise, patterns)
+- [ ] Implement material layering/blending/masking
 
 ### Animation System
 - [ ] Design keyframe animation framework
@@ -96,8 +96,8 @@ This document outlines a comprehensive plan to take the MoonBit ray tracer to th
 - [ ] Implement motion blur rendering
 
 ### Advanced Geometry
-- [ ] Expand OBJ file support (materials, textures)
-- [ ] Add GLTF format support
+- [ ] Expand OBJ file support (materials/MTL, textures)
+- [x] Add GLTF format support
 - [ ] Implement mesh subdivision
 - [ ] Add procedural geometry generation
 - [ ] Create geometry optimization tools
@@ -106,7 +106,7 @@ This document outlines a comprehensive plan to take the MoonBit ray tracer to th
 ## Priority 5: Ecosystem & Tools
 
 ### Plugin Architecture
-- [ ] Design plugin interface specification
+- [ ] Design plugin interface specification (maybe via wasm?)
 - [ ] Implement plugin loading system
 - [ ] Create example plugins (materials, shapes, post-effects)
 - [ ] Add plugin discovery and management
@@ -119,7 +119,7 @@ This document outlines a comprehensive plan to take the MoonBit ray tracer to th
 - [ ] Create material debugging modes
 - [ ] Add intersection visualization
 - [ ] Implement render statistics and analytics
-- [ ] Create automated testing framework
+- [x] Create automated test runner + unit tests
 
 ### Documentation & Examples
 - [ ] Create comprehensive API documentation
@@ -172,7 +172,7 @@ Complete the tool with documentation, examples, and advanced features.
 ## Success Metrics
 
 - [ ] Render complex scenes (1000+ objects) in reasonable time
-- [ ] Support standard 3D file formats (OBJ, GLTF)
+- [x] Support standard 3D file formats (OBJ, GLTF) (baseline import; OBJ materials/MTL still TODO)
 - [ ] Produce photorealistic images comparable to commercial tools
 - [ ] Provide intuitive user interface for non-programmers
 - [ ] Maintain code quality and comprehensive test coverage
