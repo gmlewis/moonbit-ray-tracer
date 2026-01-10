@@ -1,6 +1,8 @@
 ///|
 /// Scene parsing errors
-pub suberror SceneParseError String derive(Show, Eq)
+pub suberror SceneParseError {
+  SceneParseError(String)
+} derive(Show, Eq)
 
 ///|
 /// Parsed scene structure containing all scene components

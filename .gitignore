@@ -1,7 +1,10 @@
-target/
-.moonagent/
+.DS_Store
+_build/
+target
 .mooncakes/
+.moonagent/
 *.glb
 *.md
 *.obj
 *.png
+*.svg

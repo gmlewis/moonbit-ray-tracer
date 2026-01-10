@@ -10,7 +10,9 @@ pub(all) struct ObjFile {
 }
 
 ///|
-suberror ParserError String derive(Show, Eq)
+suberror ParserError {
+  ParserError(String)
+} derive(Show, Eq)
 
 ///|
 pub fn parse_obj_file(buf : String) -> ObjFile raise ParserError {

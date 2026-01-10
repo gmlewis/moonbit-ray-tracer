@@ -28,7 +28,9 @@ pub(all) struct HdrImage {
 }
 
 ///|
-pub suberror HdrError String derive(Show)
+pub suberror HdrError {
+  HdrError(String)
+} derive(Show)
 
 ///|
 pub fn decode(bytes : Bytes) -> HdrImage raise HdrError {

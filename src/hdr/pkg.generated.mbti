@@ -5,7 +5,9 @@ package "gmlewis/ray-tracer/hdr"
 pub fn decode(Bytes) -> HdrImage raise HdrError
 
 // Errors
-pub suberror HdrError String
+pub suberror HdrError {
+  HdrError(String)
+}
 pub impl Show for HdrError
 
 // Types and methods

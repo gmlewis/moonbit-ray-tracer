@@ -134,7 +134,9 @@ type ParserError
 pub impl Eq for ParserError
 pub impl Show for ParserError
 
-pub suberror SceneParseError String
+pub suberror SceneParseError {
+  SceneParseError(String)
+}
 pub impl Eq for SceneParseError
 pub impl Show for SceneParseError
 
