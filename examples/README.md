@@ -38,7 +38,7 @@ Shows Constructive Solid Geometry (CSG) operations for complex shape creation.
 
 **Features demonstrated:**
 - CSG union operations
-- CSG intersection operations  
+- CSG intersection operations
 - CSG difference operations
 - Nested CSG operations
 - Complex hierarchical shapes
@@ -47,10 +47,18 @@ Shows Constructive Solid Geometry (CSG) operations for complex shape creation.
 Comprehensive demonstration of all available pattern types and their applications.
 
 **Features demonstrated:**
-- All pattern types: stripes, checkers, gradient, rings, gradient_rings, gradient_checkers
+- Classic pattern types: stripes, checkers, gradient, rings, gradient_rings, gradient_checkers
 - Pattern transformations (scale, rotation)
 - Patterns on different shape types
 - Pattern color definitions
+
+### [`procedural-textures.toml`](procedural-textures.toml)
+Demonstrates procedural patterns (noise/fBm/marble/wood/voronoi) and compositing (invert/mix/warp).
+
+**Features demonstrated:**
+- Procedural textures that don’t require images
+- Nested inline pattern definitions for compositing
+- Domain warping for more organic results
 
 ## Using the Examples
 

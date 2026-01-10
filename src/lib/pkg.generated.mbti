@@ -37,6 +37,10 @@ pub fn decode_base64_uri(String) -> Bytes?
 
 pub fn default_world() -> World
 
+pub fn fbm3(Tuple, Int, Int, Double, Double) -> Double
+
+pub fn fbm_pattern(seed? : Int, scale? : Double, octaves? : Int, lacunarity? : Double, gain? : Double) -> Pattern
+
 pub fn get_directory(String) -> String
 
 pub fn glass_sphere() -> Shape
@@ -55,7 +59,11 @@ pub fn intersection_allowed(Operation, Bool, Bool, Bool) -> Bool
 
 pub fn intersections(Array[Intersection]) -> Intersections
 
+pub fn invert_pattern(Pattern) -> Pattern
+
 pub async fn load_gltf_file(String) -> Shape raise SceneParseError
+
+pub fn marble_pattern(Array[Color], seed? : Int, scale? : Double, octaves? : Int, lacunarity? : Double, gain? : Double, frequency? : Double, strength? : Double) -> Pattern
 
 pub fn mat2(Double, Double, Double, Double) -> Matrix
 
@@ -68,6 +76,10 @@ pub fn mat4ident() -> Matrix
 pub fn mat4zero() -> Matrix
 
 pub fn material() -> Material
+
+pub fn mix_pattern(Pattern, Pattern, Pattern) -> Pattern
+
+pub fn noise_pattern(seed? : Int, scale? : Double) -> Pattern
 
 pub fn parse_gltf(Json) -> Gltf?
 
@@ -121,11 +133,21 @@ pub fn triangle_uv(Tuple, Tuple, Tuple, (Double, Double), (Double, Double), (Dou
 
 pub fn tuple(Double, Double, Double, Double) -> Tuple
 
+pub fn value_noise3(Tuple, Int) -> Double
+
 pub fn vector(Double, Double, Double) -> Tuple
 
 pub fn view_transform(Tuple, Tuple, Tuple) -> Matrix
 
+pub fn voronoi2(Tuple, Int, Double) -> (Double, Int, Int)
+
+pub fn voronoi_pattern(seed? : Int, scale? : Double, jitter? : Double, mode? : VoronoiMode) -> Pattern
+
+pub fn warp_pattern(Pattern, Pattern, amplitude? : Double) -> Pattern
+
 pub let white : Color
+
+pub fn wood_pattern(Array[Color], seed? : Int, scale? : Double, octaves? : Int, lacunarity? : Double, gain? : Double, ring_frequency? : Double, turbulence? : Double) -> Pattern
 
 pub fn world() -> World
 
@@ -289,6 +311,17 @@ pub(all) struct CylindricalMapping {
 pub impl Mapping for CylindricalMapping
 pub impl Eq for CylindricalMapping
 pub impl Show for CylindricalMapping
+
+pub(all) struct FbmPattern {
+  seed : Int
+  scale : Double
+  octaves : Int
+  lacunarity : Double
+  gain : Double
+}
+pub impl PatternTrait for FbmPattern
+pub impl Eq for FbmPattern
+pub impl Show for FbmPattern
 
 pub(all) struct Gltf {
   accessors : Array[GltfAccessor]
@@ -461,6 +494,12 @@ pub fn Intersections::hit(Self) -> Intersection?
 pub fn Intersections::op_get(Self, Int) -> Intersection
 pub fn Intersections::to_ts(Self) -> Array[Double]
 
+pub(all) struct InvertPattern {
+  pattern : Pattern
+}
+pub impl PatternTrait for InvertPattern
+pub impl Show for InvertPattern
+
 pub(all) struct Light {
   position : Tuple
   intensity : Color
@@ -484,6 +523,19 @@ pub(all) enum LightingMode {
 }
 pub impl Eq for LightingMode
 pub impl Show for LightingMode
+
+pub(all) struct MarblePattern {
+  colors : Array[Color]
+  seed : Int
+  scale : Double
+  octaves : Int
+  lacunarity : Double
+  gain : Double
+  frequency : Double
+  strength : Double
+}
+pub impl PatternTrait for MarblePattern
+pub impl Show for MarblePattern
 
 pub(all) struct Material {
   mut color : Color
@@ -538,6 +590,22 @@ pub fn MatrixRow::inner(Self) -> Array[Double]
 pub fn MatrixRow::op_get(Self, Int) -> Double
 pub fn MatrixRow::op_set(Self, Int, Double) -> Unit
 pub impl Show for MatrixRow
+
+pub(all) struct MixPattern {
+  a : Pattern
+  b : Pattern
+  mask : Pattern
+}
+pub impl PatternTrait for MixPattern
+pub impl Show for MixPattern
+
+pub(all) struct NoisePattern {
+  seed : Int
+  scale : Double
+}
+pub impl PatternTrait for NoisePattern
+pub impl Eq for NoisePattern
+pub impl Show for NoisePattern
 
 pub(all) struct ObjFile {
   default_group : Shape
@@ -797,6 +865,43 @@ pub impl Mul for Tuple
 pub impl Neg for Tuple
 pub impl Show for Tuple
 pub impl Sub for Tuple
+
+pub(all) enum VoronoiMode {
+  Distance
+  Cells
+}
+pub impl Eq for VoronoiMode
+pub impl Show for VoronoiMode
+
+pub(all) struct VoronoiPattern {
+  seed : Int
+  scale : Double
+  jitter : Double
+  mode : VoronoiMode
+}
+pub impl PatternTrait for VoronoiPattern
+pub impl Show for VoronoiPattern
+
+pub(all) struct WarpPattern {
+  base : Pattern
+  warp : Pattern
+  amplitude : Double
+}
+pub impl PatternTrait for WarpPattern
+pub impl Show for WarpPattern
+
+pub(all) struct WoodPattern {
+  colors : Array[Color]
+  seed : Int
+  scale : Double
+  octaves : Int
+  lacunarity : Double
+  gain : Double
+  ring_frequency : Double
+  turbulence : Double
+}
+pub impl PatternTrait for WoodPattern
+pub impl Show for WoodPattern
 
 pub(all) struct World {
   mut shapes : Array[Shape]

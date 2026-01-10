@@ -26,5 +26,6 @@ moon run src/render -- -s examples/glass-spheres.toml -o glass-spheres.png --sam
 moon run src/render -- -s examples/glb-demo.toml -o glb-demo.png --samples 4 --divide 1
 moon run src/render -- -s examples/patterns-showcase.toml -o patterns-showcase.png --samples 4 --divide 1
 moon run src/render -- -s examples/pbr-demo.toml -o pbr-demo.png --samples 4 --divide 1
+moon run src/render -- -s examples/procedural-textures.toml -o procedural-textures.png --samples 4 --divide 1
 moon run src/render -- -s examples/simple-sphere.toml -o simple-sphere.png --samples 4 --divide 1
 moon run src/render -- -s examples/texture-demo.toml -o texture-demo.png --samples 4 --divide 1

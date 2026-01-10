@@ -379,3 +379,450 @@ pub impl PatternTrait for GradientCheckersPattern with uv_at(self, u, v) {
 pub fn gradient_checkers_pattern(colors : Array[Color]) -> Pattern {
   Pattern::new(GradientCheckersPattern::{ colors, })
 }
+
+///|
+// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+// Procedural noise + compositing
+// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+///|
+fn clamp01(t : Double) -> Double {
+  if t < 0.0 {
+    0.0
+  } else if t > 1.0 {
+    1.0
+  } else {
+    t
+  }
+}
+
+///|
+fn luminance(c : Color) -> Double {
+  // Simple perceptual-ish luminance for masks.
+  clamp01(0.2126 * c.red + 0.7152 * c.green + 0.0722 * c.blue)
+}
+
+///|
+fn lerp_color(a : Color, b : Color, t : Double) -> Color {
+  a + (b - a).mul_scalar(clamp01(t))
+}
+
+///|
+fn palette(colors : Array[Color], t : Double) -> Color {
+  let n = colors.length()
+  if n == 0 {
+    return color(0, 0, 0)
+  }
+  if n == 1 {
+    return colors[0]
+  }
+  let t = clamp01(t) * (n - 1).to_double()
+  let i = @math.floor(t).to_int()
+  let frac = t - @math.floor(t)
+  let i0 = if i < 0 { 0 } else if i >= n { n - 1 } else { i }
+  let i1 = if i0 + 1 >= n { n - 1 } else { i0 + 1 }
+  lerp_color(colors[i0], colors[i1], frac)
+}
+
+///|
+pub(all) struct NoisePattern {
+  seed : Int
+  scale : Double
+} derive(Eq)
+
+///|
+pub impl Show for NoisePattern with output(self, logger) {
+  logger.write_string("noise(seed=\{self.seed}, scale=\{self.scale})")
+}
+
+///|
+pub impl PatternTrait for NoisePattern with clone(self) {
+  noise_pattern(seed=self.seed, scale=self.scale)
+}
+
+///|
+pub impl PatternTrait for NoisePattern with pattern_at(self, point) {
+  let v = value_noise3(point.mul_scalar(self.scale), self.seed)
+  color(v, v, v)
+}
+
+///|
+pub impl PatternTrait for NoisePattern with uv_at(self, u, v) {
+  self.pattern_at(point(u, 0.0, v))
+}
+
+///|
+pub fn noise_pattern(seed? : Int = 0, scale? : Double = 1.0) -> Pattern {
+  Pattern::new(NoisePattern::{ seed, scale })
+}
+
+///|
+pub(all) struct FbmPattern {
+  seed : Int
+  scale : Double
+  octaves : Int
+  lacunarity : Double
+  gain : Double
+} derive(Eq)
+
+///|
+pub impl Show for FbmPattern with output(self, logger) {
+  logger.write_string(
+    "fbm(seed=\{self.seed}, scale=\{self.scale}, octaves=\{self.octaves})",
+  )
+}
+
+///|
+pub impl PatternTrait for FbmPattern with clone(self) {
+  fbm_pattern(
+    seed=self.seed,
+    scale=self.scale,
+    octaves=self.octaves,
+    lacunarity=self.lacunarity,
+    gain=self.gain,
+  )
+}
+
+///|
+pub impl PatternTrait for FbmPattern with pattern_at(self, point) {
+  let v = fbm3(
+    point.mul_scalar(self.scale),
+    self.seed,
+    self.octaves,
+    self.lacunarity,
+    self.gain,
+  )
+  color(v, v, v)
+}
+
+///|
+pub impl PatternTrait for FbmPattern with uv_at(self, u, v) {
+  self.pattern_at(point(u, 0.0, v))
+}
+
+///|
+pub fn fbm_pattern(
+  seed? : Int = 0,
+  scale? : Double = 1.0,
+  octaves? : Int = 5,
+  lacunarity? : Double = 2.0,
+  gain? : Double = 0.5,
+) -> Pattern {
+  Pattern::new(FbmPattern::{ seed, scale, octaves, lacunarity, gain })
+}
+
+///|
+pub(all) struct MarblePattern {
+  colors : Array[Color]
+  seed : Int
+  scale : Double
+  octaves : Int
+  lacunarity : Double
+  gain : Double
+  frequency : Double
+  strength : Double
+}
+
+///|
+pub impl Show for MarblePattern with output(_self, logger) {
+  logger.write_string("marble(...) ")
+}
+
+///|
+pub impl PatternTrait for MarblePattern with clone(self) {
+  marble_pattern(
+    self.colors,
+    seed=self.seed,
+    scale=self.scale,
+    octaves=self.octaves,
+    lacunarity=self.lacunarity,
+    gain=self.gain,
+    frequency=self.frequency,
+    strength=self.strength,
+  )
+}
+
+///|
+pub impl PatternTrait for MarblePattern with pattern_at(self, point) {
+  let p = point.mul_scalar(self.scale)
+  let n = fbm3(p, self.seed, self.octaves, self.lacunarity, self.gain)
+  let t = @math.sin((p.x * self.frequency + n * self.strength) * 2.0 * @math.PI)
+  let t = clamp01(t * 0.5 + 0.5)
+  palette(self.colors, t)
+}
+
+///|
+pub impl PatternTrait for MarblePattern with uv_at(self, u, v) {
+  self.pattern_at(point(u, 0.0, v))
+}
+
+///|
+pub fn marble_pattern(
+  colors : Array[Color],
+  seed? : Int = 0,
+  scale? : Double = 1.0,
+  octaves? : Int = 5,
+  lacunarity? : Double = 2.0,
+  gain? : Double = 0.5,
+  frequency? : Double = 5.0,
+  strength? : Double = 2.0,
+) -> Pattern {
+  Pattern::new(MarblePattern::{
+    colors,
+    seed,
+    scale,
+    octaves,
+    lacunarity,
+    gain,
+    frequency,
+    strength,
+  })
+}
+
+///|
+pub(all) struct WoodPattern {
+  colors : Array[Color]
+  seed : Int
+  scale : Double
+  octaves : Int
+  lacunarity : Double
+  gain : Double
+  ring_frequency : Double
+  turbulence : Double
+}
+
+///|
+pub impl Show for WoodPattern with output(_self, logger) {
+  logger.write_string("wood(...) ")
+}
+
+///|
+pub impl PatternTrait for WoodPattern with clone(self) {
+  wood_pattern(
+    self.colors,
+    seed=self.seed,
+    scale=self.scale,
+    octaves=self.octaves,
+    lacunarity=self.lacunarity,
+    gain=self.gain,
+    ring_frequency=self.ring_frequency,
+    turbulence=self.turbulence,
+  )
+}
+
+///|
+pub impl PatternTrait for WoodPattern with pattern_at(self, point) {
+  let p = point.mul_scalar(self.scale)
+  let n = fbm3(p, self.seed, self.octaves, self.lacunarity, self.gain)
+  let r = (p.x * p.x + p.z * p.z).sqrt()
+  let t = r * self.ring_frequency + n * self.turbulence
+  let t = t - @math.floor(t)
+  palette(self.colors, t)
+}
+
+///|
+pub impl PatternTrait for WoodPattern with uv_at(self, u, v) {
+  self.pattern_at(point(u, 0.0, v))
+}
+
+///|
+pub fn wood_pattern(
+  colors : Array[Color],
+  seed? : Int = 0,
+  scale? : Double = 1.0,
+  octaves? : Int = 5,
+  lacunarity? : Double = 2.0,
+  gain? : Double = 0.5,
+  ring_frequency? : Double = 6.0,
+  turbulence? : Double = 0.5,
+) -> Pattern {
+  Pattern::new(WoodPattern::{
+    colors,
+    seed,
+    scale,
+    octaves,
+    lacunarity,
+    gain,
+    ring_frequency,
+    turbulence,
+  })
+}
+
+///|
+pub(all) enum VoronoiMode {
+  Distance
+  Cells
+} derive(Show, Eq)
+
+///|
+pub(all) struct VoronoiPattern {
+  seed : Int
+  scale : Double
+  jitter : Double
+  mode : VoronoiMode
+}
+
+///|
+pub impl Show for VoronoiPattern with output(self, logger) {
+  logger.write_string(
+    "voronoi(seed=\{self.seed}, scale=\{self.scale}, mode=\{self.mode})",
+  )
+}
+
+///|
+pub impl PatternTrait for VoronoiPattern with clone(self) {
+  voronoi_pattern(
+    seed=self.seed,
+    scale=self.scale,
+    jitter=self.jitter,
+    mode=self.mode,
+  )
+}
+
+///|
+pub impl PatternTrait for VoronoiPattern with pattern_at(self, p) {
+  let p = p.mul_scalar(self.scale)
+  let (d, cx, cy) = voronoi2(p, self.seed, self.jitter)
+  match self.mode {
+    VoronoiMode::Distance => {
+      let v = clamp01(1.0 - d)
+      color(v, v, v)
+    }
+    VoronoiMode::Cells => {
+      let r = value_noise3(
+        point(cx.to_double(), 0.0, cy.to_double()),
+        self.seed,
+      )
+      let g = value_noise3(
+        point(cx.to_double(), 1.0, cy.to_double()),
+        self.seed,
+      )
+      let b = value_noise3(
+        point(cx.to_double(), 2.0, cy.to_double()),
+        self.seed,
+      )
+      color(r, g, b)
+    }
+  }
+}
+
+///|
+pub impl PatternTrait for VoronoiPattern with uv_at(self, u, v) {
+  self.pattern_at(point(u, 0.0, v))
+}
+
+///|
+pub fn voronoi_pattern(
+  seed? : Int = 0,
+  scale? : Double = 1.0,
+  jitter? : Double = 1.0,
+  mode? : VoronoiMode = VoronoiMode::Distance,
+) -> Pattern {
+  Pattern::new(VoronoiPattern::{ seed, scale, jitter, mode })
+}
+
+///|
+pub(all) struct InvertPattern {
+  pattern : Pattern
+}
+
+///|
+pub impl Show for InvertPattern with output(_self, logger) {
+  logger.write_string("invert(...) ")
+}
+
+///|
+pub impl PatternTrait for InvertPattern with clone(self) {
+  invert_pattern(self.pattern.clone())
+}
+
+///|
+pub impl PatternTrait for InvertPattern with pattern_at(self, point) {
+  let c = self.pattern.pattern_at(point)
+  color(1.0 - c.red, 1.0 - c.green, 1.0 - c.blue)
+}
+
+///|
+pub impl PatternTrait for InvertPattern with uv_at(self, u, v) {
+  self.pattern_at(point(u, 0.0, v))
+}
+
+///|
+pub fn invert_pattern(pattern : Pattern) -> Pattern {
+  Pattern::new(InvertPattern::{ pattern, })
+}
+
+///|
+pub(all) struct MixPattern {
+  a : Pattern
+  b : Pattern
+  mask : Pattern
+}
+
+///|
+pub impl Show for MixPattern with output(_self, logger) {
+  logger.write_string("mix(...) ")
+}
+
+///|
+pub impl PatternTrait for MixPattern with clone(self) {
+  mix_pattern(self.a.clone(), self.b.clone(), self.mask.clone())
+}
+
+///|
+pub impl PatternTrait for MixPattern with pattern_at(self, point) {
+  let ca = self.a.pattern_at(point)
+  let cb = self.b.pattern_at(point)
+  let t = luminance(self.mask.pattern_at(point))
+  lerp_color(ca, cb, t)
+}
+
+///|
+pub impl PatternTrait for MixPattern with uv_at(self, u, v) {
+  self.pattern_at(point(u, 0.0, v))
+}
+
+///|
+pub fn mix_pattern(a : Pattern, b : Pattern, mask : Pattern) -> Pattern {
+  Pattern::new(MixPattern::{ a, b, mask })
+}
+
+///|
+pub(all) struct WarpPattern {
+  base : Pattern
+  warp : Pattern
+  amplitude : Double
+}
+
+///|
+pub impl Show for WarpPattern with output(_self, logger) {
+  logger.write_string("warp(...) ")
+}
+
+///|
+pub impl PatternTrait for WarpPattern with clone(self) {
+  warp_pattern(self.base.clone(), self.warp.clone(), amplitude=self.amplitude)
+}
+
+///|
+pub impl PatternTrait for WarpPattern with pattern_at(self, p) {
+  let w = self.warp.pattern_at(p)
+  let dx = (w.red * 2.0 - 1.0) * self.amplitude
+  let dy = (w.green * 2.0 - 1.0) * self.amplitude
+  let dz = (w.blue * 2.0 - 1.0) * self.amplitude
+  self.base.pattern_at(point(p.x + dx, p.y + dy, p.z + dz))
+}
+
+///|
+pub impl PatternTrait for WarpPattern with uv_at(self, u, v) {
+  self.pattern_at(point(u, 0.0, v))
+}
+
+///|
+pub fn warp_pattern(
+  base : Pattern,
+  warp : Pattern,
+  amplitude? : Double = 0.25,
+) -> Pattern {
+  Pattern::new(WarpPattern::{ base, warp, amplitude })
+}

@@ -187,6 +187,59 @@ colors = [
 - `"gradient_rings"`: Concentric rings with gradient
 - `"gradient_checkers"`: Checkerboard with gradient
 
+### Procedural Pattern Types
+
+These patterns are generated procedurally (no image file required):
+
+- `"noise"`: 3D value noise (grayscale)
+  - Params: `seed` (int, default `0`), `scale` (float, default `1.0`)
+- `"fbm"`: Fractal Brownian motion built from value noise (grayscale)
+  - Params: `seed` (0), `scale` (1.0), `octaves` (5), `lacunarity` (2.0), `gain` (0.5)
+- `"marble"`: Marble-like sine bands modulated by fBm (uses a color palette)
+  - Requires: `colors`
+  - Params: `seed` (0), `scale` (1.0), `octaves` (5), `lacunarity` (2.0), `gain` (0.5),
+    `frequency` (5.0), `strength` (2.0)
+- `"wood"`: Wood-like radial rings with turbulence (uses a color palette)
+  - Requires: `colors`
+  - Params: `seed` (0), `scale` (1.0), `octaves` (5), `lacunarity` (2.0), `gain` (0.5),
+    `ring_frequency` (6.0), `turbulence` (0.5)
+- `"voronoi"`: 2D Voronoi (cellular) pattern evaluated on X/Z
+  - Params: `seed` (0), `scale` (1.0), `jitter` (1.0), `mode` (`"distance"` or `"cells"`, default `"distance"`)
+
+Example:
+
+```toml
+[patterns.my_voronoi]
+type = "voronoi"
+seed = 1
+scale = 4.0
+jitter = 1.0
+mode = "cells"
+```
+
+### Compositing Pattern Types
+
+These patterns combine other patterns. Sub-patterns are provided as inline TOML tables.
+
+- `"invert"`: Invert a pattern’s RGB
+  - Requires: `pattern` (inline pattern table)
+- `"mix"`: Blend two patterns using a mask pattern’s luminance as $t$ in `lerp(a,b,t)`
+  - Requires: `a`, `b`, `mask` (inline pattern tables)
+- `"warp"`: Domain-warp `base` by offsetting the lookup point using `warp` RGB
+  - Requires: `base`, `warp` (inline pattern tables)
+  - Params: `amplitude` (float, default `0.25`)
+
+Example:
+
+```toml
+[patterns.warped_marble]
+type = "warp"
+amplitude = 0.25
+
+base = { type = "marble", colors = [[0.9,0.9,0.95], [0.2,0.2,0.25]], scale = 2.0, frequency = 6.0 }
+warp = { type = "fbm", seed = 3, scale = 3.0, octaves = 5, lacunarity = 2.0, gain = 0.5 }
+```
+
 ### Pattern Transforms
 Patterns can be transformed using the same transform syntax as objects:
 
@@ -221,7 +274,7 @@ transparency = 0.0
 refractive_index = 1.0
 pattern = "checkers"  # Reference to named pattern
 
-# Note: You cannot use both 'material = "name"' and '[objects.material]' 
+# Note: You cannot use both 'material = "name"' and '[objects.material]'
 # in the same object - they are mutually exclusive
 
 [[objects]]
@@ -276,7 +329,7 @@ translation = [2.0, 0.0, 0.0]
 ```toml
 [objects.properties]
 minimum = -1.0    # Minimum Y value
-maximum = 1.0     # Maximum Y value  
+maximum = 1.0     # Maximum Y value
 closed = true     # Whether to cap the ends
 ```
 
@@ -330,7 +383,7 @@ scale = [2.0, 1.0, 1.0]
 # Alternative: transformation matrix (4x4, row-major order)
 matrix = [
   [1.0, 0.0, 0.0, 1.0],
-  [0.0, 1.0, 0.0, 0.0], 
+  [0.0, 1.0, 0.0, 0.0],
   [0.0, 0.0, 1.0, 0.0],
   [0.0, 0.0, 0.0, 1.0]
 ]

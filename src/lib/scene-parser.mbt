@@ -241,9 +241,7 @@ fn parse_material(value : @toml.TomlValue) -> Material raise SceneParseError {
     Some(color_value) => parse_color(color_value)
     None => color(1.0, 1.0, 1.0) // Default white
   }
-
-  // Parse material properties
-  mat.ambient = get_float_or_default(material_table, "ambient", 0.1)
+  mat.ambient = get_float_or_default(material_table, "ambient", mat.ambient)
   if mat.ambient < 0.0 {
     raise SceneParseError("material ambient must be non-negative")
   }
@@ -374,29 +372,125 @@ fn parse_pattern(value : @toml.TomlValue) -> Pattern raise SceneParseError {
     _ => raise SceneParseError("pattern must be a table")
   }
   let pattern_type = get_string_required(pattern_table, "type")
-  let colors_array = match pattern_table.get("colors") {
-    Some(@toml.TomlArray(arr)) => {
-      let colors = Array::new()
-      for i = 0; i < arr.length(); i = i + 1 {
-        colors.push(parse_color(arr[i]))
+  fn get_colors_optional() -> Array[Color] raise SceneParseError {
+    match pattern_table.get("colors") {
+      Some(@toml.TomlArray(arr)) => {
+        let colors = Array::new()
+        for i = 0; i < arr.length(); i = i + 1 {
+          colors.push(parse_color(arr[i]))
+        }
+        colors
       }
-      colors
+      Some(_) => raise SceneParseError("pattern colors must be an array")
+      None => []
     }
-    Some(_) => raise SceneParseError("pattern colors must be an array")
-    None =>
-      if pattern_type == "texture" {
-        []
-      } else {
-        raise SceneParseError("pattern colors are required")
-      }
   }
+
+  fn get_colors_required() -> Array[Color] raise SceneParseError {
+    let colors = get_colors_optional()
+    if colors.length() == 0 {
+      raise SceneParseError("pattern colors are required")
+    }
+    colors
+  }
+
+  fn get_pattern_required(key : String) -> Pattern raise SceneParseError {
+    match pattern_table.get(key) {
+      Some(p) => parse_pattern(p)
+      None => raise SceneParseError("pattern field is required: \{key}")
+    }
+  }
+
   let pattern = match pattern_type {
-    "checkers" => checkers_pattern(colors_array)
-    "stripes" => stripe_pattern(colors_array)
-    "gradient" => gradient_pattern(colors_array)
-    "rings" => ring_pattern(colors_array)
-    "gradient_rings" => gradient_ring_pattern(colors_array)
-    "gradient_checkers" => gradient_checkers_pattern(colors_array)
+    "checkers" => checkers_pattern(get_colors_required())
+    "stripes" => stripe_pattern(get_colors_required())
+    "gradient" => gradient_pattern(get_colors_required())
+    "rings" => ring_pattern(get_colors_required())
+    "gradient_rings" => gradient_ring_pattern(get_colors_required())
+    "gradient_checkers" => gradient_checkers_pattern(get_colors_required())
+
+    // Procedural noise
+    "noise" => {
+      let seed = get_int_or_default(pattern_table, "seed", 0)
+      let scale = get_float_or_default(pattern_table, "scale", 1.0)
+      noise_pattern(seed~, scale~)
+    }
+    "fbm" => {
+      let seed = get_int_or_default(pattern_table, "seed", 0)
+      let scale = get_float_or_default(pattern_table, "scale", 1.0)
+      let octaves = get_int_or_default(pattern_table, "octaves", 5)
+      let lacunarity = get_float_or_default(pattern_table, "lacunarity", 2.0)
+      let gain = get_float_or_default(pattern_table, "gain", 0.5)
+      fbm_pattern(seed~, scale~, octaves~, lacunarity~, gain~)
+    }
+    "marble" => {
+      let colors = get_colors_required()
+      let seed = get_int_or_default(pattern_table, "seed", 0)
+      let scale = get_float_or_default(pattern_table, "scale", 1.0)
+      let octaves = get_int_or_default(pattern_table, "octaves", 5)
+      let lacunarity = get_float_or_default(pattern_table, "lacunarity", 2.0)
+      let gain = get_float_or_default(pattern_table, "gain", 0.5)
+      let frequency = get_float_or_default(pattern_table, "frequency", 5.0)
+      let strength = get_float_or_default(pattern_table, "strength", 2.0)
+      marble_pattern(
+        colors,
+        seed~,
+        scale~,
+        octaves~,
+        lacunarity~,
+        gain~,
+        frequency~,
+        strength~,
+      )
+    }
+    "wood" => {
+      let colors = get_colors_required()
+      let seed = get_int_or_default(pattern_table, "seed", 0)
+      let scale = get_float_or_default(pattern_table, "scale", 1.0)
+      let octaves = get_int_or_default(pattern_table, "octaves", 5)
+      let lacunarity = get_float_or_default(pattern_table, "lacunarity", 2.0)
+      let gain = get_float_or_default(pattern_table, "gain", 0.5)
+      let ring_frequency = get_float_or_default(
+        pattern_table, "ring_frequency", 6.0,
+      )
+      let turbulence = get_float_or_default(pattern_table, "turbulence", 0.5)
+      wood_pattern(
+        colors,
+        seed~,
+        scale~,
+        octaves~,
+        lacunarity~,
+        gain~,
+        ring_frequency~,
+        turbulence~,
+      )
+    }
+    "voronoi" => {
+      let seed = get_int_or_default(pattern_table, "seed", 0)
+      let scale = get_float_or_default(pattern_table, "scale", 1.0)
+      let jitter = get_float_or_default(pattern_table, "jitter", 1.0)
+      let mode = match
+        get_string_or_default(pattern_table, "mode", "distance") {
+        "cells" => VoronoiMode::Cells
+        _ => VoronoiMode::Distance
+      }
+      voronoi_pattern(seed~, scale~, jitter~, mode~)
+    }
+
+    // Compositing / fun combinations
+    "invert" => invert_pattern(get_pattern_required("pattern"))
+    "mix" => {
+      let a = get_pattern_required("a")
+      let b = get_pattern_required("b")
+      let mask = get_pattern_required("mask")
+      mix_pattern(a, b, mask)
+    }
+    "warp" => {
+      let base = get_pattern_required("base")
+      let warp = get_pattern_required("warp")
+      let amplitude = get_float_or_default(pattern_table, "amplitude", 0.25)
+      warp_pattern(base, warp, amplitude~)
+    }
     "texture" => {
       let _file = get_string_required(pattern_table, "file")
       // Texture loading is only supported in async parse_scene_file
@@ -804,7 +898,7 @@ pub fn parse_scene(toml_content : String) -> ParsedScene raise SceneParseError {
   // Parse metadata
   let metadata = parse_scene_metadata(root_table)
 
-  // Parse render settings  
+  // Parse render settings
   let render_settings = parse_render_settings(root_table)
 
   // Parse camera
@@ -861,7 +955,7 @@ pub async fn parse_scene_file(
   // Parse metadata
   let metadata = parse_scene_metadata(root_table)
 
-  // Parse render settings  
+  // Parse render settings
   let render_settings = parse_render_settings(root_table)
 
   // Parse camera
@@ -919,7 +1013,7 @@ async fn parse_patterns_async(
   let patterns = Map::new()
   match root.get("patterns") {
     Some(@toml.TomlTable(patterns_table)) => {
-      // iterate is synchronous, so we can't inside. 
+      // iterate is synchronous, so we can't inside.
       // Use an array of keys to iterate asynchronously.
       let keys = []
       patterns_table.each(fn(name, _) { keys.push(name) })
