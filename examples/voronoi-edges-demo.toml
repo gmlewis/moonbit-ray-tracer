@@ -1,0 +1,84 @@
+# Voronoi edges / crackle demo
+[scene]
+name = "Voronoi Edges Demo"
+description = "Voronoi edges + crackle looks"
+version = "1.0"
+
+[scene.render]
+width = 1100
+height = 650
+samples = 1
+max_bounces = 4
+background = [0.06, 0.06, 0.08]
+
+[camera]
+position = [0.0, 3.2, -10.5]
+look_at = [0.0, 1.1, 0.0]
+up = [0.0, 1.0, 0.0]
+field_of_view = 0.785
+
+[[lights]]
+type = "point"
+position = [-10.0, 10.0, -10.0]
+intensity = [1.0, 1.0, 1.0]
+
+[[lights]]
+type = "point"
+position = [8.0, 8.0, 6.0]
+intensity = [0.35, 0.35, 0.45]
+
+# Patterns
+[patterns.v_edges]
+type = "voronoi"
+seed = 23
+scale = 3.0
+jitter = 1.0
+mode = "edges"
+edge_scale = 18.0
+
+[patterns.v_crackle]
+type = "voronoi"
+seed = 23
+scale = 3.0
+jitter = 1.0
+mode = "crackle"
+edge_scale = 22.0
+
+[patterns.v_cells]
+type = "voronoi"
+seed = 23
+scale = 3.0
+jitter = 1.0
+mode = "cells"
+
+# Materials
+[materials.base]
+ambient = 0.08
+diffuse = 0.85
+specular = 0.15
+shininess = 90.0
+reflective = 0.06
+
+# Floor
+[[objects]]
+type = "plane"
+material = { color = [0.25, 0.25, 0.28], ambient = 0.25, diffuse = 0.9, specular = 0.0 }
+
+# Spheres
+[[objects]]
+type = "sphere"
+material = { ambient = 0.1, diffuse = 0.85, specular = 0.18, shininess = 120.0, pattern = "v_cells" }
+transform = { translation = [-4.5, 1.0, 1.6] }
+pattern_transform = { scale = [0.65, 0.65, 0.65] }
+
+[[objects]]
+type = "sphere"
+material = { ambient = 0.1, diffuse = 0.85, specular = 0.18, shininess = 120.0, pattern = "v_edges" }
+transform = { translation = [0.0, 1.0, 1.2] }
+pattern_transform = { scale = [0.65, 0.65, 0.65] }
+
+[[objects]]
+type = "sphere"
+material = { ambient = 0.1, diffuse = 0.85, specular = 0.18, shininess = 120.0, pattern = "v_crackle" }
+transform = { translation = [4.5, 1.0, 1.6] }
+pattern_transform = { scale = [0.65, 0.65, 0.65] }

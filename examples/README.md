@@ -60,6 +60,24 @@ Demonstrates procedural patterns (noise/fBm/marble/wood/voronoi) and compositing
 - Nested inline pattern definitions for compositing
 - Domain warping for more organic results
 
+### [`levels-demo.toml`](levels-demo.toml)
+Demonstrates `levels` (remap + gamma shaping) applied to procedural noise.
+
+### [`threshold-demo.toml`](threshold-demo.toml)
+Demonstrates `threshold` turning noise into bold graphic masks.
+
+### [`posterize-demo.toml`](posterize-demo.toml)
+Demonstrates `posterize` quantization (bolder banding as steps decrease).
+
+### [`gradient-map-demo.toml`](gradient-map-demo.toml)
+Demonstrates `gradient_map` (palette mapping from noise luminance).
+
+### [`triplanar-demo.toml`](triplanar-demo.toml)
+Demonstrates `triplanar` projection using surface normals.
+
+### [`voronoi-edges-demo.toml`](voronoi-edges-demo.toml)
+Demonstrates Voronoi `edges` and `crackle` modes.
+
 ## Using the Examples
 
 1. Copy any example file as a starting point for your own scenes

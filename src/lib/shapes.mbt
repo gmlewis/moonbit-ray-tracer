@@ -311,6 +311,17 @@ pub fn Shape::normal_to_world(self : Shape, normal : Tuple) -> Tuple {
 }
 
 ///|
+pub fn Shape::world_normal_to_object(self : Shape, normal : Tuple) -> Tuple {
+  let normal = match self.parent {
+    Some(parent) => parent.world_normal_to_object(normal)
+    _ => normal
+  }
+  let normal = self.transform.transpose().mul_tuple(normal)
+  normal.w = 0
+  normal.normalize()
+}
+
+///|
 pub fn Shape::includes_shape(self : Shape, shape : Shape) -> Bool {
   if self.id == shape.id {
     return true

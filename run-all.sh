@@ -27,5 +27,11 @@ moon run src/render -- -s examples/glb-demo.toml -o glb-demo.png --samples 4 --d
 moon run src/render -- -s examples/patterns-showcase.toml -o patterns-showcase.png --samples 4 --divide 1
 moon run src/render -- -s examples/pbr-demo.toml -o pbr-demo.png --samples 4 --divide 1
 moon run src/render -- -s examples/procedural-textures.toml -o procedural-textures.png --samples 4 --divide 1
+moon run src/render -- -s examples/levels-demo.toml -o levels-demo.png --samples 4 --divide 1
+moon run src/render -- -s examples/threshold-demo.toml -o threshold-demo.png --samples 4 --divide 1
+moon run src/render -- -s examples/posterize-demo.toml -o posterize-demo.png --samples 4 --divide 1
+moon run src/render -- -s examples/gradient-map-demo.toml -o gradient-map-demo.png --samples 4 --divide 1
+moon run src/render -- -s examples/triplanar-demo.toml -o triplanar-demo.png --samples 4 --divide 1
+moon run src/render -- -s examples/voronoi-edges-demo.toml -o voronoi-edges-demo.png --samples 4 --divide 1
 moon run src/render -- -s examples/simple-sphere.toml -o simple-sphere.png --samples 4 --divide 1
 moon run src/render -- -s examples/texture-demo.toml -o texture-demo.png --samples 4 --divide 1

@@ -47,6 +47,8 @@ pub fn glass_sphere() -> Shape
 
 pub fn gradient_checkers_pattern(Array[Color]) -> Pattern
 
+pub fn gradient_map_pattern(Pattern, Array[Color]) -> Pattern
+
 pub fn gradient_pattern(Array[Color]) -> Pattern
 
 pub fn gradient_ring_pattern(Array[Color]) -> Pattern
@@ -60,6 +62,8 @@ pub fn intersection_allowed(Operation, Bool, Bool, Bool) -> Bool
 pub fn intersections(Array[Intersection]) -> Intersections
 
 pub fn invert_pattern(Pattern) -> Pattern
+
+pub fn levels_pattern(Pattern, in_min? : Double, in_max? : Double, out_min? : Double, out_max? : Double, gamma? : Double) -> Pattern
 
 pub async fn load_gltf_file(String) -> Shape raise SceneParseError
 
@@ -97,6 +101,8 @@ pub fn point(Double, Double, Double) -> Tuple
 
 pub fn point_light(Tuple, Color) -> Light
 
+pub fn posterize_pattern(Pattern, steps? : Int) -> Pattern
+
 pub fn ray(Tuple, Tuple) -> Ray
 
 pub fn ring_pattern(Array[Color]) -> Pattern
@@ -125,11 +131,15 @@ pub fn stripe_pattern(Array[Color]) -> Pattern
 
 pub fn texture(Canvas, mapping? : &Mapping) -> Pattern
 
+pub fn threshold_pattern(Pattern, threshold? : Double, low? : Color, high? : Color) -> Pattern
+
 pub fn translation(Double, Double, Double) -> Matrix
 
 pub fn triangle(Tuple, Tuple, Tuple) -> Shape
 
 pub fn triangle_uv(Tuple, Tuple, Tuple, (Double, Double), (Double, Double), (Double, Double)) -> Shape
+
+pub fn triplanar_pattern(Pattern, scale? : Double, sharpness? : Double) -> Pattern
 
 pub fn tuple(Double, Double, Double, Double) -> Tuple
 
@@ -141,7 +151,9 @@ pub fn view_transform(Tuple, Tuple, Tuple) -> Matrix
 
 pub fn voronoi2(Tuple, Int, Double) -> (Double, Int, Int)
 
-pub fn voronoi_pattern(seed? : Int, scale? : Double, jitter? : Double, mode? : VoronoiMode) -> Pattern
+pub fn voronoi2_f1_f2(Tuple, Int, Double) -> (Double, Double, Int, Int)
+
+pub fn voronoi_pattern(seed? : Int, scale? : Double, jitter? : Double, mode? : VoronoiMode, edge_scale? : Double) -> Pattern
 
 pub fn warp_pattern(Pattern, Pattern, amplitude? : Double) -> Pattern
 
@@ -441,6 +453,13 @@ pub impl PatternTrait for GradientCheckersPattern
 pub impl Eq for GradientCheckersPattern
 pub impl Show for GradientCheckersPattern
 
+pub(all) struct GradientMapPattern {
+  pattern : Pattern
+  colors : Array[Color]
+}
+pub impl PatternTrait for GradientMapPattern
+pub impl Show for GradientMapPattern
+
 pub(all) struct GradientPattern {
   colors : Array[Color]
 }
@@ -499,6 +518,17 @@ pub(all) struct InvertPattern {
 }
 pub impl PatternTrait for InvertPattern
 pub impl Show for InvertPattern
+
+pub(all) struct LevelsPattern {
+  pattern : Pattern
+  in_min : Double
+  in_max : Double
+  out_min : Double
+  out_max : Double
+  gamma : Double
+}
+pub impl PatternTrait for LevelsPattern
+pub impl Show for LevelsPattern
 
 pub(all) struct Light {
   position : Tuple
@@ -638,7 +668,7 @@ pub(all) struct Pattern {
   mut inv_transform : Matrix
 }
 pub fn Pattern::new(&PatternTrait) -> Self
-pub fn Pattern::pattern_at_shape(Self, Shape, Tuple, uv? : (Double, Double)) -> Color
+pub fn Pattern::pattern_at_shape(Self, Shape, Tuple, normal? : Tuple, uv? : (Double, Double)) -> Color
 pub fn Pattern::set_pattern_transform(Self, Matrix) -> Unit
 pub impl PatternTrait for Pattern
 pub impl Eq for Pattern
@@ -655,6 +685,13 @@ pub(all) struct Plane {
 pub impl Object for Plane
 pub impl Eq for Plane
 pub impl Show for Plane
+
+pub(all) struct PosterizePattern {
+  pattern : Pattern
+  steps : Int
+}
+pub impl PatternTrait for PosterizePattern
+pub impl Show for PosterizePattern
 
 pub(all) struct Ray {
   origin : Tuple
@@ -733,6 +770,7 @@ pub fn Shape::normal_to_world(Self, Tuple) -> Tuple
 pub fn Shape::object_space_bounds(Self) -> Bounds
 pub fn Shape::parent_space_bounds(Self) -> Bounds
 pub fn Shape::set_transform(Self, Matrix) -> Unit
+pub fn Shape::world_normal_to_object(Self, Tuple) -> Tuple
 pub fn Shape::world_to_object(Self, Tuple) -> Tuple
 pub impl Eq for Shape
 pub impl Show for Shape
@@ -804,6 +842,15 @@ pub impl PatternTrait for Texture
 pub impl Eq for Texture
 pub impl Show for Texture
 
+pub(all) struct ThresholdPattern {
+  pattern : Pattern
+  threshold : Double
+  low : Color
+  high : Color
+}
+pub impl PatternTrait for ThresholdPattern
+pub impl Show for ThresholdPattern
+
 pub(all) struct Triangle {
   p1 : Tuple
   p2 : Tuple
@@ -839,6 +886,14 @@ pub fn TriangleUV::local_normal_at(Self, Tuple) -> Tuple
 pub impl Eq for TriangleUV
 pub impl Show for TriangleUV
 
+pub(all) struct TriplanarPattern {
+  pattern : Pattern
+  scale : Double
+  sharpness : Double
+}
+pub impl PatternTrait for TriplanarPattern
+pub impl Show for TriplanarPattern
+
 pub(all) struct Tuple {
   mut x : Double
   mut y : Double
@@ -869,6 +924,8 @@ pub impl Sub for Tuple
 pub(all) enum VoronoiMode {
   Distance
   Cells
+  Edges
+  Crackle
 }
 pub impl Eq for VoronoiMode
 pub impl Show for VoronoiMode
@@ -878,6 +935,7 @@ pub(all) struct VoronoiPattern {
   scale : Double
   jitter : Double
   mode : VoronoiMode
+  edge_scale : Double
 }
 pub impl PatternTrait for VoronoiPattern
 pub impl Show for VoronoiPattern
@@ -933,6 +991,7 @@ pub(open) trait Object : Show {
 pub(open) trait PatternTrait : Show {
   pattern_at(Self, Tuple) -> Color
   uv_at(Self, Double, Double) -> Color
+  pattern_at_with_info(Self, Tuple, Tuple, (Double, Double)?) -> Color
   clone(Self) -> Pattern
 }
 

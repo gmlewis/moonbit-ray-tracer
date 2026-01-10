@@ -1,0 +1,116 @@
+# Levels / remap demo
+[scene]
+name = "Levels Demo"
+description = "Remap + gamma shaping over procedural noise"
+version = "1.0"
+
+[scene.render]
+width = 1100
+height = 650
+samples = 1
+max_bounces = 4
+background = [0.06, 0.06, 0.08]
+
+[camera]
+position = [0.0, 3.0, -10.0]
+look_at = [0.0, 1.1, 0.0]
+up = [0.0, 1.0, 0.0]
+field_of_view = 0.785
+
+[[lights]]
+type = "point"
+position = [-10.0, 10.0, -10.0]
+intensity = [1.0, 1.0, 1.0]
+
+[[lights]]
+type = "point"
+position = [8.0, 8.0, 6.0]
+intensity = [0.35, 0.35, 0.45]
+
+# Patterns
+[patterns.base_fbm]
+type = "fbm"
+seed = 7
+scale = 2.0
+octaves = 5
+
+[patterns.levels_contrast]
+type = "levels"
+in_min = 0.25
+in_max = 0.75
+out_min = 0.0
+out_max = 1.0
+gamma = 1.0
+
+[patterns.levels_contrast.pattern]
+type = "fbm"
+seed = 7
+scale = 2.0
+octaves = 5
+
+[patterns.levels_soft]
+type = "levels"
+in_min = 0.0
+in_max = 1.0
+out_min = 0.0
+out_max = 1.0
+gamma = 2.2
+
+[patterns.levels_soft.pattern]
+type = "fbm"
+seed = 7
+scale = 2.0
+octaves = 5
+
+[patterns.levels_crush]
+type = "levels"
+in_min = 0.10
+in_max = 0.90
+out_min = 0.0
+out_max = 1.0
+gamma = 0.55
+
+[patterns.levels_crush.pattern]
+type = "fbm"
+seed = 7
+scale = 2.0
+octaves = 5
+
+# Materials
+[materials.base]
+ambient = 0.08
+diffuse = 0.85
+specular = 0.15
+shininess = 90.0
+reflective = 0.06
+
+# Floor
+[[objects]]
+type = "plane"
+material = { color = [0.25, 0.25, 0.28], ambient = 0.25, diffuse = 0.9, specular = 0.0 }
+
+# Spheres (left to right)
+[[objects]]
+type = "sphere"
+material = { ambient = 0.1, diffuse = 0.85, specular = 0.18, shininess = 120.0, pattern = "base_fbm" }
+transform = { translation = [-4.5, 1.0, 1.6] }
+pattern_transform = { scale = [0.9, 0.9, 0.9] }
+
+[[objects]]
+type = "sphere"
+material = { ambient = 0.1, diffuse = 0.85, specular = 0.18, shininess = 120.0, pattern = "levels_soft" }
+transform = { translation = [0.0, 1.0, 1.2] }
+pattern_transform = { scale = [0.9, 0.9, 0.9] }
+
+[[objects]]
+type = "sphere"
+material = { ambient = 0.1, diffuse = 0.85, specular = 0.18, shininess = 120.0, pattern = "levels_contrast" }
+transform = { translation = [4.5, 1.0, 1.6] }
+pattern_transform = { scale = [0.9, 0.9, 0.9] }
+
+# Center foreground
+[[objects]]
+type = "sphere"
+material = { ambient = 0.1, diffuse = 0.85, specular = 0.18, shininess = 120.0, pattern = "levels_crush" }
+transform = { translation = [0.0, 0.6, -1.8], scale = [0.65, 0.65, 0.65] }
+pattern_transform = { scale = [1.2, 1.2, 1.2] }

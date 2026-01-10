@@ -469,12 +469,52 @@ fn parse_pattern(value : @toml.TomlValue) -> Pattern raise SceneParseError {
       let seed = get_int_or_default(pattern_table, "seed", 0)
       let scale = get_float_or_default(pattern_table, "scale", 1.0)
       let jitter = get_float_or_default(pattern_table, "jitter", 1.0)
+      let edge_scale = get_float_or_default(pattern_table, "edge_scale", 12.0)
       let mode = match
         get_string_or_default(pattern_table, "mode", "distance") {
         "cells" => VoronoiMode::Cells
+        "edges" => VoronoiMode::Edges
+        "crackle" => VoronoiMode::Crackle
         _ => VoronoiMode::Distance
       }
-      voronoi_pattern(seed~, scale~, jitter~, mode~)
+      voronoi_pattern(seed~, scale~, jitter~, mode~, edge_scale~)
+    }
+
+    // More looks
+    "levels" => {
+      let p = get_pattern_required("pattern")
+      let in_min = get_float_or_default(pattern_table, "in_min", 0.0)
+      let in_max = get_float_or_default(pattern_table, "in_max", 1.0)
+      let out_min = get_float_or_default(pattern_table, "out_min", 0.0)
+      let out_max = get_float_or_default(pattern_table, "out_max", 1.0)
+      let gamma = get_float_or_default(pattern_table, "gamma", 1.0)
+      levels_pattern(p, in_min~, in_max~, out_min~, out_max~, gamma~)
+    }
+    "threshold" => {
+      let p = get_pattern_required("pattern")
+      let threshold = get_float_or_default(pattern_table, "threshold", 0.5)
+      let colors = get_colors_optional()
+      if colors.length() >= 2 {
+        threshold_pattern(p, threshold~, low=colors[0], high=colors[1])
+      } else {
+        threshold_pattern(p, threshold~)
+      }
+    }
+    "posterize" => {
+      let p = get_pattern_required("pattern")
+      let steps = get_int_or_default(pattern_table, "steps", 4)
+      posterize_pattern(p, steps~)
+    }
+    "gradient_map" => {
+      let p = get_pattern_required("pattern")
+      let colors = get_colors_required()
+      gradient_map_pattern(p, colors)
+    }
+    "triplanar" => {
+      let p = get_pattern_required("pattern")
+      let scale = get_float_or_default(pattern_table, "scale", 1.0)
+      let sharpness = get_float_or_default(pattern_table, "sharpness", 1.0)
+      triplanar_pattern(p, scale~, sharpness~)
     }
 
     // Compositing / fun combinations

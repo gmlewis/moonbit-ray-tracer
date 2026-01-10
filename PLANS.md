@@ -89,14 +89,34 @@ Next best thing to address: focus first on the Procedural Texture Library + comp
 - [ ] Implement material layering/blending/masking
 
 ### Procedural Texture Library (High Priority for still images)
-- [ ] Create extensive procedural texture system (noise, patterns)
-- [ ] Add core noise primitives (value noise, Perlin/simplex-style gradients)
-- [ ] Add fBm/turbulence and common looks (marble, wood, clouds)
-- [ ] Add cellular/Voronoi noise variants
-- [ ] Add domain warping for richer textures
-- [ ] Add compositing nodes (blend/mix, mask, remap, clamp, invert)
-- [ ] Add parameterized controls in scene format (seed, scale, octaves, lacunarity, gain)
-- [ ] Create a procedural texture showcase scene + rendered gallery
+- [x] Create initial procedural texture system (noise, patterns)
+- [x] Add core noise primitives (value noise)
+- [x] Add fBm and common looks (marble, wood)
+- [x] Add cellular/Voronoi noise variants
+- [x] Add domain warping for richer textures
+- [x] Add compositing nodes (mix, invert, warp)
+- [x] Add parameterized controls in scene format (seed, scale, octaves, lacunarity, gain)
+- [x] Create a procedural texture showcase scene + rendered gallery
+
+#### Procedural Textures: Next Steps
+
+Goal: keep the system fun for albedo output now, while structuring it so the same pattern graphs can later drive masks/roughness/metallic, normal maps, and displacement.
+
+- [ ] Add a lightweight “field” abstraction (internal): standardize sampling as **scalar/color/vector** so a single pattern graph can be reused for albedo, masks, warps, and height.
+- [ ] Add “more looks” utility nodes:
+	- [ ] `levels` / `remap` (bias/gain/contrast + clamp)
+	- [ ] `threshold` / `posterize` (hard edges, toon/cell looks)
+	- [ ] `gradient_map` (map scalar → palette; makes fBm/Voronoi art-directable)
+	- [ ] `triplanar` mapping helper (improves procedural textures on meshes without UVs)
+	- [ ] Voronoi “features” (edges/crackle, F1/F2 variants) for stone/cracks
+- [ ] Start future geometry hooks (optional, minimal first pass):
+	- [ ] Normal-from-height (finite differences on scalar field; no tessellation required)
+	- [ ] Displacement mapping plan (field + strength), gated until a tessellation strategy is chosen
+
+Success metrics:
+- [ ] A set of WOW example scenes for each new procedural node (clearly demonstrating why it exists)
+- [ ] New nodes are composable via nested inline patterns in TOML
+- [ ] Triplanar makes procedural textures look good on GLTF meshes that lack good UVs
 
 ### `Graphic` Integration (gmlewis/fonts/draw)
 - [ ] Define scene representation for `Graphic` assets (likely JSON, referenced from TOML)

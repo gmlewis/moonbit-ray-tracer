@@ -125,3 +125,44 @@ pub fn voronoi2(p : Tuple, seed : Int, jitter : Double) -> (Double, Int, Int) {
   }
   (best.sqrt(), best_ix, best_iy)
 }
+
+///|
+pub fn voronoi2_f1_f2(
+  p : Tuple,
+  seed : Int,
+  jitter : Double,
+) -> (Double, Double, Int, Int) {
+  // Returns F1, F2 (Euclidean), and the winning cell coords.
+  // 2D Voronoi on (x,z)
+  let x = p.x
+  let y = p.z
+  let ix = @math.floor(x).to_int()
+  let iy = @math.floor(y).to_int()
+  let mut best1 : Double = @double.max_value
+  let mut best2 : Double = @double.max_value
+  let mut best_ix = ix
+  let mut best_iy = iy
+
+  // Check neighbor cells
+  for dx in -1..<2 {
+    for dy in -1..<2 {
+      let cx = ix + dx
+      let cy = iy + dy
+      let (rx, ry) = hash2(cx, cy, seed)
+      let fx = cx.to_double() + rx * jitter
+      let fy = cy.to_double() + ry * jitter
+      let dxv = x - fx
+      let dyv = y - fy
+      let d2 = dxv * dxv + dyv * dyv
+      if d2 < best1 {
+        best2 = best1
+        best1 = d2
+        best_ix = cx
+        best_iy = cy
+      } else if d2 < best2 {
+        best2 = d2
+      }
+    }
+  }
+  (best1.sqrt(), best2.sqrt(), best_ix, best_iy)
+}

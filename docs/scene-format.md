@@ -85,20 +85,17 @@ height = 2.0
 - `"point"`: Point light source
 - `"area"`: Area light source (future)
 - `"environment"`: Environment/IBL lighting (future)
-
 ## Materials
-
 ```toml
-[materials.red_plastic]
 color = [0.8, 0.2, 0.2]
 ambient = 0.1
 diffuse = 0.7
-specular = 0.2
 shininess = 200.0
 reflective = 0.0
 transparency = 0.0
-refractive_index = 1.0
-
+  - Params: `seed` (0), `scale` (1.0), `jitter` (1.0),
+    `mode` (`"distance"`, `"cells"`, `"edges"`, or `"crackle"`, default `"distance"`),
+    `edge_scale` (12.0; used by `edges`/`crackle`)
 [materials.glass]
 color = [1.0, 1.0, 1.0]
 ambient = 0.0
@@ -114,11 +111,8 @@ color = [0.1, 0.1, 0.1]
 ambient = 0.0
 diffuse = 0.1
 specular = 0.9
-shininess = 200.0
 reflective = 0.9
-transparency = 0.0
 refractive_index = 1.0
-```
 
 ### Material Properties
 - `color`: Base color [R, G, B] (0.0-1.0)
@@ -131,6 +125,41 @@ refractive_index = 1.0
 - `refractive_index`: Index of refraction (>= 1.0)
 
 ## Patterns
+
+### More-Looks Pattern Types
+
+These patterns modify or reinterpret an underlying pattern.
+
+- `"levels"`: Remap per-channel (input range → output range) with optional gamma shaping
+  - Requires: `pattern` (inline pattern table)
+  - Params: `in_min` (0.0), `in_max` (1.0), `out_min` (0.0), `out_max` (1.0), `gamma` (1.0)
+- `"threshold"`: Turn a pattern into a hard mask using luminance
+  - Requires: `pattern` (inline pattern table)
+  - Params: `threshold` (0.5)
+  - Optional: `colors = [low, high]` (defaults to black/white)
+- `"posterize"`: Quantize a pattern into a fixed number of steps
+  - Requires: `pattern` (inline pattern table)
+  - Params: `steps` (4)
+- `"gradient_map"`: Map a pattern’s luminance through a palette
+  - Requires: `pattern` (inline pattern table), `colors` (palette)
+- `"triplanar"`: Triplanar projection using the surface normal (no UV seams)
+  - Requires: `pattern` (inline pattern table)
+  - Params: `scale` (1.0), `sharpness` (1.0)
+
+Example:
+
+```toml
+[patterns.my_neon]
+type = "gradient_map"
+colors = [
+  [0.05, 0.02, 0.10],
+  [0.20, 0.05, 0.55],
+  [0.05, 0.65, 0.95],
+  [0.95, 0.90, 0.35]
+]
+
+pattern = { type = "fbm", seed = 29, scale = 2.0, octaves = 5 }
+```
 
 ```toml
 [patterns.checkers]
