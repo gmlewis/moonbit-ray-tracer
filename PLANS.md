@@ -79,15 +79,38 @@ This document outlines a comprehensive plan to take the MoonBit ray tracer to th
 
 ## Priority 4: Advanced Features
 
+Next best thing to address: focus first on the Procedural Texture Library + compositing/masks, then wire that into `Graphic`-based masks; extrusion can follow once masks/textures are solid.
+
 ### Texture & Material System
 - [x] Implement texture loading (PNG, JPG, HDR) (decode + sampling)
 - [x] Add UV mapping support (spherical/planar/cylindrical/cubic + mesh UVs)
 - [ ] Implement normal mapping
 - [ ] Add displacement mapping
-- [ ] Create extensive procedural texture system (noise, patterns)
 - [ ] Implement material layering/blending/masking
 
-### Animation System
+### Procedural Texture Library (High Priority for still images)
+- [ ] Create extensive procedural texture system (noise, patterns)
+- [ ] Add core noise primitives (value noise, Perlin/simplex-style gradients)
+- [ ] Add fBm/turbulence and common looks (marble, wood, clouds)
+- [ ] Add cellular/Voronoi noise variants
+- [ ] Add domain warping for richer textures
+- [ ] Add compositing nodes (blend/mix, mask, remap, clamp, invert)
+- [ ] Add parameterized controls in scene format (seed, scale, octaves, lacunarity, gain)
+- [ ] Create a procedural texture showcase scene + rendered gallery
+
+### `Graphic` Integration (gmlewis/fonts/draw)
+- [ ] Define scene representation for `Graphic` assets (likely JSON, referenced from TOML)
+- [ ] Add loader that reads a `Graphic` asset and applies transforms/scaling
+- [ ] Decide on scene authoring approach for complex `Graphic` generation (keep TOML for declarative scenes; optionally add a MoonBit “scene/asset generator” that outputs JSON/TOML)
+- [ ] Implement `Graphic`-based mask pattern (inside/outside + optional antialiasing)
+- [ ] Allow masking between two patterns (solid color or any procedural texture)
+- [ ] Support nested masks (embed one procedural texture “inside” another via `Graphic`)
+- [ ] Implement `Graphic` extrusion to solid geometry (profiles → triangulation + side walls)
+- [ ] Add UV mapping strategies for extruded graphics (planar + configurable mapping)
+- [ ] Add example scenes: extruded logo/text; masked decal on another surface
+- [ ] Add unit tests for profile → mesh and mask evaluation
+
+### Animation System (Deprioritized)
 - [ ] Design keyframe animation framework
 - [ ] Implement object transformation animations
 - [ ] Add camera animation support
@@ -174,6 +197,7 @@ Complete the tool with documentation, examples, and advanced features.
 - [ ] Render complex scenes (1000+ objects) in reasonable time
 - [x] Support standard 3D file formats (OBJ, GLTF) (baseline import; OBJ materials/MTL still TODO)
 - [ ] Produce photorealistic images comparable to commercial tools
+- [ ] Render `Graphic` assets as extruded solids and as texture masks
 - [ ] Provide intuitive user interface for non-programmers
 - [ ] Maintain code quality and comprehensive test coverage
 - [ ] Build active community of users and contributors
