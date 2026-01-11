@@ -85,7 +85,7 @@ pub fn Material::clone(self : Material) -> Material {
 }
 
 ///|
-fn bump_normal_from_pattern(
+pub fn bump_normal_from_pattern(
   normal_pattern : Pattern,
   strength : Double,
   shape : Shape,
@@ -96,13 +96,38 @@ fn bump_normal_from_pattern(
   if strength <= 0.0 {
     return geometric_normalv
   }
-  // Sample in object space for stable scale under transforms.
-  let eps = 1.0e-3
+  // Tangent-space finite differences (in object space) give a much more
+  // stable/visible bump effect on curved geometry than sampling along fixed
+  // object axes.
+  // Larger step makes the numerical gradient much more visible and less
+  // likely to vanish due to extremely smooth / quantized height functions.
+  let eps = 1.0e-2
   let op = shape.world_to_object(position)
+  let obj_normal = shape.world_normal_to_object(geometric_normalv)
+
+  // Build an orthonormal tangent basis around the geometric normal.
+  let up = if obj_normal.y.abs() < 0.9 {
+    vector(0, 1, 0)
+  } else {
+    vector(1, 0, 0)
+  }
+  let tangent_u = obj_normal.cross(up).normalize()
+  let tangent_v = obj_normal.cross(tangent_u).normalize()
   let p0 = position
-  let px = shape.object_to_world(point(op.x + eps, op.y, op.z))
-  let py = shape.object_to_world(point(op.x, op.y + eps, op.z))
-  let pz = shape.object_to_world(point(op.x, op.y, op.z + eps))
+  let pu = shape.object_to_world(
+    point(
+      op.x + tangent_u.x * eps,
+      op.y + tangent_u.y * eps,
+      op.z + tangent_u.z * eps,
+    ),
+  )
+  let pv = shape.object_to_world(
+    point(
+      op.x + tangent_v.x * eps,
+      op.y + tangent_v.y * eps,
+      op.z + tangent_v.z * eps,
+    ),
+  )
   fn h(
     pat : Pattern,
     s : Shape,
@@ -123,16 +148,17 @@ fn bump_normal_from_pattern(
   }
 
   let h0 = h(normal_pattern, shape, p0, geometric_normalv, uv)
-  let hx = h(normal_pattern, shape, px, geometric_normalv, uv)
-  let hy = h(normal_pattern, shape, py, geometric_normalv, uv)
-  let hz = h(normal_pattern, shape, pz, geometric_normalv, uv)
+  let hu = h(normal_pattern, shape, pu, geometric_normalv, uv)
+  let hv = h(normal_pattern, shape, pv, geometric_normalv, uv)
 
-  // Gradient in object space.
-  let gx = (hx - h0) / eps
-  let gy = (hy - h0) / eps
-  let gz = (hz - h0) / eps
-  let obj_normal = shape.world_normal_to_object(geometric_normalv)
-  let bumped_obj = (obj_normal + vector(gx, gy, gz).mul_scalar(strength)).normalize()
+  // Slope along tangents.
+  let du = (hu - h0) / eps
+  let dv = (hv - h0) / eps
+
+  // Standard bump approximation: tilt the normal against the height slopes.
+  let bumped_obj = (obj_normal -
+  tangent_u.mul_scalar(du * strength) -
+  tangent_v.mul_scalar(dv * strength)).normalize()
   shape.normal_to_world(bumped_obj)
 }
 
@@ -194,8 +220,10 @@ pub fn Material::lighting(
   shape? : Shape? = None,
   uv? : (Double, Double),
 ) -> Color {
-  // Use geometric normal for pattern evaluation (e.g., triplanar mapping),
-  // and a potentially bumped normal for shading.
+  // Use geometric normal by default for pattern evaluation, and a potentially
+  // bumped normal for shading. When a normal map is present, we also feed the
+  // bumped normal into pattern evaluation so normal-aware patterns (e.g.
+  // triplanar) can reflect the perturbation.
   let shading_normalv = match (self.normal_pattern, shape) {
     (Some(np), Some(shape)) =>
       bump_normal_from_pattern(
@@ -208,9 +236,13 @@ pub fn Material::lighting(
       )
     _ => normalv
   }
+  let pattern_normalv = match self.normal_pattern {
+    Some(_) => shading_normalv
+    None => normalv
+  }
   let clr = match (self.pattern, shape) {
     (Some(pattern), Some(shape)) =>
-      pattern.pattern_at_shape(shape, position, normal=normalv, uv?)
+      pattern.pattern_at_shape(shape, position, normal=pattern_normalv, uv?)
     _ => self.color
   }
   match self.lighting_mode {

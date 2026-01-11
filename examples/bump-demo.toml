@@ -9,7 +9,7 @@ width = 1100
 height = 650
 samples = 1
 max_bounces = 4
-background = [0.06, 0.06, 0.08]
+background = [0.20, 0.05, 0.20]
 
 [camera]
 position = [0.0, 2.7, -8.8]
@@ -24,18 +24,16 @@ intensity = [1.0, 1.0, 1.0]
 
 [[lights]]
 type = "point"
-position = [-6.0, 1.25, -1.2]
-intensity = [1.2, 1.2, 1.2]
+position = [-2.5, 1.2, -2.2]
+intensity = [2.2, 2.2, 2.2]
 
 [[lights]]
 type = "point"
-position = [7.5, 7.0, -1.5]
-intensity = [0.20, 0.22, 0.30]
+# Strong grazing light for the A/B bump pair (near camera, low angle).
+position = [0.0, 0.35, -4.6]
+intensity = [6.5, 6.5, 6.5]
 
-[[lights]]
-type = "point"
-position = [0.0, 1.5, -6.0]
-intensity = [0.18, 0.18, 0.20]
+
 
 # Materials
 [materials.floor]
@@ -79,22 +77,28 @@ normal_pattern = "micro_fbm"
 normal_strength = 1.4
 
 [materials.bump_ab]
-color = [0.65, 0.65, 0.68]
-ambient = 0.02
-diffuse = 0.65
-specular = 0.95
-shininess = 800.0
-normal_pattern = "macro_height"
+color = [0.88, 0.88, 0.88]
+ambient = 0.0
+diffuse = 0.08
+specular = 1.0
+shininess = 900.0
+normal_pattern = "ab_height"
 normal_strength = 0.0
 
 [materials.bump_ab_strong]
-color = [0.65, 0.65, 0.68]
-ambient = 0.02
-diffuse = 0.65
-specular = 0.95
-shininess = 800.0
-normal_pattern = "macro_height"
-normal_strength = 10.0
+color = [0.88, 0.88, 0.88]
+ambient = 0.0
+diffuse = 0.08
+specular = 1.0
+shininess = 900.0
+normal_pattern = "ab_height"
+normal_strength = 75.0
+
+[patterns.ab_height]
+type = "fbm"
+seed = 123
+scale = 28.0
+octaves = 5
 
 # Patterns
 [patterns.tri_marble]
@@ -119,7 +123,7 @@ colors = [
 [patterns.tri_neon]
 type = "triplanar"
 scale = 2.8
-sharpness = 4.0
+sharpness = 40.0
 
 [patterns.tri_neon.pattern]
 type = "gradient_map"
@@ -232,14 +236,14 @@ transform = { translation = [0.0, 0.0, 6.0], rotation = [1.5708, 0.0, 0.0] }
 [[objects]]
 type = "sphere"
 material = "bump_ab"
-transform = { translation = [-1.35, 0.95, -1.1] }
-pattern_transform = { scale = [1.0, 1.0, 1.0] }
+transform = { translation = [-1.55, 1.05, -1.25], scale = [1.25, 1.25, 1.25] }
+pattern_transform = { scale = [1.8, 1.8, 1.8] }
 
 [[objects]]
 type = "sphere"
 material = "bump_ab_strong"
-transform = { translation = [1.35, 0.95, -1.1] }
-pattern_transform = { scale = [1.0, 1.0, 1.0] }
+transform = { translation = [1.55, 1.05, -1.25], scale = [1.25, 1.25, 1.25] }
+pattern_transform = { scale = [1.8, 1.8, 1.8] }
 
 # Bumped sphere
 [[objects]]

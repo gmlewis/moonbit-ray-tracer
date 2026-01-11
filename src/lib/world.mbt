@@ -58,7 +58,7 @@ pub fn World::shade_hit(
   let uv = if comps.has_uv { Some((comps.uv_u, comps.uv_v)) } else { None }
   let clr = match (comps.shape.material.pattern, Some(comps.shape)) {
     (Some(pattern), Some(shape)) =>
-      pattern.pattern_at_shape(shape, comps.point, uv?)
+      pattern.pattern_at_shape(shape, comps.point, normal=comps.normalv, uv?)
     _ => comps.shape.material.color
   }
 

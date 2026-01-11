@@ -13,6 +13,8 @@ pub fn area_light(Tuple, Tuple, Int, Tuple, Int, Color) -> Light
 
 pub let black : Color
 
+pub fn bump_normal_from_pattern(Pattern, Double, Shape, Tuple, Tuple, uv? : (Double, Double)) -> Tuple
+
 pub fn camera(Int, Int, Double) -> Camera
 
 pub fn canvas(Int, Int) -> Canvas

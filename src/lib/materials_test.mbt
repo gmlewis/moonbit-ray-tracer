@@ -122,6 +122,60 @@ test "Bump mapping (normal_pattern) perturbs lighting" {
 }
 
 ///|
+test "Bump mapping perturbs sphere normal (deterministic)" {
+  let shape = sphere()
+  let wp = point(0.0, 0.0, -1.0)
+  let gn = vector(0.0, 0.0, -1.0)
+
+  // For this point/normal, the bump code's tangent_u is +X, so the +X height
+  // ramp should tilt the normal toward -X (negative x component).
+  let bumped = bump_normal_from_pattern(rampx_pattern(), 10.0, shape, wp, gn)
+  assert_eq(bumped == gn, false)
+  assert_eq(bumped.x < -1.0e-4, true)
+  // Must still be a unit vector.
+  assert_true((bumped.magnitude() - 1.0).abs() < 1.0e-6)
+}
+
+///|
+// A simple height field: grayscale ramps with +x.
+struct RampX {}
+
+///|
+impl PatternTrait for RampX with clone(_self) {
+  rampx_pattern()
+}
+
+///|
+impl Show for RampX with output(self, logger) {
+  logger.write_string(self.to_string())
+}
+
+///|
+fn rampx_pattern() -> Pattern {
+  Pattern::new(RampX::{  })
+}
+
+///|
+impl PatternTrait for RampX with pattern_at(_self, p) {
+  let t = p.x * 0.5 + 0.5
+  let t = if t < 0.0 { 0.0 } else if t > 1.0 { 1.0 } else { t }
+  color(t, t, t)
+}
+
+///|
+impl PatternTrait for RampX with uv_at(self, u, v) {
+  self.pattern_at(point(u, 0.0, v))
+}
+
+///|
+impl PatternTrait for RampX with pattern_at_with_info(self, p, _n, uv) {
+  match uv {
+    Some((u, v)) => self.uv_at(u, v)
+    None => self.pattern_at(p)
+  }
+}
+
+///|
 test "Stripes with an object transformation (p.179)" {
   let object = sphere()
   object.set_transform(scaling(2, 2, 2))
