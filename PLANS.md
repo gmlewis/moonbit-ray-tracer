@@ -84,7 +84,7 @@ Next best thing to address: focus first on the Procedural Texture Library + comp
 ### Texture & Material System
 - [x] Implement texture loading (PNG, JPG, HDR) (decode + sampling)
 - [x] Add UV mapping support (spherical/planar/cylindrical/cubic + mesh UVs)
-- [ ] Implement normal mapping
+- [x] Implement normal mapping (procedural: height→normal via `normal_pattern` + `normal_strength`)
 - [ ] Add displacement mapping
 - [ ] Implement material layering/blending/masking
 
@@ -110,8 +110,10 @@ Goal: keep the system fun for albedo output now, while structuring it so the sam
 	- [ ] `triplanar` mapping helper (improves procedural textures on meshes without UVs)
 	- [ ] Voronoi “features” (edges/crackle, F1/F2 variants) for stone/cracks
 - [ ] Start future geometry hooks (optional, minimal first pass):
-	- [ ] Normal-from-height (finite differences on scalar field; no tessellation required)
+	- [x] Normal-from-height (finite differences on scalar field; no tessellation required)
 	- [ ] Displacement mapping plan (field + strength), gated until a tessellation strategy is chosen
+
+Note: image-based tangent-space normal maps (RGB normal textures) are still TODO; the current implementation focuses on procedural/graph-driven bump mapping.
 
 Success metrics:
 - [ ] A set of WOW example scenes for each new procedural node (clearly demonstrating why it exists)
