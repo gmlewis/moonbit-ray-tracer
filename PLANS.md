@@ -86,11 +86,13 @@ Next best thing to address: focus first on the Procedural Texture Library + comp
 - [x] Implement texture loading (PNG, JPG, HDR) (decode + sampling)
 - [x] Add UV mapping support (spherical/planar/cylindrical/cubic + mesh UVs)
 - [x] Implement normal mapping (procedural: height→normal via `normal_pattern` + `normal_strength`)
-- [ ] Implement image-based tangent-space normal maps (RGB normal textures)
-- [ ] Transform tangent-space normals to world space via TBN (with graceful fallback on primitives / missing UVs)
-- [ ] Support glTF `normalTexture` (including scale factor) and make it match common asset expectations
-- [ ] Generate mesh tangents/bitangents when missing (positions + UVs; orthonormalize against geometric normal)
+- [x] Implement image-based tangent-space normal maps (RGB normal textures)
+- [x] Transform tangent-space normals to world space via TBN (with graceful fallback on primitives / missing UVs)
+- [x] Support glTF `normalTexture` (including scale factor)
+- [x] Generate mesh tangents/bitangents when missing (positions + UVs; orthonormalize against geometric normal)
 - [ ] Optional later: MikkTSpace compatibility for best parity with DCC/glTF tooling
+- [ ] Use glTF-provided tangents when present (ATTRIBUTE `TANGENT`) and ensure parity with common viewers
+- [ ] Respect glTF `texCoord` on normal textures (currently assumes primary UV set)
 - [ ] Add displacement mapping
 - [ ] Implement material layering/blending/masking
 
@@ -119,7 +121,7 @@ Goal: keep the system fun for albedo output now, while structuring it so the sam
 	- [x] Normal-from-height (finite differences on scalar field; no tessellation required)
 	- [ ] Displacement mapping plan (field + strength), gated until a tessellation strategy is chosen
 
-Note: image-based tangent-space normal maps (RGB normal textures) are still TODO (tracked in “Texture & Material System” above); the current implementation focuses on procedural/graph-driven bump mapping.
+Note: image-based tangent-space normal maps are now implemented via glTF `normalTexture` and can also be applied as a material normal texture; procedural height→normal bump mapping remains supported via `normal_pattern` + `normal_strength`.
 
 Success metrics:
 - [ ] A set of WOW example scenes for each new procedural node (clearly demonstrating why it exists)
@@ -181,7 +183,8 @@ Success metrics:
 - [ ] Create community contribution guidelines
 - [ ] Docs polish: add one canonical “Normals” section to docs/scene-format.md (procedural height→normal now; normal textures later)
 - [ ] Docs: include a small “known limitations” note for procedural normal-from-height (not true displacement)
-- [ ] Add one stable “golden normals” regression test scene/probe (covers procedural bump now; extend to normal textures once added)
+- [x] Add one stable “golden normals” regression test scene/probe (covers procedural bump)
+- [x] Add a GLB normalTexture shading regression test (ensures glTF normal maps affect shading)
 
 ## Priority 6: Advanced Graphics & Optimization
 
