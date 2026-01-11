@@ -9,6 +9,8 @@ pub(all) struct TriangleUV {
   e1 : Tuple
   e2 : Tuple
   normal : Tuple
+  tangent_u : Tuple
+  tangent_v : Tuple
   bounds : Bounds
 } derive(Show, Eq)
 
@@ -26,7 +28,49 @@ pub fn triangle_uv(
   let e1 = p2 - p1
   let e2 = p3 - p1
   let normal = e2.cross(e1).normalize()
-  Shape::new(TriangleUV({ p1, p2, p3, uv1, uv2, uv3, e1, e2, normal, bounds }))
+
+  // Tangent basis from positions + UVs.
+  let du1 = uv2.0 - uv1.0
+  let dv1 = uv2.1 - uv1.1
+  let du2 = uv3.0 - uv1.0
+  let dv2 = uv3.1 - uv1.1
+  let denom = du1 * dv2 - du2 * dv1
+  let (tangent_u0, tangent_v0) = if denom.abs() < 1.0e-12 {
+    // Degenerate UV mapping; fall back to an arbitrary basis.
+    let up = if normal.y.abs() < 0.9 {
+      vector(0, 1, 0)
+    } else {
+      vector(1, 0, 0)
+    }
+    let tu = normal.cross(up).normalize()
+    let tv = normal.cross(tu).normalize()
+    (tu, tv)
+  } else {
+    let f = 1.0 / denom
+    let tu = (e1.mul_scalar(dv2) - e2.mul_scalar(dv1)).mul_scalar(f)
+    let tv = (e2.mul_scalar(du1) - e1.mul_scalar(du2)).mul_scalar(f)
+    (tu, tv)
+  }
+  let tangent_u = (tangent_u0 - normal.mul_scalar(normal.dot(tangent_u0))).normalize()
+  let tangent_v = (tangent_v0 -
+  normal.mul_scalar(normal.dot(tangent_v0)) -
+  tangent_u.mul_scalar(tangent_u.dot(tangent_v0))).normalize()
+  Shape::new(
+    TriangleUV({
+      p1,
+      p2,
+      p3,
+      uv1,
+      uv2,
+      uv3,
+      e1,
+      e2,
+      normal,
+      tangent_u,
+      tangent_v,
+      bounds,
+    }),
+  )
 }
 
 ///|
@@ -46,6 +90,8 @@ pub fn TriangleUV::clone(self : TriangleUV) -> TriangleUV {
     e1: self.e1,
     e2: self.e2,
     normal: self.normal,
+    tangent_u: self.tangent_u,
+    tangent_v: self.tangent_v,
     bounds: self.bounds,
   }
 }

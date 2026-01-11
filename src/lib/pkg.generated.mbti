@@ -394,7 +394,7 @@ pub(all) struct GltfImage {
 
 pub(all) struct GltfMaterial {
   pbr_metallic_roughness : GltfMaterialPbr?
-  normal_texture : GltfTextureInfo?
+  normal_texture : GltfNormalTextureInfo?
   occlusion_texture : GltfTextureInfo?
   emissive_texture : GltfTextureInfo?
   emissive_factor : Array[Double]?
@@ -429,6 +429,12 @@ pub(all) struct GltfNode {
   rotation : Array[Double]?
   scale : Array[Double]?
   name : String?
+}
+
+pub(all) struct GltfNormalTextureInfo {
+  index : Int
+  tex_coord : Int?
+  scale : Double?
 }
 
 pub(all) struct GltfScene {
@@ -581,6 +587,8 @@ pub(all) struct Material {
   mut pattern : Pattern?
   mut normal_pattern : Pattern?
   mut normal_strength : Double
+  mut normal_texture : Pattern?
+  mut normal_texture_scale : Double
   mut metallic : Double
   mut roughness : Double
   mut lighting_mode : LightingMode
@@ -810,6 +818,8 @@ pub(all) struct SmoothTriangleUV {
   uv3 : (Double, Double)
   e1 : Tuple
   e2 : Tuple
+  tangent_u : Tuple
+  tangent_v : Tuple
   bounds : Bounds
 }
 pub fn SmoothTriangleUV::bounds(Self) -> Bounds
@@ -882,6 +892,8 @@ pub(all) struct TriangleUV {
   e1 : Tuple
   e2 : Tuple
   normal : Tuple
+  tangent_u : Tuple
+  tangent_v : Tuple
   bounds : Bounds
 }
 pub fn TriangleUV::bounds(Self) -> Bounds

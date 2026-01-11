@@ -126,26 +126,29 @@ fn normal_from_texture(
   base_normalv : Tuple,
   uv? : (Double, Double),
 ) -> Tuple {
-  match uv? {
+  match uv {
     None => return base_normalv
     Some(_) => ()
   }
-  let c = normal_texture.pattern_at_shape(shape, position, normal=base_normalv, uv?)
+  let c = normal_texture.pattern_at_shape(
+    shape,
+    position,
+    normal=base_normalv,
+    uv?,
+  )
 
   // glTF normalTexture encodes tangent-space normals as RGB in [0,1], where:
   // n = normalize(vec3(2*r-1, 2*g-1, 2*b-1)), and `scale` scales x/y.
   let mut tx = 2.0 * c.red - 1.0
   let mut ty = 2.0 * c.green - 1.0
   let tz = 2.0 * c.blue - 1.0
-
   tx *= scale
   ty *= scale
-
   let tn = vector(tx, ty, tz).normalize()
 
   // Tangent basis in world space (best effort). If missing, fall back to an
   // arbitrary orthonormal basis around the base normal.
-  let (mut t, mut b) = match get_shape_tangent_basis_world(shape) {
+  let (t0, b0) = match get_shape_tangent_basis_world(shape) {
     Some((tu, tv)) => (tu, tv)
     None => {
       let up = if base_normalv.y.abs() < 0.9 {
@@ -161,8 +164,8 @@ fn normal_from_texture(
 
   // Orthonormalize T,B against the (possibly interpolated) base normal.
   let n = base_normalv.normalize()
-  t = (t - n.mul_scalar(n.dot(t))).normalize()
-  b = n.cross(t).normalize()
+  let t = (t0 - n.mul_scalar(n.dot(t0))).normalize()
+  let b = (b0 - n.mul_scalar(n.dot(b0)) - t.mul_scalar(t.dot(b0))).normalize()
 
   // Tangent-to-world transform: worldN = normalize(T*tx + B*ty + N*tz)
   (t.mul_scalar(tn.x) + b.mul_scalar(tn.y) + n.mul_scalar(tn.z)).normalize()

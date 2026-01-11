@@ -532,8 +532,13 @@ pub fn GltfData::load_material(self : GltfData, mat_idx : Int) -> Material {
   match g_mat.normal_texture {
     Some(info) =>
       match self.load_material_texture(info.index, linear=true) {
-        // TODO: Use normal_texture
-        Some(_tex) => ()
+        Some(tex) => {
+          mat.normal_texture = Some(tex)
+          mat.normal_texture_scale = match info.scale {
+            Some(s) => s
+            None => 1.0
+          }
+        }
         None => ()
       }
     None => ()
