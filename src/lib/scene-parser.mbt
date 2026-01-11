@@ -785,185 +785,17 @@ fn parse_object(
   // Apply material (either reference or inline)
   if (object_type != "gltf" && object_type != "obj") ||
     object_table.get("material") is Some(_) {
-    apply_material_and_transform_sync(shape, object_table, materials, patterns)
+    apply_material_and_transform(shape, object_table, materials, patterns)
   } else {
     // Still need to apply transform
-    apply_transform_sync(shape, object_table)
+    apply_transform(shape, object_table)
   }
   shape
 }
 
 ///|
-fn apply_transform_sync(
-  shape : Shape,
-  object_table : Map[String, @toml.TomlValue],
-) -> Unit raise SceneParseError {
-  // Apply object transform if specified
-  match object_table.get("transform") {
-    Some(t) => {
-      let transform = parse_transform(t)
-      shape.set_transform(transform)
-    }
-    _ => ()
-  }
-
-  // Apply pattern transform if specified
-  match object_table.get("pattern_transform") {
-    Some(t) => {
-      let transform = parse_transform(t)
-      match shape.material.pattern {
-        Some(pattern) => pattern.set_pattern_transform(transform)
-        None => () // No pattern to transform
-      }
-      match shape.material.normal_pattern {
-        Some(pattern) => pattern.set_pattern_transform(transform)
-        None => ()
-      }
-    }
-    _ => ()
-  }
-}
-
-///|
-fn apply_material_and_transform_sync(
-  shape : Shape,
-  object_table : Map[String, @toml.TomlValue],
-  materials : Map[String, Material],
-  patterns : Map[String, Pattern],
-) -> Unit raise SceneParseError {
-  let has_material_ref = match object_table.get("material") {
-    Some(@toml.TomlString(_)) => true
-    _ => false
-  }
-  let has_material_inline = match object_table.get("material") {
-    Some(@toml.TomlTable(_)) => true
-    _ => false
-  }
-  if has_material_ref && has_material_inline {
-    raise SceneParseError(
-      "Cannot specify both material reference and inline material",
-    )
-  }
-  if has_material_ref {
-    // Material reference
-    let material_name = get_string_required(object_table, "material")
-    match materials.get(material_name) {
-      Some(mat) => {
-        // Copy the material to avoid sharing mutable state
-        shape.material.color = mat.color
-        shape.material.ambient = mat.ambient
-        shape.material.diffuse = mat.diffuse
-        shape.material.specular = mat.specular
-        shape.material.shininess = mat.shininess
-        shape.material.reflective = mat.reflective
-        shape.material.transparency = mat.transparency
-        shape.material.refractive_index = mat.refractive_index
-        shape.material.pattern = match mat.pattern {
-          Some(p) => Some(p.clone())
-          None => None
-        }
-        shape.material.normal_pattern = match mat.normal_pattern {
-          Some(p) => Some(p.clone())
-          None => None
-        }
-        shape.material.normal_strength = mat.normal_strength
-        shape.material.metallic = mat.metallic
-        shape.material.roughness = mat.roughness
-        shape.material.lighting_mode = mat.lighting_mode
-      }
-      None =>
-        raise SceneParseError("Unknown material reference: \{material_name}")
-    }
-  }
-  if has_material_inline {
-    // Inline material definition
-    let material_value = match object_table.get("material") {
-      Some(value) => value
-      None => raise SceneParseError("Should have material")
-    }
-    let parsed_material = parse_material(material_value)
-    shape.material.color = parsed_material.color
-    shape.material.ambient = parsed_material.ambient
-    shape.material.diffuse = parsed_material.diffuse
-    shape.material.specular = parsed_material.specular
-    shape.material.shininess = parsed_material.shininess
-    shape.material.reflective = parsed_material.reflective
-    shape.material.transparency = parsed_material.transparency
-    shape.material.refractive_index = parsed_material.refractive_index
-    shape.material.normal_strength = parsed_material.normal_strength
-    shape.material.metallic = parsed_material.metallic
-    shape.material.roughness = parsed_material.roughness
-    shape.material.lighting_mode = parsed_material.lighting_mode
-    // Pattern will be resolved below
-  }
-
-  // Resolve pattern reference if present in inline material
-  if has_material_inline {
-    let material_table = match object_table.get("material") {
-      Some(@toml.TomlTable(table)) => table
-      _ => Map::new()
-    }
-    match material_table.get("pattern") {
-      Some(@toml.TomlString(pattern_name)) =>
-        match patterns.get(pattern_name) {
-          Some(pattern) => shape.material.pattern = Some(pattern.clone())
-          None =>
-            raise SceneParseError("Unknown pattern reference: \{pattern_name}")
-        }
-      Some(_) => raise SceneParseError("pattern reference must be a string")
-      None => ()
-    }
-    match material_table.get("normal_pattern") {
-      Some(@toml.TomlString(pattern_name)) =>
-        match patterns.get(pattern_name) {
-          Some(pattern) => shape.material.normal_pattern = Some(pattern.clone())
-          None =>
-            raise SceneParseError(
-              "Unknown normal_pattern reference: \{pattern_name}",
-            )
-        }
-      Some(_) =>
-        raise SceneParseError("normal_pattern reference must be a string")
-      None => ()
-    }
-  }
-
-  // Finalize with transforms
-  apply_transform_sync(shape, object_table)
-
-  // Handle group and CSG children material propagation
-  let object_type = get_string_required(object_table, "type")
-  if object_type == "group" || object_type == "csg" {
-    propagate_material(shape, shape.material)
-  }
-}
-
-///|
-fn propagate_material(shape : Shape, mat_to_propagate : Material) -> Unit {
-  let def_mat = material()
-  match shape.object {
-    Group(group) =>
-      for child in group.children {
-        // If child material is the default, replace it
-        if child.material == def_mat {
-          child.material = mat_to_propagate.clone()
-        }
-        // Recursively propagate
-        propagate_material(child, mat_to_propagate)
-      }
-    CSG(csg) => {
-      if csg.left.material == def_mat {
-        csg.left.material = mat_to_propagate.clone()
-      }
-      propagate_material(csg.left, mat_to_propagate)
-      if csg.right.material == def_mat {
-        csg.right.material = mat_to_propagate.clone()
-      }
-      propagate_material(csg.right, mat_to_propagate)
-    }
-    _ => ()
-  }
-}
+// NOTE: apply_transform / apply_material_and_transform / propagate_material
+// live in scene-apply.mbt as shared helpers.
 
 ///|
 /// Parse a TOML scene file from a string
@@ -1044,19 +876,19 @@ pub async fn parse_scene_file(
 
   // Parse materials and patterns first (needed for objects)
   let materials = parse_materials(root_table)
-  let patterns = parse_patterns_async(root_table)
+  let patterns = parse_patterns_with_io(root_table)
 
   // Resolve material patterns
   resolve_material_patterns(root_table, materials, patterns)
 
   // Parse templates (definitions)
-  let templates = parse_templates_async(root_table, materials, patterns)
+  let templates = parse_templates_with_io(root_table, materials, patterns)
 
   // Parse lights
   let lights = parse_lights(root_table)
 
   // Parse objects (may reference materials, patterns and templates)
-  let shapes = parse_objects_async(root_table, materials, patterns, templates)
+  let shapes = parse_objects_with_io(root_table, materials, patterns, templates)
 
   // Create world
   let world = world()
@@ -1069,7 +901,7 @@ pub async fn parse_scene_file(
   // Parse environment map
   match root_table.get("environment") {
     Some(env_value) => {
-      let env_pattern = parse_pattern_async(env_value)
+      let env_pattern = parse_pattern_with_io(env_value)
       world.environment_map = Some(env_pattern)
     }
     None => ()
@@ -1088,19 +920,17 @@ pub async fn parse_scene_file(
 }
 
 ///|
-async fn parse_patterns_async(
+async fn parse_patterns_with_io(
   root : Map[String, @toml.TomlValue],
 ) -> Map[String, Pattern] raise SceneParseError {
   let patterns = Map::new()
   match root.get("patterns") {
     Some(@toml.TomlTable(patterns_table)) => {
-      // iterate is synchronous, so we can't inside.
-      // Use an array of keys to iterate asynchronously.
       let keys = []
       patterns_table.each(fn(name, _) { keys.push(name) })
       for name in keys {
         let pattern_value = patterns_table.get(name).unwrap()
-        let pattern = parse_pattern_async(pattern_value)
+        let pattern = parse_pattern_with_io(pattern_value)
         patterns.set(name, pattern)
       }
     }
@@ -1111,7 +941,7 @@ async fn parse_patterns_async(
 }
 
 ///|
-async fn parse_pattern_async(
+async fn parse_pattern_with_io(
   value : @toml.TomlValue,
 ) -> Pattern raise SceneParseError {
   let pattern_table = match value {
@@ -1157,6 +987,172 @@ async fn parse_pattern_async(
 
   // For other patterns, use the synchronous version
   parse_pattern(value)
+}
+
+///|
+async fn parse_templates_with_io(
+  root : Map[String, @toml.TomlValue],
+  materials : Map[String, Material],
+  patterns : Map[String, Pattern],
+) -> Map[String, Shape] raise SceneParseError {
+  let templates = Map::new()
+  match root.get("definitions") {
+    Some(@toml.TomlTable(definitions_table)) => {
+      let keys = []
+      definitions_table.each(fn(name, _) { keys.push(name) })
+      for name in keys {
+        let template_value = definitions_table.get(name).unwrap()
+        let shape = parse_object_with_io(
+          template_value, materials, patterns, templates,
+        )
+        templates.set(name, shape)
+      }
+    }
+    _ => ()
+  }
+  templates
+}
+
+///|
+async fn parse_objects_with_io(
+  root : Map[String, @toml.TomlValue],
+  materials : Map[String, Material],
+  patterns : Map[String, Pattern],
+  templates : Map[String, Shape],
+) -> Array[Shape] raise SceneParseError {
+  let shapes = Array::new()
+  match root.get("objects") {
+    Some(@toml.TomlArray(objects_array)) =>
+      for i = 0; i < objects_array.length(); i = i + 1 {
+        shapes.push(
+          parse_object_with_io(objects_array[i], materials, patterns, templates),
+        )
+      }
+    Some(_) => raise SceneParseError("objects section must be an array")
+    None => ()
+  }
+  shapes
+}
+
+///|
+async fn parse_object_with_io(
+  value : @toml.TomlValue,
+  materials : Map[String, Material],
+  patterns : Map[String, Pattern],
+  templates : Map[String, Shape],
+) -> Shape raise SceneParseError {
+  let object_table = match value {
+    @toml.TomlTable(table) => table
+    _ => raise SceneParseError("object must be a table")
+  }
+  let object_type = get_string_required(object_table, "type")
+  let shape = match object_type {
+    "reference" => {
+      let name = get_string_required(object_table, "name")
+      match templates.get(name) {
+        Some(t) => t.clone()
+        None => raise SceneParseError("Unknown template reference: \{name}")
+      }
+    }
+    "sphere" => sphere()
+    "plane" => plane()
+    "cube" => cube()
+    "cylinder" =>
+      match object_table.get("properties") {
+        Some(@toml.TomlTable(props_table)) => {
+          let minimum = get_float_or_default(
+            props_table, "minimum", @double.neg_infinity,
+          )
+          let maximum = get_float_or_default(
+            props_table, "maximum", @double.infinity,
+          )
+          let closed = get_bool_or_default(props_table, "closed", false)
+          cylinder(minimum~, maximum~, closed~)
+        }
+        _ => cylinder()
+      }
+    "cone" =>
+      match object_table.get("properties") {
+        Some(@toml.TomlTable(props_table)) => {
+          let minimum = get_float_or_default(
+            props_table, "minimum", @double.neg_infinity,
+          )
+          let maximum = get_float_or_default(
+            props_table, "maximum", @double.infinity,
+          )
+          let closed = get_bool_or_default(props_table, "closed", false)
+          cone(minimum~, maximum~, closed~)
+        }
+        _ => cone()
+      }
+    "triangle" =>
+      // No file IO here; reuse the synchronous implementation.
+      parse_object(value, materials, patterns, templates)
+    "group" => {
+      let g = group()
+      match object_table.get("children") {
+        Some(@toml.TomlArray(children_array)) =>
+          for i = 0; i < children_array.length(); i = i + 1 {
+            let child = parse_object_with_io(
+              children_array[i],
+              materials,
+              patterns,
+              templates,
+            )
+            g.add_child(child)
+          }
+        _ => ()
+      }
+      g
+    }
+    "csg" => {
+      let operation = match object_table.get("properties") {
+        Some(@toml.TomlTable(props_table)) =>
+          get_string_required(props_table, "operation")
+        _ => raise SceneParseError("CSG properties are required")
+      }
+      let csg_op = match operation {
+        "union" => Union
+        "intersection" => Intersection
+        "difference" => Difference
+        _ => raise SceneParseError("Unknown CSG operation: \{operation}")
+      }
+      let left_shape = match object_table.get("left") {
+        Some(left_value) =>
+          parse_object_with_io(left_value, materials, patterns, templates)
+        None => raise SceneParseError("CSG left object is required")
+      }
+      let right_shape = match object_table.get("right") {
+        Some(right_value) =>
+          parse_object_with_io(right_value, materials, patterns, templates)
+        None => raise SceneParseError("CSG right object is required")
+      }
+      csg(csg_op, left_shape, right_shape)
+    }
+    "gltf" => {
+      let file = get_string_required(object_table, "file")
+      load_gltf_file(file)
+    }
+    "obj" => {
+      let file = get_string_required(object_table, "file")
+      let content = @fs.read_file(file).text() catch {
+        e => raise SceneParseError("Failed to read OBJ file \{file}: \{e}")
+      }
+      let obj_file = parse_obj_file(content) catch {
+        e => raise SceneParseError("OBJ parse error \{file}: \{e}")
+      }
+      obj_file.obj_to_group()
+    }
+    _ => raise SceneParseError("Unknown object type: \{object_type}")
+  }
+  let object_type = get_string_required(object_table, "type")
+  if (object_type != "gltf" && object_type != "obj") ||
+    object_table.get("material") is Some(_) {
+    apply_material_and_transform(shape, object_table, materials, patterns)
+  } else {
+    apply_transform(shape, object_table)
+  }
+  shape
 }
 
 ///|

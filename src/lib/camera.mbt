@@ -88,7 +88,7 @@ pub async fn Camera::render(
       Some(f) => f(y + 1)
       None => ()
     }
-    @async.pause() // Yield to allow progress reporting/event loop to run
+    @async.pause()
   }
   image
 }

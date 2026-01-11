@@ -107,15 +107,22 @@ async fn main {
   println("Rendering \{parsed_scene.metadata.name}...")
   println("Resolution: \{settings.width}x\{settings.height}")
   println("Samples: \{settings.samples}")
+  async fn write_progress(msg : String) -> Unit {
+    // Best-effort terminal output; ignore failures.
+    @stdio.stdout.write(msg) catch {
+      _ => ()
+    }
+  }
+
   let canvas = camera.render(world, samples=settings.samples, progress=async fn(
     y,
   ) {
     if y % 10 == 0 || y == settings.height {
       let pct = y.to_double() * 100.0 / settings.height.to_double()
       let msg = "\rProgress: \{pct.to_int()}% (\{y}/\{settings.height})"
-      @stdio.stdout.write(msg)
+      write_progress(msg)
       if y == settings.height {
-        println("")
+        write_progress("\n")
       }
     }
   })
