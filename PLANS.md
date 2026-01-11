@@ -94,7 +94,7 @@ Next best thing to address: focus first on the Procedural Texture Library + comp
 - [x] Use glTF-provided tangents when present (ATTRIBUTE `TANGENT`) and ensure parity with common viewers
 - [x] Respect glTF `texCoord` on normal textures (currently assumes primary UV set)
 - [x] Add displacement mapping
-- [ ] Implement material layering/blending/masking
+- [x] Implement material layering/blending/masking
 
 ### Procedural Texture Library (High Priority for still images)
 - [x] Create initial procedural texture system (noise, patterns)

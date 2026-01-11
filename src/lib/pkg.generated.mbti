@@ -658,6 +658,9 @@ pub(all) struct Material {
   mut normal_texture : Pattern?
   mut normal_texture_scale : Double
   mut normal_texture_texcoord : Int
+  mut layer_material : String?
+  mut layer_mask : String?
+  mut layer_opacity : Double
   mut metallic : Double
   mut roughness : Double
   mut lighting_mode : LightingMode
@@ -666,6 +669,14 @@ pub fn Material::clone(Self) -> Self
 pub fn Material::lighting(Self, Light, Tuple, Tuple, Tuple, in_shadow? : Bool, shape? : Shape?, uv0? : (Double, Double), uv1? : (Double, Double)) -> Color
 pub impl Eq for Material
 pub impl Show for Material
+
+pub(all) struct MaterialLayer {
+  top : Material
+  mask : Pattern
+  opacity : Double
+}
+pub impl Eq for MaterialLayer
+pub impl Show for MaterialLayer
 
 pub(all) struct Matrix(Array[MatrixRow])
 pub fn Matrix::clone(Self) -> Self
@@ -825,6 +836,7 @@ pub impl Show for SceneMetadata
 pub(all) struct Shape {
   object : Renderable
   mut material : Material
+  mut material_layer : MaterialLayer?
   mut transform : Matrix
   mut inv_transform : Matrix
   mut parent : Shape?

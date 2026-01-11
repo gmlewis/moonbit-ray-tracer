@@ -1,0 +1,110 @@
+# Material layering demo (blend two full materials with a procedural mask)
+[scene]
+name = "Material Layer Demo"
+description = "Blend base vs top material shading via layer_mask"
+version = "1.0"
+
+[scene.render]
+width = 1100
+height = 650
+samples = 4
+max_bounces = 4
+background = [0.08, 0.08, 0.10]
+
+[camera]
+position = [0.0, 2.7, -8.8]
+look_at = [0.0, 1.15, 0.6]
+up = [0.0, 1.0, 0.0]
+field_of_view = 0.785
+
+[[lights]]
+type = "point"
+position = [-7.0, 6.0, -6.5]
+intensity = [1.25, 1.25, 1.25]
+
+[[lights]]
+type = "point"
+position = [6.0, 2.5, -4.5]
+intensity = [0.75, 0.75, 0.75]
+
+[[lights]]
+type = "point"
+position = [0.0, 3.8, 3.5]
+intensity = [0.9, 0.9, 0.9]
+
+
+# Materials
+[materials.floor]
+color = [0.25, 0.25, 0.28]
+ambient = 0.25
+diffuse = 0.9
+specular = 0.0
+
+[materials.wall]
+color = [0.10, 0.10, 0.12]
+ambient = 0.15
+diffuse = 0.85
+specular = 0.05
+shininess = 40.0
+
+# Base layer: shiny metal
+[materials.base_metal]
+lighting_mode = "pbr"
+color = [0.95, 0.78, 0.25]
+metallic = 1.0
+roughness = 0.18
+
+# Top layer: matte paint
+[materials.top_paint]
+lighting_mode = "phong"
+color = [0.15, 0.65, 0.95]
+ambient = 0.04
+diffuse = 0.9
+specular = 0.12
+shininess = 80.0
+
+# Layered material: base + top + mask
+[materials.layered]
+lighting_mode = "pbr"
+color = [0.95, 0.78, 0.25]
+metallic = 1.0
+roughness = 0.18
+layer_material = "top_paint"
+layer_mask = "paint_mask"
+layer_opacity = 1.0
+
+
+# Patterns
+[patterns.paint_mask]
+# Crackly edges -> patchy paint.
+type = "levels"
+in_min = 0.2
+in_max = 0.9
+out_min = 0.0
+out_max = 1.0
+gamma = 1.2
+
+[patterns.paint_mask.pattern]
+type = "voronoi"
+seed = 3
+scale = 5.5
+jitter = 1.0
+mode = "crackle"
+edge_scale = 22.0
+
+
+# Objects
+[[objects]]
+type = "plane"
+material = "floor"
+
+[[objects]]
+type = "plane"
+material = "wall"
+transform = { translation = [0.0, 0.0, 6.0], rotation = [1.571, 0.0, 0.0] }
+
+[[objects]]
+type = "sphere"
+material = "layered"
+transform = { translation = [0.0, 1.05, 1.1] }
+pattern_transform = { scale = [0.9, 0.9, 0.9], rotation = [0.0, 0.6, 0.0] }

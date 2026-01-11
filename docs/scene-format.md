@@ -151,11 +151,18 @@ normal_strength = 1.0
 - `normal_strength`: Bump mapping strength (float, >= 0.0; `0.0` disables)
 - `displacement_pattern`: Named pattern reference used as a height field for **simple displacement** (string)
 - `displacement_strength`: Displacement strength (float, >= 0.0; `0.0` disables)
+- `layer_material`: Name of the “top” material to blend over this material (string)
+- `layer_mask`: Name of a mask pattern; its luminance controls blending (string)
+- `layer_opacity`: Scales the mask (float, 0.0-1.0; default 1.0)
 
 Notes on displacement:
 - This is a shading-time displacement: the hit point is offset along the surface normal by a height derived from `displacement_pattern` luminance.
 - The height is remapped from $[0, 1]$ to $[-strength, +strength]$ (so 0.5 means “no displacement”).
 - It does **not** change silhouettes (no tessellation), but it can add depth/parallax-like variation.
+
+Notes on material layering:
+- Layering blends the **final shaded colors** of the base material vs the top material using $t = clamp(luminance(layer_mask) * layer_opacity)$.
+- This is an artistic compositing feature; it is not physically based when mixing different shading models.
 
 ## Patterns
 

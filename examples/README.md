@@ -102,6 +102,9 @@ Demonstrates procedural bump mapping using `normal_pattern` + `normal_strength`.
 ### [`displacement-demo.toml`](displacement-demo.toml)
 Demonstrates `displacement_pattern` + `displacement_strength` (simple shading-time displacement; no silhouette changes).
 
+### [`material-layer-demo.toml`](material-layer-demo.toml)
+Demonstrates blending two full materials using `layer_material` + `layer_mask`.
+
 ### [`mask-demo.toml`](mask-demo.toml)
 Demonstrates using any pattern graph as a **mask** (scalar field) to drive `mix`.
 

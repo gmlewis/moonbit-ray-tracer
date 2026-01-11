@@ -34,6 +34,24 @@ fn apply_transform(
         Some(pattern) => pattern.set_pattern_transform(transform)
         None => ()
       }
+      match shape.material_layer {
+        Some(layer) => {
+          match layer.top.pattern {
+            Some(pattern) => pattern.set_pattern_transform(transform)
+            None => ()
+          }
+          match layer.top.normal_pattern {
+            Some(pattern) => pattern.set_pattern_transform(transform)
+            None => ()
+          }
+          match layer.top.displacement_pattern {
+            Some(pattern) => pattern.set_pattern_transform(transform)
+            None => ()
+          }
+          layer.mask.set_pattern_transform(transform)
+        }
+        None => ()
+      }
     }
     _ => ()
   }
@@ -131,6 +149,9 @@ fn apply_material_and_transform(
           None => None
         }
         shape.material.displacement_strength = mat.displacement_strength
+        shape.material.layer_material = mat.layer_material
+        shape.material.layer_mask = mat.layer_mask
+        shape.material.layer_opacity = mat.layer_opacity
         shape.material.metallic = mat.metallic
         shape.material.roughness = mat.roughness
         shape.material.lighting_mode = mat.lighting_mode
@@ -155,6 +176,9 @@ fn apply_material_and_transform(
     shape.material.refractive_index = parsed_material.refractive_index
     shape.material.normal_strength = parsed_material.normal_strength
     shape.material.displacement_strength = parsed_material.displacement_strength
+    shape.material.layer_material = parsed_material.layer_material
+    shape.material.layer_mask = parsed_material.layer_mask
+    shape.material.layer_opacity = parsed_material.layer_opacity
     shape.material.metallic = parsed_material.metallic
     shape.material.roughness = parsed_material.roughness
     shape.material.lighting_mode = parsed_material.lighting_mode
@@ -203,6 +227,33 @@ fn apply_material_and_transform(
         raise SceneParseError("displacement_pattern reference must be a string")
       None => ()
     }
+  }
+
+  // Resolve optional material layer (base material references a top material + mask).
+  shape.material_layer = None
+  match (shape.material.layer_material, shape.material.layer_mask) {
+    (Some(top_name), Some(mask_name)) => {
+      let top = match materials.get(top_name) {
+        Some(m) => m.clone()
+        None =>
+          raise SceneParseError("Unknown layer_material reference: \{top_name}")
+      }
+      let mask = match patterns.get(mask_name) {
+        Some(p) => p.clone()
+        None =>
+          raise SceneParseError("Unknown layer_mask reference: \{mask_name}")
+      }
+      shape.material_layer = Some({
+        top,
+        mask,
+        opacity: shape.material.layer_opacity,
+      })
+    }
+    (None, None) => ()
+    _ =>
+      raise SceneParseError(
+        "Material layering requires both layer_material and layer_mask",
+      )
   }
   apply_transform(shape, object_table)
 

@@ -291,6 +291,20 @@ fn parse_material(value : @toml.TomlValue) -> Material raise SceneParseError {
   if mat.displacement_strength < 0.0 {
     raise SceneParseError("material displacement_strength must be non-negative")
   }
+  mat.layer_material = match material_table.get("layer_material") {
+    Some(@toml.TomlString(name)) => Some(name)
+    Some(_) => raise SceneParseError("material layer_material must be a string")
+    None => None
+  }
+  mat.layer_mask = match material_table.get("layer_mask") {
+    Some(@toml.TomlString(name)) => Some(name)
+    Some(_) => raise SceneParseError("material layer_mask must be a string")
+    None => None
+  }
+  mat.layer_opacity = get_float_or_default(material_table, "layer_opacity", 1.0)
+  if mat.layer_opacity < 0.0 || mat.layer_opacity > 1.0 {
+    raise SceneParseError("material layer_opacity must be between 0 and 1")
+  }
   mat.lighting_mode = match
     get_string_or_default(material_table, "lighting_mode", "phong") {
     "phong" => Phong

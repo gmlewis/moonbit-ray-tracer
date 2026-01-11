@@ -2,6 +2,7 @@
 pub(all) struct Shape {
   object : Renderable
   mut material : Material
+  mut material_layer : MaterialLayer?
   // Do not modify transform or inv_transform directly.
   // Instead, use `set_transform`.
   mut transform : Matrix
@@ -92,13 +93,23 @@ pub fn Shape::new_object(object : &Object) -> Shape {
 ///|
 pub fn Shape::new(object : Renderable) -> Shape {
   let material = material()
+  let material_layer = None
   let transform = mat4ident()
   let inv_transform = mat4ident()
   let parent = None
   let bounds = None
   let id = id_counter.val
   id_counter.val += 1
-  { object, material, transform, inv_transform, parent, bounds, id }
+  {
+    object,
+    material,
+    material_layer,
+    transform,
+    inv_transform,
+    parent,
+    bounds,
+    id,
+  }
 }
 
 ///|
@@ -114,6 +125,15 @@ pub fn Shape::clone(self : Shape) -> Shape {
   }
   let s = Shape::new(object)
   s.material = self.material.clone()
+  s.material_layer = match self.material_layer {
+    Some(layer) =>
+      Some({
+        top: layer.top.clone(),
+        mask: layer.mask.clone(),
+        opacity: layer.opacity,
+      })
+    None => None
+  }
   s.transform = self.transform.clone()
   s.inv_transform = self.inv_transform.clone()
   // Parent is intentionally not cloned to avoid cycles or incorrect linking

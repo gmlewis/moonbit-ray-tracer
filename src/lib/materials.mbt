@@ -22,6 +22,10 @@ pub(all) struct Material {
   mut normal_texture : Pattern?
   mut normal_texture_scale : Double
   mut normal_texture_texcoord : Int
+  // Scene-only: optional material layering (resolved onto Shape).
+  mut layer_material : String?
+  mut layer_mask : String?
+  mut layer_opacity : Double
   mut metallic : Double
   mut roughness : Double
   mut lighting_mode : LightingMode
@@ -45,6 +49,9 @@ pub fn material() -> Material {
   let normal_texture = None
   let normal_texture_scale = 1.0
   let normal_texture_texcoord = 0
+  let layer_material = None
+  let layer_mask = None
+  let layer_opacity = 1.0
   let metallic = 0.0
   let roughness = 0.5
   let lighting_mode = Phong
@@ -65,6 +72,9 @@ pub fn material() -> Material {
     normal_texture,
     normal_texture_scale,
     normal_texture_texcoord,
+    layer_material,
+    layer_mask,
+    layer_opacity,
     metallic,
     roughness,
     lighting_mode,
@@ -106,11 +116,21 @@ pub fn Material::clone(self : Material) -> Material {
     normal_texture,
     normal_texture_scale: self.normal_texture_scale,
     normal_texture_texcoord: self.normal_texture_texcoord,
+    layer_material: self.layer_material,
+    layer_mask: self.layer_mask,
+    layer_opacity: self.layer_opacity,
     metallic: self.metallic,
     roughness: self.roughness,
     lighting_mode: self.lighting_mode,
   }
 }
+
+///|
+pub(all) struct MaterialLayer {
+  top : Material
+  mask : Pattern
+  opacity : Double
+} derive(Show, Eq)
 
 ///|
 fn get_shape_tangent_basis_world(shape : Shape) -> (Tuple, Tuple)? {
@@ -317,106 +337,157 @@ pub fn Material::lighting(
   uv0? : (Double, Double),
   uv1? : (Double, Double),
 ) -> Color {
-  // Use geometric normal by default for pattern evaluation, and a potentially
-  // bumped normal for shading. When a normal map is present, we also feed the
-  // bumped normal into pattern evaluation so normal-aware patterns (e.g.
-  // triplanar) can reflect the perturbation.
-  let normal_uv = if self.normal_texture_texcoord == 1 {
-    match uv1 {
-      Some(_) => uv1
-      None => uv0
-    }
-  } else {
-    uv0
-  }
-  let normalv = match (self.normal_texture, shape) {
-    (Some(nt), Some(shape)) => {
-      let uv = normal_uv
-      normal_from_texture(
-        nt,
-        self.normal_texture_scale,
-        shape,
-        position,
-        normalv,
-        uv?,
-      )
-    }
-    _ => normalv
-  }
-  let shading_normalv = match (self.normal_pattern, shape) {
-    (Some(np), Some(shape)) => {
-      let uv = uv0
-      bump_normal_from_pattern(
-        np,
-        self.normal_strength,
-        shape,
-        position,
-        normalv,
-        uv?,
-      )
-    }
-    _ => normalv
-  }
-  let pattern_normalv = match (self.normal_pattern, self.normal_texture) {
-    (Some(_), _) => shading_normalv
-    (_, Some(_)) => shading_normalv
-    _ => normalv
-  }
-  let clr = match (self.pattern, shape) {
-    (Some(pattern), Some(shape)) => {
-      let uv = uv0
-      pattern.pattern_at_shape(shape, position, normal=pattern_normalv, uv?)
-    }
-    _ => self.color
-  }
-  match self.lighting_mode {
-    Phong => {
-      if in_shadow {
-        return color(0, 0, 0)
+  fn lighting_core(
+    mat : Material,
+    light : Light,
+    position : Tuple,
+    eyev : Tuple,
+    normalv : Tuple,
+    in_shadow : Bool,
+    shape : Shape?,
+    uv0 : (Double, Double)?,
+    uv1 : (Double, Double)?,
+  ) -> Color {
+    // Use geometric normal by default for pattern evaluation, and a potentially
+    // bumped normal for shading. When a normal map is present, we also feed the
+    // bumped normal into pattern evaluation so normal-aware patterns (e.g.
+    // triplanar) can reflect the perturbation.
+    let normal_uv = if mat.normal_texture_texcoord == 1 {
+      match uv1 {
+        Some(_) => uv1
+        None => uv0
       }
-      let effective_color = clr * light.intensity
-      let lightv = (light.position - position).normalize()
-      let light_dot_normal = lightv.dot(shading_normalv)
-      let mut diffuse = color(0, 0, 0)
-      let mut specular = color(0, 0, 0)
-      if light_dot_normal >= 0 {
-        diffuse = effective_color.mul_scalar(self.diffuse * light_dot_normal)
-        let reflectv = (-lightv).reflect(shading_normalv)
-        let reflect_dot_eye = reflectv.dot(eyev)
-        if reflect_dot_eye >= 0 {
-          let factor = @math.pow(reflect_dot_eye, self.shininess)
-          specular = light.intensity.mul_scalar(self.specular * factor)
+    } else {
+      uv0
+    }
+    let normalv = match (mat.normal_texture, shape) {
+      (Some(nt), Some(shape)) => {
+        let uv = normal_uv
+        normal_from_texture(
+          nt,
+          mat.normal_texture_scale,
+          shape,
+          position,
+          normalv,
+          uv?,
+        )
+      }
+      _ => normalv
+    }
+    let shading_normalv = match (mat.normal_pattern, shape) {
+      (Some(np), Some(shape)) => {
+        let uv = uv0
+        bump_normal_from_pattern(
+          np,
+          mat.normal_strength,
+          shape,
+          position,
+          normalv,
+          uv?,
+        )
+      }
+      _ => normalv
+    }
+    let pattern_normalv = match (mat.normal_pattern, mat.normal_texture) {
+      (Some(_), _) => shading_normalv
+      (_, Some(_)) => shading_normalv
+      _ => normalv
+    }
+    let clr = match (mat.pattern, shape) {
+      (Some(pattern), Some(shape)) => {
+        let uv = uv0
+        pattern.pattern_at_shape(shape, position, normal=pattern_normalv, uv?)
+      }
+      _ => mat.color
+    }
+    match mat.lighting_mode {
+      Phong => {
+        if in_shadow {
+          return color(0, 0, 0)
         }
+        let effective_color = clr * light.intensity
+        let lightv = (light.position - position).normalize()
+        let light_dot_normal = lightv.dot(shading_normalv)
+        let mut diffuse = color(0, 0, 0)
+        let mut specular = color(0, 0, 0)
+        if light_dot_normal >= 0 {
+          diffuse = effective_color.mul_scalar(mat.diffuse * light_dot_normal)
+          let reflectv = (-lightv).reflect(shading_normalv)
+          let reflect_dot_eye = reflectv.dot(eyev)
+          if reflect_dot_eye >= 0 {
+            let factor = @math.pow(reflect_dot_eye, mat.shininess)
+            specular = light.intensity.mul_scalar(mat.specular * factor)
+          }
+        }
+        diffuse + specular
       }
-      diffuse + specular
+      PBR => {
+        if in_shadow {
+          return color(0, 0, 0)
+        }
+        let lightv = (light.position - position).normalize()
+        let halfv = (eyev + lightv).normalize()
+        let n_dot_l = @cmp.maximum(shading_normalv.dot(lightv), 0.0)
+        if n_dot_l <= 0.0 {
+          return color(0, 0, 0)
+        }
+        let n_dot_v = @cmp.maximum(shading_normalv.dot(eyev), 0.0)
+        let h_dot_v = @cmp.maximum(halfv.dot(eyev), 0.0)
+        let mut f0 = color(0.04, 0.04, 0.04)
+        f0 = f0 * color(1.0, 1.0, 1.0).mul_scalar(1.0 - mat.metallic) +
+          clr.mul_scalar(mat.metallic)
+        let ndf = distribution_ggx(shading_normalv, halfv, mat.roughness)
+        let g = geometry_smith(shading_normalv, eyev, lightv, mat.roughness)
+        let f = fresnel_schlick(h_dot_v, f0)
+        let numerator = f.mul_scalar(ndf * g)
+        let denominator = 4.0 * n_dot_v * n_dot_l + 0.001
+        let specular_brdf = numerator
+          .mul_scalar(1.0 / denominator)
+          .clamp_valid()
+        let ks = f
+        let mut kd = color(1.0, 1.0, 1.0) - ks
+        kd = kd.mul_scalar(1.0 - mat.metallic)
+        let diffuse_brdf = clr.mul_scalar(1.0 / @math.PI) * kd
+        let brdf = diffuse_brdf + specular_brdf
+        brdf * light.intensity.mul_scalar(n_dot_l)
+      }
     }
-    PBR => {
-      if in_shadow {
-        return color(0, 0, 0)
+  }
+
+  // If the shape has a resolved material layer, blend base vs top lighting.
+  match shape {
+    Some(s) =>
+      match s.material_layer {
+        Some(layer) => {
+          let uv = uv0
+          let t0 = layer.mask
+            .pattern_at_shape(s, position, normal=normalv, uv?)
+            .luminance()
+          let t = @cmp.minimum(@cmp.maximum(t0 * layer.opacity, 0.0), 1.0)
+          let base_c = lighting_core(
+            self, light, position, eyev, normalv, in_shadow, shape, uv0, uv1,
+          )
+          let top_c = lighting_core(
+            layer.top,
+            light,
+            position,
+            eyev,
+            normalv,
+            in_shadow,
+            shape,
+            uv0,
+            uv1,
+          )
+          base_c + (top_c - base_c).mul_scalar(t)
+        }
+        None =>
+          lighting_core(
+            self, light, position, eyev, normalv, in_shadow, shape, uv0, uv1,
+          )
       }
-      let lightv = (light.position - position).normalize()
-      let halfv = (eyev + lightv).normalize()
-      let n_dot_l = @cmp.maximum(shading_normalv.dot(lightv), 0.0)
-      if n_dot_l <= 0.0 {
-        return color(0, 0, 0)
-      }
-      let n_dot_v = @cmp.maximum(shading_normalv.dot(eyev), 0.0)
-      let h_dot_v = @cmp.maximum(halfv.dot(eyev), 0.0)
-      let mut f0 = color(0.04, 0.04, 0.04)
-      f0 = f0 * color(1.0, 1.0, 1.0).mul_scalar(1.0 - self.metallic) +
-        clr.mul_scalar(self.metallic)
-      let ndf = distribution_ggx(shading_normalv, halfv, self.roughness)
-      let g = geometry_smith(shading_normalv, eyev, lightv, self.roughness)
-      let f = fresnel_schlick(h_dot_v, f0)
-      let numerator = f.mul_scalar(ndf * g)
-      let denominator = 4.0 * n_dot_v * n_dot_l + 0.001
-      let specular_brdf = numerator.mul_scalar(1.0 / denominator).clamp_valid()
-      let ks = f
-      let mut kd = color(1.0, 1.0, 1.0) - ks
-      kd = kd.mul_scalar(1.0 - self.metallic)
-      let diffuse_brdf = clr.mul_scalar(1.0 / @math.PI) * kd
-      let brdf = diffuse_brdf + specular_brdf
-      brdf * light.intensity.mul_scalar(n_dot_l)
-    }
+    None =>
+      lighting_core(
+        self, light, position, eyev, normalv, in_shadow, shape, uv0, uv1,
+      )
   }
 }
