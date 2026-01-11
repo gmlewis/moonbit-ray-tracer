@@ -37,6 +37,19 @@ pub fn color(red : Double, green : Double, blue : Double) -> Color {
 }
 
 ///|
+pub fn Color::luminance(self : Color) -> Double {
+  // Perceptual-ish luminance, clamped to [0,1].
+  let v = 0.2126 * self.red + 0.7152 * self.green + 0.0722 * self.blue
+  if v < 0.0 {
+    0.0
+  } else if v > 1.0 {
+    1.0
+  } else {
+    v
+  }
+}
+
+///|
 pub impl Eq for Color with equal(self, other) {
   let { red, green, blue } = self - other
   red.abs() < EPSILON && green.abs() < EPSILON && blue.abs() < EPSILON

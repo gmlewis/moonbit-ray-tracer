@@ -224,14 +224,7 @@ pub fn bump_normal_from_pattern(
   ) -> Double {
     let c = pat.pattern_at_shape(s, wp, normal=gn, uv?)
     // Simple luminance height.
-    let v = 0.2126 * c.red + 0.7152 * c.green + 0.0722 * c.blue
-    if v < 0.0 {
-      0.0
-    } else if v > 1.0 {
-      1.0
-    } else {
-      v
-    }
+    c.luminance()
   }
 
   let h0 = h(normal_pattern, shape, p0, geometric_normalv, uv)

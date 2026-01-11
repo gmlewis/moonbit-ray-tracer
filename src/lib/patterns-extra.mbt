@@ -488,12 +488,6 @@ fn clamp01(t : Double) -> Double {
 }
 
 ///|
-fn luminance(c : Color) -> Double {
-  // Simple perceptual-ish luminance for masks.
-  clamp01(0.2126 * c.red + 0.7152 * c.green + 0.0722 * c.blue)
-}
-
-///|
 fn lerp_color(a : Color, b : Color, t : Double) -> Color {
   a + (b - a).mul_scalar(clamp01(t))
 }
@@ -1061,7 +1055,7 @@ pub fn levels_pattern(
 
 ///|
 pub(all) struct ThresholdPattern {
-  pattern : Pattern
+  pattern : Field
   threshold : Double
   low : Color
   high : Color
@@ -1075,7 +1069,7 @@ pub impl Show for ThresholdPattern with output(_self, logger) {
 ///|
 pub impl PatternTrait for ThresholdPattern with clone(self) {
   threshold_pattern(
-    self.pattern.clone(),
+    self.pattern.pattern.clone(),
     threshold=self.threshold,
     low=self.low,
     high=self.high,
@@ -1084,12 +1078,11 @@ pub impl PatternTrait for ThresholdPattern with clone(self) {
 
 ///|
 fn threshold_eval(
-  c : Color,
+  t : Double,
   threshold : Double,
   low : Color,
   high : Color,
 ) -> Color {
-  let t = luminance(c)
   if t >= threshold {
     high
   } else {
@@ -1100,7 +1093,7 @@ fn threshold_eval(
 ///|
 pub impl PatternTrait for ThresholdPattern with pattern_at(self, point) {
   threshold_eval(
-    self.pattern.pattern_at(point),
+    self.pattern.scalar_at(point),
     self.threshold,
     self.low,
     self.high,
@@ -1109,7 +1102,12 @@ pub impl PatternTrait for ThresholdPattern with pattern_at(self, point) {
 
 ///|
 pub impl PatternTrait for ThresholdPattern with uv_at(self, u, v) {
-  threshold_eval(self.pattern.uv_at(u, v), self.threshold, self.low, self.high)
+  threshold_eval(
+    self.pattern.scalar_uv_at(u, v),
+    self.threshold,
+    self.low,
+    self.high,
+  )
 }
 
 ///|
@@ -1120,7 +1118,7 @@ pub impl PatternTrait for ThresholdPattern with pattern_at_with_info(
   uv,
 ) {
   threshold_eval(
-    self.pattern.pattern_at_with_info(point, normal, uv),
+    self.pattern.scalar_at_with_info(point, normal, uv),
     self.threshold,
     self.low,
     self.high,
@@ -1134,7 +1132,12 @@ pub fn threshold_pattern(
   low? : Color = color(0.0, 0.0, 0.0),
   high? : Color = color(1.0, 1.0, 1.0),
 ) -> Pattern {
-  Pattern::new(ThresholdPattern::{ pattern, threshold, low, high })
+  Pattern::new(ThresholdPattern::{
+    pattern: field(pattern),
+    threshold,
+    low,
+    high,
+  })
 }
 
 ///|
@@ -1220,7 +1223,7 @@ pub impl PatternTrait for GradientMapPattern with clone(self) {
 
 ///|
 fn gradient_map_eval(colors : Array[Color], c : Color) -> Color {
-  palette(colors, luminance(c))
+  palette(colors, c.luminance())
 }
 
 ///|
@@ -1373,7 +1376,7 @@ pub fn invert_pattern(pattern : Pattern) -> Pattern {
 pub(all) struct MixPattern {
   a : Pattern
   b : Pattern
-  mask : Pattern
+  mask : Field
 }
 
 ///|
@@ -1383,14 +1386,14 @@ pub impl Show for MixPattern with output(_self, logger) {
 
 ///|
 pub impl PatternTrait for MixPattern with clone(self) {
-  mix_pattern(self.a.clone(), self.b.clone(), self.mask.clone())
+  mix_pattern(self.a.clone(), self.b.clone(), self.mask.pattern.clone())
 }
 
 ///|
 pub impl PatternTrait for MixPattern with pattern_at(self, point) {
   let ca = self.a.pattern_at(point)
   let cb = self.b.pattern_at(point)
-  let t = luminance(self.mask.pattern_at(point))
+  let t = self.mask.scalar_at(point)
   lerp_color(ca, cb, t)
 }
 
@@ -1414,13 +1417,13 @@ pub impl PatternTrait for MixPattern with pattern_at_with_info(
 
 ///|
 pub fn mix_pattern(a : Pattern, b : Pattern, mask : Pattern) -> Pattern {
-  Pattern::new(MixPattern::{ a, b, mask })
+  Pattern::new(MixPattern::{ a, b, mask: field(mask) })
 }
 
 ///|
 pub(all) struct WarpPattern {
   base : Pattern
-  warp : Pattern
+  warp : Field
   amplitude : Double
 }
 
@@ -1431,16 +1434,23 @@ pub impl Show for WarpPattern with output(_self, logger) {
 
 ///|
 pub impl PatternTrait for WarpPattern with clone(self) {
-  warp_pattern(self.base.clone(), self.warp.clone(), amplitude=self.amplitude)
+  warp_pattern(
+    self.base.clone(),
+    self.warp.pattern.clone(),
+    amplitude=self.amplitude,
+  )
 }
 
 ///|
 pub impl PatternTrait for WarpPattern with pattern_at(self, p) {
-  let w = self.warp.pattern_at(p)
-  let dx = (w.red * 2.0 - 1.0) * self.amplitude
-  let dy = (w.green * 2.0 - 1.0) * self.amplitude
-  let dz = (w.blue * 2.0 - 1.0) * self.amplitude
-  self.base.pattern_at(point(p.x + dx, p.y + dy, p.z + dz))
+  let dv = self.warp.vector_at(p)
+  self.base.pattern_at(
+    point(
+      p.x + dv.x * self.amplitude,
+      p.y + dv.y * self.amplitude,
+      p.z + dv.z * self.amplitude,
+    ),
+  )
 }
 
 ///|
@@ -1467,5 +1477,5 @@ pub fn warp_pattern(
   warp : Pattern,
   amplitude? : Double = 0.25,
 ) -> Pattern {
-  Pattern::new(WarpPattern::{ base, warp, amplitude })
+  Pattern::new(WarpPattern::{ base, warp: field(warp), amplitude })
 }

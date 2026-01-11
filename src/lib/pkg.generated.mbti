@@ -43,6 +43,12 @@ pub fn fbm3(Tuple, Int, Int, Double, Double) -> Double
 
 pub fn fbm_pattern(seed? : Int, scale? : Double, octaves? : Int, lacunarity? : Double, gain? : Double) -> Pattern
 
+pub fn field(Pattern, vector_decoding? : VectorDecoding) -> Field
+
+pub fn field_signed(Pattern) -> Field
+
+pub fn field_unit01(Pattern) -> Field
+
 pub fn get_directory(String) -> String
 
 pub fn glass_sphere() -> Shape
@@ -263,6 +269,7 @@ pub(all) struct Color {
 }
 pub fn Color::clamp_valid(Self) -> Self
 pub fn Color::clone(Self) -> Self
+pub fn Color::luminance(Self) -> Double
 pub fn Color::mul_scalar(Self, Double) -> Self
 pub fn Color::srgb_to_linear(Self) -> Self
 pub fn Color::to_string(Self) -> String
@@ -336,6 +343,21 @@ pub(all) struct FbmPattern {
 pub impl PatternTrait for FbmPattern
 pub impl Eq for FbmPattern
 pub impl Show for FbmPattern
+
+pub struct Field {
+  pattern : Pattern
+  vector_decoding : VectorDecoding
+}
+pub fn Field::color_at(Self, Tuple) -> Color
+pub fn Field::color_at_with_info(Self, Tuple, Tuple, (Double, Double)?) -> Color
+pub fn Field::color_uv_at(Self, Double, Double) -> Color
+pub fn Field::scalar_at(Self, Tuple) -> Double
+pub fn Field::scalar_at_with_info(Self, Tuple, Tuple, (Double, Double)?) -> Double
+pub fn Field::scalar_uv_at(Self, Double, Double) -> Double
+pub fn Field::vector_at(Self, Tuple) -> Tuple
+pub fn Field::vector_at_with_info(Self, Tuple, Tuple, (Double, Double)?) -> Tuple
+pub fn Field::vector_uv_at(Self, Double, Double) -> Tuple
+pub impl Show for Field
 
 pub(all) struct Gltf {
   accessors : Array[GltfAccessor]
@@ -636,7 +658,7 @@ pub impl Show for MatrixRow
 pub(all) struct MixPattern {
   a : Pattern
   b : Pattern
-  mask : Pattern
+  mask : Field
 }
 pub impl PatternTrait for MixPattern
 pub impl Show for MixPattern
@@ -858,7 +880,7 @@ pub impl Eq for Texture
 pub impl Show for Texture
 
 pub(all) struct ThresholdPattern {
-  pattern : Pattern
+  pattern : Field
   threshold : Double
   low : Color
   high : Color
@@ -938,6 +960,13 @@ pub impl Neg for Tuple
 pub impl Show for Tuple
 pub impl Sub for Tuple
 
+pub enum VectorDecoding {
+  Unit01
+  Signed
+}
+pub impl Eq for VectorDecoding
+pub impl Show for VectorDecoding
+
 pub(all) enum VoronoiMode {
   Distance
   Cells
@@ -959,7 +988,7 @@ pub impl Show for VoronoiPattern
 
 pub(all) struct WarpPattern {
   base : Pattern
-  warp : Pattern
+  warp : Field
   amplitude : Double
 }
 pub impl PatternTrait for WarpPattern
