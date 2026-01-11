@@ -74,3 +74,32 @@ test "contrast_pattern clamps" {
   let c2 = p2.pattern_at(point(0.1, 0.2, 0.3))
   assert_true((c2.red - 1.0).abs() < @lib.EPSILON)
 }
+
+///|
+test "voronoi f1/f2/f2-f1 outputs are consistent" {
+  let seed = 23
+  let scale = 3.0
+  let jitter = 1.0
+  let p_f1 = voronoi_f1_pattern(seed~, scale~, jitter~)
+  let p_f2 = voronoi_f2_pattern(seed~, scale~, jitter~)
+  let p_df = voronoi_f2_minus_f1_pattern(seed~, scale~, jitter~, edge_scale=1.0)
+  let pt = point(0.12, 0.0, -0.34)
+  let c1 = p_f1.pattern_at(pt)
+  let c2 = p_f2.pattern_at(pt)
+  let cd = p_df.pattern_at(pt)
+
+  // By definition, f2 >= f1.
+  assert_true(c2.red + @lib.EPSILON >= c1.red)
+
+  // f2-f1 should be close to the difference when unclamped.
+  // (Edge cases clamp to [0,1], so allow a small tolerance.)
+  let diff = c2.red - c1.red
+  assert_true((cd.red - diff).abs() < 1.0e-6 || cd.red == 0.0 || cd.red == 1.0)
+
+  // All are grayscale in [0,1].
+  assert_true(c1.red >= 0.0 && c1.red <= 1.0)
+  assert_true((c1.red - c1.green).abs() < @lib.EPSILON)
+  assert_true(c2.red >= 0.0 && c2.red <= 1.0)
+  assert_true((c2.red - c2.blue).abs() < @lib.EPSILON)
+  assert_true(cd.red >= 0.0 && cd.red <= 1.0)
+}

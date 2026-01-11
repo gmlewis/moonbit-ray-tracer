@@ -490,6 +490,11 @@ fn parse_pattern(value : @toml.TomlValue) -> Pattern raise SceneParseError {
         "cells" => VoronoiMode::Cells
         "edges" => VoronoiMode::Edges
         "crackle" => VoronoiMode::Crackle
+        "f1" => VoronoiMode::F1
+        "f2" => VoronoiMode::F2
+        "f2-f1" => VoronoiMode::F2MinusF1
+        "f2_minus_f1" => VoronoiMode::F2MinusF1
+        "f2minusf1" => VoronoiMode::F2MinusF1
         _ => VoronoiMode::Distance
       }
       voronoi_pattern(seed~, scale~, jitter~, mode~, edge_scale~)

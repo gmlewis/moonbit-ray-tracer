@@ -791,6 +791,9 @@ pub(all) enum VoronoiMode {
   Cells
   Edges
   Crackle
+  F1
+  F2
+  F2MinusF1
 } derive(Show, Eq)
 
 ///|
@@ -827,6 +830,20 @@ pub impl PatternTrait for VoronoiPattern with pattern_at(self, p) {
   match self.mode {
     VoronoiMode::Distance => {
       let v = clamp01(1.0 - f1)
+      color(v, v, v)
+    }
+    VoronoiMode::F1 => {
+      let v = clamp01(f1)
+      color(v, v, v)
+    }
+    VoronoiMode::F2 => {
+      let v = clamp01(f2)
+      color(v, v, v)
+    }
+    VoronoiMode::F2MinusF1 => {
+      // Feature distance: larger values away from borders.
+      // `edge_scale` acts as a generic multiplier for this signal.
+      let v = clamp01((f2 - f1) * self.edge_scale)
       color(v, v, v)
     }
     VoronoiMode::Cells => {
@@ -884,6 +901,40 @@ pub fn voronoi_pattern(
   edge_scale? : Double = 12.0,
 ) -> Pattern {
   Pattern::new(VoronoiPattern::{ seed, scale, jitter, mode, edge_scale })
+}
+
+///|
+pub fn voronoi_f1_pattern(
+  seed? : Int = 0,
+  scale? : Double = 1.0,
+  jitter? : Double = 1.0,
+) -> Pattern {
+  voronoi_pattern(seed~, scale~, jitter~, mode=VoronoiMode::F1)
+}
+
+///|
+pub fn voronoi_f2_pattern(
+  seed? : Int = 0,
+  scale? : Double = 1.0,
+  jitter? : Double = 1.0,
+) -> Pattern {
+  voronoi_pattern(seed~, scale~, jitter~, mode=VoronoiMode::F2)
+}
+
+///|
+pub fn voronoi_f2_minus_f1_pattern(
+  seed? : Int = 0,
+  scale? : Double = 1.0,
+  jitter? : Double = 1.0,
+  edge_scale? : Double = 12.0,
+) -> Pattern {
+  voronoi_pattern(
+    seed~,
+    scale~,
+    jitter~,
+    mode=VoronoiMode::F2MinusF1,
+    edge_scale~,
+  )
 }
 
 ///|############################################################################

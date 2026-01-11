@@ -84,6 +84,9 @@ Demonstrates `triplanar` projection using surface normals.
 ### [`voronoi-edges-demo.toml`](voronoi-edges-demo.toml)
 Demonstrates Voronoi `edges` and `crackle` modes.
 
+### [`voronoi-f1f2-demo.toml`](voronoi-f1f2-demo.toml)
+Demonstrates Voronoi `f1`, `f2`, and `f2_minus_f1` feature-distance outputs.
+
 ### [`bump-demo.toml`](bump-demo.toml)
 Demonstrates procedural bump mapping using `normal_pattern` + `normal_strength`.
 
