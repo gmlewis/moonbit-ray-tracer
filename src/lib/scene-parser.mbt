@@ -279,6 +279,12 @@ fn parse_material(value : @toml.TomlValue) -> Material raise SceneParseError {
   if mat.roughness < 0.0 || mat.roughness > 1.0 {
     raise SceneParseError("material roughness must be between 0 and 1")
   }
+  mat.normal_strength = get_float_or_default(
+    material_table, "normal_strength", 0.0,
+  )
+  if mat.normal_strength < 0.0 {
+    raise SceneParseError("material normal_strength must be non-negative")
+  }
   mat.lighting_mode = match
     get_string_or_default(material_table, "lighting_mode", "phong") {
     "phong" => Phong
@@ -301,7 +307,7 @@ fn resolve_material_patterns(
     Some(@toml.TomlTable(materials_table)) =>
       materials_table.each(fn(name, material_value) {
         match material_value {
-          @toml.TomlTable(table) =>
+          @toml.TomlTable(table) => {
             match table.get("pattern") {
               Some(@toml.TomlString(pattern_name)) =>
                 match (materials.get(name), patterns.get(pattern_name)) {
@@ -310,6 +316,15 @@ fn resolve_material_patterns(
                 }
               _ => ()
             }
+            match table.get("normal_pattern") {
+              Some(@toml.TomlString(pattern_name)) =>
+                match (materials.get(name), patterns.get(pattern_name)) {
+                  (Some(mat), Some(p)) => mat.normal_pattern = Some(p.clone())
+                  _ => ()
+                }
+              _ => ()
+            }
+          }
           _ => ()
         }
       })
@@ -800,6 +815,10 @@ fn apply_transform_sync(
         Some(pattern) => pattern.set_pattern_transform(transform)
         None => () // No pattern to transform
       }
+      match shape.material.normal_pattern {
+        Some(pattern) => pattern.set_pattern_transform(transform)
+        None => ()
+      }
     }
     _ => ()
   }
@@ -839,7 +858,15 @@ fn apply_material_and_transform_sync(
         shape.material.reflective = mat.reflective
         shape.material.transparency = mat.transparency
         shape.material.refractive_index = mat.refractive_index
-        shape.material.pattern = mat.pattern
+        shape.material.pattern = match mat.pattern {
+          Some(p) => Some(p.clone())
+          None => None
+        }
+        shape.material.normal_pattern = match mat.normal_pattern {
+          Some(p) => Some(p.clone())
+          None => None
+        }
+        shape.material.normal_strength = mat.normal_strength
         shape.material.metallic = mat.metallic
         shape.material.roughness = mat.roughness
         shape.material.lighting_mode = mat.lighting_mode
@@ -863,6 +890,7 @@ fn apply_material_and_transform_sync(
     shape.material.reflective = parsed_material.reflective
     shape.material.transparency = parsed_material.transparency
     shape.material.refractive_index = parsed_material.refractive_index
+    shape.material.normal_strength = parsed_material.normal_strength
     shape.material.metallic = parsed_material.metallic
     shape.material.roughness = parsed_material.roughness
     shape.material.lighting_mode = parsed_material.lighting_mode
@@ -883,6 +911,19 @@ fn apply_material_and_transform_sync(
             raise SceneParseError("Unknown pattern reference: \{pattern_name}")
         }
       Some(_) => raise SceneParseError("pattern reference must be a string")
+      None => ()
+    }
+    match material_table.get("normal_pattern") {
+      Some(@toml.TomlString(pattern_name)) =>
+        match patterns.get(pattern_name) {
+          Some(pattern) => shape.material.normal_pattern = Some(pattern.clone())
+          None =>
+            raise SceneParseError(
+              "Unknown normal_pattern reference: \{pattern_name}",
+            )
+        }
+      Some(_) =>
+        raise SceneParseError("normal_pattern reference must be a string")
       None => ()
     }
   }

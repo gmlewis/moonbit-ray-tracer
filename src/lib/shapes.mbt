@@ -300,6 +300,15 @@ pub fn Shape::world_to_object(self : Shape, point : Tuple) -> Tuple {
 }
 
 ///|
+pub fn Shape::object_to_world(self : Shape, point : Tuple) -> Tuple {
+  let point = self.transform.mul_tuple(point)
+  match self.parent {
+    Some(parent) => parent.object_to_world(point)
+    _ => point
+  }
+}
+
+///|
 pub fn Shape::normal_to_world(self : Shape, normal : Tuple) -> Tuple {
   let normal = self.inv_transform.transpose().mul_tuple(normal)
   normal.w = 0

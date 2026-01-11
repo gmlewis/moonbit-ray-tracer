@@ -15,6 +15,8 @@ pub(all) struct Material {
   mut transparency : Double
   mut refractive_index : Double
   mut pattern : Pattern?
+  mut normal_pattern : Pattern?
+  mut normal_strength : Double
   mut metallic : Double
   mut roughness : Double
   mut lighting_mode : LightingMode
@@ -31,6 +33,8 @@ pub fn material() -> Material {
   let transparency = 0.0
   let refractive_index = 1.0
   let pattern = None
+  let normal_pattern = None
+  let normal_strength = 0.0
   let metallic = 0.0
   let roughness = 0.5
   let lighting_mode = Phong
@@ -44,6 +48,8 @@ pub fn material() -> Material {
     transparency,
     refractive_index,
     pattern,
+    normal_pattern,
+    normal_strength,
     metallic,
     roughness,
     lighting_mode,
@@ -53,6 +59,10 @@ pub fn material() -> Material {
 ///|
 pub fn Material::clone(self : Material) -> Material {
   let pattern = match self.pattern {
+    Some(p) => Some(p.clone())
+    None => None
+  }
+  let normal_pattern = match self.normal_pattern {
     Some(p) => Some(p.clone())
     None => None
   }
@@ -66,10 +76,64 @@ pub fn Material::clone(self : Material) -> Material {
     transparency: self.transparency,
     refractive_index: self.refractive_index,
     pattern,
+    normal_pattern,
+    normal_strength: self.normal_strength,
     metallic: self.metallic,
     roughness: self.roughness,
     lighting_mode: self.lighting_mode,
   }
+}
+
+///|
+fn bump_normal_from_pattern(
+  normal_pattern : Pattern,
+  strength : Double,
+  shape : Shape,
+  position : Tuple,
+  geometric_normalv : Tuple,
+  uv? : (Double, Double),
+) -> Tuple {
+  if strength <= 0.0 {
+    return geometric_normalv
+  }
+  // Sample in object space for stable scale under transforms.
+  let eps = 1.0e-3
+  let op = shape.world_to_object(position)
+  let p0 = position
+  let px = shape.object_to_world(point(op.x + eps, op.y, op.z))
+  let py = shape.object_to_world(point(op.x, op.y + eps, op.z))
+  let pz = shape.object_to_world(point(op.x, op.y, op.z + eps))
+  fn h(
+    pat : Pattern,
+    s : Shape,
+    wp : Tuple,
+    gn : Tuple,
+    uv : (Double, Double)?,
+  ) -> Double {
+    let c = pat.pattern_at_shape(s, wp, normal=gn, uv?)
+    // Simple luminance height.
+    let v = 0.2126 * c.red + 0.7152 * c.green + 0.0722 * c.blue
+    if v < 0.0 {
+      0.0
+    } else if v > 1.0 {
+      1.0
+    } else {
+      v
+    }
+  }
+
+  let h0 = h(normal_pattern, shape, p0, geometric_normalv, uv)
+  let hx = h(normal_pattern, shape, px, geometric_normalv, uv)
+  let hy = h(normal_pattern, shape, py, geometric_normalv, uv)
+  let hz = h(normal_pattern, shape, pz, geometric_normalv, uv)
+
+  // Gradient in object space.
+  let gx = (hx - h0) / eps
+  let gy = (hy - h0) / eps
+  let gz = (hz - h0) / eps
+  let obj_normal = shape.world_normal_to_object(geometric_normalv)
+  let bumped_obj = (obj_normal + vector(gx, gy, gz).mul_scalar(strength)).normalize()
+  shape.normal_to_world(bumped_obj)
 }
 
 ///|
@@ -130,6 +194,20 @@ pub fn Material::lighting(
   shape? : Shape? = None,
   uv? : (Double, Double),
 ) -> Color {
+  // Use geometric normal for pattern evaluation (e.g., triplanar mapping),
+  // and a potentially bumped normal for shading.
+  let shading_normalv = match (self.normal_pattern, shape) {
+    (Some(np), Some(shape)) =>
+      bump_normal_from_pattern(
+        np,
+        self.normal_strength,
+        shape,
+        position,
+        normalv,
+        uv?,
+      )
+    _ => normalv
+  }
   let clr = match (self.pattern, shape) {
     (Some(pattern), Some(shape)) =>
       pattern.pattern_at_shape(shape, position, normal=normalv, uv?)
@@ -142,12 +220,12 @@ pub fn Material::lighting(
       }
       let effective_color = clr * light.intensity
       let lightv = (light.position - position).normalize()
-      let light_dot_normal = lightv.dot(normalv)
+      let light_dot_normal = lightv.dot(shading_normalv)
       let mut diffuse = color(0, 0, 0)
       let mut specular = color(0, 0, 0)
       if light_dot_normal >= 0 {
         diffuse = effective_color.mul_scalar(self.diffuse * light_dot_normal)
-        let reflectv = (-lightv).reflect(normalv)
+        let reflectv = (-lightv).reflect(shading_normalv)
         let reflect_dot_eye = reflectv.dot(eyev)
         if reflect_dot_eye >= 0 {
           let factor = @math.pow(reflect_dot_eye, self.shininess)
@@ -162,17 +240,17 @@ pub fn Material::lighting(
       }
       let lightv = (light.position - position).normalize()
       let halfv = (eyev + lightv).normalize()
-      let n_dot_l = @cmp.maximum(normalv.dot(lightv), 0.0)
+      let n_dot_l = @cmp.maximum(shading_normalv.dot(lightv), 0.0)
       if n_dot_l <= 0.0 {
         return color(0, 0, 0)
       }
-      let n_dot_v = @cmp.maximum(normalv.dot(eyev), 0.0)
+      let n_dot_v = @cmp.maximum(shading_normalv.dot(eyev), 0.0)
       let h_dot_v = @cmp.maximum(halfv.dot(eyev), 0.0)
       let mut f0 = color(0.04, 0.04, 0.04)
       f0 = f0 * color(1.0, 1.0, 1.0).mul_scalar(1.0 - self.metallic) +
         clr.mul_scalar(self.metallic)
-      let ndf = distribution_ggx(normalv, halfv, self.roughness)
-      let g = geometry_smith(normalv, eyev, lightv, self.roughness)
+      let ndf = distribution_ggx(shading_normalv, halfv, self.roughness)
+      let g = geometry_smith(shading_normalv, eyev, lightv, self.roughness)
       let f = fresnel_schlick(h_dot_v, f0)
       let numerator = f.mul_scalar(ndf * g)
       let denominator = 4.0 * n_dot_v * n_dot_l + 0.001

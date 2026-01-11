@@ -33,5 +33,6 @@ moon run src/render -- -s examples/posterize-demo.toml -o posterize-demo.png --s
 moon run src/render -- -s examples/gradient-map-demo.toml -o gradient-map-demo.png --samples 4 --divide 1
 moon run src/render -- -s examples/triplanar-demo.toml -o triplanar-demo.png --samples 4 --divide 1
 moon run src/render -- -s examples/voronoi-edges-demo.toml -o voronoi-edges-demo.png --samples 4 --divide 1
+moon run src/render -- -s examples/bump-demo.toml -o bump-demo.png --samples 4 --divide 1
 moon run src/render -- -s examples/simple-sphere.toml -o simple-sphere.png --samples 4 --divide 1
 moon run src/render -- -s examples/texture-demo.toml -o texture-demo.png --samples 4 --divide 1

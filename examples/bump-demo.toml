@@ -1,0 +1,261 @@
+# Bump mapping demo (normal-from-height via patterns)
+[scene]
+name = "Bump Demo"
+description = "Procedural bump mapping using a normal_pattern height field"
+version = "1.0"
+
+[scene.render]
+width = 1100
+height = 650
+samples = 1
+max_bounces = 4
+background = [0.06, 0.06, 0.08]
+
+[camera]
+position = [0.0, 2.7, -8.8]
+look_at = [0.0, 1.15, 0.6]
+up = [0.0, 1.0, 0.0]
+field_of_view = 0.785
+
+[[lights]]
+type = "point"
+position = [-6.5, 4.2, -3.0]
+intensity = [1.0, 1.0, 1.0]
+
+[[lights]]
+type = "point"
+position = [-6.0, 1.25, -1.2]
+intensity = [1.2, 1.2, 1.2]
+
+[[lights]]
+type = "point"
+position = [7.5, 7.0, -1.5]
+intensity = [0.20, 0.22, 0.30]
+
+[[lights]]
+type = "point"
+position = [0.0, 1.5, -6.0]
+intensity = [0.18, 0.18, 0.20]
+
+# Materials
+[materials.floor]
+color = [0.25, 0.25, 0.28]
+ambient = 0.25
+diffuse = 0.9
+specular = 0.0
+
+[materials.wall]
+color = [0.10, 0.10, 0.12]
+ambient = 0.15
+diffuse = 0.85
+specular = 0.05
+shininess = 40.0
+
+[materials.bumped]
+ambient = 0.08
+diffuse = 0.85
+specular = 0.55
+shininess = 260.0
+pattern = "tri_marble"
+normal_pattern = "crackle_height"
+normal_strength = 2.3
+
+[materials.bumped_ridges]
+ambient = 0.06
+diffuse = 0.82
+specular = 0.62
+shininess = 320.0
+pattern = "tri_neon"
+normal_pattern = "warped_ridges"
+normal_strength = 3.2
+
+[materials.bumped_micro]
+ambient = 0.06
+diffuse = 0.84
+specular = 0.50
+shininess = 220.0
+pattern = "tri_marble"
+normal_pattern = "micro_fbm"
+normal_strength = 1.4
+
+[materials.bump_ab]
+color = [0.65, 0.65, 0.68]
+ambient = 0.02
+diffuse = 0.65
+specular = 0.95
+shininess = 800.0
+normal_pattern = "macro_height"
+normal_strength = 0.0
+
+[materials.bump_ab_strong]
+color = [0.65, 0.65, 0.68]
+ambient = 0.02
+diffuse = 0.65
+specular = 0.95
+shininess = 800.0
+normal_pattern = "macro_height"
+normal_strength = 10.0
+
+# Patterns
+[patterns.tri_marble]
+type = "triplanar"
+scale = 2.2
+sharpness = 2.5
+
+[patterns.tri_marble.pattern]
+type = "marble"
+seed = 17
+scale = 1.6
+octaves = 5
+frequency = 6.0
+strength = 2.0
+colors = [
+  [0.92, 0.92, 0.96],
+  [0.18, 0.18, 0.22],
+  [0.95, 0.35, 0.55],
+  [0.10, 0.55, 0.75]
+]
+
+[patterns.tri_neon]
+type = "triplanar"
+scale = 2.8
+sharpness = 4.0
+
+[patterns.tri_neon.pattern]
+type = "gradient_map"
+colors = [
+  [0.02, 0.02, 0.06],
+  [0.25, 0.06, 0.55],
+  [0.05, 0.65, 0.95],
+  [0.95, 0.90, 0.35],
+  [0.95, 0.20, 0.55]
+]
+
+[patterns.tri_neon.pattern.pattern]
+type = "warp"
+amplitude = 0.35
+
+[patterns.tri_neon.pattern.pattern.base]
+type = "fbm"
+seed = 41
+scale = 2.0
+octaves = 5
+
+[patterns.tri_neon.pattern.pattern.warp]
+type = "fbm"
+seed = 7
+scale = 6.0
+octaves = 4
+
+[patterns.crackle_height]
+type = "levels"
+in_min = 0.0
+in_max = 1.0
+out_min = 0.0
+out_max = 1.0
+gamma = 1.15
+
+[patterns.crackle_height.pattern]
+type = "voronoi"
+seed = 3
+scale = 6.0
+jitter = 1.0
+mode = "crackle"
+edge_scale = 32.0
+
+[patterns.warped_ridges]
+type = "levels"
+in_min = 0.0
+in_max = 1.0
+out_min = 0.0
+out_max = 1.0
+gamma = 0.85
+
+[patterns.warped_ridges.pattern]
+type = "warp"
+amplitude = 0.55
+
+[patterns.warped_ridges.pattern.base]
+type = "voronoi"
+seed = 9
+scale = 5.5
+jitter = 1.0
+mode = "edges"
+edge_scale = 42.0
+
+[patterns.warped_ridges.pattern.warp]
+type = "fbm"
+seed = 2
+scale = 7.5
+octaves = 4
+
+[patterns.micro_fbm]
+type = "levels"
+in_min = 0.2
+in_max = 0.8
+out_min = 0.0
+out_max = 1.0
+gamma = 1.0
+
+[patterns.micro_fbm.pattern]
+type = "fbm"
+seed = 99
+scale = 14.0
+octaves = 5
+
+[patterns.macro_height]
+type = "levels"
+in_min = 0.15
+in_max = 0.85
+out_min = 0.0
+out_max = 1.0
+gamma = 1.0
+
+[patterns.macro_height.pattern]
+type = "voronoi"
+seed = 11
+scale = 2.4
+jitter = 1.0
+mode = "distance"
+
+# Floor
+[[objects]]
+type = "plane"
+material = "floor"
+
+[[objects]]
+type = "plane"
+material = "wall"
+transform = { translation = [0.0, 0.0, 6.0], rotation = [1.5708, 0.0, 0.0] }
+
+# A/B bump diagnostic: same material except normal_strength.
+[[objects]]
+type = "sphere"
+material = "bump_ab"
+transform = { translation = [-1.35, 0.95, -1.1] }
+pattern_transform = { scale = [1.0, 1.0, 1.0] }
+
+[[objects]]
+type = "sphere"
+material = "bump_ab_strong"
+transform = { translation = [1.35, 0.95, -1.1] }
+pattern_transform = { scale = [1.0, 1.0, 1.0] }
+
+# Bumped sphere
+[[objects]]
+type = "sphere"
+material = "bumped_ridges"
+transform = { translation = [-2.7, 1.05, 0.9] }
+pattern_transform = { scale = [0.80, 0.80, 0.80], rotation = [0.0, 0.35, 0.0] }
+
+[[objects]]
+type = "sphere"
+material = "bumped"
+transform = { translation = [0.0, 1.05, 1.3] }
+pattern_transform = { scale = [0.78, 0.78, 0.78], rotation = [0.0, 0.65, 0.0] }
+
+[[objects]]
+type = "sphere"
+material = "bumped_micro"
+transform = { translation = [2.7, 1.05, 0.9] }
+pattern_transform = { scale = [0.80, 0.80, 0.80], rotation = [0.0, 0.95, 0.0] }

@@ -18,32 +18,42 @@ The scene format uses TOML (Tom's Obvious, Minimal Language) to describe 3D scen
 ```toml
 [scene]
 # Scene metadata and render settings
+## Named material definitions
+[materials.red_plastic]
+color = [0.8, 0.2, 0.2]
+ambient = 0.1
+diffuse = 0.7
+specular = 0.3
+shininess = 200.0
+reflective = 0.0
+transparency = 0.0
+refractive_index = 1.0
 
-[camera]
-# Camera configuration
+[materials.glass]
+color = [1.0, 1.0, 1.0]
+ambient = 0.0
+diffuse = 0.1
+specular = 0.9
+shininess = 300.0
+reflective = 0.9
+transparency = 0.9
+refractive_index = 1.5
 
-[[lights]]
-# Light source definitions (array of tables)
+[materials.mirror]
+color = [0.1, 0.1, 0.1]
+ambient = 0.0
+diffuse = 0.1
+specular = 0.9
+shininess = 300.0
+reflective = 0.9
+refractive_index = 1.0
 
-[materials]
-# Named material definitions
-
-[patterns]
-# Named pattern definitions
-
-[[objects]]
-# Scene objects (array of tables)
-```
-
-## Scene Metadata
-
-```toml
-[scene]
-name = "My Scene"
-description = "A beautiful ray-traced scene"
-version = "1.0"
-
-[scene.render]
+## Pattern references inside materials
+# (You can also set these in an inline material table under an object.)
+[materials.bumped]
+pattern = "triplanar_marble"       # Base color pattern
+normal_pattern = "crackle_height"  # Height pattern used to perturb normals
+normal_strength = 0.8              # 0 disables bump mapping
 width = 800
 height = 600
 samples = 1          # Anti-aliasing samples per pixel
@@ -85,17 +95,20 @@ height = 2.0
 - `"point"`: Point light source
 - `"area"`: Area light source (future)
 - `"environment"`: Environment/IBL lighting (future)
+
 ## Materials
+
 ```toml
+[materials.red_plastic]
 color = [0.8, 0.2, 0.2]
 ambient = 0.1
 diffuse = 0.7
+specular = 0.3
 shininess = 200.0
 reflective = 0.0
 transparency = 0.0
-  - Params: `seed` (0), `scale` (1.0), `jitter` (1.0),
-    `mode` (`"distance"`, `"cells"`, `"edges"`, or `"crackle"`, default `"distance"`),
-    `edge_scale` (12.0; used by `edges`/`crackle`)
+refractive_index = 1.0
+
 [materials.glass]
 color = [1.0, 1.0, 1.0]
 ambient = 0.0
@@ -114,6 +127,13 @@ specular = 0.9
 reflective = 0.9
 refractive_index = 1.0
 
+# Optional: bump mapping using a height-field pattern
+[materials.bumped]
+pattern = "tri_marble"         # Base color pattern
+normal_pattern = "crackle_height"
+normal_strength = 1.0
+```
+
 ### Material Properties
 - `color`: Base color [R, G, B] (0.0-1.0)
 - `ambient`: Ambient reflection coefficient (0.0-1.0)
@@ -123,6 +143,12 @@ refractive_index = 1.0
 - `reflective`: Reflection coefficient (0.0-1.0)
 - `transparency`: Transparency coefficient (0.0-1.0)
 - `refractive_index`: Index of refraction (>= 1.0)
+- `metallic`: PBR metallic (0.0-1.0)
+- `roughness`: PBR roughness (0.0-1.0)
+- `lighting_mode`: `"phong"` (default) or `"pbr"`
+- `pattern`: Named pattern reference (string)
+- `normal_pattern`: Named pattern reference used as a height field (string)
+- `normal_strength`: Bump mapping strength (float, >= 0.0; `0.0` disables)
 
 ## Patterns
 

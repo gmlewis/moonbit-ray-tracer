@@ -78,6 +78,9 @@ Demonstrates `triplanar` projection using surface normals.
 ### [`voronoi-edges-demo.toml`](voronoi-edges-demo.toml)
 Demonstrates Voronoi `edges` and `crackle` modes.
 
+### [`bump-demo.toml`](bump-demo.toml)
+Demonstrates procedural bump mapping using `normal_pattern` + `normal_strength`.
+
 ## Using the Examples
 
 1. Copy any example file as a starting point for your own scenes

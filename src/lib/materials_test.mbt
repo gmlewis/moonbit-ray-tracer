@@ -95,6 +95,33 @@ test "Lighting with a pattern applied (p.176)" {
 }
 
 ///|
+test "Bump mapping (normal_pattern) perturbs lighting" {
+  let light = point_light(point(0, 0, -10), color(1, 1, 1))
+  let position = point(0, 0, 0)
+  let eyev = vector(0, 0, -1)
+  let normalv = vector(0, 0, -1)
+  let shape = Some(sphere())
+  let m0 = material()
+  m0.color = color(1, 1, 1)
+  m0.ambient = 0
+  m0.diffuse = 1
+  m0.specular = 0
+  m0.normal_pattern = Some(gradient_pattern([black, white]))
+  m0.normal_strength = 0.0
+  let baseline = m0.lighting(light, position, eyev, normalv, shape~)
+  assert_eq(baseline, color(1, 1, 1))
+  let m1 = material()
+  m1.color = color(1, 1, 1)
+  m1.ambient = 0
+  m1.diffuse = 1
+  m1.specular = 0
+  m1.normal_pattern = Some(gradient_pattern([black, white]))
+  m1.normal_strength = 1.0
+  let bumped = m1.lighting(light, position, eyev, normalv, shape~)
+  assert_eq(bumped, color(0.7071, 0.7071, 0.7071))
+}
+
+///|
 test "Stripes with an object transformation (p.179)" {
   let object = sphere()
   object.set_transform(scaling(2, 2, 2))

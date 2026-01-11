@@ -577,6 +577,8 @@ pub(all) struct Material {
   mut transparency : Double
   mut refractive_index : Double
   mut pattern : Pattern?
+  mut normal_pattern : Pattern?
+  mut normal_strength : Double
   mut metallic : Double
   mut roughness : Double
   mut lighting_mode : LightingMode
@@ -768,6 +770,7 @@ pub fn Shape::new_triangle(Triangle) -> Self
 pub fn Shape::normal_at(Self, Tuple, hit? : Intersection?) -> Tuple
 pub fn Shape::normal_to_world(Self, Tuple) -> Tuple
 pub fn Shape::object_space_bounds(Self) -> Bounds
+pub fn Shape::object_to_world(Self, Tuple) -> Tuple
 pub fn Shape::parent_space_bounds(Self) -> Bounds
 pub fn Shape::set_transform(Self, Matrix) -> Unit
 pub fn Shape::world_normal_to_object(Self, Tuple) -> Tuple
