@@ -17,6 +17,8 @@ pub(all) struct Material {
   mut pattern : Pattern?
   mut normal_pattern : Pattern?
   mut normal_strength : Double
+  mut normal_texture : Pattern?
+  mut normal_texture_scale : Double
   mut metallic : Double
   mut roughness : Double
   mut lighting_mode : LightingMode
@@ -35,6 +37,8 @@ pub fn material() -> Material {
   let pattern = None
   let normal_pattern = None
   let normal_strength = 0.0
+  let normal_texture = None
+  let normal_texture_scale = 1.0
   let metallic = 0.0
   let roughness = 0.5
   let lighting_mode = Phong
@@ -50,6 +54,8 @@ pub fn material() -> Material {
     pattern,
     normal_pattern,
     normal_strength,
+    normal_texture,
+    normal_texture_scale,
     metallic,
     roughness,
     lighting_mode,
@@ -66,6 +72,10 @@ pub fn Material::clone(self : Material) -> Material {
     Some(p) => Some(p.clone())
     None => None
   }
+  let normal_texture = match self.normal_texture {
+    Some(p) => Some(p.clone())
+    None => None
+  }
   {
     color: self.color.clone(),
     ambient: self.ambient,
@@ -78,10 +88,84 @@ pub fn Material::clone(self : Material) -> Material {
     pattern,
     normal_pattern,
     normal_strength: self.normal_strength,
+    normal_texture,
+    normal_texture_scale: self.normal_texture_scale,
     metallic: self.metallic,
     roughness: self.roughness,
     lighting_mode: self.lighting_mode,
   }
+}
+
+///|
+fn get_shape_tangent_basis_world(shape : Shape) -> (Tuple, Tuple)? {
+  match shape.object {
+    TriangleUV(t) =>
+      Some(
+        (
+          shape.object_to_world(t.tangent_u).normalize(),
+          shape.object_to_world(t.tangent_v).normalize(),
+        ),
+      )
+    SmoothTriangleUV(t) =>
+      Some(
+        (
+          shape.object_to_world(t.tangent_u).normalize(),
+          shape.object_to_world(t.tangent_v).normalize(),
+        ),
+      )
+    _ => None
+  }
+}
+
+///|
+fn normal_from_texture(
+  normal_texture : Pattern,
+  scale : Double,
+  shape : Shape,
+  position : Tuple,
+  base_normalv : Tuple,
+  uv? : (Double, Double),
+) -> Tuple {
+  match uv? {
+    None => return base_normalv
+    Some(_) => ()
+  }
+  let c = normal_texture.pattern_at_shape(shape, position, normal=base_normalv, uv?)
+
+  // glTF normalTexture encodes tangent-space normals as RGB in [0,1], where:
+  // n = normalize(vec3(2*r-1, 2*g-1, 2*b-1)), and `scale` scales x/y.
+  let mut tx = 2.0 * c.red - 1.0
+  let mut ty = 2.0 * c.green - 1.0
+  let tz = 2.0 * c.blue - 1.0
+
+  tx *= scale
+  ty *= scale
+
+  let tn = vector(tx, ty, tz).normalize()
+
+  // Tangent basis in world space (best effort). If missing, fall back to an
+  // arbitrary orthonormal basis around the base normal.
+  let (mut t, mut b) = match get_shape_tangent_basis_world(shape) {
+    Some((tu, tv)) => (tu, tv)
+    None => {
+      let up = if base_normalv.y.abs() < 0.9 {
+        vector(0, 1, 0)
+      } else {
+        vector(1, 0, 0)
+      }
+      let tu = base_normalv.cross(up).normalize()
+      let tv = base_normalv.cross(tu).normalize()
+      (tu, tv)
+    }
+  }
+
+  // Orthonormalize T,B against the (possibly interpolated) base normal.
+  let n = base_normalv.normalize()
+  t = (t - n.mul_scalar(n.dot(t))).normalize()
+  b = n.cross(t).normalize()
+
+  // Tangent-to-world transform: worldN = normalize(T*tx + B*ty + N*tz)
+  (t.mul_scalar(tn.x) + b.mul_scalar(tn.y) + n.mul_scalar(tn.z)).normalize()
 }
 
 ///|
@@ -224,6 +308,18 @@ pub fn Material::lighting(
   // bumped normal for shading. When a normal map is present, we also feed the
   // bumped normal into pattern evaluation so normal-aware patterns (e.g.
   // triplanar) can reflect the perturbation.
+  let normalv = match (self.normal_texture, shape) {
+    (Some(nt), Some(shape)) =>
+      normal_from_texture(
+        nt,
+        self.normal_texture_scale,
+        shape,
+        position,
+        normalv,
+        uv?,
+      )
+    _ => normalv
+  }
   let shading_normalv = match (self.normal_pattern, shape) {
     (Some(np), Some(shape)) =>
       bump_normal_from_pattern(
@@ -236,9 +332,10 @@ pub fn Material::lighting(
       )
     _ => normalv
   }
-  let pattern_normalv = match self.normal_pattern {
-    Some(_) => shading_normalv
-    None => normalv
+  let pattern_normalv = match (self.normal_pattern, self.normal_texture) {
+    (Some(_), _) => shading_normalv
+    (_, Some(_)) => shading_normalv
+    _ => normalv
   }
   let clr = match (self.pattern, shape) {
     (Some(pattern), Some(shape)) =>

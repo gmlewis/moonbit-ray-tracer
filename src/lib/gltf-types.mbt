@@ -62,6 +62,13 @@ pub(all) struct GltfTextureInfo {
 }
 
 ///|
+pub(all) struct GltfNormalTextureInfo {
+  index : Int
+  tex_coord : Int?
+  scale : Double?
+}
+
+///|
 pub(all) struct GltfTexture {
   sampler : Int?
   source : Int?
@@ -88,7 +95,7 @@ pub(all) struct GltfMaterialPbr {
 ///|
 pub(all) struct GltfMaterial {
   pbr_metallic_roughness : GltfMaterialPbr?
-  normal_texture : GltfTextureInfo?
+  normal_texture : GltfNormalTextureInfo?
   occlusion_texture : GltfTextureInfo?
   emissive_texture : GltfTextureInfo?
   emissive_factor : Array[Double]?

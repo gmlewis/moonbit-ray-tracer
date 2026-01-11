@@ -324,6 +324,31 @@ fn parse_texture_info(json : Json) -> GltfTextureInfo? {
 }
 
 ///|
+fn parse_normal_texture_info(json : Json) -> GltfNormalTextureInfo? {
+  let obj = match get_object(json) {
+    Some(o) => o
+    None => return None
+  }
+  let index = match obj.get("index") {
+    Some(v) =>
+      match get_int(v) {
+        Some(i) => i
+        None => return None
+      }
+    None => return None
+  }
+  let tex_coord = match obj.get("texCoord") {
+    Some(v) => get_int(v)
+    None => None
+  }
+  let scale = match obj.get("scale") {
+    Some(v) => get_double(v)
+    None => None
+  }
+  Some({ index, tex_coord, scale })
+}
+
+///|
 fn parse_texture(json : Json) -> GltfTexture? {
   let obj = match get_object(json) {
     Some(o) => o
@@ -419,7 +444,7 @@ fn parse_material_gltf(json : Json) -> GltfMaterial? {
     None => None
   }
   let normal_texture = match obj.get("normalTexture") {
-    Some(v) => parse_texture_info(v)
+    Some(v) => parse_normal_texture_info(v)
     None => None
   }
   let occlusion_texture = match obj.get("occlusionTexture") {
