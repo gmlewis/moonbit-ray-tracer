@@ -359,6 +359,71 @@ test "parse material with normal_pattern affects lighting" {
 }
 
 ///|
+test "parse error - displacement inline material not supported" {
+  let toml_content =
+    #|[scene]
+    #|name = "Displacement Inline Material Scene"
+    #|[camera]
+    #|position = [0,0,-5]
+    #|look_at = [0,0,0]
+    #|up = [0,1,0]
+    #|field_of_view = 1.0
+    #|[patterns.h]
+    #|type = "fbm"
+    #|seed = 1
+    #|scale = 3.0
+    #|octaves = 3
+    #|[[objects]]
+    #|type = "sphere"
+    #|material = { displacement_pattern = "h", displacement_strength = 1.0 }
+    #|
+  try {
+    let _scene = @lib.parse_scene(toml_content)
+    inspect("should_fail", content="correctly_failed")
+  } catch {
+    e => {
+      let msg = e.to_string()
+      let ok = msg.contains("displacement is not supported")
+      inspect(ok, content="true")
+    }
+  }
+}
+
+///|
+test "parse error - displacement referenced material not supported" {
+  let toml_content =
+    #|[scene]
+    #|name = "Displacement Ref Material Scene"
+    #|[camera]
+    #|position = [0,0,-5]
+    #|look_at = [0,0,0]
+    #|up = [0,1,0]
+    #|field_of_view = 1.0
+    #|[patterns.h]
+    #|type = "fbm"
+    #|seed = 1
+    #|scale = 3.0
+    #|octaves = 3
+    #|[materials.disp]
+    #|displacement_pattern = "h"
+    #|displacement_strength = 1.0
+    #|[[objects]]
+    #|type = "sphere"
+    #|material = "disp"
+    #|
+  try {
+    let _scene = @lib.parse_scene(toml_content)
+    inspect("should_fail", content="correctly_failed")
+  } catch {
+    e => {
+      let msg = e.to_string()
+      let ok = msg.contains("displacement is not supported")
+      inspect(ok, content="true")
+    }
+  }
+}
+
+///|
 test "propagate material to CSG children" {
   let toml_content =
     #|[scene]

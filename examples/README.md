@@ -90,6 +90,12 @@ Demonstrates Voronoi `f1`, `f2`, and `f2_minus_f1` feature-distance outputs.
 ### [`bump-demo.toml`](bump-demo.toml)
 Demonstrates procedural bump mapping using `normal_pattern` + `normal_strength`.
 
+### [`mask-demo.toml`](mask-demo.toml)
+Demonstrates using any pattern graph as a **mask** (scalar field) to drive `mix`.
+
+### [`warp-field-demo.toml`](warp-field-demo.toml)
+Demonstrates using any pattern graph as a **warp field** (vector-ish RGB) to drive domain warping.
+
 ## Using the Examples
 
 1. Copy any example file as a starting point for your own scenes

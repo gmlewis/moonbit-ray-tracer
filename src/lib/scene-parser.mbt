@@ -285,6 +285,12 @@ fn parse_material(value : @toml.TomlValue) -> Material raise SceneParseError {
   if mat.normal_strength < 0.0 {
     raise SceneParseError("material normal_strength must be non-negative")
   }
+  mat.displacement_strength = get_float_or_default(
+    material_table, "displacement_strength", 0.0,
+  )
+  if mat.displacement_strength < 0.0 {
+    raise SceneParseError("material displacement_strength must be non-negative")
+  }
   mat.lighting_mode = match
     get_string_or_default(material_table, "lighting_mode", "phong") {
     "phong" => Phong
@@ -320,6 +326,15 @@ fn resolve_material_patterns(
               Some(@toml.TomlString(pattern_name)) =>
                 match (materials.get(name), patterns.get(pattern_name)) {
                   (Some(mat), Some(p)) => mat.normal_pattern = Some(p.clone())
+                  _ => ()
+                }
+              _ => ()
+            }
+            match table.get("displacement_pattern") {
+              Some(@toml.TomlString(pattern_name)) =>
+                match (materials.get(name), patterns.get(pattern_name)) {
+                  (Some(mat), Some(p)) =>
+                    mat.displacement_pattern = Some(p.clone())
                   _ => ()
                 }
               _ => ()

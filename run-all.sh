@@ -34,6 +34,8 @@ moon run src/render -- -s examples/threshold-demo.toml -o threshold-demo.png --s
 moon run src/render -- -s examples/posterize-demo.toml -o posterize-demo.png --samples 4 --divide 1
 moon run src/render -- -s examples/gradient-map-demo.toml -o gradient-map-demo.png --samples 4 --divide 1
 moon run src/render -- -s examples/triplanar-demo.toml -o triplanar-demo.png --samples 4 --divide 1
+moon run src/render -- -s examples/mask-demo.toml -o mask-demo.png --samples 4 --divide 1
+moon run src/render -- -s examples/warp-field-demo.toml -o warp-field-demo.png --samples 4 --divide 1
 moon run src/render -- -s examples/voronoi-edges-demo.toml -o voronoi-edges-demo.png --samples 4 --divide 1
 moon run src/render -- -s examples/voronoi-f1f2-demo.toml -o voronoi-f1f2-demo.png --samples 4 --divide 1
 moon run src/render -- -s examples/bump-demo.toml -o bump-demo.png --samples 4 --divide 1

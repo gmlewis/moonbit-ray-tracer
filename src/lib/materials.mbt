@@ -17,6 +17,8 @@ pub(all) struct Material {
   mut pattern : Pattern?
   mut normal_pattern : Pattern?
   mut normal_strength : Double
+  mut displacement_pattern : Pattern?
+  mut displacement_strength : Double
   mut normal_texture : Pattern?
   mut normal_texture_scale : Double
   mut metallic : Double
@@ -37,6 +39,8 @@ pub fn material() -> Material {
   let pattern = None
   let normal_pattern = None
   let normal_strength = 0.0
+  let displacement_pattern = None
+  let displacement_strength = 0.0
   let normal_texture = None
   let normal_texture_scale = 1.0
   let metallic = 0.0
@@ -54,6 +58,8 @@ pub fn material() -> Material {
     pattern,
     normal_pattern,
     normal_strength,
+    displacement_pattern,
+    displacement_strength,
     normal_texture,
     normal_texture_scale,
     metallic,
@@ -69,6 +75,10 @@ pub fn Material::clone(self : Material) -> Material {
     None => None
   }
   let normal_pattern = match self.normal_pattern {
+    Some(p) => Some(p.clone())
+    None => None
+  }
+  let displacement_pattern = match self.displacement_pattern {
     Some(p) => Some(p.clone())
     None => None
   }
@@ -88,6 +98,8 @@ pub fn Material::clone(self : Material) -> Material {
     pattern,
     normal_pattern,
     normal_strength: self.normal_strength,
+    displacement_pattern,
+    displacement_strength: self.displacement_strength,
     normal_texture,
     normal_texture_scale: self.normal_texture_scale,
     metallic: self.metallic,

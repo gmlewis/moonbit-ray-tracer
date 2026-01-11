@@ -30,6 +30,10 @@ fn apply_transform(
         Some(pattern) => pattern.set_pattern_transform(transform)
         None => ()
       }
+      match shape.material.displacement_pattern {
+        Some(pattern) => pattern.set_pattern_transform(transform)
+        None => ()
+      }
     }
     _ => ()
   }
@@ -101,6 +105,11 @@ fn apply_material_and_transform(
           None => None
         }
         shape.material.normal_strength = mat.normal_strength
+        shape.material.displacement_pattern = match mat.displacement_pattern {
+          Some(p) => Some(p.clone())
+          None => None
+        }
+        shape.material.displacement_strength = mat.displacement_strength
         shape.material.metallic = mat.metallic
         shape.material.roughness = mat.roughness
         shape.material.lighting_mode = mat.lighting_mode
@@ -124,6 +133,7 @@ fn apply_material_and_transform(
     shape.material.transparency = parsed_material.transparency
     shape.material.refractive_index = parsed_material.refractive_index
     shape.material.normal_strength = parsed_material.normal_strength
+    shape.material.displacement_strength = parsed_material.displacement_strength
     shape.material.metallic = parsed_material.metallic
     shape.material.roughness = parsed_material.roughness
     shape.material.lighting_mode = parsed_material.lighting_mode
@@ -158,6 +168,30 @@ fn apply_material_and_transform(
         raise SceneParseError("normal_pattern reference must be a string")
       None => ()
     }
+    match material_table.get("displacement_pattern") {
+      Some(@toml.TomlString(pattern_name)) =>
+        match patterns.get(pattern_name) {
+          Some(pattern) =>
+            shape.material.displacement_pattern = Some(pattern.clone())
+          None =>
+            raise SceneParseError(
+              "Unknown displacement_pattern reference: \{pattern_name}",
+            )
+        }
+      Some(_) =>
+        raise SceneParseError("displacement_pattern reference must be a string")
+      None => ()
+    }
+  }
+
+  // Displacement mapping is planned but not yet implemented (needs a
+  // tessellation strategy). Keep parsing/plumbing in place, but fail fast if a
+  // scene tries to enable it.
+  if shape.material.displacement_strength != 0.0 ||
+    shape.material.displacement_pattern is Some(_) {
+    raise SceneParseError(
+      "Material displacement is not supported yet. Remove displacement_pattern / displacement_strength.",
+    )
   }
   apply_transform(shape, object_table)
 

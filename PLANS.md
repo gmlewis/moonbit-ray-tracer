@@ -110,16 +110,16 @@ Next best thing to address: focus first on the Procedural Texture Library + comp
 
 Goal: keep the system fun for albedo output now, while structuring it so the same pattern graphs can later drive masks/roughness/metallic, normal maps, and displacement.
 
-- [ ] Add a lightweight “field” abstraction (internal): standardize sampling as **scalar/color/vector** so a single pattern graph can be reused for albedo, masks, warps, and height.
-- [ ] Add “more looks” utility nodes:
-	- [ ] `levels` / `remap` (bias/gain/contrast + clamp)
-	- [ ] `threshold` / `posterize` (hard edges, toon/cell looks)
-	- [ ] `gradient_map` (map scalar → palette; makes fBm/Voronoi art-directable)
-	- [ ] `triplanar` mapping helper (improves procedural textures on meshes without UVs)
-	- [ ] Voronoi “features” (edges/crackle, F1/F2 variants) for stone/cracks
-- [ ] Start future geometry hooks (optional, minimal first pass):
+- [x] Add a lightweight “field” abstraction (internal): standardize sampling as **scalar/color/vector** so a single pattern graph can be reused for albedo, masks, warps, and height.
+- [x] Add “more looks” utility nodes:
+	- [x] `levels` / `remap` (bias/gain/contrast + clamp)
+	- [x] `threshold` / `posterize` (hard edges, toon/cell looks)
+	- [x] `gradient_map` (map scalar → palette; makes fBm/Voronoi art-directable)
+	- [x] `triplanar` mapping helper (improves procedural textures on meshes without UVs)
+	- [x] Voronoi “features” (edges/crackle, F1/F2 variants) for stone/cracks
+- [x] Start future geometry hooks (optional, minimal first pass):
 	- [x] Normal-from-height (finite differences on scalar field; no tessellation required)
-	- [ ] Displacement mapping plan (field + strength), gated until a tessellation strategy is chosen
+	- [x] Displacement mapping plan (field + strength): schema/plumbing only; true displacement gated until a tessellation strategy is chosen
 
 Note: image-based tangent-space normal maps are now implemented via glTF `normalTexture` and can also be applied as a material normal texture; procedural height→normal bump mapping remains supported via `normal_pattern` + `normal_strength`.
 

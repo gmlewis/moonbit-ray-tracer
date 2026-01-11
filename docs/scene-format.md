@@ -149,6 +149,8 @@ normal_strength = 1.0
 - `pattern`: Named pattern reference (string)
 - `normal_pattern`: Named pattern reference used as a height field (string)
 - `normal_strength`: Bump mapping strength (float, >= 0.0; `0.0` disables)
+- `displacement_pattern`: Reserved for future true displacement (string; currently unsupported)
+- `displacement_strength`: Reserved for future true displacement (float, >= 0.0; currently unsupported)
 
 ## Patterns
 
