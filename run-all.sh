@@ -41,5 +41,6 @@ moon run src/render -- -s examples/warp-field-demo.toml -o warp-field-demo.png -
 moon run src/render -- -s examples/voronoi-edges-demo.toml -o voronoi-edges-demo.png --samples 4 --divide 1
 moon run src/render -- -s examples/voronoi-f1f2-demo.toml -o voronoi-f1f2-demo.png --samples 4 --divide 1
 moon run src/render -- -s examples/bump-demo.toml -o bump-demo.png --samples 4 --divide 1
+moon run src/render -- -s examples/displacement-demo.toml -o displacement-demo.png --samples 4 --divide 1
 moon run src/render -- -s examples/simple-sphere.toml -o simple-sphere.png --samples 4 --divide 1
 moon run src/render -- -s examples/texture-demo.toml -o texture-demo.png --samples 4 --divide 1

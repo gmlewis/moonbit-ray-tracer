@@ -149,8 +149,13 @@ normal_strength = 1.0
 - `pattern`: Named pattern reference (string)
 - `normal_pattern`: Named pattern reference used as a height field (string)
 - `normal_strength`: Bump mapping strength (float, >= 0.0; `0.0` disables)
-- `displacement_pattern`: Reserved for future true displacement (string; currently unsupported)
-- `displacement_strength`: Reserved for future true displacement (float, >= 0.0; currently unsupported)
+- `displacement_pattern`: Named pattern reference used as a height field for **simple displacement** (string)
+- `displacement_strength`: Displacement strength (float, >= 0.0; `0.0` disables)
+
+Notes on displacement:
+- This is a shading-time displacement: the hit point is offset along the surface normal by a height derived from `displacement_pattern` luminance.
+- The height is remapped from $[0, 1]$ to $[-strength, +strength]$ (so 0.5 means “no displacement”).
+- It does **not** change silhouettes (no tessellation), but it can add depth/parallax-like variation.
 
 ## Patterns
 

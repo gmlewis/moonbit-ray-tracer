@@ -1,0 +1,129 @@
+# Displacement mapping demo (simple shading-time displacement)
+[scene]
+name = "Displacement Demo"
+description = "Procedural displacement_pattern + displacement_strength (simple normal-offset displacement)"
+version = "1.0"
+
+[scene.render]
+width = 1100
+height = 650
+samples = 4
+max_bounces = 4
+background = [0.08, 0.08, 0.10]
+
+[camera]
+position = [0.0, 2.8, -8.6]
+look_at = [0.0, 1.1, 0.5]
+up = [0.0, 1.0, 0.0]
+field_of_view = 0.785
+
+[[lights]]
+type = "point"
+position = [-7.0, 6.0, -6.5]
+intensity = [1.25, 1.25, 1.25]
+
+[[lights]]
+type = "point"
+position = [6.0, 2.5, -4.5]
+intensity = [0.75, 0.75, 0.75]
+
+[[lights]]
+type = "point"
+# Grazing light to make displacement more visible.
+position = [0.0, 3.8, 3.5]
+intensity = [0.9, 0.9, 0.9]
+
+
+# Materials
+[materials.floor]
+color = [0.25, 0.25, 0.28]
+ambient = 0.25
+diffuse = 0.9
+specular = 0.0
+
+[materials.wall]
+color = [0.10, 0.10, 0.12]
+ambient = 0.15
+diffuse = 0.85
+specular = 0.05
+shininess = 40.0
+
+[materials.displaced]
+ambient = 0.08
+diffuse = 0.85
+specular = 0.55
+shininess = 260.0
+pattern = "tri_marble"
+# Use a height field to offset the shading point.
+displacement_pattern = "disp_height"
+displacement_strength = 0.25
+# Optional: pair with bump mapping for extra detail.
+normal_pattern = "disp_height"
+normal_strength = 1.2
+
+
+# Patterns
+[patterns.tri_marble]
+type = "triplanar"
+scale = 2.1
+sharpness = 2.5
+
+[patterns.tri_marble.pattern]
+type = "marble"
+seed = 17
+scale = 1.6
+octaves = 5
+frequency = 6.0
+strength = 2.0
+colors = [
+  [0.92, 0.92, 0.96],
+  [0.18, 0.18, 0.22],
+  [0.95, 0.35, 0.55],
+  [0.10, 0.55, 0.75]
+]
+
+[patterns.disp_height]
+# Keep it in [0,1] with a little contrast for nicer ridges.
+type = "levels"
+in_min = 0.2
+in_max = 0.85
+out_min = 0.0
+out_max = 1.0
+gamma = 1.0
+
+[patterns.disp_height.pattern]
+type = "warp"
+amplitude = 0.35
+
+[patterns.disp_height.pattern.base]
+type = "fbm"
+seed = 41
+scale = 2.8
+octaves = 5
+
+[patterns.disp_height.pattern.warp]
+type = "fbm"
+seed = 7
+scale = 6.0
+octaves = 4
+
+
+# Objects
+[[objects]]
+type = "plane"
+material = "floor"
+
+[[objects]]
+type = "plane"
+material = "wall"
+transform = { translation = [0.0, 0.0, 6.0], rotation = [1.571, 0.0, 0.0] }
+
+[[objects]]
+type = "sphere"
+material = "displaced"
+transform = { translation = [-0.8, 1.0, 0.8], scale = [1.0, 1.0, 1.0] }
+
+[[objects]]
+type = "sphere"
+material = "displaced"
+transform = { translation = [1.2, 0.6, 0.0], scale = [0.6, 0.6, 0.6] }

@@ -99,6 +99,9 @@ Demonstrates Voronoi `f1`, `f2`, and `f2_minus_f1` feature-distance outputs.
 ### [`bump-demo.toml`](bump-demo.toml)
 Demonstrates procedural bump mapping using `normal_pattern` + `normal_strength`.
 
+### [`displacement-demo.toml`](displacement-demo.toml)
+Demonstrates `displacement_pattern` + `displacement_strength` (simple shading-time displacement; no silhouette changes).
+
 ### [`mask-demo.toml`](mask-demo.toml)
 Demonstrates using any pattern graph as a **mask** (scalar field) to drive `mix`.
 
