@@ -135,6 +135,8 @@ pub fn smooth_triangle(Tuple, Tuple, Tuple, Tuple, Tuple, Tuple) -> Shape
 
 pub fn smooth_triangle_uv(Tuple, Tuple, Tuple, Tuple, Tuple, Tuple, (Double, Double), (Double, Double), (Double, Double)) -> Shape
 
+pub fn smooth_triangle_uv_with_tangents(Tuple, Tuple, Tuple, Tuple, Tuple, Tuple, (Double, Double), (Double, Double), (Double, Double), Tuple, Tuple) -> Shape
+
 pub fn sphere() -> Shape
 
 pub fn spherical_map(Tuple) -> (Double, Double)
@@ -150,6 +152,8 @@ pub fn translation(Double, Double, Double) -> Matrix
 pub fn triangle(Tuple, Tuple, Tuple) -> Shape
 
 pub fn triangle_uv(Tuple, Tuple, Tuple, (Double, Double), (Double, Double), (Double, Double)) -> Shape
+
+pub fn triangle_uv_with_tangents(Tuple, Tuple, Tuple, (Double, Double), (Double, Double), (Double, Double), Tuple, Tuple) -> Shape
 
 pub fn triplanar_pattern(Pattern, scale? : Double, sharpness? : Double) -> Pattern
 

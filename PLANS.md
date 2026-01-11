@@ -234,7 +234,6 @@ Complete the tool with documentation, examples, and advanced features.
 - [ ] Render `Graphic` assets as extruded solids and as texture masks
 - [ ] Provide intuitive user interface for non-programmers
 - [ ] Maintain code quality and comprehensive test coverage
-- [ ] Build active community of users and contributors
 
 ## Notes
 

@@ -74,6 +74,70 @@ pub fn triangle_uv(
 }
 
 ///|
+pub fn triangle_uv_with_tangents(
+  p1 : Tuple,
+  p2 : Tuple,
+  p3 : Tuple,
+  uv1 : (Double, Double),
+  uv2 : (Double, Double),
+  uv3 : (Double, Double),
+  tangent_u0 : Tuple,
+  tangent_v0 : Tuple,
+) -> Shape {
+  let bounds = Bounds::new()
+  bounds..update(p1)..update(p2)..update(p3)
+  let e1 = p2 - p1
+  let e2 = p3 - p1
+  let normal = e2.cross(e1).normalize()
+  let mut tangent_u = tangent_u0
+  if tangent_u.magnitude() < 1.0e-12 {
+    // Fall back to an arbitrary basis.
+    let up = if normal.y.abs() < 0.9 {
+      vector(0, 1, 0)
+    } else {
+      vector(1, 0, 0)
+    }
+    tangent_u = normal.cross(up).normalize()
+  }
+  tangent_u = (tangent_u - normal.mul_scalar(normal.dot(tangent_u))).normalize()
+  if tangent_u.magnitude() < 1.0e-12 {
+    // A near-degenerate projection; fall back again.
+    let up = if normal.y.abs() < 0.9 {
+      vector(0, 1, 0)
+    } else {
+      vector(1, 0, 0)
+    }
+    tangent_u = normal.cross(up).normalize()
+  }
+  let mut tangent_v = tangent_v0
+  if tangent_v.magnitude() < 1.0e-12 {
+    tangent_v = normal.cross(tangent_u)
+  }
+  tangent_v = (tangent_v -
+  normal.mul_scalar(normal.dot(tangent_v)) -
+  tangent_u.mul_scalar(tangent_u.dot(tangent_v))).normalize()
+  if tangent_v.magnitude() < 1.0e-12 {
+    tangent_v = normal.cross(tangent_u).normalize()
+  }
+  Shape::new(
+    TriangleUV({
+      p1,
+      p2,
+      p3,
+      uv1,
+      uv2,
+      uv3,
+      e1,
+      e2,
+      normal,
+      tangent_u,
+      tangent_v,
+      bounds,
+    }),
+  )
+}
+
+///|
 pub fn TriangleUV::bounds(self : TriangleUV) -> Bounds {
   self.bounds
 }
