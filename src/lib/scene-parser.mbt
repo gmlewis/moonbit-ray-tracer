@@ -505,6 +505,18 @@ fn parse_pattern(value : @toml.TomlValue) -> Pattern raise SceneParseError {
       let gamma = get_float_or_default(pattern_table, "gamma", 1.0)
       levels_pattern(p, in_min~, in_max~, out_min~, out_max~, gamma~)
     }
+    "bias_gain" => {
+      let p = get_pattern_required("pattern")
+      let bias = get_float_or_default(pattern_table, "bias", 0.5)
+      let gain = get_float_or_default(pattern_table, "gain", 0.5)
+      bias_gain_pattern(p, bias~, gain~)
+    }
+    "contrast" => {
+      let p = get_pattern_required("pattern")
+      let contrast = get_float_or_default(pattern_table, "contrast", 1.0)
+      let pivot = get_float_or_default(pattern_table, "pivot", 0.5)
+      contrast_pattern(p, contrast~, pivot~)
+    }
     "threshold" => {
       let p = get_pattern_required("pattern")
       let threshold = get_float_or_default(pattern_table, "threshold", 0.5)

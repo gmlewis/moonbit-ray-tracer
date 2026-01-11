@@ -112,6 +112,28 @@ seed = 5
 scale = 1.8
 octaves = 5
 
+[patterns.bias_gain_midtones]
+type = "bias_gain"
+bias = 0.30
+gain = 0.55
+
+[patterns.bias_gain_midtones.pattern]
+type = "fbm"
+seed = 37
+scale = 2.2
+octaves = 5
+
+[patterns.contrast_hard]
+type = "contrast"
+contrast = 1.8
+pivot = 0.5
+
+[patterns.contrast_hard.pattern]
+type = "fbm"
+seed = 41
+scale = 2.0
+octaves = 5
+
 # Materials
 [materials.base]
 color = [1.0, 1.0, 1.0]
@@ -156,3 +178,16 @@ type = "sphere"
 material = { ambient = 0.1, diffuse = 0.8, specular = 0.22, shininess = 140.0, reflective = 0.08, pattern = "mixed_wood_marble" }
 transform = { translation = [4.5, 1.0, 1.6] }
 pattern_transform = { scale = [0.75, 0.75, 0.75] }
+
+# Back row (extra nodes)
+[[objects]]
+type = "sphere"
+material = { ambient = 0.1, diffuse = 0.85, specular = 0.16, shininess = 120.0, reflective = 0.06, pattern = "bias_gain_midtones" }
+transform = { translation = [-2.2, 1.0, 3.8], scale = [0.85, 0.85, 0.85] }
+pattern_transform = { scale = [0.9, 0.9, 0.9] }
+
+[[objects]]
+type = "sphere"
+material = { ambient = 0.1, diffuse = 0.85, specular = 0.16, shininess = 120.0, reflective = 0.06, pattern = "contrast_hard" }
+transform = { translation = [2.2, 1.0, 3.8], scale = [0.85, 0.85, 0.85] }
+pattern_transform = { scale = [0.9, 0.9, 0.9] }

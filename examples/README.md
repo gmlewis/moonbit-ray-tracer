@@ -63,6 +63,12 @@ Demonstrates procedural patterns (noise/fBm/marble/wood/voronoi) and compositing
 ### [`levels-demo.toml`](levels-demo.toml)
 Demonstrates `levels` (remap + gamma shaping) applied to procedural noise.
 
+### [`bias-gain-demo.toml`](bias-gain-demo.toml)
+Demonstrates `bias_gain` (bias shifts midtones; gain reshapes shadows/highlights).
+
+### [`contrast-demo.toml`](contrast-demo.toml)
+Demonstrates `contrast` around a pivot (default 0.5).
+
 ### [`threshold-demo.toml`](threshold-demo.toml)
 Demonstrates `threshold` turning noise into bold graphic masks.
 

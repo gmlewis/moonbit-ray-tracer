@@ -1054,6 +1054,159 @@ pub fn levels_pattern(
 }
 
 ///|
+fn bias_value(x : Double, bias : Double) -> Double {
+  let x = clamp01(x)
+  // Schlick bias: x^(log(b)/log(0.5))
+  let b0 = clamp01(bias)
+  let eps = 1.0e-6
+  let b = if b0 < eps { eps } else if b0 > 1.0 - eps { 1.0 - eps } else { b0 }
+  let exp = @math.ln(b) / @math.ln(0.5)
+  clamp01(@math.pow(x, exp))
+}
+
+///|
+fn gain_value(x : Double, gain : Double) -> Double {
+  let x = clamp01(x)
+  let g = clamp01(gain)
+  if x < 0.5 {
+    0.5 * bias_value(2.0 * x, 1.0 - g)
+  } else {
+    1.0 - 0.5 * bias_value(2.0 - 2.0 * x, 1.0 - g)
+  }
+}
+
+///|
+pub(all) struct BiasGainPattern {
+  pattern : Pattern
+  bias : Double
+  gain : Double
+}
+
+///|
+pub impl Show for BiasGainPattern with output(_self, logger) {
+  logger.write_string("bias_gain(...)")
+}
+
+///|
+pub impl PatternTrait for BiasGainPattern with clone(self) {
+  bias_gain_pattern(self.pattern.clone(), bias=self.bias, gain=self.gain)
+}
+
+///|
+pub impl PatternTrait for BiasGainPattern with pattern_at(self, point) {
+  let c = self.pattern.pattern_at(point)
+  color(
+    gain_value(bias_value(c.red, self.bias), self.gain),
+    gain_value(bias_value(c.green, self.bias), self.gain),
+    gain_value(bias_value(c.blue, self.bias), self.gain),
+  )
+}
+
+///|
+pub impl PatternTrait for BiasGainPattern with uv_at(self, u, v) {
+  let c = self.pattern.uv_at(u, v)
+  color(
+    gain_value(bias_value(c.red, self.bias), self.gain),
+    gain_value(bias_value(c.green, self.bias), self.gain),
+    gain_value(bias_value(c.blue, self.bias), self.gain),
+  )
+}
+
+///|
+pub impl PatternTrait for BiasGainPattern with pattern_at_with_info(
+  self,
+  point,
+  normal,
+  uv,
+) {
+  let c = self.pattern.pattern_at_with_info(point, normal, uv)
+  color(
+    gain_value(bias_value(c.red, self.bias), self.gain),
+    gain_value(bias_value(c.green, self.bias), self.gain),
+    gain_value(bias_value(c.blue, self.bias), self.gain),
+  )
+}
+
+///|
+pub fn bias_gain_pattern(
+  pattern : Pattern,
+  bias? : Double = 0.5,
+  gain? : Double = 0.5,
+) -> Pattern {
+  Pattern::new(BiasGainPattern::{ pattern, bias, gain })
+}
+
+///|
+fn contrast_value(x : Double, contrast : Double, pivot : Double) -> Double {
+  clamp01((clamp01(x) - pivot) * contrast + pivot)
+}
+
+///|
+pub(all) struct ContrastPattern {
+  pattern : Pattern
+  contrast : Double
+  pivot : Double
+}
+
+///|
+pub impl Show for ContrastPattern with output(_self, logger) {
+  logger.write_string("contrast(...)")
+}
+
+///|
+pub impl PatternTrait for ContrastPattern with clone(self) {
+  contrast_pattern(
+    self.pattern.clone(),
+    contrast=self.contrast,
+    pivot=self.pivot,
+  )
+}
+
+///|
+pub impl PatternTrait for ContrastPattern with pattern_at(self, point) {
+  let c = self.pattern.pattern_at(point)
+  color(
+    contrast_value(c.red, self.contrast, self.pivot),
+    contrast_value(c.green, self.contrast, self.pivot),
+    contrast_value(c.blue, self.contrast, self.pivot),
+  )
+}
+
+///|
+pub impl PatternTrait for ContrastPattern with uv_at(self, u, v) {
+  let c = self.pattern.uv_at(u, v)
+  color(
+    contrast_value(c.red, self.contrast, self.pivot),
+    contrast_value(c.green, self.contrast, self.pivot),
+    contrast_value(c.blue, self.contrast, self.pivot),
+  )
+}
+
+///|
+pub impl PatternTrait for ContrastPattern with pattern_at_with_info(
+  self,
+  point,
+  normal,
+  uv,
+) {
+  let c = self.pattern.pattern_at_with_info(point, normal, uv)
+  color(
+    contrast_value(c.red, self.contrast, self.pivot),
+    contrast_value(c.green, self.contrast, self.pivot),
+    contrast_value(c.blue, self.contrast, self.pivot),
+  )
+}
+
+///|
+pub fn contrast_pattern(
+  pattern : Pattern,
+  contrast? : Double = 1.0,
+  pivot? : Double = 0.5,
+) -> Pattern {
+  Pattern::new(ContrastPattern::{ pattern, contrast, pivot })
+}
+
+///|
 pub(all) struct ThresholdPattern {
   pattern : Field
   threshold : Double

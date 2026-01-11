@@ -11,6 +11,8 @@ pub const EPSILON : Double = 0.00001
 
 pub fn area_light(Tuple, Tuple, Int, Tuple, Int, Color) -> Light
 
+pub fn bias_gain_pattern(Pattern, bias? : Double, gain? : Double) -> Pattern
+
 pub let black : Color
 
 pub fn bump_normal_from_pattern(Pattern, Double, Shape, Tuple, Tuple, uv? : (Double, Double)) -> Tuple
@@ -24,6 +26,8 @@ pub fn checkers_pattern(Array[Color]) -> Pattern
 pub fn color(Double, Double, Double) -> Color
 
 pub fn cone(minimum? : Double, maximum? : Double, closed? : Bool) -> Shape
+
+pub fn contrast_pattern(Pattern, contrast? : Double, pivot? : Double) -> Pattern
 
 pub fn csg(Operation, Shape, Shape) -> Shape
 
@@ -183,6 +187,14 @@ pub impl Eq for SceneParseError
 pub impl Show for SceneParseError
 
 // Types and methods
+pub(all) struct BiasGainPattern {
+  pattern : Pattern
+  bias : Double
+  gain : Double
+}
+pub impl PatternTrait for BiasGainPattern
+pub impl Show for BiasGainPattern
+
 pub(all) struct BinaryReader {
   bytes : Bytes
   mut offset : Int
@@ -305,6 +317,14 @@ pub(all) struct Cone {
 pub impl Object for Cone
 pub impl Eq for Cone
 pub impl Show for Cone
+
+pub(all) struct ContrastPattern {
+  pattern : Pattern
+  contrast : Double
+  pivot : Double
+}
+pub impl PatternTrait for ContrastPattern
+pub impl Show for ContrastPattern
 
 pub(all) struct Cube {
 }
