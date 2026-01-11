@@ -43,7 +43,7 @@ pub fn smooth_triangle_uv(
   let du2 = uv3.0 - uv1.0
   let dv2 = uv3.1 - uv1.1
   let denom = du1 * dv2 - du2 * dv1
-  let (tangent_u0, tangent_v0) = if denom.abs() < 1.0e-12 {
+  let (tangent_u0, tangent_v0) = if denom.abs() < 1.e-12 {
     let up = if geom_normal.y.abs() < 0.9 {
       vector(0, 1, 0)
     } else {
@@ -149,7 +149,7 @@ pub fn smooth_triangle_uv_with_tangents(
   let e2 = p3 - p1
   let geom_normal = e2.cross(e1).normalize()
   let mut tangent_u = tangent_u0
-  if tangent_u.magnitude() < 1.0e-12 {
+  if tangent_u.magnitude() < 1.e-12 {
     let up = if geom_normal.y.abs() < 0.9 {
       vector(0, 1, 0)
     } else {
@@ -158,7 +158,7 @@ pub fn smooth_triangle_uv_with_tangents(
     tangent_u = geom_normal.cross(up).normalize()
   }
   tangent_u = (tangent_u - geom_normal.mul_scalar(geom_normal.dot(tangent_u))).normalize()
-  if tangent_u.magnitude() < 1.0e-12 {
+  if tangent_u.magnitude() < 1.e-12 {
     let up = if geom_normal.y.abs() < 0.9 {
       vector(0, 1, 0)
     } else {
@@ -167,13 +167,13 @@ pub fn smooth_triangle_uv_with_tangents(
     tangent_u = geom_normal.cross(up).normalize()
   }
   let mut tangent_v = tangent_v0
-  if tangent_v.magnitude() < 1.0e-12 {
+  if tangent_v.magnitude() < 1.e-12 {
     tangent_v = geom_normal.cross(tangent_u)
   }
   tangent_v = (tangent_v -
   geom_normal.mul_scalar(geom_normal.dot(tangent_v)) -
   tangent_u.mul_scalar(tangent_u.dot(tangent_v))).normalize()
-  if tangent_v.magnitude() < 1.0e-12 {
+  if tangent_v.magnitude() < 1.e-12 {
     tangent_v = geom_normal.cross(tangent_u).normalize()
   }
   Shape::new(

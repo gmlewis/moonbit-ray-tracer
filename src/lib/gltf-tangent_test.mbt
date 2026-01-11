@@ -294,10 +294,10 @@ async test "GLB TANGENT attribute is used for tangent basis" {
   let e2 = p3 - p1
   let n = e2.cross(e1).normalize()
   let t = t1 + t2 + t3
-  assert_true(t.magnitude() > 1.0e-12)
+  assert_true(t.magnitude() > 1.e-12)
   let mut tu = t.normalize()
   tu = (tu - n.mul_scalar(n.dot(tu))).normalize()
-  assert_true(tu.magnitude() > 1.0e-12)
+  assert_true(tu.magnitude() > 1.e-12)
   let s = s1 + s2 + s3
   let sign = if s < 0.0 { -1.0 } else { 1.0 }
   let tv = n.cross(tu).mul_scalar(sign).normalize()

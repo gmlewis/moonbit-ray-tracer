@@ -359,7 +359,7 @@ test "parse material with normal_pattern affects lighting" {
 }
 
 ///|
-test "parse error - displacement inline material not supported" {
+test "parse displacement - inline material" {
   let toml_content =
     #|[scene]
     #|name = "Displacement Inline Material Scene"
@@ -377,20 +377,18 @@ test "parse error - displacement inline material not supported" {
     #|type = "sphere"
     #|material = { displacement_pattern = "h", displacement_strength = 1.0 }
     #|
-  try {
-    let _scene = @lib.parse_scene(toml_content)
-    inspect("should_fail", content="correctly_failed")
-  } catch {
-    e => {
-      let msg = e.to_string()
-      let ok = msg.contains("displacement is not supported")
-      inspect(ok, content="true")
-    }
+  let scene = @lib.parse_scene(toml_content)
+  inspect(scene.world.shapes.length(), content="1")
+  let s = scene.world.shapes[0]
+  inspect(s.material.displacement_strength, content="1")
+  match s.material.displacement_pattern {
+    Some(_) => ()
+    None => abort("expected displacement_pattern to be resolved")
   }
 }
 
 ///|
-test "parse error - displacement referenced material not supported" {
+test "parse displacement - referenced material" {
   let toml_content =
     #|[scene]
     #|name = "Displacement Ref Material Scene"
@@ -411,15 +409,13 @@ test "parse error - displacement referenced material not supported" {
     #|type = "sphere"
     #|material = "disp"
     #|
-  try {
-    let _scene = @lib.parse_scene(toml_content)
-    inspect("should_fail", content="correctly_failed")
-  } catch {
-    e => {
-      let msg = e.to_string()
-      let ok = msg.contains("displacement is not supported")
-      inspect(ok, content="true")
-    }
+  let scene = @lib.parse_scene(toml_content)
+  inspect(scene.world.shapes.length(), content="1")
+  let s = scene.world.shapes[0]
+  inspect(s.material.displacement_strength, content="1")
+  match s.material.displacement_pattern {
+    Some(_) => ()
+    None => abort("expected displacement_pattern to be resolved")
   }
 }
 

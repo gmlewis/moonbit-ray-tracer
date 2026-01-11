@@ -141,12 +141,31 @@ pub fn Intersection::prepare_computations(
   }
   let t = self.t
   let shape = self.shape
-  let point = ray.position(t)
+  let mut point = ray.position(t)
   let eyev = -ray.direction
   let mut normalv = shape.normal_at(point, hit=Some(self))
   let inside = normalv.dot(eyev) < 0
   if inside {
     normalv = -normalv
+  }
+
+  // Optional displacement mapping: offset the hit point along the (possibly
+  // flipped) geometric normal. This is a simple shading-time displacement and
+  // does not change silhouette (no tessellation).
+  match shape.material.displacement_pattern {
+    Some(pat) => {
+      let strength = shape.material.displacement_strength
+      if strength != 0.0 {
+        let uv = if self.has_uv { Some((self.uv_u, self.uv_v)) } else { None }
+        let h = pat
+          .pattern_at_shape(shape, point, normal=normalv, uv?)
+          .luminance()
+        // Map height [0,1] to displacement [-strength,+strength].
+        let disp = (h - 0.5) * 2.0 * strength
+        point = point + normalv.mul_scalar(disp)
+      }
+    }
+    None => ()
   }
   let delta = normalv.mul_scalar(EPSILON)
   let over_point = point + delta

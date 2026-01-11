@@ -204,16 +204,6 @@ fn apply_material_and_transform(
       None => ()
     }
   }
-
-  // Displacement mapping is planned but not yet implemented (needs a
-  // tessellation strategy). Keep parsing/plumbing in place, but fail fast if a
-  // scene tries to enable it.
-  if shape.material.displacement_strength != 0.0 ||
-    shape.material.displacement_pattern is Some(_) {
-    raise SceneParseError(
-      "Material displacement is not supported yet. Remove displacement_pattern / displacement_strength.",
-    )
-  }
   apply_transform(shape, object_table)
 
   // Handle group and CSG children material propagation.

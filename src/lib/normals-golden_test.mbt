@@ -82,7 +82,7 @@ async test "Golden normals probe (GLB mesh)" {
   let dg = (c0.green - c1.green).abs()
   let db = (c0.blue - c1.blue).abs()
   let dmax = @cmp.maximum(dr, @cmp.maximum(dg, db))
-  assert_true(dmax > 1.0e-4)
+  assert_true(dmax > 1.e-4)
 }
 
 ///|

@@ -204,7 +204,7 @@ pub fn bump_normal_from_pattern(
   // object axes.
   // Larger step makes the numerical gradient much more visible and less
   // likely to vanish due to extremely smooth / quantized height functions.
-  let eps = 1.0e-2
+  let eps = 1.e-2
   let op = shape.world_to_object(position)
   let obj_normal = shape.world_normal_to_object(geometric_normalv)
 

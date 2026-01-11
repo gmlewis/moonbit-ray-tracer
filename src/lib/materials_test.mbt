@@ -131,9 +131,9 @@ test "Bump mapping perturbs sphere normal (deterministic)" {
   // ramp should tilt the normal toward -X (negative x component).
   let bumped = bump_normal_from_pattern(rampx_pattern(), 10.0, shape, wp, gn)
   assert_eq(bumped == gn, false)
-  assert_eq(bumped.x < -1.0e-4, true)
+  assert_eq(bumped.x < -1.e-4, true)
   // Must still be a unit vector.
-  assert_true((bumped.magnitude() - 1.0).abs() < 1.0e-6)
+  assert_true((bumped.magnitude() - 1.0).abs() < 1.e-6)
 }
 
 ///|

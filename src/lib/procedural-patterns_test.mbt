@@ -94,7 +94,7 @@ test "voronoi f1/f2/f2-f1 outputs are consistent" {
   // f2-f1 should be close to the difference when unclamped.
   // (Edge cases clamp to [0,1], so allow a small tolerance.)
   let diff = c2.red - c1.red
-  assert_true((cd.red - diff).abs() < 1.0e-6 || cd.red == 0.0 || cd.red == 1.0)
+  assert_true((cd.red - diff).abs() < 1.e-6 || cd.red == 0.0 || cd.red == 1.0)
 
   // All are grayscale in [0,1].
   assert_true(c1.red >= 0.0 && c1.red <= 1.0)

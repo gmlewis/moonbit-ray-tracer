@@ -953,9 +953,9 @@ fn remap_channel(
   gamma : Double,
 ) -> Double {
   let denom = in_max - in_min
-  let t = if denom.abs() <= 1.0e-12 { 0.0 } else { (x - in_min) / denom }
+  let t = if denom.abs() <= 1.e-12 { 0.0 } else { (x - in_min) / denom }
   let t = clamp01(t)
-  let g = if gamma <= 1.0e-12 { 1.0 } else { gamma }
+  let g = if gamma <= 1.e-12 { 1.0 } else { gamma }
   let t = @math.pow(t, 1.0 / g)
   clamp01(out_min + t * (out_max - out_min))
 }
@@ -1109,7 +1109,7 @@ fn bias_value(x : Double, bias : Double) -> Double {
   let x = clamp01(x)
   // Schlick bias: x^(log(b)/log(0.5))
   let b0 = clamp01(bias)
-  let eps = 1.0e-6
+  let eps = 1.e-6
   let b = if b0 < eps { eps } else if b0 > 1.0 - eps { 1.0 - eps } else { b0 }
   let exp = @math.ln(b) / @math.ln(0.5)
   clamp01(@math.pow(x, exp))
@@ -1504,12 +1504,12 @@ pub impl PatternTrait for TriplanarPattern with pattern_at_with_info(
   let ax0 = normal.x.abs()
   let ay0 = normal.y.abs()
   let az0 = normal.z.abs()
-  let sharp = if self.sharpness <= 1.0e-12 { 1.0 } else { self.sharpness }
+  let sharp = if self.sharpness <= 1.e-12 { 1.0 } else { self.sharpness }
   let ax = @math.pow(ax0, sharp)
   let ay = @math.pow(ay0, sharp)
   let az = @math.pow(az0, sharp)
   let sum = ax + ay + az
-  if sum <= 1.0e-12 {
+  if sum <= 1.e-12 {
     return self.pattern.uv_at(point.x * self.scale, point.y * self.scale)
   }
   let wx = ax / sum

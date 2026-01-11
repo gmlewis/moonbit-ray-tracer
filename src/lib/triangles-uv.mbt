@@ -38,7 +38,7 @@ pub fn triangle_uv(
   let du2 = uv3.0 - uv1.0
   let dv2 = uv3.1 - uv1.1
   let denom = du1 * dv2 - du2 * dv1
-  let (tangent_u0, tangent_v0) = if denom.abs() < 1.0e-12 {
+  let (tangent_u0, tangent_v0) = if denom.abs() < 1.e-12 {
     // Degenerate UV mapping; fall back to an arbitrary basis.
     let up = if normal.y.abs() < 0.9 {
       vector(0, 1, 0)
@@ -134,7 +134,7 @@ pub fn triangle_uv_with_tangents(
   let e2 = p3 - p1
   let normal = e2.cross(e1).normalize()
   let mut tangent_u = tangent_u0
-  if tangent_u.magnitude() < 1.0e-12 {
+  if tangent_u.magnitude() < 1.e-12 {
     // Fall back to an arbitrary basis.
     let up = if normal.y.abs() < 0.9 {
       vector(0, 1, 0)
@@ -144,7 +144,7 @@ pub fn triangle_uv_with_tangents(
     tangent_u = normal.cross(up).normalize()
   }
   tangent_u = (tangent_u - normal.mul_scalar(normal.dot(tangent_u))).normalize()
-  if tangent_u.magnitude() < 1.0e-12 {
+  if tangent_u.magnitude() < 1.e-12 {
     // A near-degenerate projection; fall back again.
     let up = if normal.y.abs() < 0.9 {
       vector(0, 1, 0)
@@ -154,13 +154,13 @@ pub fn triangle_uv_with_tangents(
     tangent_u = normal.cross(up).normalize()
   }
   let mut tangent_v = tangent_v0
-  if tangent_v.magnitude() < 1.0e-12 {
+  if tangent_v.magnitude() < 1.e-12 {
     tangent_v = normal.cross(tangent_u)
   }
   tangent_v = (tangent_v -
   normal.mul_scalar(normal.dot(tangent_v)) -
   tangent_u.mul_scalar(tangent_u.dot(tangent_v))).normalize()
-  if tangent_v.magnitude() < 1.0e-12 {
+  if tangent_v.magnitude() < 1.e-12 {
     tangent_v = normal.cross(tangent_u).normalize()
   }
   Shape::new(

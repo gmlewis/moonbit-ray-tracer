@@ -451,7 +451,7 @@ pub fn GltfData::load_mesh(self : GltfData, mesh_idx : Int) -> Shape {
             let e2 = positions[i3] - positions[i1]
             let n = e2.cross(e1).normalize()
             let t = tangents[i1].0 + tangents[i2].0 + tangents[i3].0
-            let mut tangent_u = if t.magnitude() < 1.0e-12 {
+            let mut tangent_u = if t.magnitude() < 1.e-12 {
               vector(0, 0, 0)
             } else {
               t.normalize()
@@ -600,7 +600,7 @@ pub fn GltfData::load_mesh(self : GltfData, mesh_idx : Int) -> Shape {
             let e2 = positions[i + 2] - positions[i]
             let n = e2.cross(e1).normalize()
             let t = tangents[i].0 + tangents[i + 1].0 + tangents[i + 2].0
-            let mut tangent_u = if t.magnitude() < 1.0e-12 {
+            let mut tangent_u = if t.magnitude() < 1.e-12 {
               vector(0, 0, 0)
             } else {
               t.normalize()

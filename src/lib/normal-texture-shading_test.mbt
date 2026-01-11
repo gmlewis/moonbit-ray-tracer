@@ -123,7 +123,7 @@ async test "GLB normalTexture affects shading" {
     let dg = (c0.green - c1.green).abs()
     let db = (c0.blue - c1.blue).abs()
     let dmax = @cmp.maximum(dr, @cmp.maximum(dg, db))
-    if dmax > 1.0e-4 {
+    if dmax > 1.e-4 {
       any_changed = true
       break
     }
