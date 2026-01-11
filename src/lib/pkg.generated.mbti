@@ -635,6 +635,8 @@ pub(all) struct Material {
   mut pattern : Pattern?
   mut normal_pattern : Pattern?
   mut normal_strength : Double
+  mut displacement_pattern : Pattern?
+  mut displacement_strength : Double
   mut normal_texture : Pattern?
   mut normal_texture_scale : Double
   mut metallic : Double

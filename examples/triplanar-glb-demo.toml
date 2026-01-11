@@ -1,0 +1,82 @@
+# Triplanar on GLB mesh demo
+[scene]
+name = "Triplanar GLB Demo"
+description = "Apply a procedural triplanar pattern to an imported GLB mesh (material override)"
+version = "1.0"
+
+[scene.render]
+width = 800
+height = 600
+samples = 2
+max_bounces = 5
+background = [0.05, 0.05, 0.10]
+divide = 20
+exposure = 1.0
+
+[camera]
+position = [2.2, 1.8, -3.2]
+look_at = [0.0, 0.6, 0.0]
+up = [0.0, 1.0, 0.0]
+field_of_view = 0.6
+
+[[lights]]
+type = "point"
+position = [10.0, 10.0, -10.0]
+intensity = [1.0, 1.0, 1.0]
+
+[[lights]]
+type = "point"
+position = [-10.0, 5.0, -5.0]
+intensity = [0.5, 0.5, 0.8]
+
+# A bold triplanar procedural for meshes (no UV seams)
+[patterns.tri_proc]
+type = "triplanar"
+scale = 1.25
+sharpness = 1.0
+
+[patterns.tri_proc.pattern]
+type = "gradient_map"
+colors = [
+  [0.06, 0.07, 0.10],
+  [0.18, 0.10, 0.45],
+  [0.08, 0.70, 0.92],
+  [0.95, 0.90, 0.35]
+]
+
+[patterns.tri_proc.pattern.pattern]
+type = "fbm"
+seed = 29
+scale = 2.0
+octaves = 5
+
+[materials.triplanar]
+ambient = 0.04
+diffuse = 0.9
+specular = 0.15
+shininess = 80.0
+roughness = 0.6
+metallic = 0.0
+lighting_mode = "pbr"
+pattern = "tri_proc"
+
+[materials.ground]
+color = [0.5, 0.5, 0.5]
+ambient = 0.1
+diffuse = 0.9
+specular = 0.0
+roughness = 0.9
+lighting_mode = "pbr"
+
+[[objects]]
+type = "plane"
+material = "ground"
+transform = { translation = [0.0, -1.0, 0.0] }
+
+# Imported mesh with a scene-assigned material override
+[[objects]]
+type = "gltf"
+file = "examples/assets/Box.glb"
+material = "triplanar"
+transform = { scale = [1.4, 1.4, 1.4], rotation = [0.0, 0.4, 0.0] }
+pattern_transform = { scale = [0.8, 0.8, 0.8] }

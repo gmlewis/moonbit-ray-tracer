@@ -338,6 +338,10 @@ pattern = "checkers"  # Reference to named pattern
 type = "cube"
 [objects.transform]
 translation = [1.0, 0.0, 0.0]
+
+### glTF/OBJ material override
+
+When using `type = "gltf"` or `type = "obj"`, you may set `material = "name"` (or an inline `material = { ... }`) to override the imported materials on the entire model. This is especially useful for applying procedural patterns like `triplanar` to meshes.
 rotation = [0.0, 0.785, 0.0]  # π/4 radians around Y
 scale = [1.0, 2.0, 1.0]
 

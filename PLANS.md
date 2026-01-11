@@ -124,9 +124,9 @@ Goal: keep the system fun for albedo output now, while structuring it so the sam
 Note: image-based tangent-space normal maps are now implemented via glTF `normalTexture` and can also be applied as a material normal texture; procedural height→normal bump mapping remains supported via `normal_pattern` + `normal_strength`.
 
 Success metrics:
-- [ ] A set of WOW example scenes for each new procedural node (clearly demonstrating why it exists)
-- [ ] New nodes are composable via nested inline patterns in TOML
-- [ ] Triplanar makes procedural textures look good on GLTF meshes that lack good UVs
+- [x] A set of WOW example scenes for each new procedural node (clearly demonstrating why it exists)
+- [x] New nodes are composable via nested inline patterns in TOML
+- [x] Triplanar makes procedural textures look good on GLTF meshes that lack good UVs
 
 ### `Graphic` Integration (gmlewis/fonts/draw)
 - [ ] Define scene representation for `Graphic` assets (likely JSON, referenced from TOML)

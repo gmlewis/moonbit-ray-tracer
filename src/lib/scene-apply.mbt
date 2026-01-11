@@ -65,6 +65,27 @@ fn propagate_material(shape : Shape, mat_to_propagate : Material) -> Unit {
 }
 
 ///|
+fn override_material_recursive(
+  shape : Shape,
+  mat_to_override : Material,
+) -> Unit {
+  match shape.object {
+    Group(group) =>
+      for child in group.children {
+        child.material = mat_to_override.clone()
+        override_material_recursive(child, mat_to_override)
+      }
+    CSG(csg) => {
+      csg.left.material = mat_to_override.clone()
+      override_material_recursive(csg.left, mat_to_override)
+      csg.right.material = mat_to_override.clone()
+      override_material_recursive(csg.right, mat_to_override)
+    }
+    _ => ()
+  }
+}
+
+///|
 fn apply_material_and_transform(
   shape : Shape,
   object_table : Map[String, @toml.TomlValue],
@@ -201,5 +222,12 @@ fn apply_material_and_transform(
   let object_type = get_string_required(object_table, "type")
   if object_type == "group" || object_type == "csg" {
     propagate_material(shape, shape.material)
+  }
+
+  // When a glTF/OBJ import is assigned a material in the scene, treat it as an
+  // explicit override of the imported materials.
+  if (object_type == "gltf" || object_type == "obj") &&
+    (has_material_ref || has_material_inline) {
+    override_material_recursive(shape, shape.material)
   }
 }

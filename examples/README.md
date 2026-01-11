@@ -60,6 +60,12 @@ Demonstrates procedural patterns (noise/fBm/marble/wood/voronoi) and compositing
 - Nested inline pattern definitions for compositing
 - Domain warping for more organic results
 
+### [`glb-demo.toml`](glb-demo.toml)
+Demonstrates loading a GLB model.
+
+### [`triplanar-glb-demo.toml`](triplanar-glb-demo.toml)
+Demonstrates overriding a GLB’s materials with a procedural `triplanar` pattern.
+
 ### [`levels-demo.toml`](levels-demo.toml)
 Demonstrates `levels` (remap + gamma shaping) applied to procedural noise.
 
