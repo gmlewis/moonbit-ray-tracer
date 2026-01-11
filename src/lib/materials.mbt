@@ -21,6 +21,7 @@ pub(all) struct Material {
   mut displacement_strength : Double
   mut normal_texture : Pattern?
   mut normal_texture_scale : Double
+  mut normal_texture_texcoord : Int
   mut metallic : Double
   mut roughness : Double
   mut lighting_mode : LightingMode
@@ -43,6 +44,7 @@ pub fn material() -> Material {
   let displacement_strength = 0.0
   let normal_texture = None
   let normal_texture_scale = 1.0
+  let normal_texture_texcoord = 0
   let metallic = 0.0
   let roughness = 0.5
   let lighting_mode = Phong
@@ -62,6 +64,7 @@ pub fn material() -> Material {
     displacement_strength,
     normal_texture,
     normal_texture_scale,
+    normal_texture_texcoord,
     metallic,
     roughness,
     lighting_mode,
@@ -102,6 +105,7 @@ pub fn Material::clone(self : Material) -> Material {
     displacement_strength: self.displacement_strength,
     normal_texture,
     normal_texture_scale: self.normal_texture_scale,
+    normal_texture_texcoord: self.normal_texture_texcoord,
     metallic: self.metallic,
     roughness: self.roughness,
     lighting_mode: self.lighting_mode,
@@ -310,14 +314,24 @@ pub fn Material::lighting(
   normalv : Tuple,
   in_shadow? : Bool = false,
   shape? : Shape? = None,
-  uv? : (Double, Double),
+  uv0? : (Double, Double),
+  uv1? : (Double, Double),
 ) -> Color {
   // Use geometric normal by default for pattern evaluation, and a potentially
   // bumped normal for shading. When a normal map is present, we also feed the
   // bumped normal into pattern evaluation so normal-aware patterns (e.g.
   // triplanar) can reflect the perturbation.
+  let normal_uv = if self.normal_texture_texcoord == 1 {
+    match uv1 {
+      Some(_) => uv1
+      None => uv0
+    }
+  } else {
+    uv0
+  }
   let normalv = match (self.normal_texture, shape) {
-    (Some(nt), Some(shape)) =>
+    (Some(nt), Some(shape)) => {
+      let uv = normal_uv
       normal_from_texture(
         nt,
         self.normal_texture_scale,
@@ -326,10 +340,12 @@ pub fn Material::lighting(
         normalv,
         uv?,
       )
+    }
     _ => normalv
   }
   let shading_normalv = match (self.normal_pattern, shape) {
-    (Some(np), Some(shape)) =>
+    (Some(np), Some(shape)) => {
+      let uv = uv0
       bump_normal_from_pattern(
         np,
         self.normal_strength,
@@ -338,6 +354,7 @@ pub fn Material::lighting(
         normalv,
         uv?,
       )
+    }
     _ => normalv
   }
   let pattern_normalv = match (self.normal_pattern, self.normal_texture) {
@@ -346,8 +363,10 @@ pub fn Material::lighting(
     _ => normalv
   }
   let clr = match (self.pattern, shape) {
-    (Some(pattern), Some(shape)) =>
+    (Some(pattern), Some(shape)) => {
+      let uv = uv0
       pattern.pattern_at_shape(shape, position, normal=pattern_normalv, uv?)
+    }
     _ => self.color
   }
   match self.lighting_mode {

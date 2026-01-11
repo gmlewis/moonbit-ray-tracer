@@ -55,10 +55,13 @@ pub fn World::shade_hit(
 ) -> Color {
 
   // Get surface color including pattern
-  let uv = if comps.has_uv { Some((comps.uv_u, comps.uv_v)) } else { None }
+  let uv0 = if comps.has_uv { Some((comps.uv_u, comps.uv_v)) } else { None }
+  let uv1 = if comps.has_uv1 { Some((comps.uv_u1, comps.uv_v1)) } else { None }
   let clr = match (comps.shape.material.pattern, Some(comps.shape)) {
-    (Some(pattern), Some(shape)) =>
+    (Some(pattern), Some(shape)) => {
+      let uv = uv0
       pattern.pattern_at_shape(shape, comps.point, normal=comps.normalv, uv?)
+    }
     _ => comps.shape.material.color
   }
 
@@ -118,7 +121,8 @@ pub fn World::shade_hit(
           comps.normalv,
           in_shadow~,
           shape=Some(comps.shape),
-          uv?,
+          uv0?,
+          uv1?,
         )
       }
       Area(_, u_steps, _, v_steps) => {
@@ -141,7 +145,8 @@ pub fn World::shade_hit(
                 comps.normalv,
                 in_shadow~,
                 shape=Some(comps.shape),
-                uv?,
+                uv0?,
+                uv1?,
               )
           }
         }

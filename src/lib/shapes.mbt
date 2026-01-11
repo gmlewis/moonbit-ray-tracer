@@ -168,6 +168,20 @@ pub fn Shape::local_intersect(self : Shape, local_ray : Ray) -> Intersections {
           hit.uv_u = uv_u
           hit.uv_v = uv_v
           hit.has_uv = true
+          match (triangle.uv1b, triangle.uv2b, triangle.uv3b) {
+            (Some(uv1b), Some(uv2b), Some(uv3b)) => {
+              let uv_u1 = uv1b.0 * (1.0 - t.1 - t.2) +
+                uv2b.0 * t.1 +
+                uv3b.0 * t.2
+              let uv_v1 = uv1b.1 * (1.0 - t.1 - t.2) +
+                uv2b.1 * t.1 +
+                uv3b.1 * t.2
+              hit.uv_u1 = uv_u1
+              hit.uv_v1 = uv_v1
+              hit.has_uv1 = true
+            }
+            _ => ()
+          }
           hit
         }),
       )
@@ -186,6 +200,20 @@ pub fn Shape::local_intersect(self : Shape, local_ray : Ray) -> Intersections {
           hit.uv_u = uv_u
           hit.uv_v = uv_v
           hit.has_uv = true
+          match (triangle.uv1b, triangle.uv2b, triangle.uv3b) {
+            (Some(uv1b), Some(uv2b), Some(uv3b)) => {
+              let uv_u1 = uv1b.0 * (1.0 - t.1 - t.2) +
+                uv2b.0 * t.1 +
+                uv3b.0 * t.2
+              let uv_v1 = uv1b.1 * (1.0 - t.1 - t.2) +
+                uv2b.1 * t.1 +
+                uv3b.1 * t.2
+              hit.uv_u1 = uv_u1
+              hit.uv_v1 = uv_v1
+              hit.has_uv1 = true
+            }
+            _ => ()
+          }
           hit
         }),
       )

@@ -66,6 +66,9 @@ Demonstrates loading a GLB model.
 ### [`triplanar-glb-demo.toml`](triplanar-glb-demo.toml)
 Demonstrates overriding a GLB’s materials with a procedural `triplanar` pattern.
 
+### [`normal-tangent-mirror-demo.toml`](normal-tangent-mirror-demo.toml)
+Demonstrates using glTF-provided mesh tangents (ATTRIBUTE `TANGENT`) for correct tangent-space normal mapping, including mirrored handedness.
+
 ### [`levels-demo.toml`](levels-demo.toml)
 Demonstrates `levels` (remap + gamma shaping) applied to procedural noise.
 

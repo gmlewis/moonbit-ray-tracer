@@ -91,7 +91,7 @@ Next best thing to address: focus first on the Procedural Texture Library + comp
 - [x] Support glTF `normalTexture` (including scale factor)
 - [x] Generate mesh tangents/bitangents when missing (positions + UVs; orthonormalize against geometric normal)
 - [ ] Optional later: MikkTSpace compatibility for best parity with DCC/glTF tooling
-- [ ] Use glTF-provided tangents when present (ATTRIBUTE `TANGENT`) and ensure parity with common viewers
+- [x] Use glTF-provided tangents when present (ATTRIBUTE `TANGENT`) and ensure parity with common viewers
 - [ ] Respect glTF `texCoord` on normal textures (currently assumes primary UV set)
 - [ ] Add displacement mapping
 - [ ] Implement material layering/blending/masking

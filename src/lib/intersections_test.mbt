@@ -239,8 +239,14 @@ test "prepare_computations preserves UV coordinates and has_uv flag" {
   i.uv_u = 0.2
   i.uv_v = 0.4
   i.has_uv = true
+  i.uv_u1 = 0.6
+  i.uv_v1 = 0.8
+  i.has_uv1 = true
   let comps = i.prepare_computations(r)
   assert_eq(comps.uv_u, 0.2)
   assert_eq(comps.uv_v, 0.4)
   assert_eq(comps.has_uv, true)
+  assert_eq(comps.uv_u1, 0.6)
+  assert_eq(comps.uv_v1, 0.8)
+  assert_eq(comps.has_uv1, true)
 }

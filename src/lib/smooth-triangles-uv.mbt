@@ -9,6 +9,9 @@ pub(all) struct SmoothTriangleUV {
   uv1 : (Double, Double)
   uv2 : (Double, Double)
   uv3 : (Double, Double)
+  uv1b : (Double, Double)?
+  uv2b : (Double, Double)?
+  uv3b : (Double, Double)?
   e1 : Tuple
   e2 : Tuple
   tangent_u : Tuple
@@ -71,6 +74,9 @@ pub fn smooth_triangle_uv(
       uv1,
       uv2,
       uv3,
+      uv1b: None,
+      uv2b: None,
+      uv3b: None,
       e1,
       e2,
       tangent_u,
@@ -78,6 +84,49 @@ pub fn smooth_triangle_uv(
       bounds,
     }),
   )
+}
+
+///|
+pub fn smooth_triangle_uv_with_extra_uv(
+  p1 : Tuple,
+  p2 : Tuple,
+  p3 : Tuple,
+  n1 : Tuple,
+  n2 : Tuple,
+  n3 : Tuple,
+  uv1 : (Double, Double),
+  uv2 : (Double, Double),
+  uv3 : (Double, Double),
+  uv1b : (Double, Double),
+  uv2b : (Double, Double),
+  uv3b : (Double, Double),
+) -> Shape {
+  let s = smooth_triangle_uv(p1, p2, p3, n1, n2, n3, uv1, uv2, uv3)
+  match s.object {
+    SmoothTriangleUV(t) =>
+      Shape::new(
+        SmoothTriangleUV({
+          p1: t.p1,
+          p2: t.p2,
+          p3: t.p3,
+          n1: t.n1,
+          n2: t.n2,
+          n3: t.n3,
+          uv1: t.uv1,
+          uv2: t.uv2,
+          uv3: t.uv3,
+          uv1b: Some(uv1b),
+          uv2b: Some(uv2b),
+          uv3b: Some(uv3b),
+          e1: t.e1,
+          e2: t.e2,
+          tangent_u: t.tangent_u,
+          tangent_v: t.tangent_v,
+          bounds: t.bounds,
+        }),
+      )
+    _ => s
+  }
 }
 
 ///|
@@ -138,6 +187,9 @@ pub fn smooth_triangle_uv_with_tangents(
       uv1,
       uv2,
       uv3,
+      uv1b: None,
+      uv2b: None,
+      uv3b: None,
       e1,
       e2,
       tangent_u,
@@ -145,6 +197,53 @@ pub fn smooth_triangle_uv_with_tangents(
       bounds,
     }),
   )
+}
+
+///|
+pub fn smooth_triangle_uv_with_tangents_and_extra_uv(
+  p1 : Tuple,
+  p2 : Tuple,
+  p3 : Tuple,
+  n1 : Tuple,
+  n2 : Tuple,
+  n3 : Tuple,
+  uv1 : (Double, Double),
+  uv2 : (Double, Double),
+  uv3 : (Double, Double),
+  tangent_u0 : Tuple,
+  tangent_v0 : Tuple,
+  uv1b : (Double, Double),
+  uv2b : (Double, Double),
+  uv3b : (Double, Double),
+) -> Shape {
+  let s = smooth_triangle_uv_with_tangents(
+    p1, p2, p3, n1, n2, n3, uv1, uv2, uv3, tangent_u0, tangent_v0,
+  )
+  match s.object {
+    SmoothTriangleUV(t) =>
+      Shape::new(
+        SmoothTriangleUV({
+          p1: t.p1,
+          p2: t.p2,
+          p3: t.p3,
+          n1: t.n1,
+          n2: t.n2,
+          n3: t.n3,
+          uv1: t.uv1,
+          uv2: t.uv2,
+          uv3: t.uv3,
+          uv1b: Some(uv1b),
+          uv2b: Some(uv2b),
+          uv3b: Some(uv3b),
+          e1: t.e1,
+          e2: t.e2,
+          tangent_u: t.tangent_u,
+          tangent_v: t.tangent_v,
+          bounds: t.bounds,
+        }),
+      )
+    _ => s
+  }
 }
 
 ///|
@@ -164,6 +263,9 @@ pub fn SmoothTriangleUV::clone(self : SmoothTriangleUV) -> SmoothTriangleUV {
     uv1: self.uv1,
     uv2: self.uv2,
     uv3: self.uv3,
+    uv1b: self.uv1b,
+    uv2b: self.uv2b,
+    uv3b: self.uv3b,
     e1: self.e1,
     e2: self.e2,
     tangent_u: self.tangent_u,
