@@ -6,6 +6,7 @@ async fn main {
     "width": @cli.opt_int(0, short='w', help="Override output width"),
     "height": @cli.opt_int(0, short='H', help="Override output height"),
     "samples": @cli.opt_int(0, help="Override samples per pixel"),
+    "debug": @cli.flag(help="Print parsed scene summary (materials/patterns)"),
     "divide": @cli.opt_int(
       0,
       help="Subdivide groups with at least this many children",
@@ -62,6 +63,44 @@ async fn main {
     }
     g.divide(d)
     world.shapes = [g]
+  }
+  if args.flag("debug") {
+    println("--- debug: parsed scene summary ---")
+    fn dump_shape(s : @lib.Shape, indent : String) -> Unit {
+      println("\{indent}id=\{s.id} kind=\{s.object}")
+      println(
+        "\{indent}  material: mode=\{s.material.lighting_mode} color=\{s.material.color}",
+      )
+      println(
+        "\{indent}  material: ambient=\{s.material.ambient} diffuse=\{s.material.diffuse} specular=\{s.material.specular} shininess=\{s.material.shininess}",
+      )
+      println("\{indent}  material: pattern=\{s.material.pattern}")
+      println(
+        "\{indent}  material: normal_pattern=\{s.material.normal_pattern} normal_strength=\{s.material.normal_strength}",
+      )
+      match s.object {
+        Group(g) => {
+          println("\{indent}  children: \{g.children.length()}")
+          let next = indent + "    "
+          for child in g.children {
+            dump_shape(child, next)
+          }
+        }
+        _ => ()
+      }
+    }
+
+    println("name: \"\{parsed_scene.metadata.name}\"")
+    println("scene: \"\{scene_path}\"")
+    println("resolution: \{settings.width}x\{settings.height}")
+    println("samples: \{settings.samples}")
+    println("lights: \{world.lights.length()}")
+    println("shapes: \{world.shapes.length()}")
+    for i in 0..<world.shapes.length() {
+      println("shape[\{i}]:")
+      dump_shape(world.shapes[i], "  ")
+    }
+    println("--- debug: end ---")
   }
 
   // TODO: Implement multi-sampling if settings.samples > 1

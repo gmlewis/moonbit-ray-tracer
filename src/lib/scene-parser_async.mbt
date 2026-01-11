@@ -191,6 +191,10 @@ fn apply_transform(
         Some(pattern) => pattern.set_pattern_transform(transform)
         None => () // No pattern to transform
       }
+      match shape.material.normal_pattern {
+        Some(pattern) => pattern.set_pattern_transform(transform)
+        None => ()
+      }
     }
     _ => ()
   }
@@ -229,7 +233,15 @@ fn apply_material_and_transform(
         shape.material.reflective = mat.reflective
         shape.material.transparency = mat.transparency
         shape.material.refractive_index = mat.refractive_index
-        shape.material.pattern = mat.pattern
+        shape.material.pattern = match mat.pattern {
+          Some(p) => Some(p.clone())
+          None => None
+        }
+        shape.material.normal_pattern = match mat.normal_pattern {
+          Some(p) => Some(p.clone())
+          None => None
+        }
+        shape.material.normal_strength = mat.normal_strength
         shape.material.metallic = mat.metallic
         shape.material.roughness = mat.roughness
         shape.material.lighting_mode = mat.lighting_mode
@@ -249,11 +261,12 @@ fn apply_material_and_transform(
     shape.material.reflective = parsed_material.reflective
     shape.material.transparency = parsed_material.transparency
     shape.material.refractive_index = parsed_material.refractive_index
+    shape.material.normal_strength = parsed_material.normal_strength
     shape.material.metallic = parsed_material.metallic
     shape.material.roughness = parsed_material.roughness
     shape.material.lighting_mode = parsed_material.lighting_mode
     match material_value {
-      @toml.TomlTable(table) =>
+      @toml.TomlTable(table) => {
         match table.get("pattern") {
           Some(@toml.TomlString(pattern_name)) =>
             match patterns.get(pattern_name) {
@@ -265,16 +278,25 @@ fn apply_material_and_transform(
             }
           _ => ()
         }
+        match table.get("normal_pattern") {
+          Some(@toml.TomlString(pattern_name)) =>
+            match patterns.get(pattern_name) {
+              Some(pattern) =>
+                shape.material.normal_pattern = Some(pattern.clone())
+              None =>
+                raise SceneParseError(
+                  "Unknown normal_pattern reference: \{pattern_name}",
+                )
+            }
+          Some(_) =>
+            raise SceneParseError("normal_pattern reference must be a string")
+          None => ()
+        }
+      }
       _ => ()
     }
   }
 
   // Finalize with transforms
   apply_transform(shape, object_table)
-
-  // Handle group and CSG children material propagation
-  let object_type = get_string_required(object_table, "type")
-  if object_type == "group" || object_type == "csg" {
-    propagate_material(shape, shape.material)
-  }
 }
