@@ -11,6 +11,7 @@ The scene format uses TOML (Tom's Obvious, Minimal Language) to describe 3D scen
 - **Lights**: Illumination sources
 - **Materials**: Reusable material definitions
 - **Patterns**: Reusable pattern definitions
+- **Graphics**: Reusable vector-graphics assets (JSON)
 - **Objects**: 3D shapes and their properties
 
 ## File Structure
@@ -322,6 +323,25 @@ colors = [[1.0, 1.0, 1.0], [0.0, 0.0, 0.0]]
 scale = [0.1, 0.1, 0.1]
 rotation = [0.0, 0.785, 0.0]  # π/4 radians around Y
 ```
+
+## Graphics
+
+Scenes may include a `[graphics]` table for loading reusable vector graphics assets.
+
+Each entry references a JSON file containing a serialized `@draw.Graphic` (from `gmlewis/fonts/draw`).
+This is intended as a building block for upcoming `Graphic`-based masks and extrusions.
+
+```toml
+[graphics.logo]
+file = "assets/logo.json"
+
+# Optional 2D transform applied while loading.
+transform = { position = [0.0, 0.0], rotation = 0.0, scale = [1.0, 1.0], skew = 0.0, origin = [0.0, 0.0] }
+```
+
+Notes:
+- `file` is loaded in `parse_scene_file` (the `render` CLI path). The string-only `parse_scene` helper does not load graphics.
+- The JSON format is exactly what `@draw.Graphic::to_json().stringify()` produces.
 
 ## Objects
 

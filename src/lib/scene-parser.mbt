@@ -12,6 +12,7 @@ pub(all) struct ParsedScene {
   render_settings : RenderSettings
   metadata : SceneMetadata
   templates : Map[String, Shape]
+  graphics : Map[String, @draw.Graphic]
 }
 
 ///|
@@ -853,6 +854,11 @@ pub fn parse_scene(toml_content : String) -> ParsedScene raise SceneParseError {
     @toml.TomlTable(table) => table
     _ => raise SceneParseError("Root must be a table")
   }
+  if root_table.get("graphics") is Some(_) {
+    raise SceneParseError(
+      "graphics loading is only supported in async parse_scene_file",
+    )
+  }
 
   // Parse metadata
   let metadata = parse_scene_metadata(root_table)
@@ -892,7 +898,7 @@ pub fn parse_scene(toml_content : String) -> ParsedScene raise SceneParseError {
     g.divide(render_settings.divide)
     world.shapes = [g]
   }
-  { world, camera, render_settings, metadata, templates }
+  { world, camera, render_settings, metadata, templates, graphics: Map::new() }
 }
 
 ///|
@@ -922,7 +928,8 @@ pub async fn parse_scene_file(
 
   // Parse materials and patterns first (needed for objects)
   let materials = parse_materials(root_table)
-  let patterns = parse_patterns_with_io(root_table)
+  let graphics = parse_graphics_with_io(root_table)
+  let patterns = parse_patterns_with_io(root_table, graphics)
 
   // Resolve material patterns
   resolve_material_patterns(root_table, materials, patterns)
@@ -947,7 +954,7 @@ pub async fn parse_scene_file(
   // Parse environment map
   match root_table.get("environment") {
     Some(env_value) => {
-      let env_pattern = parse_pattern_with_io(env_value)
+      let env_pattern = parse_pattern_with_io(env_value, graphics)
       world.environment_map = Some(env_pattern)
     }
     None => ()
@@ -962,12 +969,117 @@ pub async fn parse_scene_file(
     println("World divided.")
     world.shapes = [g]
   }
-  { world, camera, render_settings, metadata, templates }
+  { world, camera, render_settings, metadata, templates, graphics }
+}
+
+///|
+async fn parse_graphics_with_io(
+  root : Map[String, @toml.TomlValue],
+) -> Map[String, @draw.Graphic] raise SceneParseError {
+  let graphics = Map::new()
+  match root.get("graphics") {
+    Some(@toml.TomlTable(graphics_table)) => {
+      let keys = []
+      graphics_table.each(fn(name, _) { keys.push(name) })
+      for name in keys {
+        let value = graphics_table.get(name).unwrap()
+        graphics.set(name, parse_graphic_with_io(value))
+      }
+    }
+    Some(_) => raise SceneParseError("graphics section must be a table")
+    None => ()
+  }
+  graphics
+}
+
+///|
+async fn parse_graphic_with_io(
+  value : @toml.TomlValue,
+) -> @draw.Graphic raise SceneParseError {
+  let table = match value {
+    @toml.TomlTable(t) => t
+    _ => raise SceneParseError("graphic must be a table")
+  }
+  let file = get_string_required(table, "file")
+  let json_str = @fs.read_file(file).text() catch {
+    e => raise SceneParseError("Failed to read graphic file \{file}: \{e}")
+  }
+  let json_val = @json.parse(json_str) catch {
+    e => raise SceneParseError("Failed to parse graphic JSON \{file}: \{e}")
+  }
+  let graphic : @draw.Graphic = @json.from_json(json_val) catch {
+    e => raise SceneParseError("Failed to decode graphic JSON \{file}: \{e}")
+  }
+  match table.get("transform") {
+    Some(transform_value) => {
+      let (position, rotation, scale, skew, origin) = parse_graphic_transform(
+        transform_value,
+      )
+      graphic.transform(position~, rotation~, scale~, skew~, origin~)
+    }
+    None => graphic
+  }
+}
+
+///|
+fn parse_graphic_transform(
+  value : @toml.TomlValue,
+) -> (@draw.Vec2, Double, @draw.Vec2, Double, @draw.Vec2) raise SceneParseError {
+  let table = match value {
+    @toml.TomlTable(t) => t
+    _ => raise SceneParseError("graphic.transform must be a table")
+  }
+  fn parse_vec2(
+    value : @toml.TomlValue,
+    key : String,
+  ) -> @draw.Vec2 raise SceneParseError {
+    match value {
+      @toml.TomlArray(arr) if arr.length() == 2 => {
+        let x = match arr[0] {
+          @toml.TomlFloat(f) => f
+          @toml.TomlInteger(i) => i.to_double()
+          _ =>
+            raise SceneParseError(
+              "graphic.transform.\{key}[0] must be a number",
+            )
+        }
+        let y = match arr[1] {
+          @toml.TomlFloat(f) => f
+          @toml.TomlInteger(i) => i.to_double()
+          _ =>
+            raise SceneParseError(
+              "graphic.transform.\{key}[1] must be a number",
+            )
+        }
+        @draw.vec2(x, y)
+      }
+      @toml.TomlArray(_) =>
+        raise SceneParseError("graphic.transform.\{key} must have 2 elements")
+      _ => raise SceneParseError("graphic.transform.\{key} must be an array")
+    }
+  }
+
+  let position = match table.get("position") {
+    Some(v) => parse_vec2(v, "position")
+    None => @draw.vec2(0, 0)
+  }
+  let rotation = get_float_or_default(table, "rotation", 0.0)
+  let scale = match table.get("scale") {
+    Some(v) => parse_vec2(v, "scale")
+    None => @draw.vec2(1, 1)
+  }
+  let skew = get_float_or_default(table, "skew", 0.0)
+  let origin = match table.get("origin") {
+    Some(v) => parse_vec2(v, "origin")
+    None => @draw.vec2(0, 0)
+  }
+  (position, rotation, scale, skew, origin)
 }
 
 ///|
 async fn parse_patterns_with_io(
   root : Map[String, @toml.TomlValue],
+  graphics : Map[String, @draw.Graphic],
 ) -> Map[String, Pattern] raise SceneParseError {
   let patterns = Map::new()
   match root.get("patterns") {
@@ -976,7 +1088,7 @@ async fn parse_patterns_with_io(
       patterns_table.each(fn(name, _) { keys.push(name) })
       for name in keys {
         let pattern_value = patterns_table.get(name).unwrap()
-        let pattern = parse_pattern_with_io(pattern_value)
+        let pattern = parse_pattern_with_io(pattern_value, graphics)
         patterns.set(name, pattern)
       }
     }
@@ -989,6 +1101,7 @@ async fn parse_patterns_with_io(
 ///|
 async fn parse_pattern_with_io(
   value : @toml.TomlValue,
+  graphics : Map[String, @draw.Graphic],
 ) -> Pattern raise SceneParseError {
   let pattern_table = match value {
     @toml.TomlTable(table) => table
@@ -1021,6 +1134,31 @@ async fn parse_pattern_with_io(
     }
     let pattern = texture(canvas, mapping~)
     // Apply pattern transform if specified
+    match pattern_table.get("transform") {
+      Some(transform_value) => {
+        let transform = parse_transform(transform_value)
+        pattern.set_pattern_transform(transform)
+      }
+      None => ()
+    }
+    return pattern
+  }
+  if pattern_type == "graphic_mask" {
+    let name = get_string_required(pattern_table, "graphic")
+    let graphic = match graphics.get(name) {
+      Some(g) => g.clone()
+      None => raise SceneParseError("Unknown graphic: \{name}")
+    }
+    let style = get_bool_or_default(pattern_table, "style", false)
+    let inside = match pattern_table.get("inside") {
+      Some(v) => parse_color(v)
+      None => color(1, 1, 1)
+    }
+    let outside = match pattern_table.get("outside") {
+      Some(v) => parse_color(v)
+      None => color(0, 0, 0)
+    }
+    let pattern = graphic_mask_pattern(graphic, inside~, outside~, style~)
     match pattern_table.get("transform") {
       Some(transform_value) => {
         let transform = parse_transform(transform_value)

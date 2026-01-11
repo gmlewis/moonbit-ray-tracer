@@ -1,5 +1,6 @@
 {
   "import": [
+    "gmlewis/fonts/draw",
     "gmlewis/image",
     "gmlewis/image/color",
     "gmlewis/image/jpeg",

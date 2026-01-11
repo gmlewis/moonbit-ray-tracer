@@ -1,0 +1,22 @@
+[scene]
+name = "Graphic Mask Scene"
+
+[camera]
+position = [0.0, 0.0, -5.0]
+look_at = [0.0, 0.0, 0.0]
+up = [0.0, 1.0, 0.0]
+field_of_view = 1.047
+
+[graphics.square]
+file = "src/lib/testdata/unit-square.json"
+
+[patterns.square_mask]
+type = "graphic_mask"
+graphic = "square"
+
+[materials.masked]
+pattern = "square_mask"
+
+[[objects]]
+type = "sphere"
+material = "masked"
