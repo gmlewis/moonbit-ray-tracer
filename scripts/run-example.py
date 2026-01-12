@@ -64,6 +64,8 @@ def main(argv: list[str]) -> int:
     cmd = [
         "moon",
         "run",
+        "--target",
+        "native",
         "src/render",
         "--",
         "-s",

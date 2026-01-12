@@ -29,6 +29,7 @@
 ./scripts/run-example.py glass-spheres
 ./scripts/run-example.py glb-demo
 ./scripts/run-example.py gradient-map-demo
+./scripts/run-example.py graphic-mask-demo
 ./scripts/run-example.py levels-demo
 ./scripts/run-example.py mask-demo
 ./scripts/run-example.py material-layer-demo

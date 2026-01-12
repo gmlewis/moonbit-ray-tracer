@@ -129,12 +129,16 @@ Success metrics:
 - [x] Triplanar makes procedural textures look good on GLTF meshes that lack good UVs
 
 ### `Graphic` Integration (gmlewis/fonts/draw)
-- [ ] Define scene representation for `Graphic` assets (likely JSON, referenced from TOML)
-- [ ] Add loader that reads a `Graphic` asset and applies transforms/scaling
-- [ ] Decide on scene authoring approach for complex `Graphic` generation (keep TOML for declarative scenes; optionally add a MoonBit “scene/asset generator” that outputs JSON/TOML)
-- [ ] Implement `Graphic`-based mask pattern (inside/outside + optional antialiasing)
-- [ ] Allow masking between two patterns (solid color or any procedural texture)
-- [ ] Support nested masks (embed one procedural texture “inside” another via `Graphic`)
+- [x] Define scene representation for `Graphic` assets (JSON, referenced from TOML)
+- [x] Add loader that reads a `Graphic` asset and applies transforms/scaling
+- [x] Provide an authoring approach for `Graphic` generation (scripts/render-to-json.py + scripts/render-to-svg.py)
+- [x] Implement `Graphic`-based mask pattern (inside/outside)
+- [x] Allow masking between two patterns (solid color or any procedural texture)
+- [x] Support nested masks (pattern graphs can nest `graphic_mask` under `mix.mask`)
+- [x] Add `graphics.<name>.fit` to auto-scale/center Graphics (no transform guesswork)
+- [x] Optimize `graphic_mask` broad-phase rejection (overall/profile bbox culling)
+- [ ] Investigate area light specular “grid” artifact (jitter/stratify area-light sampling for specular highlights)
+- [ ] Investigate unexpected orange tint/color bleeding in demo renders (material/reflection interactions)
 - [ ] Implement `Graphic` extrusion to solid geometry (profiles → triangulation + side walls)
 - [ ] Add UV mapping strategies for extruded graphics (planar + configurable mapping)
 - [ ] Add example scenes: extruded logo/text; masked decal on another surface

@@ -554,6 +554,8 @@ pub impl Show for GradientRingPattern
 pub(all) struct GraphicMaskPattern {
   graphic : @draw.Graphic
   profiles : Array[(Array[@geom.Vec2], Array[Array[@geom.Vec2]])]
+  overall_bbox : (@geom.Vec2, @geom.Vec2)?
+  profile_bboxes : Array[(@geom.Vec2, @geom.Vec2)]
   curve_segments : Int
   inside : Color
   outside : Color

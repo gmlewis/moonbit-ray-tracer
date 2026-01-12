@@ -108,6 +108,15 @@ Demonstrates blending two full materials using `layer_material` + `layer_mask`.
 ### [`mask-demo.toml`](mask-demo.toml)
 Demonstrates using any pattern graph as a **mask** (scalar field) to drive `mix`.
 
+### [`graphic-mask-demo.toml`](graphic-mask-demo.toml)
+Demonstrates loading a `gmlewis/fonts/draw` `Graphic` from JSON and using it as a crisp vector mask.
+
+Regenerate the demo asset (from the gmlewis/fonts repo):
+
+```bash
+echo "MoonBit Render Test" | ./scripts/render-to-json.py -o examples/assets/moonbit-bloom.json
+```
+
 ### [`warp-field-demo.toml`](warp-field-demo.toml)
 Demonstrates using any pattern graph as a **warp field** (vector-ish RGB) to drive domain warping.
 

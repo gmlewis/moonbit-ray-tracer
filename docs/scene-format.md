@@ -335,6 +335,10 @@ This is intended as a building block for upcoming `Graphic`-based masks and extr
 [graphics.logo]
 file = "assets/logo.json"
 
+# Optional: auto-fit the Graphic to a target size/center (in the Graphic's 2D units).
+# This is applied before `transform`.
+fit = { center = [0.0, 0.0], size = [4.0, 4.0], mode = "contain" }
+
 # Optional 2D transform applied while loading.
 transform = { position = [0.0, 0.0], rotation = 0.0, scale = [1.0, 1.0], skew = 0.0, origin = [0.0, 0.0] }
 ```
@@ -342,6 +346,11 @@ transform = { position = [0.0, 0.0], rotation = 0.0, scale = [1.0, 1.0], skew = 
 Notes:
 - `file` is loaded in `parse_scene_file` (the `render` CLI path). The string-only `parse_scene` helper does not load graphics.
 - The JSON format is exactly what `@draw.Graphic::to_json().stringify()` produces.
+
+`fit.mode`:
+- `contain` (default): preserve aspect ratio; fits inside `size`.
+- `cover`: preserve aspect ratio; fills `size` (may crop).
+- `stretch`: non-uniform scale to exactly match `size`.
 
 ## Objects
 

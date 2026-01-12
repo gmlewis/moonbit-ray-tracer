@@ -9,6 +9,8 @@
 pub(all) struct GraphicMaskPattern {
   graphic : @draw.Graphic
   profiles : Array[(Array[@draw.Vec2], Array[Array[@draw.Vec2]])]
+  overall_bbox : (@draw.Vec2, @draw.Vec2)?
+  profile_bboxes : Array[(@draw.Vec2, @draw.Vec2)]
   curve_segments : Int
   inside : Color
   outside : Color
@@ -75,14 +77,105 @@ pub fn graphic_mask_pattern(
   // Note: `gmlewis/fonts/draw` currently has `contains_point` unimplemented on
   // Path/CompoundPath, so we build polygon profiles and use point-in-polygon.
   let profiles = graphic.to_profiles(curve_segments)
+  let overall_bbox = bbox_for_profiles(profiles)
+  let profile_bboxes = profiles.map(fn(profile) {
+    let outer = profile.0
+    bbox_for_poly(outer)
+  })
   Pattern::new(GraphicMaskPattern::{
     graphic,
     profiles,
+    overall_bbox,
+    profile_bboxes,
     curve_segments,
     inside,
     outside,
     style,
   })
+}
+
+///|
+fn bbox_for_profiles(
+  profiles : Array[(Array[@draw.Vec2], Array[Array[@draw.Vec2]])],
+) -> (@draw.Vec2, @draw.Vec2)? {
+  if profiles.length() == 0 {
+    return None
+  }
+  let first_outer = profiles[0].0
+  if first_outer.length() == 0 {
+    return None
+  }
+  let first = first_outer[0]
+  let mut minx = first.x
+  let mut miny = first.y
+  let mut maxx = first.x
+  let mut maxy = first.y
+  for profile in profiles {
+    let outer = profile.0
+    let holes = profile.1
+    for p in outer {
+      if p.x < minx {
+        minx = p.x
+      }
+      if p.y < miny {
+        miny = p.y
+      }
+      if p.x > maxx {
+        maxx = p.x
+      }
+      if p.y > maxy {
+        maxy = p.y
+      }
+    }
+    for hole in holes {
+      for p in hole {
+        if p.x < minx {
+          minx = p.x
+        }
+        if p.y < miny {
+          miny = p.y
+        }
+        if p.x > maxx {
+          maxx = p.x
+        }
+        if p.y > maxy {
+          maxy = p.y
+        }
+      }
+    }
+  }
+  Some((@draw.vec2(minx, miny), @draw.vec2(maxx, maxy)))
+}
+
+///|
+fn bbox_for_poly(poly : Array[@draw.Vec2]) -> (@draw.Vec2, @draw.Vec2) {
+  // Assume non-empty polygons.
+  let first = poly[0]
+  let mut minx = first.x
+  let mut miny = first.y
+  let mut maxx = first.x
+  let mut maxy = first.y
+  for p in poly {
+    if p.x < minx {
+      minx = p.x
+    }
+    if p.y < miny {
+      miny = p.y
+    }
+    if p.x > maxx {
+      maxx = p.x
+    }
+    if p.y > maxy {
+      maxy = p.y
+    }
+  }
+  (@draw.vec2(minx, miny), @draw.vec2(maxx, maxy))
+}
+
+///|
+fn bbox_contains_pt(bbox : (@draw.Vec2, @draw.Vec2), pt : @draw.Vec2) -> Bool {
+  let (minp, maxp) = bbox
+  pt.x >= minp.x && pt.x <= maxp.x && pt.y >= minp.y && pt.y <= maxp.y
 }
 
 ///|
@@ -92,9 +185,22 @@ fn GraphicMaskPattern::graphic_profiles_contain_point(
 ) -> Bool {
   // `style` is reserved for future (stroke/fill-aware masks).
   let _style = self.style
-  for profile in self.profiles {
+
+  // Fast reject: most points are outside the overall graphic bounds.
+  match self.overall_bbox {
+    Some(bbox) => if not(bbox_contains_pt(bbox, pt)) { return false }
+    None => ()
+  }
+
+  // Profile-level bbox rejects avoid expensive point-in-polygon calls.
+  for i in 0..<self.profiles.length() {
+    let profile = self.profiles[i]
     let outer = profile.0
     let holes = profile.1
+    let bbox = self.profile_bboxes[i]
+    if not(bbox_contains_pt(bbox, pt)) {
+      continue
+    }
     if @draw.is_point_in_poly(pt, outer) {
       let mut in_hole = false
       for hole in holes {

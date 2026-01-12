@@ -1,0 +1,126 @@
+# Graphic mask demo (vector mask drives pattern mixing)
+[scene]
+name = "Graphic Mask Demo"
+description = "Uses a gmlewis/fonts/draw Graphic as a crisp mask on a floor plane"
+version = "1.0"
+
+[scene.render]
+width = 900
+height = 520
+samples = 2
+max_bounces = 4
+background = [0.06, 0.06, 0.08]
+
+[camera]
+position = [0.0, 2.6, -8.8]
+look_at = [0.0, 1.0, 1.2]
+up = [0.0, 1.0, 0.0]
+field_of_view = 0.785
+
+# Soft key light + a couple of fill lights
+[[lights]]
+type = "area"
+position = [-3.5, 7.0, -4.5]
+u_vec = [7.0, 0.0, 0.0]
+u_steps = 3
+v_vec = [0.0, 0.0, 7.0]
+v_steps = 3
+intensity = [1.2, 1.2, 1.2]
+
+[[lights]]
+type = "point"
+position = [6.5, 4.5, -4.0]
+intensity = [0.55, 0.55, 0.65]
+
+[[lights]]
+type = "point"
+position = [0.0, 6.0, 6.0]
+intensity = [0.40, 0.40, 0.50]
+
+# Vector graphic asset
+[graphics.bloom]
+file = "examples/assets/moonbit-bloom.json"
+# Auto-fit: scale + center the Graphic in world units (no guesswork).
+# The mask uses world (x,z) as (u,v), so a 4x4 fit yields a ~4-unit medallion.
+fit = { center = [0.0, 0.0], size = [4.0, 4.0], mode = "contain" }
+
+
+# Patterns
+# Final: mix base vs fill using the vector mask.
+[patterns.floor_mix]
+type = "mix"
+
+[patterns.floor_mix.a]
+type = "checkers"
+colors = [
+  [0.06, 0.06, 0.07],
+  [0.06, 0.06, 0.07],
+]
+
+[patterns.floor_mix.b]
+type = "stripes"
+colors = [
+  [0.10, 0.85, 0.95],
+  [0.95, 0.25, 0.85],
+]
+
+[patterns.floor_mix.mask]
+type = "graphic_mask"
+graphic = "bloom"
+curve_segments = 24
+inside = [1.0, 1.0, 1.0]
+outside = [0.0, 0.0, 0.0]
+
+# Scale the mask so it sits nicely under the objects.
+[patterns.floor_mix.mask.transform]
+scale = [1.0, 1.0, 1.0]
+
+
+# Materials
+[materials.floor]
+ambient = 0.25
+diffuse = 0.90
+specular = 0.06
+shininess = 80.0
+reflective = 0.01
+pattern = "floor_mix"
+
+[materials.wall]
+color = [0.10, 0.10, 0.12]
+ambient = 0.15
+diffuse = 0.85
+specular = 0.05
+shininess = 40.0
+
+[materials.metal]
+lighting_mode = "pbr"
+color = [0.95, 0.78, 0.25]
+metallic = 1.0
+roughness = 0.18
+
+
+# Objects
+[[objects]]
+type = "plane"
+material = "floor"
+
+[[objects]]
+type = "plane"
+material = "wall"
+transform = { translation = [0.0, 0.0, 7.0], rotation = [1.571, 0.0, 0.0] }
+
+# A couple of objects to cast soft shadows across the masked graphic.
+[[objects]]
+type = "sphere"
+material = { color = [0.92, 0.92, 0.96], ambient = 0.05, diffuse = 0.90, specular = 0.12, shininess = 120.0 }
+transform = { translation = [-1.7, 1.05, 0.5] }
+
+[[objects]]
+type = "sphere"
+material = "metal"
+transform = { translation = [1.8, 1.05, 1.6], scale = [1.05, 1.05, 1.05] }
+
+[[objects]]
+type = "cube"
+material = { color = [0.85, 0.20, 0.12], ambient = 0.05, diffuse = 0.9, specular = 0.2, shininess = 120.0 }
+transform = { translation = [0.0, 0.6, 2.6], scale = [0.7, 0.7, 0.7], rotation = [0.0, 0.65, 0.0] }

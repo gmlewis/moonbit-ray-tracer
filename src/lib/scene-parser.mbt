@@ -1010,12 +1010,113 @@ async fn parse_graphic_with_io(
   let graphic : @draw.Graphic = @json.from_json(json_val) catch {
     e => raise SceneParseError("Failed to decode graphic JSON \{file}: \{e}")
   }
+
+  // Optional auto-fit (normalize to a target size/center) before user transform.
+  let fitted = match table.get("fit") {
+    Some(fit_value) => fit_graphic(graphic, fit_value)
+    None => graphic
+  }
   match table.get("transform") {
     Some(transform_value) => {
       let (position, rotation, scale, skew, origin) = parse_graphic_transform(
         transform_value,
       )
-      graphic.transform(position~, rotation~, scale~, skew~, origin~)
+      fitted.transform(position~, rotation~, scale~, skew~, origin~)
+    }
+    None => fitted
+  }
+}
+
+///|
+fn fit_graphic(
+  graphic : @draw.Graphic,
+  value : @toml.TomlValue,
+) -> @draw.Graphic raise SceneParseError {
+  let table = match value {
+    @toml.TomlTable(t) => t
+    _ => raise SceneParseError("graphic.fit must be a table")
+  }
+  fn parse_vec2(
+    value : @toml.TomlValue,
+    key : String,
+  ) -> @draw.Vec2 raise SceneParseError {
+    match value {
+      @toml.TomlArray(arr) if arr.length() == 2 => {
+        let x = match arr[0] {
+          @toml.TomlFloat(f) => f
+          @toml.TomlInteger(i) => i.to_double()
+          _ => raise SceneParseError("graphic.fit.\{key}[0] must be a number")
+        }
+        let y = match arr[1] {
+          @toml.TomlFloat(f) => f
+          @toml.TomlInteger(i) => i.to_double()
+          _ => raise SceneParseError("graphic.fit.\{key}[1] must be a number")
+        }
+        @draw.vec2(x, y)
+      }
+      @toml.TomlArray(_) =>
+        raise SceneParseError("graphic.fit.\{key} must have 2 elements")
+      _ => raise SceneParseError("graphic.fit.\{key} must be an array")
+    }
+  }
+
+  let center = match table.get("center") {
+    Some(v) => parse_vec2(v, "center")
+    None => @draw.vec2(0, 0)
+  }
+  let size = match table.get("size") {
+    Some(v) => parse_vec2(v, "size")
+    None => raise SceneParseError("graphic.fit.size is required")
+  }
+  let mode = get_string_or_default(table, "mode", "contain")
+  match graphic.bounding_box() {
+    Some(b) => {
+      let size0 = b.size()
+      let w = size0.x
+      let h = size0.y
+      if w == 0.0 || h == 0.0 {
+        return graphic
+      }
+      let center0 = b.center()
+      let cx = center0.x
+      let cy = center0.y
+      let sx0 = size.x / w
+      let sy0 = size.y / h
+      let (sx, sy) = match mode {
+        "stretch" => (sx0, sy0)
+        "cover" => {
+          let s = if sx0 > sy0 { sx0 } else { sy0 }
+          (s, s)
+        }
+        _ => {
+          // contain (default)
+          let s = if sx0 < sy0 { sx0 } else { sy0 }
+          (s, s)
+        }
+      }
+
+      // Center at origin -> scale -> translate to target center.
+      let g0 = graphic.transform(
+        position=@draw.vec2(-cx, -cy),
+        rotation=0.0,
+        scale=@draw.vec2(1.0, 1.0),
+        skew=0.0,
+        origin=@draw.vec2(0.0, 0.0),
+      )
+      let g1 = g0.transform(
+        position=@draw.vec2(0.0, 0.0),
+        rotation=0.0,
+        scale=@draw.vec2(sx, sy),
+        skew=0.0,
+        origin=@draw.vec2(0.0, 0.0),
+      )
+      g1.transform(
+        position=center,
+        rotation=0.0,
+        scale=@draw.vec2(1.0, 1.0),
+        skew=0.0,
+        origin=@draw.vec2(0.0, 0.0),
+      )
     }
     None => graphic
   }
@@ -1108,69 +1209,243 @@ async fn parse_pattern_with_io(
     _ => raise SceneParseError("pattern must be a table")
   }
   let pattern_type = get_string_required(pattern_table, "type")
-  if pattern_type == "texture" {
-    let file = get_string_required(pattern_table, "file")
-    let bytes = @fs.read_file(file).binary() catch {
-      e => raise SceneParseError("Failed to read texture file \{file}: \{e}")
-    }
-    let canvas = if file.has_suffix(".hdr") {
-      let hdr_img = @hdr.decode(bytes) catch {
-        e => raise SceneParseError("Failed to decode HDR texture \{file}: \{e}")
+  fn get_colors_optional() -> Array[Color] raise SceneParseError {
+    match pattern_table.get("colors") {
+      Some(@toml.TomlArray(arr)) => {
+        let colors = Array::new()
+        for i = 0; i < arr.length(); i = i + 1 {
+          colors.push(parse_color(arr[i]))
+        }
+        colors
       }
-      Canvas::from_hdr(hdr_img)
-    } else {
-      match Canvas::from_png(bytes) {
-        Some(c) => c
-        None => raise SceneParseError("Failed to decode PNG texture \{file}")
-      }
+      Some(_) => raise SceneParseError("pattern colors must be an array")
+      None => []
     }
-    let mapping_type = get_string_or_default(pattern_table, "mapping", "planar")
-    let mapping : &Mapping = match mapping_type {
-      "spherical" => SphericalMapping::{  } as &Mapping
-      "planar" => PlanarMapping::{  } as &Mapping
-      "cylindrical" => CylindricalMapping::{  } as &Mapping
-      "cubic" => CubicMapping::{  } as &Mapping
-      _ => raise SceneParseError("Unknown mapping type: \{mapping_type}")
-    }
-    let pattern = texture(canvas, mapping~)
-    // Apply pattern transform if specified
-    match pattern_table.get("transform") {
-      Some(transform_value) => {
-        let transform = parse_transform(transform_value)
-        pattern.set_pattern_transform(transform)
-      }
-      None => ()
-    }
-    return pattern
-  }
-  if pattern_type == "graphic_mask" {
-    let name = get_string_required(pattern_table, "graphic")
-    let graphic = match graphics.get(name) {
-      Some(g) => g.clone()
-      None => raise SceneParseError("Unknown graphic: \{name}")
-    }
-    let style = get_bool_or_default(pattern_table, "style", false)
-    let inside = match pattern_table.get("inside") {
-      Some(v) => parse_color(v)
-      None => color(1, 1, 1)
-    }
-    let outside = match pattern_table.get("outside") {
-      Some(v) => parse_color(v)
-      None => color(0, 0, 0)
-    }
-    let pattern = graphic_mask_pattern(graphic, inside~, outside~, style~)
-    match pattern_table.get("transform") {
-      Some(transform_value) => {
-        let transform = parse_transform(transform_value)
-        pattern.set_pattern_transform(transform)
-      }
-      None => ()
-    }
-    return pattern
   }
 
-  // For other patterns, use the synchronous version
-  parse_pattern(value)
+  fn get_colors_required() -> Array[Color] raise SceneParseError {
+    let colors = get_colors_optional()
+    if colors.length() == 0 {
+      raise SceneParseError("pattern colors are required")
+    }
+    colors
+  }
+
+  async fn get_pattern_required(key : String) -> Pattern raise SceneParseError {
+    match pattern_table.get(key) {
+      Some(p) => parse_pattern_with_io(p, graphics)
+      None => raise SceneParseError("pattern field is required: \{key}")
+    }
+  }
+
+  let pattern = match pattern_type {
+    "checkers" => checkers_pattern(get_colors_required())
+    "stripes" => stripe_pattern(get_colors_required())
+    "gradient" => gradient_pattern(get_colors_required())
+    "rings" => ring_pattern(get_colors_required())
+    "gradient_rings" => gradient_ring_pattern(get_colors_required())
+    "gradient_checkers" => gradient_checkers_pattern(get_colors_required())
+
+    // Procedural noise
+    "noise" => {
+      let seed = get_int_or_default(pattern_table, "seed", 0)
+      let scale = get_float_or_default(pattern_table, "scale", 1.0)
+      noise_pattern(seed~, scale~)
+    }
+    "fbm" => {
+      let seed = get_int_or_default(pattern_table, "seed", 0)
+      let scale = get_float_or_default(pattern_table, "scale", 1.0)
+      let octaves = get_int_or_default(pattern_table, "octaves", 5)
+      let lacunarity = get_float_or_default(pattern_table, "lacunarity", 2.0)
+      let gain = get_float_or_default(pattern_table, "gain", 0.5)
+      fbm_pattern(seed~, scale~, octaves~, lacunarity~, gain~)
+    }
+    "marble" => {
+      let colors = get_colors_required()
+      let seed = get_int_or_default(pattern_table, "seed", 0)
+      let scale = get_float_or_default(pattern_table, "scale", 1.0)
+      let octaves = get_int_or_default(pattern_table, "octaves", 5)
+      let lacunarity = get_float_or_default(pattern_table, "lacunarity", 2.0)
+      let gain = get_float_or_default(pattern_table, "gain", 0.5)
+      let frequency = get_float_or_default(pattern_table, "frequency", 5.0)
+      let strength = get_float_or_default(pattern_table, "strength", 2.0)
+      marble_pattern(
+        colors,
+        seed~,
+        scale~,
+        octaves~,
+        lacunarity~,
+        gain~,
+        frequency~,
+        strength~,
+      )
+    }
+    "wood" => {
+      let colors = get_colors_required()
+      let seed = get_int_or_default(pattern_table, "seed", 0)
+      let scale = get_float_or_default(pattern_table, "scale", 1.0)
+      let octaves = get_int_or_default(pattern_table, "octaves", 5)
+      let lacunarity = get_float_or_default(pattern_table, "lacunarity", 2.0)
+      let gain = get_float_or_default(pattern_table, "gain", 0.5)
+      let ring_frequency = get_float_or_default(
+        pattern_table, "ring_frequency", 6.0,
+      )
+      let turbulence = get_float_or_default(pattern_table, "turbulence", 0.5)
+      wood_pattern(
+        colors,
+        seed~,
+        scale~,
+        octaves~,
+        lacunarity~,
+        gain~,
+        ring_frequency~,
+        turbulence~,
+      )
+    }
+    "voronoi" => {
+      let seed = get_int_or_default(pattern_table, "seed", 0)
+      let scale = get_float_or_default(pattern_table, "scale", 1.0)
+      let jitter = get_float_or_default(pattern_table, "jitter", 1.0)
+      let edge_scale = get_float_or_default(pattern_table, "edge_scale", 12.0)
+      let mode = match
+        get_string_or_default(pattern_table, "mode", "distance") {
+        "cells" => VoronoiMode::Cells
+        "edges" => VoronoiMode::Edges
+        "crackle" => VoronoiMode::Crackle
+        "f1" => VoronoiMode::F1
+        "f2" => VoronoiMode::F2
+        "f2-f1" => VoronoiMode::F2MinusF1
+        "f2_minus_f1" => VoronoiMode::F2MinusF1
+        "f2minusf1" => VoronoiMode::F2MinusF1
+        _ => VoronoiMode::Distance
+      }
+      voronoi_pattern(seed~, scale~, jitter~, mode~, edge_scale~)
+    }
+
+    // More looks
+    "levels" => {
+      let p = get_pattern_required("pattern")
+      let in_min = get_float_or_default(pattern_table, "in_min", 0.0)
+      let in_max = get_float_or_default(pattern_table, "in_max", 1.0)
+      let out_min = get_float_or_default(pattern_table, "out_min", 0.0)
+      let out_max = get_float_or_default(pattern_table, "out_max", 1.0)
+      let gamma = get_float_or_default(pattern_table, "gamma", 1.0)
+      levels_pattern(p, in_min~, in_max~, out_min~, out_max~, gamma~)
+    }
+    "bias_gain" => {
+      let p = get_pattern_required("pattern")
+      let bias = get_float_or_default(pattern_table, "bias", 0.5)
+      let gain = get_float_or_default(pattern_table, "gain", 0.5)
+      bias_gain_pattern(p, bias~, gain~)
+    }
+    "contrast" => {
+      let p = get_pattern_required("pattern")
+      let contrast = get_float_or_default(pattern_table, "contrast", 1.0)
+      let pivot = get_float_or_default(pattern_table, "pivot", 0.5)
+      contrast_pattern(p, contrast~, pivot~)
+    }
+    "threshold" => {
+      let p = get_pattern_required("pattern")
+      let threshold = get_float_or_default(pattern_table, "threshold", 0.5)
+      let colors = get_colors_optional()
+      if colors.length() >= 2 {
+        threshold_pattern(p, threshold~, low=colors[0], high=colors[1])
+      } else {
+        threshold_pattern(p, threshold~)
+      }
+    }
+    "posterize" => {
+      let p = get_pattern_required("pattern")
+      let steps = get_int_or_default(pattern_table, "steps", 4)
+      posterize_pattern(p, steps~)
+    }
+    "gradient_map" => {
+      let p = get_pattern_required("pattern")
+      let colors = get_colors_required()
+      gradient_map_pattern(p, colors)
+    }
+    "triplanar" => {
+      let p = get_pattern_required("pattern")
+      let scale = get_float_or_default(pattern_table, "scale", 1.0)
+      let sharpness = get_float_or_default(pattern_table, "sharpness", 1.0)
+      triplanar_pattern(p, scale~, sharpness~)
+    }
+
+    // Compositing / fun combinations
+    "invert" => invert_pattern(get_pattern_required("pattern"))
+    "mix" => {
+      let a = get_pattern_required("a")
+      let b = get_pattern_required("b")
+      let mask = get_pattern_required("mask")
+      mix_pattern(a, b, mask)
+    }
+    "warp" => {
+      let base = get_pattern_required("base")
+      let warp = get_pattern_required("warp")
+      let amplitude = get_float_or_default(pattern_table, "amplitude", 0.25)
+      warp_pattern(base, warp, amplitude~)
+    }
+    "texture" => {
+      let file = get_string_required(pattern_table, "file")
+      let bytes = @fs.read_file(file).binary() catch {
+        e => raise SceneParseError("Failed to read texture file \{file}: \{e}")
+      }
+      let canvas = if file.has_suffix(".hdr") {
+        let hdr_img = @hdr.decode(bytes) catch {
+          e =>
+            raise SceneParseError("Failed to decode HDR texture \{file}: \{e}")
+        }
+        Canvas::from_hdr(hdr_img)
+      } else {
+        match Canvas::from_png(bytes) {
+          Some(c) => c
+          None => raise SceneParseError("Failed to decode PNG texture \{file}")
+        }
+      }
+      let mapping_type = get_string_or_default(
+        pattern_table, "mapping", "planar",
+      )
+      let mapping : &Mapping = match mapping_type {
+        "spherical" => SphericalMapping::{  } as &Mapping
+        "planar" => PlanarMapping::{  } as &Mapping
+        "cylindrical" => CylindricalMapping::{  } as &Mapping
+        "cubic" => CubicMapping::{  } as &Mapping
+        _ => raise SceneParseError("Unknown mapping type: \{mapping_type}")
+      }
+      texture(canvas, mapping~)
+    }
+    "graphic_mask" => {
+      let name = get_string_required(pattern_table, "graphic")
+      let graphic = match graphics.get(name) {
+        Some(g) => g.clone()
+        None => raise SceneParseError("Unknown graphic: \{name}")
+      }
+      let curve_segments = get_int_or_default(
+        pattern_table, "curve_segments", 16,
+      )
+      let style = get_bool_or_default(pattern_table, "style", false)
+      let inside = match pattern_table.get("inside") {
+        Some(v) => parse_color(v)
+        None => color(1, 1, 1)
+      }
+      let outside = match pattern_table.get("outside") {
+        Some(v) => parse_color(v)
+        None => color(0, 0, 0)
+      }
+      graphic_mask_pattern(graphic, curve_segments~, inside~, outside~, style~)
+    }
+    _ => raise SceneParseError("Unknown pattern type: \{pattern_type}")
+  }
+
+  // Apply pattern transform if specified
+  match pattern_table.get("transform") {
+    Some(transform_value) => {
+      let transform = parse_transform(transform_value)
+      pattern.set_pattern_transform(transform)
+    }
+    None => ()
+  }
+  pattern
 }
 
 ///|
