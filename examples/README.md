@@ -111,6 +111,10 @@ Demonstrates a basic PBR setup with varying constant `metallic` and `roughness`.
 ### [`pbr-channels-demo.toml`](pbr-channels-demo.toml)
 Demonstrates driving PBR channels from procedural patterns via `metallic_pattern` and `roughness_pattern`.
 
+What to look for:
+- Metallic sphere shows alternating bands that shift between metal-like vs dielectric-like response.
+- Roughness spheres show varying highlight sharpness (smooth fBm) and chunky regions (posterized).
+
 ### [`mask-demo.toml`](mask-demo.toml)
 Demonstrates using any pattern graph as a **mask** (scalar field) to drive `mix`.
 

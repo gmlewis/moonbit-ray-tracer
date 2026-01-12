@@ -51,6 +51,12 @@ colors = [
 	[1.0, 1.0, 1.0]
 ]
 
+[patterns.metal_stripes.transform]
+# StripePattern on primitives currently samples in object/pattern space.
+# A small X scale increases stripe frequency; rotation wraps the stripes.
+scale = [0.12, 1.0, 1.0]
+rotation = [0.0, 1.05, 0.0]
+
 [patterns.rough_fbm]
 type = "levels"
 in_min = 0.25
@@ -61,7 +67,7 @@ gamma = 1.0
 [patterns.rough_fbm.pattern]
 type = "fbm"
 seed = 7
-scale = 2.0
+scale = 1.25
 octaves = 5
 lacunarity = 2.0
 gain = 0.5
@@ -112,11 +118,11 @@ reflective = 0.10
 # Alternate between dielectric (0) and metal (1) using stripes.
 [materials.metallic_striped]
 lighting_mode = "pbr"
-color = [0.18, 0.44, 0.92]
+color = [0.78, 0.80, 0.86]
 ambient = 0.0
 metallic = 0.0
-roughness = 0.30
-reflective = 0.10
+roughness = 0.18
+reflective = 0.08
 metallic_pattern = "metal_stripes"
 
 # Keep metallic fixed, but vary roughness using fBm.
