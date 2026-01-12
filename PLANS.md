@@ -138,6 +138,27 @@ Success metrics:
 - [x] Support nested masks (pattern graphs can nest `graphic_mask` under `mix.mask`)
 - [x] Add `graphics.<name>.fit` to auto-scale/center Graphics (no transform guesswork)
 - [x] Optimize `graphic_mask` broad-phase rejection (overall/profile bbox culling)
+
+#### TOML-native Text (built-in fonts)
+
+Goal: make text **trivial** to add in scenes without external asset generation. Text should be usable as:
+- a `Graphic` mask (`graphic_mask`) for decals/labels
+- a procedural pattern/mask anywhere a `Pattern` is accepted
+- future extruded solids (text → profile → mesh)
+
+Plan:
+- [ ] Vendor a small curated set of baked-in fonts (e.g., sans/serif/mono) and expose them by stable names in TOML
+- [ ] Add a TOML `graphics.<name>` variant that generates a `Graphic` from text at load-time (no JSON file needed)
+	- Fields: `type="text"`, `text`, `font`, `size`, `line_height`, `align`, `max_width` (optional wrap), `origin`/`baseline`, `stroke`/`fill` options
+	- Ensure deterministic layout across platforms (no system fonts)
+- [ ] Add a TOML shortcut for common labels/decals:
+	- Example: `patterns.label = { type="text_mask", text="A", font="sans", size=..., inside=[...], outside=[...] }`
+	- Or allow `graphic_mask` to accept an inline text graphic: `graphic = { type="text", ... }`
+- [ ] Text on objects as “decal”/projection (TOML-level ergonomics):
+	- first pass: planar projection onto an object via `pattern_transform` and a `graphic_mask`
+	- later: UV-space stamping when UVs exist
+- [ ] Text extrusion path (future): text → outlines → triangulation + sides; keep it a zero-friction TOML feature
+- [ ] Add example scenes: object labels, a “HUD card” plane with multiple labels, and extruded 3D text
 - [ ] Investigate area light specular “grid” artifact (jitter/stratify area-light sampling for specular highlights)
 - [ ] Investigate unexpected orange tint/color bleeding in demo renders (material/reflection interactions)
 - [ ] Implement `Graphic` extrusion to solid geometry (profiles → triangulation + side walls)
