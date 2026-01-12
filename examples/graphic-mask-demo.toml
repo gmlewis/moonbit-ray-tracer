@@ -8,7 +8,7 @@ version = "1.0"
 width = 900
 height = 520
 samples = 2
-max_bounces = 4
+max_bounces = 8
 background = [0.06, 0.06, 0.08]
 
 [camera]
@@ -112,8 +112,8 @@ transform = { translation = [0.0, 0.0, 7.0], rotation = [1.571, 0.0, 0.0] }
 # A couple of objects to cast soft shadows across the masked graphic.
 [[objects]]
 type = "sphere"
-material = { color = [0.92, 0.92, 0.96], ambient = 0.05, diffuse = 0.90, specular = 0.12, shininess = 120.0 }
-transform = { translation = [-1.7, 1.05, 0.5] }
+material = { color = [0.92, 0.92, 0.96], ambient = 0.02, diffuse = 0.15, specular = 0.90, shininess = 300.0, reflective = 0.10, transparency = 0.90, refractive_index = 1.50 }
+transform = { translation = [-1.7, 1.05, 0.75] }
 
 [[objects]]
 type = "sphere"
