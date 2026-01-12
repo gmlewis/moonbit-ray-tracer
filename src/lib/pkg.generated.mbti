@@ -679,7 +679,9 @@ pub(all) struct Material {
   mut layer_mask : String?
   mut layer_opacity : Double
   mut metallic : Double
+  mut metallic_pattern : Pattern?
   mut roughness : Double
+  mut roughness_pattern : Pattern?
   mut lighting_mode : LightingMode
 }
 pub fn Material::clone(Self) -> Self

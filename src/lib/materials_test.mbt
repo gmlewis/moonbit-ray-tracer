@@ -78,6 +78,51 @@ test "Lighting with the surface in shadow (p.155)" {
 }
 
 ///|
+test "PBR: metallic_pattern overrides metallic" {
+  let light = point_light(point(0, 0, -10), color(1, 1, 1))
+  let position = point(0, 0, 0)
+  let eyev = vector(0, 0, -1)
+  let normalv = vector(0, 0, -1)
+  let shape = Some(sphere())
+  let base = material()
+  base.lighting_mode = PBR
+  base.color = color(0.2, 0.6, 0.9)
+  base.metallic = 0.0
+  base.roughness = 0.5
+  let c0 = base.lighting(light, position, eyev, normalv, shape~)
+  let patterned = base.clone()
+  patterned.metallic_pattern = Some(stripe_pattern([white, white]))
+  let c1 = patterned.lighting(light, position, eyev, normalv, shape~)
+  let delta = (c0.red - c1.red).abs() +
+    (c0.green - c1.green).abs() +
+    (c0.blue - c1.blue).abs()
+  assert_true(delta > 1.e-3)
+}
+
+///|
+test "PBR: roughness_pattern overrides roughness" {
+  let light = point_light(point(0, 0, -10), color(1, 1, 1))
+  let position = point(0, 0, 0)
+  let eyev = vector(0, 0, -1)
+  let normalv = vector(0, 0, -1)
+  let shape = Some(sphere())
+  let base = material()
+  base.lighting_mode = PBR
+  base.color = color(1, 1, 1)
+  base.metallic = 0.0
+  base.roughness = 1.0
+  let c0 = base.lighting(light, position, eyev, normalv, shape~)
+  let shiny = base.clone()
+  // Luminance 0 => roughness ~ 0, clamped away from 0 internally.
+  shiny.roughness_pattern = Some(stripe_pattern([black, black]))
+  let c1 = shiny.lighting(light, position, eyev, normalv, shape~)
+  let delta = (c0.red - c1.red).abs() +
+    (c0.green - c1.green).abs() +
+    (c0.blue - c1.blue).abs()
+  assert_true(delta > 1.e-3)
+}
+
+///|
 test "Lighting with a pattern applied (p.176)" {
   let m = material()
   m.pattern = Some(stripe_pattern([white, black]))

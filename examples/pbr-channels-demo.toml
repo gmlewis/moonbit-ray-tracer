@@ -1,0 +1,172 @@
+# PBR channels demo - drive metallic/roughness via procedural pattern graphs
+[scene]
+name = "PBR Channels Demo"
+description = "Use procedural patterns as scalar fields for metallic/roughness"
+version = "1.0"
+
+[scene.render]
+width = 1000
+height = 550
+samples = 4
+max_bounces = 4
+background = [0.06, 0.06, 0.08]
+divide = 1
+
+[camera]
+position = [0.0, 2.9, -11.5]
+look_at = [0.0, 1.1, 0.0]
+up = [0.0, 1.0, 0.0]
+field_of_view = 0.785
+
+[[lights]]
+type = "point"
+position = [-10.0, 10.0, -10.0]
+intensity = [1.0, 1.0, 1.0]
+
+[[lights]]
+type = "point"
+position = [9.0, 6.0, -7.0]
+intensity = [0.65, 0.65, 0.65]
+
+[[lights]]
+type = "point"
+position = [0.0, 7.5, 6.0]
+intensity = [0.35, 0.35, 0.35]
+
+# Scalar fields (sampled via luminance)
+[patterns.metal_stripes]
+type = "stripes"
+colors = [
+	[0.0, 0.0, 0.0],
+	[1.0, 1.0, 1.0],
+	[0.0, 0.0, 0.0],
+	[1.0, 1.0, 1.0],
+	[0.0, 0.0, 0.0],
+	[1.0, 1.0, 1.0],
+	[0.0, 0.0, 0.0],
+	[1.0, 1.0, 1.0],
+	[0.0, 0.0, 0.0],
+	[1.0, 1.0, 1.0],
+	[0.0, 0.0, 0.0],
+	[1.0, 1.0, 1.0]
+]
+
+[patterns.rough_fbm]
+type = "levels"
+in_min = 0.25
+in_max = 0.80
+out_min = 0.02
+out_max = 0.98
+gamma = 1.0
+[patterns.rough_fbm.pattern]
+type = "fbm"
+seed = 7
+scale = 2.0
+octaves = 5
+lacunarity = 2.0
+gain = 0.5
+
+[patterns.rough_bands]
+type = "posterize"
+steps = 3
+[patterns.rough_bands.pattern]
+type = "levels"
+in_min = 0.25
+in_max = 0.80
+out_min = 0.05
+out_max = 0.95
+gamma = 1.0
+[patterns.rough_bands.pattern.pattern]
+type = "fbm"
+seed = 19
+scale = 1.6
+octaves = 4
+lacunarity = 2.0
+gain = 0.55
+
+# Materials
+[materials.floor]
+lighting_mode = "pbr"
+color = [0.20, 0.20, 0.23]
+ambient = 0.0
+metallic = 0.0
+roughness = 0.95
+reflective = 0.05
+
+[materials.backdrop]
+lighting_mode = "pbr"
+color = [0.14, 0.15, 0.18]
+ambient = 0.0
+metallic = 0.0
+roughness = 1.0
+reflective = 0.0
+
+[materials.base]
+lighting_mode = "pbr"
+color = [0.82, 0.82, 0.88]
+ambient = 0.0
+metallic = 0.0
+roughness = 0.35
+reflective = 0.10
+
+# Alternate between dielectric (0) and metal (1) using stripes.
+[materials.metallic_striped]
+lighting_mode = "pbr"
+color = [0.18, 0.44, 0.92]
+ambient = 0.0
+metallic = 0.0
+roughness = 0.30
+reflective = 0.10
+metallic_pattern = "metal_stripes"
+
+# Keep metallic fixed, but vary roughness using fBm.
+[materials.roughness_fbm]
+lighting_mode = "pbr"
+color = [0.95, 0.70, 0.35]
+ambient = 0.0
+metallic = 1.0
+roughness = 0.15
+reflective = 0.35
+roughness_pattern = "rough_fbm"
+
+# A more stylized roughness field (posterized bands).
+[materials.roughness_bands]
+lighting_mode = "pbr"
+color = [0.95, 0.70, 0.35]
+ambient = 0.0
+metallic = 1.0
+roughness = 0.15
+reflective = 0.35
+roughness_pattern = "rough_bands"
+
+# Floor
+[[objects]]
+type = "plane"
+material = "floor"
+
+# Backdrop (a vertical matte plane behind the spheres)
+[[objects]]
+type = "plane"
+material = "backdrop"
+transform = { rotation = [1.5708, 0.0, 0.0], translation = [0.0, 3.0, 7.0] }
+
+# Spheres (left to right)
+[[objects]]
+type = "sphere"
+material = "base"
+transform = { translation = [-3.6, 1.0, 0.0] }
+
+[[objects]]
+type = "sphere"
+material = "metallic_striped"
+transform = { translation = [-1.2, 1.0, 0.0] }
+
+[[objects]]
+type = "sphere"
+material = "roughness_fbm"
+transform = { translation = [1.2, 1.0, 0.0] }
+
+[[objects]]
+type = "sphere"
+material = "roughness_bands"
+transform = { translation = [3.6, 1.0, 0.0] }

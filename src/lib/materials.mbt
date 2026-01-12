@@ -27,7 +27,9 @@ pub(all) struct Material {
   mut layer_mask : String?
   mut layer_opacity : Double
   mut metallic : Double
+  mut metallic_pattern : Pattern?
   mut roughness : Double
+  mut roughness_pattern : Pattern?
   mut lighting_mode : LightingMode
 } derive(Show, Eq)
 
@@ -53,7 +55,9 @@ pub fn material() -> Material {
   let layer_mask = None
   let layer_opacity = 1.0
   let metallic = 0.0
+  let metallic_pattern = None
   let roughness = 0.5
+  let roughness_pattern = None
   let lighting_mode = Phong
   {
     color,
@@ -76,7 +80,9 @@ pub fn material() -> Material {
     layer_mask,
     layer_opacity,
     metallic,
+    metallic_pattern,
     roughness,
+    roughness_pattern,
     lighting_mode,
   }
 }
@@ -96,6 +102,14 @@ pub fn Material::clone(self : Material) -> Material {
     None => None
   }
   let normal_texture = match self.normal_texture {
+    Some(p) => Some(p.clone())
+    None => None
+  }
+  let metallic_pattern = match self.metallic_pattern {
+    Some(p) => Some(p.clone())
+    None => None
+  }
+  let roughness_pattern = match self.roughness_pattern {
     Some(p) => Some(p.clone())
     None => None
   }
@@ -120,7 +134,9 @@ pub fn Material::clone(self : Material) -> Material {
     layer_mask: self.layer_mask,
     layer_opacity: self.layer_opacity,
     metallic: self.metallic,
+    metallic_pattern,
     roughness: self.roughness,
+    roughness_pattern,
     lighting_mode: self.lighting_mode,
   }
 }
@@ -425,6 +441,28 @@ pub fn Material::lighting(
         if in_shadow {
           return color(0, 0, 0)
         }
+        let metallic = match (mat.metallic_pattern, shape) {
+          (Some(pat), Some(shape)) => {
+            let uv = uv0
+            pat
+            .pattern_at_shape(shape, position, normal=pattern_normalv, uv?)
+            .luminance()
+          }
+          _ => mat.metallic
+        }
+        let metallic = @cmp.minimum(@cmp.maximum(metallic, 0.0), 1.0)
+        let roughness = match (mat.roughness_pattern, shape) {
+          (Some(pat), Some(shape)) => {
+            let uv = uv0
+            pat
+            .pattern_at_shape(shape, position, normal=pattern_normalv, uv?)
+            .luminance()
+          }
+          _ => mat.roughness
+        }
+        let roughness = @cmp.minimum(@cmp.maximum(roughness, 0.0), 1.0)
+        // Avoid singularities in GGX when roughness hits exactly 0.
+        let roughness = if roughness < 1.e-3 { 1.e-3 } else { roughness }
         let lightv = (light.position - position).normalize()
         let halfv = (eyev + lightv).normalize()
         let n_dot_l = @cmp.maximum(shading_normalv.dot(lightv), 0.0)
@@ -434,10 +472,10 @@ pub fn Material::lighting(
         let n_dot_v = @cmp.maximum(shading_normalv.dot(eyev), 0.0)
         let h_dot_v = @cmp.maximum(halfv.dot(eyev), 0.0)
         let mut f0 = color(0.04, 0.04, 0.04)
-        f0 = f0 * color(1.0, 1.0, 1.0).mul_scalar(1.0 - mat.metallic) +
-          clr.mul_scalar(mat.metallic)
-        let ndf = distribution_ggx(shading_normalv, halfv, mat.roughness)
-        let g = geometry_smith(shading_normalv, eyev, lightv, mat.roughness)
+        f0 = f0 * color(1.0, 1.0, 1.0).mul_scalar(1.0 - metallic) +
+          clr.mul_scalar(metallic)
+        let ndf = distribution_ggx(shading_normalv, halfv, roughness)
+        let g = geometry_smith(shading_normalv, eyev, lightv, roughness)
         let f = fresnel_schlick(h_dot_v, f0)
         let numerator = f.mul_scalar(ndf * g)
         let denominator = 4.0 * n_dot_v * n_dot_l + 0.001
@@ -446,7 +484,7 @@ pub fn Material::lighting(
           .clamp_valid()
         let ks = f
         let mut kd = color(1.0, 1.0, 1.0) - ks
-        kd = kd.mul_scalar(1.0 - mat.metallic)
+        kd = kd.mul_scalar(1.0 - metallic)
         let diffuse_brdf = clr.mul_scalar(1.0 / @math.PI) * kd
         let brdf = diffuse_brdf + specular_brdf
         brdf * light.intensity.mul_scalar(n_dot_l)

@@ -111,6 +111,7 @@ Next best thing to address: focus first on the Procedural Texture Library + comp
 Goal: keep the system fun for albedo output now, while structuring it so the same pattern graphs can later drive masks/roughness/metallic, normal maps, and displacement.
 
 - [x] Add a lightweight “field” abstraction (internal): standardize sampling as **scalar/color/vector** so a single pattern graph can be reused for albedo, masks, warps, and height.
+- [x] Allow scalar pattern graphs to drive PBR channels via material fields: `metallic_pattern` and `roughness_pattern` (luminance → [0,1]).
 - [x] Add “more looks” utility nodes:
 	- [x] `levels` / `remap` (bias/gain/contrast + clamp)
 	- [x] `threshold` / `posterize` (hard edges, toon/cell looks)

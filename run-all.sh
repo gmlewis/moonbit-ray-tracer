@@ -36,6 +36,7 @@
 ./scripts/run-example.py normal-tangent-mirror-demo
 ./scripts/run-example.py patterns-showcase
 ./scripts/run-example.py pbr-demo
+./scripts/run-example.py pbr-channels-demo
 ./scripts/run-example.py posterize-demo
 ./scripts/run-example.py procedural-textures
 ./scripts/run-example.py simple-sphere

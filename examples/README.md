@@ -105,6 +105,12 @@ Demonstrates `displacement_pattern` + `displacement_strength` (simple shading-ti
 ### [`material-layer-demo.toml`](material-layer-demo.toml)
 Demonstrates blending two full materials using `layer_material` + `layer_mask`.
 
+### [`pbr-demo.toml`](pbr-demo.toml)
+Demonstrates a basic PBR setup with varying constant `metallic` and `roughness`.
+
+### [`pbr-channels-demo.toml`](pbr-channels-demo.toml)
+Demonstrates driving PBR channels from procedural patterns via `metallic_pattern` and `roughness_pattern`.
+
 ### [`mask-demo.toml`](mask-demo.toml)
 Demonstrates using any pattern graph as a **mask** (scalar field) to drive `mix`.
 

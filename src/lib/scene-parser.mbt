@@ -354,6 +354,23 @@ fn resolve_material_patterns(
                 }
               _ => ()
             }
+            match table.get("metallic_pattern") {
+              Some(@toml.TomlString(pattern_name)) =>
+                match (materials.get(name), patterns.get(pattern_name)) {
+                  (Some(mat), Some(p)) => mat.metallic_pattern = Some(p.clone())
+                  _ => ()
+                }
+              _ => ()
+            }
+            match table.get("roughness_pattern") {
+              Some(@toml.TomlString(pattern_name)) =>
+                match (materials.get(name), patterns.get(pattern_name)) {
+                  (Some(mat), Some(p)) =>
+                    mat.roughness_pattern = Some(p.clone())
+                  _ => ()
+                }
+              _ => ()
+            }
           }
           _ => ()
         }

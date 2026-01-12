@@ -26,6 +26,14 @@ fn apply_transform(
         Some(pattern) => pattern.set_pattern_transform(transform)
         None => ()
       }
+      match shape.material.metallic_pattern {
+        Some(pattern) => pattern.set_pattern_transform(transform)
+        None => ()
+      }
+      match shape.material.roughness_pattern {
+        Some(pattern) => pattern.set_pattern_transform(transform)
+        None => ()
+      }
       match shape.material.normal_pattern {
         Some(pattern) => pattern.set_pattern_transform(transform)
         None => ()
@@ -37,6 +45,14 @@ fn apply_transform(
       match shape.material_layer {
         Some(layer) => {
           match layer.top.pattern {
+            Some(pattern) => pattern.set_pattern_transform(transform)
+            None => ()
+          }
+          match layer.top.metallic_pattern {
+            Some(pattern) => pattern.set_pattern_transform(transform)
+            None => ()
+          }
+          match layer.top.roughness_pattern {
             Some(pattern) => pattern.set_pattern_transform(transform)
             None => ()
           }
@@ -139,6 +155,14 @@ fn apply_material_and_transform(
           Some(p) => Some(p.clone())
           None => None
         }
+        shape.material.metallic_pattern = match mat.metallic_pattern {
+          Some(p) => Some(p.clone())
+          None => None
+        }
+        shape.material.roughness_pattern = match mat.roughness_pattern {
+          Some(p) => Some(p.clone())
+          None => None
+        }
         shape.material.normal_pattern = match mat.normal_pattern {
           Some(p) => Some(p.clone())
           None => None
@@ -198,6 +222,34 @@ fn apply_material_and_transform(
             raise SceneParseError("Unknown pattern reference: \{pattern_name}")
         }
       Some(_) => raise SceneParseError("pattern reference must be a string")
+      None => ()
+    }
+    match material_table.get("metallic_pattern") {
+      Some(@toml.TomlString(pattern_name)) =>
+        match patterns.get(pattern_name) {
+          Some(pattern) =>
+            shape.material.metallic_pattern = Some(pattern.clone())
+          None =>
+            raise SceneParseError(
+              "Unknown metallic_pattern reference: \{pattern_name}",
+            )
+        }
+      Some(_) =>
+        raise SceneParseError("metallic_pattern reference must be a string")
+      None => ()
+    }
+    match material_table.get("roughness_pattern") {
+      Some(@toml.TomlString(pattern_name)) =>
+        match patterns.get(pattern_name) {
+          Some(pattern) =>
+            shape.material.roughness_pattern = Some(pattern.clone())
+          None =>
+            raise SceneParseError(
+              "Unknown roughness_pattern reference: \{pattern_name}",
+            )
+        }
+      Some(_) =>
+        raise SceneParseError("roughness_pattern reference must be a string")
       None => ()
     }
     match material_table.get("normal_pattern") {
