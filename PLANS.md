@@ -31,6 +31,17 @@ Lighting:
 
 ## Now (Highest Priority Next Steps)
 
+### Suggested “First Wins” (High Payoff / Low Risk)
+
+If you only pick a couple of items to start with, these tend to deliver the most benefit per hour:
+
+- **Fast preview defaults (`--draft` preset)**: Improves every iteration loop immediately (scene tweaking, debugging, demos). Mostly CLI plumbing + documented trade-offs.
+- **Progressive rendering (early image + refinement)**: Big perceived usability win; start simple (save/refresh every N samples or seconds) before adding adaptive sampling.
+- **Render statistics (timing/samples/rays)**: Makes performance work measurable and regressions obvious.
+- **Debug views (normals/albedo/roughness)**: Medium effort, huge debugging leverage when something is “black/noisy/wrong.”
+
+Suggested order: `--draft` → basic progressive → stats → debug views.
+
 ### Performance & UX
 - [ ] Make “preview renders” fast by default
   - [ ] Add CLI flags for quick-preview presets (e.g. `--draft` sets low bounces, smaller resolution, fewer light samples)
