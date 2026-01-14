@@ -103,3 +103,197 @@ test "voronoi f1/f2/f2-f1 outputs are consistent" {
   assert_true((c2.red - c2.blue).abs() < @lib.EPSILON)
   assert_true(cd.red >= 0.0 && cd.red <= 1.0)
 }
+
+///|
+struct ConstPattern {
+  c : Color
+}
+
+///|
+pub fn ConstPattern::to_string(self : ConstPattern) -> String {
+  "const(\{self.c})"
+}
+
+///|
+pub impl Show for ConstPattern with output(self, logger) {
+  logger.write_string(self.to_string())
+}
+
+///|
+pub impl PatternTrait for ConstPattern with clone(self) {
+  const_pattern(self.c)
+}
+
+///|
+pub impl PatternTrait for ConstPattern with pattern_at(self, _p) {
+  self.c
+}
+
+///|
+pub impl PatternTrait for ConstPattern with uv_at(self, _u, _v) {
+  self.c
+}
+
+///|
+pub impl PatternTrait for ConstPattern with pattern_at_with_info(
+  self,
+  p,
+  _normal,
+  uv,
+) {
+  match uv {
+    Some((u, v)) => self.uv_at(u, v)
+    None => self.pattern_at(p)
+  }
+}
+
+///|
+fn const_pattern(c : Color) -> Pattern {
+  Pattern::new(ConstPattern::{ c, })
+}
+
+///|
+struct UVCoordPattern {}
+
+///|
+pub fn UVCoordPattern::to_string(_self : UVCoordPattern) -> String {
+  "uv_coord()"
+}
+
+///|
+pub impl Show for UVCoordPattern with output(self, logger) {
+  logger.write_string(self.to_string())
+}
+
+///|
+pub impl PatternTrait for UVCoordPattern with clone(_self) {
+  uv_coord_pattern()
+}
+
+///|
+pub impl PatternTrait for UVCoordPattern with pattern_at(self, p) {
+  // Treat object point as UV-like for convenience.
+  self.uv_at(p.x, p.y)
+}
+
+///|
+pub impl PatternTrait for UVCoordPattern with uv_at(_self, u, v) {
+  // Clamp to [0,1] so colors stay sane.
+  let u = if u < 0.0 { 0.0 } else if u > 1.0 { 1.0 } else { u }
+  let v = if v < 0.0 { 0.0 } else if v > 1.0 { 1.0 } else { v }
+  color(u, v, 0.0)
+}
+
+///|
+pub impl PatternTrait for UVCoordPattern with pattern_at_with_info(
+  self,
+  p,
+  _normal,
+  uv,
+) {
+  match uv {
+    Some((u, v)) => self.uv_at(u, v)
+    None => self.pattern_at(p)
+  }
+}
+
+///|
+fn uv_coord_pattern() -> Pattern {
+  Pattern::new(UVCoordPattern::{  })
+}
+
+///|
+test "levels_pattern remaps and clamps" {
+  let base = const_pattern(color(0.25, 0.5, 0.75))
+  let p = levels_pattern(base, in_min=0.5, in_max=1.0, out_min=0.0, out_max=1.0)
+  let c = p.pattern_at(point(0.0, 0.0, 0.0))
+  // 0.25 < in_min => clamp to 0
+  assert_true((c.red - 0.0).abs() < @lib.EPSILON)
+  // 0.5 maps to 0
+  assert_true((c.green - 0.0).abs() < @lib.EPSILON)
+  // 0.75 maps to 0.5
+  assert_true((c.blue - 0.5).abs() < 1.e-12)
+}
+
+///|
+test "threshold_pattern switches on luminance" {
+  let base = stripe_pattern([color(0.25, 0.25, 0.25), color(0.75, 0.75, 0.75)])
+  let p = threshold_pattern(
+    base,
+    threshold=0.5,
+    low=color(1, 0, 0),
+    high=color(0, 0, 1),
+  )
+  assert_eq(p.pattern_at(point(0.1, 0.0, 0.0)), color(1, 0, 0))
+  assert_eq(p.pattern_at(point(1.1, 0.0, 0.0)), color(0, 0, 1))
+}
+
+///|
+test "posterize_pattern quantizes channels" {
+  let base = const_pattern(color(0.2, 0.6, 0.9))
+  let p = posterize_pattern(base, steps=4)
+  let c = p.pattern_at(point(0.0, 0.0, 0.0))
+  // With steps=4 => levels=3 and bins at {0, 1/3, 2/3, 1}
+  assert_true((c.red - 0.0).abs() < 1.e-12)
+  assert_true((c.green - 2.0 / 3.0).abs() < 1.e-12)
+  assert_true((c.blue - 1.0).abs() < 1.e-12)
+}
+
+///|
+test "gradient_map_pattern maps scalar to palette" {
+  let base = stripe_pattern([
+    color(0.0, 0.0, 0.0),
+    color(0.5, 0.5, 0.5),
+    color(1.0, 1.0, 1.0),
+  ])
+  let p = gradient_map_pattern(base, [color(1, 0, 0), color(0, 0, 1)])
+  assert_eq(p.pattern_at(point(0.1, 0.0, 0.0)), color(1, 0, 0))
+  assert_eq(p.pattern_at(point(2.1, 0.0, 0.0)), color(0, 0, 1))
+  // 0.5 maps to mid of palette
+  assert_eq(p.pattern_at(point(1.1, 0.0, 0.0)), color(0.5, 0.0, 0.5))
+}
+
+///|
+test "triplanar_pattern picks correct projection when axis-aligned" {
+  let base = uv_coord_pattern()
+  let p = triplanar_pattern(base, scale=1.0, sharpness=8.0)
+  let pt = point(0.2, 0.7, 0.4)
+
+  // Normal X => use (z,y)
+  let cx = p.pattern_at_shape(sphere(), pt, normal=vector(1, 0, 0))
+  assert_eq(cx, color(0.4, 0.7, 0.0))
+
+  // Normal Y => use (x,z)
+  let cy = p.pattern_at_shape(sphere(), pt, normal=vector(0, 1, 0))
+  assert_eq(cy, color(0.2, 0.4, 0.0))
+
+  // Normal Z => use (x,y)
+  let cz = p.pattern_at_shape(sphere(), pt, normal=vector(0, 0, 1))
+  assert_eq(cz, color(0.2, 0.7, 0.0))
+}
+
+///|
+test "triplanar_pattern blends projections" {
+  let base = uv_coord_pattern()
+  let p = triplanar_pattern(base, scale=1.0, sharpness=1.0)
+  let pt = point(0.2, 0.7, 0.4)
+
+  // Equal weights on X and Y.
+  let c = p.pattern_at_shape(sphere(), pt, normal=vector(1, 1, 0))
+  // 0.5 * (z,y) + 0.5 * (x,z) = (0.5*z + 0.5*x, 0.5*y + 0.5*z)
+  assert_true((c.red - 0.3).abs() < 1.e-12)
+  assert_true((c.green - 0.55).abs() < 1.e-12)
+}
+
+///|
+test "warp_pattern uses RGB-as-vector (signed)" {
+  let red = color(1, 0, 0)
+  let blue = color(0, 0, 1)
+  let base = stripe_pattern([red, blue])
+  // RGB (1,0.5,0.5) decodes to vector(1,0,0) in Signed mode.
+  let warp = const_pattern(color(1.0, 0.5, 0.5))
+  let p = warp_pattern(base, warp, amplitude=0.25)
+
+  // Without warp at x=0.9 => red. With warp => x=1.15 => blue.
+  assert_eq(p.pattern_at(point(0.9, 0.0, 0.0)), blue)
+}

@@ -1,15 +1,20 @@
 {
   "import": [
+    "bob/toml",
+    "gmlewis/base64",
+    "gmlewis/flate",
+    "gmlewis/fonts",
     "gmlewis/fonts/draw",
+    "gmlewis/gzip",
     "gmlewis/image",
     "gmlewis/image/color",
     "gmlewis/image/jpeg",
     "gmlewis/image/png",
     "gmlewis/io",
-    "gmlewis/base64",
     "gmlewis/ray-tracer/hdr",
-    "bob/toml",
     "moonbitlang/async",
-    "moonbitlang/async/fs"
+    "moonbitlang/async/fs",
+    "moonbitlang/async/stdio",
+    "moonbitlang/x/sys"
   ]
 }

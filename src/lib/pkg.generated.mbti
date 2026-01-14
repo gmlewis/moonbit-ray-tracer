@@ -2,6 +2,7 @@
 package "gmlewis/ray-tracer/lib"
 
 import(
+  "gmlewis/fonts"
   "gmlewis/fonts/draw"
   "gmlewis/fonts/geom"
   "gmlewis/image"
@@ -80,6 +81,8 @@ pub fn intersections(Array[Intersection]) -> Intersections
 pub fn invert_pattern(Pattern) -> Pattern
 
 pub fn levels_pattern(Pattern, in_min? : Double, in_max? : Double, out_min? : Double, out_max? : Double, gamma? : Double) -> Pattern
+
+pub async fn load_font(String) -> @fonts.Font raise LoaderError
 
 pub async fn load_gltf_file(String) -> Shape raise SceneParseError
 
@@ -198,6 +201,12 @@ pub fn wood_pattern(Array[Color], seed? : Int, scale? : Double, octaves? : Int, 
 pub fn world() -> World
 
 // Errors
+pub suberror LoaderError {
+  LoaderError(String)
+}
+pub impl Eq for LoaderError
+pub impl Show for LoaderError
+
 type ParserError
 pub impl Eq for ParserError
 pub impl Show for ParserError
@@ -1109,6 +1118,7 @@ pub fn World::refracted_color(Self, Computations, Int) -> Color
 pub fn World::shade_hit(Self, Computations, remaining? : Int) -> Color
 
 // Type aliases
+pub using @fonts {type Font}
 
 // Traits
 pub(open) trait Mapping : Show {
