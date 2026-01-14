@@ -62,23 +62,25 @@ pub async fn Camera::render(
   self : Camera,
   world : World,
   samples? : Int = 1,
+  max_bounces? : Int = 4,
   progress? : async (Int) -> Unit,
 ) -> Canvas {
   let image = canvas(self.hsize, self.vsize)
   let samples = if samples < 1 { 1 } else { samples }
+  let max_bounces = if max_bounces < 0 { 0 } else { max_bounces }
   let rng = @random.Rand::chacha8()
   for y in 0..<self.vsize {
     for x in 0..<self.hsize {
       let mut color = color(0, 0, 0)
       if samples == 1 {
         let ray = self.ray_for_pixel(x, y)
-        color = world.color_at(ray)
+        color = world.color_at(ray, remaining=max_bounces)
       } else {
         for s in 0..<samples {
           let rx = rng.double()
           let ry = rng.double()
           let ray = self.ray_for_pixel(x, y, offset_x=rx, offset_y=ry)
-          color = color + world.color_at(ray)
+          color = color + world.color_at(ray, remaining=max_bounces)
         }
         color = color.mul_scalar(1.0 / samples.to_double())
       }

@@ -126,18 +126,21 @@ async fn main {
     }
   }
 
-  let canvas = camera.render(world, samples=settings.samples, progress=async fn(
-    y,
-  ) {
-    if y % 10 == 0 || y == settings.height {
-      let pct = y.to_double() * 100.0 / settings.height.to_double()
-      let msg = "\rProgress: \{pct.to_int()}% (\{y}/\{settings.height})"
-      write_progress(msg)
-      if y == settings.height {
-        write_progress("\n")
+  let canvas = camera.render(
+    world,
+    samples=settings.samples,
+    max_bounces=settings.max_bounces,
+    progress=async fn(y) {
+      if y % 10 == 0 || y == settings.height {
+        let pct = y.to_double() * 100.0 / settings.height.to_double()
+        let msg = "\rProgress: \{pct.to_int()}% (\{y}/\{settings.height})"
+        write_progress(msg)
+        if y == settings.height {
+          write_progress("\n")
+        }
       }
-    }
-  })
+    },
+  )
   canvas.use_tone_mapping = true
 
   // Determine output path

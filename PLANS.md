@@ -1,290 +1,114 @@
-# Ray Tracer Improvement Plans
+# Ray Tracer Roadmap (Clean)
 
-This document outlines a comprehensive plan to take the MoonBit ray tracer to the next level, transforming it from a learning project into a genuinely useful and modern ray tracing tool.
+This file is intentionally forward-looking.
 
-## Priority 1: Foundation & Usability (Critical for making the tool usable)
+- Completed work is summarized briefly (no checkboxes).
+- Only remaining work is tracked as checkboxes.
 
-### Scene Description System
-- [x] Design TOML scene description format
-- [x] Implement scene file parser
-- [x] Create scene loader that builds World objects from descriptions
-- [x] Add validation and error handling for scene files
-- [x] Create example scene files for testing
-- [x] Document scene format specification
-- [x] Unify shared scene application logic (material + transform) to prevent sync/async feature drift
+Last refreshed: 2026-01-14
 
-### Command Line Interface
-- [x] Design CLI argument structure and commands
-- [x] Implement basic `render` command with scene file input
-- [x] Add output format options (PNG, PPM)
-- [x] Add basic rendering options (resolution, samples)
-- [x] Implement progress reporting during rendering
-- [x] Add `--help` and usage documentation
+## Current Baseline (Already Implemented)
 
-### Web Interface (Basic)
-- [ ] Create basic HTML/JS frontend for scene editing
-- [ ] Implement WebAssembly integration for ray tracer
-- [ ] Add drag-and-drop scene file loading
-- [ ] Create simple scene preview (wireframe/basic)
-- [ ] Add material/lighting parameter controls
-- [ ] Implement real-time parameter adjustment
+Core engine + scene system:
+- TOML scene format + async scene loading
+- Render CLI (PNG/PPM, progress output, resolution/samples overrides)
+- BVH acceleration + cooperative (async) rendering
 
-## Priority 2: Performance (Critical for practical use)
+Materials, textures, and patterns:
+- Phong + PBR (metallic/roughness) shading
+- Texture loading (PNG/JPG/HDR) + UV mapping (including mesh UVs)
+- Normal mapping (procedural bump via height→normal, and glTF normalTexture w/ tangents)
+- Material layering via `layer_material` + `layer_mask`
+- Rich procedural pattern library (noise/fBm/marble/wood/voronoi, compositing, warps, triplanar, levels/threshold/posterize/gradient_map, etc.)
 
-### Spatial Acceleration Structures
-- [x] Axis-Aligned Bounding Box (AABB) system
-- [x] Bounding Volume Hierarchy (BVH) builder
-- [x] BVH traversal for ray intersection
-- [x] Spatial partitioning for scene objects
-- [ ] Optimize BVH construction for different scene types
-- [ ] Benchmark intersection performance improvements
+Vector masks + text:
+- `Graphic` assets (gmlewis/fonts/draw) + `graphic_mask`
+- TOML-native text (`graphics.*.type="text"` and `patterns.*.type="text_mask"`) driven by `MOONBIT_FONTS_DIR`
 
-### Parallel Rendering (Cooperative Multitasking)
-- [x] Implement tile-based / line-based asynchronous rendering
-- [x] Add yielding (`pause()`) for responsiveness
-- [ ] Research future MoonBit threading capabilities
-- [ ] Optimize memory usage for long-running renders
-- [ ] Benchmark overhead of cooperative multitasking
+Lighting:
+- Analytical point lights
+- Area lights (rectangular) with multi-sample shadows
 
-### Progressive Rendering
-- [ ] Implement progressive pixel sampling
-- [ ] Create adaptive sampling based on image variance
-- [ ] Implement render time estimation
-- [ ] Add progressive quality indicators
+## Now (Highest Priority Next Steps)
 
-## Priority 3: Modern Rendering Features
+### Performance & UX
+- [ ] Make “preview renders” fast by default
+  - [ ] Add CLI flags for quick-preview presets (e.g. `--draft` sets low bounces, smaller resolution, fewer light samples)
+  - [ ] Add clear, documented trade-offs (noise vs speed)
+- [ ] Benchmark and optimize BVH construction for different scene types
+- [ ] Reduce memory overhead for long-running renders
 
-### Physically Based Rendering (PBR)
-- [x] Research PBR material models (metallic/roughness)
-- [x] Implement Cook-Torrance BRDF
-- [x] Add Fresnel calculations
-- [x] Implement importance sampling for materials (partially, for analytical lights)
-- [x] Add material energy conservation
-- [x] Create PBR material presets (metal, plastic, glass, etc.)
+### Rendering Quality (Big Visual Wins)
+- [ ] Progressive rendering
+  - [ ] Progressive pixel sampling (early image + refinement)
+  - [ ] Adaptive sampling based on variance
+  - [ ] Time estimation + quality indicators
+- [ ] Better sampling controls
+  - [ ] Adaptive sampling for edges/high-frequency regions
+  - [ ] Configurable sampling “quality presets”
 
-### Advanced Lighting
-- [x] Implement area lights (rectangular, circular)
-- [x] Add environment/IBL (Image-Based Lighting)
-- [ ] Implement global illumination (path tracing)
-- [ ] Add light importance sampling
-- [ ] Add emissive materials (light-emitting surfaces)
-	- [ ] Support emissive color/strength on materials
-	- [ ] Sample emissive geometry (“mesh lights”) + MIS with BSDF sampling
-	- [ ] Add a scene-level helper for “neon tube” lights (capsule/cylinder + emissive material)
-	- [ ] Add an example: realistic neon tubing/signage (pairs with bloom/tone mapping)
-- [ ] Implement volumetric lighting effects
-- [ ] Add caustics rendering
+## Next (Modern Lighting & Realism)
 
-### Anti-Aliasing & Sampling
-- [x] Implement supersampling anti-aliasing (SSAA)
-- [ ] Add temporal anti-aliasing for animations
-- [x] Implement jittered sampling patterns
-- [ ] Add adaptive sampling based on edge detection
-- [ ] Optimize sample distribution algorithms
-- [ ] Add configurable sampling quality levels
+### Global Illumination
+- [ ] Path tracing / indirect lighting (at least one-bounce GI)
+- [ ] Light importance sampling (reduce noise, especially with multiple lights)
 
-## Priority 4: Advanced Features
+### Emissive Materials (Neon “for real”)
+- [ ] Add emissive material parameters (color + strength)
+- [ ] Mesh lights: treat emissive geometry as light sources
+  - [ ] MIS between BSDF sampling and light sampling
+- [ ] Add a scene helper for “neon tube” lights (capsule/cylinder + emissive material)
+- [ ] Add a canonical neon example scene that relies on emission + bloom
 
-Next best thing to address: focus first on the Procedural Texture Library + compositing/masks, then wire that into `Graphic`-based masks; extrusion can follow once masks/textures are solid.
+### Volumetrics & Caustics
+- [ ] Volumetric effects (fog/participating media)
+- [ ] Caustics strategy (explicit sampling or photon-like approaches)
 
-### Texture & Material System
-- [x] Implement texture loading (PNG, JPG, HDR) (decode + sampling)
-- [x] Add UV mapping support (spherical/planar/cylindrical/cubic + mesh UVs)
-- [x] Implement normal mapping (procedural: height→normal via `normal_pattern` + `normal_strength`)
-- [x] Implement image-based tangent-space normal maps (RGB normal textures)
-- [x] Transform tangent-space normals to world space via TBN (with graceful fallback on primitives / missing UVs)
-- [x] Support glTF `normalTexture` (including scale factor)
-- [x] Generate mesh tangents/bitangents when missing (positions + UVs; orthonormalize against geometric normal)
-- [ ] Optional later: MikkTSpace compatibility for best parity with DCC/glTF tooling
-- [x] Use glTF-provided tangents when present (ATTRIBUTE `TANGENT`) and ensure parity with common viewers
-- [x] Respect glTF `texCoord` on normal textures (currently assumes primary UV set)
-- [x] Add displacement mapping
-- [x] Implement material layering/blending/masking
+## Geometry & Asset Pipeline
 
-### Procedural Texture Library (High Priority for still images)
-- [x] Create initial procedural texture system (noise, patterns)
-- [x] Add core noise primitives (value noise)
-- [x] Add fBm and common looks (marble, wood)
-- [x] Add cellular/Voronoi noise variants
-- [x] Add domain warping for richer textures
-- [x] Add compositing nodes (mix, invert, warp)
-- [x] Add parameterized controls in scene format (seed, scale, octaves, lacunarity, gain)
-- [x] Create a procedural texture showcase scene + rendered gallery
+- [ ] OBJ improvements (materials/MTL, textures)
+- [ ] Mesh subdivision / smoothing options
+- [ ] LOD strategies
+- [ ] Optional: MikkTSpace compatibility for tangent parity with DCC/glTF tooling
 
-#### Procedural Textures: Next Steps
+## Text & Graphics: Next Capabilities
 
-Goal: keep the system fun for albedo output now, while structuring it so the same pattern graphs can later drive masks/roughness/metallic, normal maps, and displacement.
+- [ ] Text decals with good ergonomics
+  - [ ] Planar projection “decal” helper (pattern transform + mask)
+  - [ ] Optional: UV-space stamping when UVs exist
+- [ ] Text/Graphic extrusion to solid geometry
+  - [ ] Profiles → triangulation + side walls
+  - [ ] UV mapping strategies for extruded geometry
+  - [ ] Example scenes: extruded logo/text; masked decal on a surface
+  - [ ] Focused unit tests for profile→mesh and mask evaluation
 
-- [x] Add a lightweight “field” abstraction (internal): standardize sampling as **scalar/color/vector** so a single pattern graph can be reused for albedo, masks, warps, and height.
-- [x] Allow scalar pattern graphs to drive PBR channels via material fields: `metallic_pattern` and `roughness_pattern` (luminance → [0,1]).
-- [x] Add “more looks” utility nodes:
-	- [x] `levels` / `remap` (bias/gain/contrast + clamp)
-	- [x] `threshold` / `posterize` (hard edges, toon/cell looks)
-	- [x] `gradient_map` (map scalar → palette; makes fBm/Voronoi art-directable)
-	- [x] `triplanar` mapping helper (improves procedural textures on meshes without UVs)
-	- [x] Voronoi “features” (edges/crackle, F1/F2 variants) for stone/cracks
-- [x] Start future geometry hooks (optional, minimal first pass):
-	- [x] Normal-from-height (finite differences on scalar field; no tessellation required)
-	- [x] Displacement mapping plan (field + strength): schema/plumbing only; true displacement gated until a tessellation strategy is chosen
+## Post-Processing
 
-Note: image-based tangent-space normal maps are now implemented via glTF `normalTexture` and can also be applied as a material normal texture; procedural height→normal bump mapping remains supported via `normal_pattern` + `normal_strength`.
+- [ ] Tone mapping controls/operators (beyond current defaults)
+- [ ] Bloom (needed for emissive neon look)
+  - [ ] Threshold + soft-knee + multi-pass blur + composite
+  - [ ] Establish HDR ordering (accumulate HDR → bloom → tone map → output)
+- [ ] Depth of field
+- [ ] Composable post-processing chain configuration
 
-Success metrics:
-- [x] A set of WOW example scenes for each new procedural node (clearly demonstrating why it exists)
-- [x] New nodes are composable via nested inline patterns in TOML
-- [x] Triplanar makes procedural textures look good on GLTF meshes that lack good UVs
+## Shader Authoring (OSL)
 
-### `Graphic` Integration (gmlewis/fonts/draw)
-- [x] Define scene representation for `Graphic` assets (JSON, referenced from TOML)
-- [x] Add loader that reads a `Graphic` asset and applies transforms/scaling
-- [x] Provide an authoring approach for `Graphic` generation (scripts/render-to-json.py + scripts/render-to-svg.py)
-- [x] Implement `Graphic`-based mask pattern (inside/outside)
-- [x] Allow masking between two patterns (solid color or any procedural texture)
-- [x] Support nested masks (pattern graphs can nest `graphic_mask` under `mix.mask`)
-- [x] Add `graphics.<name>.fit` to auto-scale/center Graphics (no transform guesswork)
-- [x] Optimize `graphic_mask` broad-phase rejection (overall/profile bbox culling)
+- [ ] Investigate Open Shading Language (OSL)-style support
+  - [ ] Define a safe shader IR for patterns/materials (pure functions, no I/O)
+  - [ ] Choose execution model: interpreter vs bytecode vs codegen
+  - [ ] TOML integration: `type="osl"` with `file`/`code` + `params`
+  - [ ] Start with a small subset (math/noise/conditionals)
+  - [ ] One demo scene + small gallery comparing built-ins vs OSL
 
-#### TOML-native Text (dynamically-loadable fonts)
+## Tooling & Ecosystem (Lower Priority)
 
-Goal: make text **trivial** to add in scenes without external asset generation. Text should be usable as:
-- a `Graphic` mask (`graphic_mask`) for decals/labels
-- a procedural pattern/mask anywhere a `Pattern` is accepted
-- future extruded solids (text → profile → mesh)
+- [ ] Web UI (WASM) for scene editing and rapid iteration
+- [ ] Debug views (ray visualization, normals/albedo/roughness passes)
+- [ ] Render statistics (timing, samples, rays)
+- [ ] Plugin architecture (likely wasm-based)
+- [ ] Denoising (start with simple spatial filters; consider temporal later)
+- [ ] GPU acceleration research (WebGPU compute)
 
-Plan:
+## Changelog
 
-- [x] Dynamically-load one or more fonts (by name) on-demand using the new @draw.load_font capability (which requires that the `MOONBIT_FONTS_DIR` env var be set)
-- [x] Add a TOML `graphics.<name>` variant that generates a `Graphic` from text at load-time (no `Graphic` JSON file needed)
-	- Fields: `type="text"`, `text`, `font`, `size`, `line_height`, `align`, `max_width` (optional wrap), `origin`/`baseline`, `stroke`/`fill` options
-	- Ensure deterministic layout across platforms (no system fonts)
-
-- [x] Add a TOML shortcut for common labels/decals:
-	- Example: `patterns.label = { type="text_mask", text="A", font="sans", size=..., inside=[...], outside=[...] }`
-	- Or allow `graphic_mask` to accept an inline text graphic: `graphic = { type="text", ... }`
-- [ ] Text on objects as “decal”/projection (TOML-level ergonomics):
-	- first pass: planar projection onto an object via `pattern_transform` and a `graphic_mask`
-	- later: UV-space stamping when UVs exist
-- [ ] Text extrusion path (future): text → outlines → triangulation + sides; keep it a zero-friction TOML feature
-- [ ] Add example scenes: object labels, a “HUD card” plane with multiple labels, and extruded 3D text
-- [ ] Investigate area light specular “grid” artifact (jitter/stratify area-light sampling for specular highlights)
-- [ ] Investigate unexpected orange tint/color bleeding in demo renders (material/reflection interactions)
-- [ ] Implement `Graphic` extrusion to solid geometry (profiles → triangulation + side walls)
-- [ ] Add UV mapping strategies for extruded graphics (planar + configurable mapping)
-- [ ] Add example scenes: extruded logo/text; masked decal on another surface
-- [ ] Add unit tests for profile → mesh and mask evaluation
-
-### Animation System (Deprioritized)
-- [ ] Design keyframe animation framework
-- [ ] Implement object transformation animations
-- [ ] Add camera animation support
-- [ ] Create timeline and interpolation system
-- [ ] Add material property animations
-- [ ] Implement motion blur rendering
-
-### Advanced Geometry
-- [ ] Expand OBJ file support (materials/MTL, textures)
-- [x] Add GLTF format support
-- [ ] Implement mesh subdivision
-- [ ] Add procedural geometry generation
-- [ ] Create geometry optimization tools
-- [ ] Implement level-of-detail (LOD) system
-
-## Priority 5: Ecosystem & Tools
-
-### Plugin Architecture
-- [ ] Design plugin interface specification (maybe via wasm?)
-- [ ] Implement plugin loading system
-- [ ] Create example plugins (materials, shapes, post-effects)
-- [ ] Add plugin discovery and management
-- [ ] Create plugin development documentation
-- [ ] Implement plugin validation and sandboxing
-
-### Debugging & Development Tools
-- [ ] Implement ray visualization system
-- [ ] Add performance profiling tools
-- [ ] Create material debugging modes
-- [ ] Add intersection visualization
-- [ ] Implement render statistics and analytics
-- [x] Create automated test runner + unit tests
-
-### Documentation & Examples
-- [ ] Create comprehensive API documentation
-- [ ] Write getting-started tutorial series
-- [ ] Create example scene gallery with source
-- [ ] Document best practices and optimization tips
-- [ ] Add video tutorials for complex features
-- [ ] Create community contribution guidelines
-- [ ] Docs polish: add one canonical “Normals” section to docs/scene-format.md (procedural height→normal now; normal textures later)
-- [ ] Docs: include a small “known limitations” note for procedural normal-from-height (not true displacement)
-- [x] Add one stable “golden normals” regression test scene/probe (covers procedural bump)
-- [x] Add a GLB normalTexture shading regression test (ensures glTF normal maps affect shading)
-
-## Priority 6: Advanced Graphics & Optimization
-
-### GPU Acceleration
-- [ ] Research WebGPU compute shader capabilities
-- [ ] Implement GPU ray tracing pipeline
-- [ ] Optimize memory bandwidth for GPU rendering
-- [ ] Add GPU/CPU hybrid rendering modes
-- [ ] Implement GPU-accelerated acceleration structures
-- [ ] Benchmark GPU vs CPU performance
-
-### Post-Processing Pipeline
-- [ ] Implement tone mapping operators
-- [ ] Add color grading and correction tools
-- [ ] Implement bloom and lens flare effects
-	- [ ] Bloom for emissive/neon: threshold + soft-knee + multi-pass blur + composite
-	- [ ] Establish HDR ordering (accumulate HDR → bloom → tone map → output)
-- [ ] Add depth of field simulation
-- [ ] Create customizable post-processing chains
-- [ ] Add real-time preview for post-effects
-
-### Shader Authoring (OSL)
-
-Goal: support rich, artist-friendly procedural materials beyond the built-in pattern nodes.
-
-- [ ] Investigate Open Shading Language (OSL) support
-	- [ ] Define a safe “shader IR” for patterns/materials (pure functions, no I/O)
-	- [ ] Decide execution model: interpret IR vs compile to MoonBit/Wasm-friendly bytecode
-	- [ ] Add a TOML integration point: `type="osl"` with `file`/`code` + `params`
-	- [ ] Provide a small supported subset first (noise, math, conditionals)
-	- [ ] Add one demo scene and a reference gallery comparing built-ins vs OSL
-
-### Denoising
-- [ ] Research AI-based denoising algorithms
-- [ ] Implement temporal denoising for animations
-- [ ] Add edge-preserving filters
-- [ ] Create adaptive denoising based on sample count
-- [ ] Implement multiple denoising algorithm options
-- [ ] Add denoising quality/performance trade-offs
-
-## Implementation Phases
-
-### Phase 1: Foundation (Weeks 1-4)
-Focus on Scene Description System and basic CLI to make the tool actually usable by others.
-
-### Phase 2: Performance (Weeks 5-8)
-Implement parallel rendering and basic spatial acceleration to handle realistic scene complexity.
-
-### Phase 3: Modern Rendering (Weeks 9-16)
-Add PBR materials and advanced lighting to produce professional-quality output.
-
-### Phase 4: Polish & Ecosystem (Weeks 17-24)
-Complete the tool with documentation, examples, and advanced features.
-
-## Success Metrics
-
-- [ ] Render complex scenes (1000+ objects) in reasonable time
-- [x] Support standard 3D file formats (OBJ, GLTF) (baseline import; OBJ materials/MTL still TODO)
-- [ ] Produce photorealistic images comparable to commercial tools
-- [ ] Render `Graphic` assets as extruded solids and as texture masks
-- [ ] Provide intuitive user interface for non-programmers
-- [ ] Maintain code quality and comprehensive test coverage
-
-## Notes
-
-- Each checkbox represents a substantial development task (1-5 days of work)
-- Some tasks may be parallelizable or can be worked on incrementally
-- Priority levels can be adjusted based on user feedback and development progress
-- Consider creating separate GitHub issues for major features
-- Regular benchmarking and testing should accompany each implementation phase
+- 2026-01-14: Roadmap cleanup (removed completed checklist clutter, kept a short “Current Baseline” summary)

@@ -8,7 +8,7 @@ version = "1.0"
 width = 1200
 height = 675
 samples = 6
-max_bounces = 8
+max_bounces = 2
 background = [0.02, 0.02, 0.03]
 divide = 1
 exposure = 1.15
@@ -30,9 +30,9 @@ mapping = "spherical"
 type = "area"
 position = [-4.5, 7.0, -5.0]
 u_vec = [9.0, 0.0, 0.0]
-u_steps = 4
+u_steps = 2
 v_vec = [0.0, 0.0, 9.0]
-v_steps = 4
+v_steps = 2
 intensity = [1.25, 1.22, 1.18]
 
 # Cornell-box-style colored walls: red/green side area lights.
@@ -40,34 +40,19 @@ intensity = [1.25, 1.22, 1.18]
 type = "area"
 position = [-5.9, 0.8, -1.5]
 u_vec = [0.0, 5.0, 0.0]
-u_steps = 3
+u_steps = 2
 v_vec = [0.0, 0.0, 7.0]
-v_steps = 4
+v_steps = 2
 intensity = [0.90, 0.12, 0.12]
 
 [[lights]]
 type = "area"
 position = [5.9, 0.8, -1.5]
 u_vec = [0.0, 5.0, 0.0]
-u_steps = 3
+u_steps = 2
 v_vec = [0.0, 0.0, -7.0]
-v_steps = 4
+v_steps = 2
 intensity = [0.12, 0.90, 0.12]
-
-[[lights]]
-type = "point"
-position = [7.5, 3.2, -1.5]
-intensity = [0.35, 0.45, 0.75]
-
-[[lights]]
-type = "point"
-position = [-7.5, 3.0, 2.0]
-intensity = [0.85, 0.30, 0.55]
-
-[[lights]]
-type = "point"
-position = [0.0, 5.8, 8.0]
-intensity = [0.30, 0.30, 0.34]
 
 
 # -----------------------------------------------------------------------------
@@ -103,6 +88,40 @@ scale = 2.8
 octaves = 5
 lacunarity = 2.0
 gain = 0.50
+
+# Subtle wall variation so the corridor isn't a flat gray.
+[patterns.wall_base]
+type = "mix"
+
+[patterns.wall_base.a]
+type = "checkers"
+colors = [
+  [0.05, 0.06, 0.08],
+  [0.05, 0.06, 0.08],
+]
+
+[patterns.wall_base.b]
+type = "checkers"
+colors = [
+  [0.10, 0.06, 0.14],
+  [0.10, 0.06, 0.14],
+]
+
+[patterns.wall_base.mask]
+type = "levels"
+in_min = 0.25
+in_max = 0.85
+out_min = 0.0
+out_max = 1.0
+gamma = 1.10
+
+[patterns.wall_base.mask.pattern]
+type = "fbm"
+seed = 11
+scale = 0.9
+octaves = 5
+lacunarity = 2.0
+gain = 0.55
 
 # Floor typography: kept close to camera so it reads clearly.
 [patterns.floor_text]
@@ -191,10 +210,10 @@ pattern = "floor_base"
 [materials.neon_paint]
 lighting_mode = "phong"
 color = [0.20, 0.75, 0.95]
-ambient = 0.22
-diffuse = 0.85
-specular = 0.20
-shininess = 220.0
+ambient = 0.55
+diffuse = 0.75
+specular = 0.08
+shininess = 80.0
 reflective = 0.02
 pattern = "neon_fill"
 
@@ -213,13 +232,22 @@ layer_opacity = 1.0
 
 [materials.wall]
 color = [0.08, 0.08, 0.10]
-ambient = 0.10
+ambient = 0.12
 diffuse = 0.85
 specular = 0.05
 shininess = 40.0
+pattern = "wall_base"
 layer_material = "neon_paint"
 layer_mask = "wall_text"
 layer_opacity = 0.95
+
+[materials.wall_sides]
+color = [0.08, 0.08, 0.10]
+ambient = 0.10
+diffuse = 0.90
+specular = 0.04
+shininess = 30.0
+pattern = "wall_base"
 
 [materials.gold]
 lighting_mode = "pbr"
@@ -268,18 +296,18 @@ material = "floor"
 [[objects]]
 type = "plane"
 material = "wall"
-transform = { translation = [0.0, 0.0, 9.0], rotation = [1.571, 0.0, 0.0] }
+transform = { translation = [0.0, 0.0, 9.0], rotation = [-1.571, 0.0, 0.0] }
 
 # Corridor side walls (subtle, mostly to catch colored light).
 [[objects]]
 type = "plane"
-material = { color = [0.06, 0.06, 0.07], ambient = 0.06, diffuse = 0.9, specular = 0.04, shininess = 30.0 }
+material = "wall_sides"
 transform = { translation = [-6.0, 0.0, 0.0], rotation = [0.0, 0.0, 1.571] }
 
 [[objects]]
 type = "plane"
-material = { color = [0.06, 0.06, 0.07], ambient = 0.06, diffuse = 0.9, specular = 0.04, shininess = 30.0 }
-transform = { translation = [6.0, 0.0, 0.0], rotation = [0.0, 0.0, 1.571] }
+material = "wall_sides"
+transform = { translation = [6.0, 0.0, 0.0], rotation = [0.0, 0.0, -1.571] }
 
 # The portal: a hollow tube (CSG difference) + a glass core.
 [[objects]]

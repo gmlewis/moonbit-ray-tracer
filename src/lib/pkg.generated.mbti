@@ -271,7 +271,7 @@ pub(all) struct Camera {
   half_height : Double
 }
 pub fn Camera::ray_for_pixel(Self, Int, Int, offset_x? : Double, offset_y? : Double) -> Ray
-pub async fn Camera::render(Self, World, samples? : Int, progress? : async (Int) -> Unit) -> Canvas
+pub async fn Camera::render(Self, World, samples? : Int, max_bounces? : Int, progress? : async (Int) -> Unit) -> Canvas
 pub impl Eq for Camera
 pub impl Show for Camera
 
@@ -636,6 +636,7 @@ pub(all) struct Light {
   kind : LightKind
 }
 pub fn Light::point_at(Self, Int, Int) -> Tuple
+pub fn Light::point_at_uv(Self, Double, Double) -> Tuple
 pub fn Light::samples(Self) -> Int
 pub impl Eq for Light
 pub impl Show for Light

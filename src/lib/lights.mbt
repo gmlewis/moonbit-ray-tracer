@@ -31,13 +31,20 @@ pub fn area_light(
 }
 
 ///|
-pub fn Light::point_at(self : Light, u : Int, v : Int) -> Tuple {
+pub fn Light::point_at_uv(self : Light, u : Double, v : Double) -> Tuple {
   match self.kind {
     Point => self.position
     Area(uvec, _, vvec, _) =>
-      self.position +
-      uvec.mul_scalar(u.to_double() + 0.5) +
-      vvec.mul_scalar(v.to_double() + 0.5)
+      self.position + uvec.mul_scalar(u) + vvec.mul_scalar(v)
+  }
+}
+
+///|
+pub fn Light::point_at(self : Light, u : Int, v : Int) -> Tuple {
+  match self.kind {
+    Point => self.position
+    Area(_, _, _, _) =>
+      self.point_at_uv(u.to_double() + 0.5, v.to_double() + 0.5)
   }
 }
 

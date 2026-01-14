@@ -128,7 +128,13 @@ pub fn World::shade_hit(
       Area(_, u_steps, _, v_steps) => {
         for v in 0..<v_steps {
           for u in 0..<u_steps {
-            let light_pos = light.point_at(u, v)
+            // Stratified jitter within each cell to avoid visible grid artifacts.
+            let ju = jitter01(comps.point, u, v, 0.123)
+            let jv = jitter01(comps.point, u, v, 8.456)
+            let light_pos = light.point_at_uv(
+              u.to_double() + ju,
+              v.to_double() + jv,
+            )
             let in_shadow = self.is_shadowed(comps.over_point, light_pos)
 
             // Temporarily use a fake light for the sample position
@@ -218,6 +224,18 @@ fn pseudo_random_vector(p : Tuple) -> Tuple {
   let z = @math.sin(p.x * 73.156 + p.y * 52.234 + p.z * 21.337) * 43758.5453
   let z = z - z.floor()
   vector(x * 2.0 - 1.0, y * 2.0 - 1.0, z * 2.0 - 1.0)
+}
+
+///|
+fn jitter01(p : Tuple, u : Int, v : Int, salt : Double) -> Double {
+  let t = p.x * 12.9898 +
+    p.y * 78.233 +
+    p.z * 37.719 +
+    u.to_double() * 15.23 +
+    v.to_double() * 47.11 +
+    salt
+  let x = @math.sin(t) * 43758.5453
+  x - x.floor()
 }
 
 ///|
