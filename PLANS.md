@@ -139,7 +139,7 @@ Success metrics:
 - [x] Add `graphics.<name>.fit` to auto-scale/center Graphics (no transform guesswork)
 - [x] Optimize `graphic_mask` broad-phase rejection (overall/profile bbox culling)
 
-#### TOML-native Text (built-in fonts)
+#### TOML-native Text (dynamically-loadable fonts)
 
 Goal: make text **trivial** to add in scenes without external asset generation. Text should be usable as:
 - a `Graphic` mask (`graphic_mask`) for decals/labels
@@ -147,8 +147,8 @@ Goal: make text **trivial** to add in scenes without external asset generation. 
 - future extruded solids (text → profile → mesh)
 
 Plan:
-- [ ] Vendor a small curated set of baked-in fonts (e.g., sans/serif/mono) and expose them by stable names in TOML
-- [ ] Add a TOML `graphics.<name>` variant that generates a `Graphic` from text at load-time (no JSON file needed)
+- [ ] Dynamically-load one or more fonts (by name) on-demand using the new @draw.load_font capability (which requires that the `MOONBIT_FONTS_DIR` env var be set)
+- [ ] Add a TOML `graphics.<name>` variant that generates a `Graphic` from text at load-time (no `Graphic` JSON file needed)
 	- Fields: `type="text"`, `text`, `font`, `size`, `line_height`, `align`, `max_width` (optional wrap), `origin`/`baseline`, `stroke`/`fill` options
 	- Ensure deterministic layout across platforms (no system fonts)
 - [ ] Add a TOML shortcut for common labels/decals:
