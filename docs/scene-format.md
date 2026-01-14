@@ -310,6 +310,56 @@ base = { type = "marble", colors = [[0.9,0.9,0.95], [0.2,0.2,0.25]], scale = 2.0
 warp = { type = "fbm", seed = 3, scale = 3.0, octaves = 5, lacunarity = 2.0, gain = 0.5 }
 ```
 
+### Graphic-Based Mask Pattern Types
+
+These patterns turn a 2D vector `Graphic` into a pattern by evaluating whether the surface UV point lies inside the graphic’s filled area.
+
+Notes:
+- These require the async `parse_scene_file` path (the `render` CLI path), since it is responsible for loading or generating graphics.
+
+- `"graphic_mask"`: Use a preloaded named graphic (or inline graphic table) as a mask
+  - Requires: `graphic` (string name or inline graphic table)
+  - Optional: `curve_segments` (int, default `16`), `style` (bool, default `false`)
+  - Optional colors: `inside` (default white), `outside` (default black)
+
+Example (named graphic reference):
+
+```toml
+[graphics.logo]
+file = "assets/logo.json"
+
+[patterns.logo_mask]
+type = "graphic_mask"
+graphic = "logo"
+inside = [1.0, 1.0, 1.0]
+outside = [0.0, 0.0, 0.0]
+```
+
+Example (inline TOML-native text graphic):
+
+```toml
+[patterns.title_mask]
+type = "graphic_mask"
+graphic = { type = "text", text = "HELLO", font = "lato_lightitalic", size = 24.0, align = "center" }
+```
+
+- `"text_mask"`: Convenience wrapper that generates a text `Graphic` and immediately uses it as a mask
+  - Requires: `text`, `font`
+  - Optional: `size` (1.0), `align` (left|center|right), `y_up` (true), `line_height` (1.0)
+  - Optional: `curve_segments`, `style`, `inside`, `outside`
+
+Example:
+
+```toml
+[patterns.label]
+type = "text_mask"
+text = "MoonBit"
+font = "lato_lightitalic"
+size = 18.0
+inside = [1.0, 1.0, 1.0]
+outside = [0.0, 0.0, 0.0]
+```
+
 ### Pattern Transforms
 Patterns can be transformed using the same transform syntax as objects:
 
@@ -343,9 +393,40 @@ fit = { center = [0.0, 0.0], size = [4.0, 4.0], mode = "contain" }
 transform = { position = [0.0, 0.0], rotation = 0.0, scale = [1.0, 1.0], skew = 0.0, origin = [0.0, 0.0] }
 ```
 
+### TOML-native Text Graphics
+
+You can also generate a `@draw.Graphic` directly from TOML using `type = "text"`.
+
+This requires fonts to be available at runtime via `MOONBIT_FONTS_DIR`, which should point to a directory containing `all-fonts/*.json.gz`.
+
+```toml
+[graphics.label]
+type = "text"
+text = "Hello,\nMoonBit!"
+font = "lato_lightitalic"
+size = 24.0
+
+# Optional
+align = "left"       # left|center|right (default: left)
+y_up = true           # default: true
+line_height = 1.2     # default: 1.0
+
+# Optional styling (currently useful for export/future direct rendering)
+fill = [1.0, 1.0, 1.0]
+stroke = { color = [0.0, 0.0, 0.0], width = 0.25 }
+
+# You can still use fit/transform with text graphics
+fit = { center = [0.0, 0.0], size = [4.0, 2.0], mode = "contain" }
+transform = { position = [0.0, 0.0], rotation = 0.0, scale = [1.0, 1.0], skew = 0.0, origin = [0.0, 0.0] }
+```
+
 Notes:
 - `file` is loaded in `parse_scene_file` (the `render` CLI path). The string-only `parse_scene` helper does not load graphics.
 - The JSON format is exactly what `@draw.Graphic::to_json().stringify()` produces.
+
+Text graphic notes:
+- Text graphics are also only loaded in `parse_scene_file`.
+- Multiline text is supported via `\n`.
 
 `fit.mode`:
 - `contain` (default): preserve aspect ratio; fits inside `size`.

@@ -1017,15 +1017,33 @@ async fn parse_graphic_with_io(
     @toml.TomlTable(t) => t
     _ => raise SceneParseError("graphic must be a table")
   }
-  let file = get_string_required(table, "file")
-  let json_str = @fs.read_file(file).text() catch {
-    e => raise SceneParseError("Failed to read graphic file \{file}: \{e}")
+  let kind = match table.get("type") {
+    Some(@toml.TomlString(s)) => s
+    Some(_) => raise SceneParseError("graphic.type must be a string")
+    None =>
+      match table.get("file") {
+        Some(_) => "file"
+        None =>
+          raise SceneParseError("graphic must specify either type or file")
+      }
   }
-  let json_val = @json.parse(json_str) catch {
-    e => raise SceneParseError("Failed to parse graphic JSON \{file}: \{e}")
-  }
-  let graphic : @draw.Graphic = @json.from_json(json_val) catch {
-    e => raise SceneParseError("Failed to decode graphic JSON \{file}: \{e}")
+  let graphic = match kind {
+    "file" => {
+      let file = get_string_required(table, "file")
+      let json_str = @fs.read_file(file).text() catch {
+        e => raise SceneParseError("Failed to read graphic file \{file}: \{e}")
+      }
+      let json_val = @json.parse(json_str) catch {
+        e => raise SceneParseError("Failed to parse graphic JSON \{file}: \{e}")
+      }
+      let graphic : @draw.Graphic = @json.from_json(json_val) catch {
+        e =>
+          raise SceneParseError("Failed to decode graphic JSON \{file}: \{e}")
+      }
+      graphic
+    }
+    "text" => make_text_graphic(table)
+    _ => raise SceneParseError("Unknown graphic type: \{kind}")
   }
 
   // Optional auto-fit (normalize to a target size/center) before user transform.
@@ -1042,6 +1060,91 @@ async fn parse_graphic_with_io(
     }
     None => fitted
   }
+}
+
+///|
+fn parse_text_align(s : String) -> @draw.TextAlign raise SceneParseError {
+  match s {
+    "left" => @draw.TextAlign::Left
+    "center" => @draw.TextAlign::Center
+    "right" => @draw.TextAlign::Right
+    _ => raise SceneParseError("text align must be one of: left, center, right")
+  }
+}
+
+///|
+async fn make_text_graphic(
+  table : Map[String, @toml.TomlValue],
+) -> @draw.Graphic raise SceneParseError {
+  let text = get_string_required(table, "text")
+  let font_name = get_string_required(table, "font")
+  let size = get_float_or_default(table, "size", 1.0)
+  if size <= 0.0 {
+    raise SceneParseError("text size must be positive")
+  }
+  let align = parse_text_align(get_string_or_default(table, "align", "left"))
+  let y_up = get_bool_or_default(table, "y_up", true)
+  let line_height = get_float_or_default(table, "line_height", 1.0)
+  if line_height <= 0.0 {
+    raise SceneParseError("text line_height must be positive")
+  }
+  let font = load_font(font_name) catch {
+    LoaderError(e) =>
+      raise SceneParseError("Failed to load font '\{font_name}': \{e}")
+  }
+  let lines = text.split("\n").collect()
+  let mut graphic = if lines.length() == 1 && (line_height - 1.0).abs() < 1.e-12 {
+    @draw.text(font, text, size~, align~, y_up~) catch {
+      @draw.DrawError(e) =>
+        raise SceneParseError("Failed to build text graphic: \{e}")
+    }
+  } else {
+    let scale = size / font.units_per_em
+    let advance_units = font.units_per_em - font.descent
+    let advance = advance_units * scale * line_height
+    let y_scale = if y_up { 1.0 } else { -1.0 }
+    let dy_per_line = -y_scale * advance
+    let items = []
+    for i in 0..<lines.length() {
+      let mut line = lines[i].to_string()
+      if line.has_suffix("\r") && line.length() > 0 {
+        line = line.unsafe_substring(start=0, end=line.length() - 1)
+      }
+      let g = @draw.text(font, line, size~, align~, y_up~) catch {
+        @draw.DrawError(e) =>
+          raise SceneParseError("Failed to build text graphic: \{e}")
+      }
+      items.push(g.translate(@draw.vec2(0.0, dy_per_line * i.to_double())))
+    }
+    @draw.Group::new(items~).as_graphic()
+  }
+
+  // Optional styling (useful when exporting or future direct rendering).
+  match table.get("fill") {
+    Some(v) => {
+      let c = parse_color(v)
+      let dc = @draw.rgba(c.red, c.green, c.blue, 1.0)
+      graphic = graphic.with_fill(Some(dc.as_fill()))
+    }
+    None => ()
+  }
+  match table.get("stroke") {
+    Some(@toml.TomlTable(st)) => {
+      let w = get_float_or_default(st, "width", 0.1)
+      if w < 0.0 {
+        raise SceneParseError("stroke.width must be non-negative")
+      }
+      let sc = match st.get("color") {
+        Some(v) => parse_color(v)
+        None => color(0, 0, 0)
+      }
+      let dsc = @draw.rgba(sc.red, sc.green, sc.blue, 1.0)
+      graphic = graphic.with_style(stroke=@draw.stroke(dsc, width=w))
+    }
+    Some(_) => raise SceneParseError("stroke must be a table")
+    None => ()
+  }
+  graphic
 }
 
 ///|
@@ -1432,10 +1535,16 @@ async fn parse_pattern_with_io(
       texture(canvas, mapping~)
     }
     "graphic_mask" => {
-      let name = get_string_required(pattern_table, "graphic")
-      let graphic = match graphics.get(name) {
-        Some(g) => g.clone()
-        None => raise SceneParseError("Unknown graphic: \{name}")
+      let graphic = match pattern_table.get("graphic") {
+        Some(@toml.TomlString(name)) =>
+          match graphics.get(name) {
+            Some(g) => g.clone()
+            None => raise SceneParseError("Unknown graphic: \{name}")
+          }
+        Some(@toml.TomlTable(_)) =>
+          parse_graphic_with_io(pattern_table.get("graphic").unwrap())
+        Some(_) => raise SceneParseError("graphic must be a string or a table")
+        None => raise SceneParseError("graphic is required")
       }
       let curve_segments = get_int_or_default(
         pattern_table, "curve_segments", 16,
@@ -1450,6 +1559,22 @@ async fn parse_pattern_with_io(
         None => color(0, 0, 0)
       }
       graphic_mask_pattern(graphic, curve_segments~, inside~, outside~, style~)
+    }
+    "text_mask" => {
+      let curve_segments = get_int_or_default(
+        pattern_table, "curve_segments", 16,
+      )
+      let style = get_bool_or_default(pattern_table, "style", false)
+      let inside = match pattern_table.get("inside") {
+        Some(v) => parse_color(v)
+        None => color(1, 1, 1)
+      }
+      let outside = match pattern_table.get("outside") {
+        Some(v) => parse_color(v)
+        None => color(0, 0, 0)
+      }
+      let g = make_text_graphic(pattern_table)
+      graphic_mask_pattern(g, curve_segments~, inside~, outside~, style~)
     }
     _ => raise SceneParseError("Unknown pattern type: \{pattern_type}")
   }
