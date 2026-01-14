@@ -127,6 +127,15 @@ Regenerate the demo asset (from the gmlewis/fonts repo):
 echo "MoonBit Render Test" | ./scripts/render-to-json.py -o examples/assets/moonbit-bloom.json
 ```
 
+### [`neon-portal-demo.toml`](neon-portal-demo.toml)
+A scene that uses TOML-native text to build crisp vector masks at runtime.
+
+**Features demonstrated:**
+- `text_mask` pattern for decals/labels
+- Material layering via `layer_material` + `layer_mask`
+- CSG portal ring + glass core
+- Cornell-box-style colored side lighting (red/green)
+
 ### [`warp-field-demo.toml`](warp-field-demo.toml)
 Demonstrates using any pattern graph as a **warp field** (vector-ish RGB) to drive domain warping.
 

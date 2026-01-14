@@ -67,6 +67,11 @@ This document outlines a comprehensive plan to take the MoonBit ray tracer to th
 - [x] Add environment/IBL (Image-Based Lighting)
 - [ ] Implement global illumination (path tracing)
 - [ ] Add light importance sampling
+- [ ] Add emissive materials (light-emitting surfaces)
+	- [ ] Support emissive color/strength on materials
+	- [ ] Sample emissive geometry (“mesh lights”) + MIS with BSDF sampling
+	- [ ] Add a scene-level helper for “neon tube” lights (capsule/cylinder + emissive material)
+	- [ ] Add an example: realistic neon tubing/signage (pairs with bloom/tone mapping)
 - [ ] Implement volumetric lighting effects
 - [ ] Add caustics rendering
 
@@ -147,11 +152,13 @@ Goal: make text **trivial** to add in scenes without external asset generation. 
 - future extruded solids (text → profile → mesh)
 
 Plan:
-- [ ] Dynamically-load one or more fonts (by name) on-demand using the new @draw.load_font capability (which requires that the `MOONBIT_FONTS_DIR` env var be set)
-- [ ] Add a TOML `graphics.<name>` variant that generates a `Graphic` from text at load-time (no `Graphic` JSON file needed)
+
+- [x] Dynamically-load one or more fonts (by name) on-demand using the new @draw.load_font capability (which requires that the `MOONBIT_FONTS_DIR` env var be set)
+- [x] Add a TOML `graphics.<name>` variant that generates a `Graphic` from text at load-time (no `Graphic` JSON file needed)
 	- Fields: `type="text"`, `text`, `font`, `size`, `line_height`, `align`, `max_width` (optional wrap), `origin`/`baseline`, `stroke`/`fill` options
 	- Ensure deterministic layout across platforms (no system fonts)
-- [ ] Add a TOML shortcut for common labels/decals:
+
+- [x] Add a TOML shortcut for common labels/decals:
 	- Example: `patterns.label = { type="text_mask", text="A", font="sans", size=..., inside=[...], outside=[...] }`
 	- Or allow `graphic_mask` to accept an inline text graphic: `graphic = { type="text", ... }`
 - [ ] Text on objects as “decal”/projection (TOML-level ergonomics):
@@ -226,9 +233,22 @@ Plan:
 - [ ] Implement tone mapping operators
 - [ ] Add color grading and correction tools
 - [ ] Implement bloom and lens flare effects
+	- [ ] Bloom for emissive/neon: threshold + soft-knee + multi-pass blur + composite
+	- [ ] Establish HDR ordering (accumulate HDR → bloom → tone map → output)
 - [ ] Add depth of field simulation
 - [ ] Create customizable post-processing chains
 - [ ] Add real-time preview for post-effects
+
+### Shader Authoring (OSL)
+
+Goal: support rich, artist-friendly procedural materials beyond the built-in pattern nodes.
+
+- [ ] Investigate Open Shading Language (OSL) support
+	- [ ] Define a safe “shader IR” for patterns/materials (pure functions, no I/O)
+	- [ ] Decide execution model: interpret IR vs compile to MoonBit/Wasm-friendly bytecode
+	- [ ] Add a TOML integration point: `type="osl"` with `file`/`code` + `params`
+	- [ ] Provide a small supported subset first (noise, math, conditionals)
+	- [ ] Add one demo scene and a reference gallery comparing built-ins vs OSL
 
 ### Denoising
 - [ ] Research AI-based denoising algorithms

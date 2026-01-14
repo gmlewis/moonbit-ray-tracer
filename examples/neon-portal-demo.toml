@@ -35,6 +35,25 @@ v_vec = [0.0, 0.0, 9.0]
 v_steps = 4
 intensity = [1.25, 1.22, 1.18]
 
+# Cornell-box-style colored walls: red/green side area lights.
+[[lights]]
+type = "area"
+position = [-5.9, 0.8, -1.5]
+u_vec = [0.0, 5.0, 0.0]
+u_steps = 3
+v_vec = [0.0, 0.0, 7.0]
+v_steps = 4
+intensity = [0.90, 0.12, 0.12]
+
+[[lights]]
+type = "area"
+position = [5.9, 0.8, -1.5]
+u_vec = [0.0, 5.0, 0.0]
+u_steps = 3
+v_vec = [0.0, 0.0, -7.0]
+v_steps = 4
+intensity = [0.12, 0.90, 0.12]
+
 [[lights]]
 type = "point"
 position = [7.5, 3.2, -1.5]

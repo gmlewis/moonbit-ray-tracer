@@ -33,6 +33,7 @@
 ./scripts/run-example.py levels-demo
 ./scripts/run-example.py mask-demo
 ./scripts/run-example.py material-layer-demo
+./scripts/run-example.py neon-portal-demo
 ./scripts/run-example.py normal-tangent-mirror-demo
 ./scripts/run-example.py patterns-showcase
 ./scripts/run-example.py pbr-demo
