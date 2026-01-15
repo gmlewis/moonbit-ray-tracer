@@ -161,6 +161,12 @@ Print render statistics (useful when optimizing slow scenes):
 ./scripts/run-example.py neon-portal-demo --draft --stats
 ```
 
+Cap area-light sampling for faster soft-shadow previews:
+
+```bash
+./scripts/run-example.py area-light-demo --stats --area-steps 4
+```
+
 ### Stats diagnostic scenes
 
 These scenes are purpose-built to make `--stats` easier to interpret by isolating common cost drivers:

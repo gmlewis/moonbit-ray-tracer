@@ -31,8 +31,17 @@ Vector masks + text:
 Lighting:
 - Analytical point lights
 - Area lights (rectangular) with multi-sample shadows
+- Area light sampling cap (`--area-steps`) for faster soft-shadow previews
 
 ## Now (Highest Priority Next Steps)
+
+### Stats-driven findings (what dominates runtime)
+
+From the `examples/stats-*.toml` diagnostics and a small `glb-demo` run with `--stats`:
+
+- **Area light scenes are dominated by shadow sampling**: with a 16×16 area light, `shadow/primary = 256` and bounds culling is effectively 0% (there’s little BVH work to save).
+- **glTF/triangle-heavy scenes are dominated by BVH traversal + primitive tests**: in `glb-demo` at 240×135×1, `estimated primitive tests avg/intersect_world ≈ 1258`, `group bounds culled ≈ 39%`, and `group bounds tests avg/ray ≈ 269`.
+- **Secondary rays are non-trivial in GLB scenes**: `secondary/primary ≈ 2.6` and `shadow/primary ≈ 5.7`, so “even at samples=1” you can still get a lot of work.
 
 ### Suggested “First Wins” (High Payoff / Low Risk)
 
@@ -49,6 +58,14 @@ Suggested order: debug views → shadow/area-light performance controls.
 - [ ] Add more “preview render” controls
   - [ ] Optional: `--draft` should also cap area-light samples (or add `--area-steps` overrides)
   - [ ] Document trade-offs (noise vs speed)
+- [ ] Area-light performance controls (highest payoff for soft-shadow scenes)
+  - [ ] Optional: separate `u_steps`/`v_steps` caps (beyond the current `--area-steps`)
+  - [ ] Fast shadow mode: stratified subset sampling for previews
+  - [ ] Consider per-light overrides in TOML (scene-local defaults)
+- [ ] BVH traversal + triangle intersection optimization (highest payoff for glTF scenes)
+  - [ ] Reduce group bounds tests per ray (stack/iteration strategy, data layout)
+  - [ ] Improve BVH build heuristics (partitioning strategy; consider SAH-like splits)
+  - [ ] Reduce allocations/copies in intersection collection on hot paths
 - [ ] Benchmark and optimize BVH construction for different scene types
 - [ ] Reduce memory overhead for long-running renders
 
@@ -129,3 +146,4 @@ Suggested order: debug views → shadow/area-light performance controls.
 
 - 2026-01-14: Roadmap cleanup (removed completed checklist clutter, kept a short “Current Baseline” summary)
 - 2026-01-14: Added stats diagnostic scenes; `--stats` analysis suggests area-light shadow sampling dominates work
+- 2026-01-14: Added BVH bounds-test stats; `glb-demo` suggests BVH traversal/triangle tests dominate in glTF scenes

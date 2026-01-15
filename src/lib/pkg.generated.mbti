@@ -643,6 +643,7 @@ pub(all) struct Light {
   intensity : Color
   kind : LightKind
 }
+pub fn Light::cap_area_steps(Self, Int) -> Self
 pub fn Light::point_at(Self, Int, Int) -> Tuple
 pub fn Light::point_at_uv(Self, Double, Double) -> Tuple
 pub fn Light::samples(Self) -> Int

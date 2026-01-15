@@ -6,6 +6,11 @@ async fn main {
     "width": @cli.opt_int(0, short='w', help="Override output width"),
     "height": @cli.opt_int(0, short='H', help="Override output height"),
     "samples": @cli.opt_int(0, help="Override samples per pixel"),
+    "area_steps": @cli.opt_int(
+      0,
+      help="Cap area light sampling steps per axis (e.g. 4 => at most 4x4 shadow samples)",
+    ),
+    "area-steps": @cli.opt_int(0, help="Alias for --area_steps"),
     "draft": @cli.flag(
       help="Quick preview preset (lower resolution/samples/bounces unless overridden)",
     ),
@@ -48,6 +53,14 @@ async fn main {
   let w_override = args.int("width")
   let h_override = args.int("height")
   let s_override = args.int("samples")
+  let area_steps_override = {
+    let a = args.int("area_steps")
+    if a > 0 {
+      a
+    } else {
+      args.int("area-steps")
+    }
+  }
   let mut target_w = settings.width
   let mut target_h = settings.height
   if draft {
@@ -95,6 +108,11 @@ async fn main {
   }
   if s_override > 0 {
     settings.samples = s_override
+  }
+  if area_steps_override > 0 {
+    world.lights = world.lights.map(fn(l) {
+      l.cap_area_steps(area_steps_override)
+    })
   }
   let d = args.int("divide")
   if d > 0 {
