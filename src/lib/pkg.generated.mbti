@@ -154,6 +154,12 @@ pub fn sphere() -> Shape
 
 pub fn spherical_map(Tuple) -> (Double, Double)
 
+pub fn stats_disable() -> Unit
+
+pub fn stats_enable_and_reset() -> Unit
+
+pub fn stats_record_group_bounds_test(Bool) -> Unit
+
 pub fn stripe_pattern(Array[Color]) -> Pattern
 
 pub fn texture(Canvas, mapping? : &Mapping) -> Pattern
@@ -893,6 +899,7 @@ pub fn Shape::bounds(Self) -> Bounds
 pub fn Shape::children(Self) -> Array[Self]
 pub fn Shape::clone(Self) -> Self
 pub fn Shape::divide(Self, Int) -> Unit
+pub fn Shape::estimated_primitive_count(Self) -> Int
 pub fn Shape::includes_shape(Self, Self) -> Bool
 pub fn Shape::intersect(Self, Ray) -> Intersections
 pub fn Shape::local_intersect(Self, Ray) -> Intersections
@@ -1127,8 +1134,10 @@ pub(all) struct World {
   mut environment_map : Pattern?
   mut stats_enabled : Bool
   mut stats : RenderStats
+  mut stats_est_primitives_per_intersect_world : Int
 }
 pub fn World::color_at(Self, Ray, remaining? : Int) -> Color
+pub fn World::estimated_primitive_count(Self) -> Int
 pub fn World::intersect_world(Self, Ray) -> Intersections
 pub fn World::is_shadowed(Self, Tuple, Tuple) -> Bool
 pub fn World::reflected_color(Self, Computations, Int) -> Color

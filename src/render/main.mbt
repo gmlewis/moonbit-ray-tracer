@@ -165,6 +165,8 @@ async fn main {
   if stats_enabled {
     world.stats_enabled = true
     world.stats = @lib.render_stats()
+    @lib.stats_enable_and_reset()
+    world.stats_est_primitives_per_intersect_world = world.estimated_primitive_count()
   }
   async fn write_progress(msg : String) -> Unit {
     // Best-effort terminal output; ignore failures.

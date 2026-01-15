@@ -14,6 +14,7 @@ height = 135
 samples = 1
 max_bounces = 1
 background = [0.02, 0.02, 0.02]
+divide = 4
 
 [camera]
 position = [0.0, 4.0, -14.0]

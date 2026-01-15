@@ -161,7 +161,9 @@ pub fn Shape::local_intersect(self : Shape, local_ray : Ray) -> Intersections {
     }
     Group(group) => {
       let bounds = group.bounds()
-      if not(bounds.local_intersect(local_ray)) {
+      let passed = bounds.local_intersect(local_ray)
+      stats_record_group_bounds_test(passed)
+      if not(passed) {
         return intersections([])
       }
       group.local_intersect(self, local_ray)
@@ -303,6 +305,23 @@ pub fn Shape::children(self : Shape) -> Array[Shape] {
     TriangleUV(_) => []
     SmoothTriangleUV(_) => []
     CSG(_) => []
+  }
+}
+
+///|
+pub fn Shape::estimated_primitive_count(self : Shape) -> Int {
+  match self.object {
+    Group(group) => {
+      let mut total = 0
+      for child in group.children {
+        total = total + child.estimated_primitive_count()
+      }
+      total
+    }
+    CSG(csg) =>
+      csg.left.estimated_primitive_count() +
+      csg.right.estimated_primitive_count()
+    _ => 1
   }
 }
 

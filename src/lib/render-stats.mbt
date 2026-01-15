@@ -12,6 +12,48 @@ pub(all) struct RenderStats {
 }
 
 ///|
+let stats_global_enabled : Ref[Bool] = { val: false }
+
+///|
+let stats_group_bounds_tests : Ref[Int] = { val: 0 }
+
+///|
+let stats_group_bounds_culled : Ref[Int] = { val: 0 }
+
+///|
+pub fn stats_enable_and_reset() -> Unit {
+  stats_global_enabled.val = true
+  stats_group_bounds_tests.val = 0
+  stats_group_bounds_culled.val = 0
+}
+
+///|
+pub fn stats_disable() -> Unit {
+  stats_global_enabled.val = false
+}
+
+///|
+pub fn stats_record_group_bounds_test(passed : Bool) -> Unit {
+  if not(stats_global_enabled.val) {
+    return
+  }
+  stats_group_bounds_tests.val = stats_group_bounds_tests.val + 1
+  if not(passed) {
+    stats_group_bounds_culled.val = stats_group_bounds_culled.val + 1
+  }
+}
+
+///|
+fn group_bounds_tests() -> Int {
+  stats_group_bounds_tests.val
+}
+
+///|
+fn group_bounds_culled() -> Int {
+  stats_group_bounds_culled.val
+}
+
+///|
 pub fn render_stats() -> RenderStats {
   {
     rays_total: 0,
@@ -69,6 +111,11 @@ pub fn RenderStats::summary(
     self.intersect_world_calls,
   )
   let avg_inters_per_ray = ratio(self.intersections_total, self.rays_total)
+  let btests = group_bounds_tests()
+  let bculled = group_bounds_culled()
+  let bkept = btests - bculled
+  let bculled_pct = pct(bculled, btests)
+  let btests_per_ray = ratio(btests, total)
   let lines : Array[String] = []
   lines.push("--- render stats ---")
   lines.push(
@@ -86,7 +133,10 @@ pub fn RenderStats::summary(
   )
   lines.push("intersect_world calls: \{self.intersect_world_calls}")
   lines.push(
-    "shape intersect calls: \{self.shape_intersect_calls} (avg \{avg_shapes_per_intersect})",
+    "estimated primitive tests: \{self.shape_intersect_calls} (avg/intersect_world \{avg_shapes_per_intersect})",
+  )
+  lines.push(
+    "group bounds tests: \{btests} (kept \{bkept}, culled \{bculled} (\{bculled_pct}%)) (avg/ray \{btests_per_ray})",
   )
   lines.push(
     "intersections returned: \{self.intersections_total} (avg/intersect \{avg_inters_per_intersect}, avg/ray \{avg_inters_per_ray})",

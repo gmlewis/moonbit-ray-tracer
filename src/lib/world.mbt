@@ -9,6 +9,7 @@ pub(all) struct World {
   mut environment_map : Pattern?
   mut stats_enabled : Bool
   mut stats : RenderStats
+  mut stats_est_primitives_per_intersect_world : Int
 }
 
 ///|
@@ -24,6 +25,7 @@ pub fn world() -> World {
     environment_map,
     stats_enabled: false,
     stats: render_stats(),
+    stats_est_primitives_per_intersect_world: 0,
   }
 }
 
@@ -50,7 +52,17 @@ pub fn default_world() -> World {
     environment_map,
     stats_enabled: false,
     stats: render_stats(),
+    stats_est_primitives_per_intersect_world: 0,
   }
+}
+
+///|
+pub fn World::estimated_primitive_count(self : World) -> Int {
+  let mut total = 0
+  for shape in self.shapes {
+    total = total + shape.estimated_primitive_count()
+  }
+  total
 }
 
 ///|
@@ -58,7 +70,7 @@ pub fn World::intersect_world(self : World, ray : Ray) -> Intersections {
   if self.stats_enabled {
     self.stats.intersect_world_calls = self.stats.intersect_world_calls + 1
     self.stats.shape_intersect_calls = self.stats.shape_intersect_calls +
-      self.shapes.length()
+      self.stats_est_primitives_per_intersect_world
   }
   let xs = []
   for obj in self.shapes {

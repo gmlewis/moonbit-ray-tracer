@@ -12,7 +12,9 @@ Last refreshed: 2026-01-14
 Core engine + scene system:
 - TOML scene format + async scene loading
 - Render CLI (PNG/PPM, progress output, resolution/samples overrides)
-- Render statistics (`--stats`) for rays/shadows/intersections
+- Quick preview preset (`--draft`) for faster iteration
+- Render statistics (`--stats`) for rays/shadows/intersections + BVH bounds culling
+- Stats diagnostic scenes (`examples/stats-*.toml`) to isolate bottlenecks
 - BVH acceleration + cooperative (async) rendering
 
 Materials, textures, and patterns:
@@ -37,14 +39,16 @@ Lighting:
 If you only pick a couple of items to start with, these tend to deliver the most benefit per hour:
 
 - **Fast preview defaults (`--draft` preset)**: Improves every iteration loop immediately (scene tweaking, debugging, demos). Mostly CLI plumbing + documented trade-offs.
-- **Debug views (normals/albedo/roughness)**: Medium effort, huge debugging leverage when something is “black/noisy/wrong.”
 
-Suggested order: `--draft` → debug views.
+- **Debug views (normals/albedo/roughness)**: Medium effort, huge debugging leverage when something is “black/noisy/wrong.”
+- **Shadow/area-light performance controls**: High payoff now that `--stats` shows shadow sampling dominating work in area-light scenes.
+
+Suggested order: debug views → shadow/area-light performance controls.
 
 ### Performance & UX
-- [ ] Make “preview renders” fast by default
-  - [ ] Add CLI flags for quick-preview presets (e.g. `--draft` sets low bounces, smaller resolution, fewer light samples)
-  - [ ] Add clear, documented trade-offs (noise vs speed)
+- [ ] Add more “preview render” controls
+  - [ ] Optional: `--draft` should also cap area-light samples (or add `--area-steps` overrides)
+  - [ ] Document trade-offs (noise vs speed)
 - [ ] Benchmark and optimize BVH construction for different scene types
 - [ ] Reduce memory overhead for long-running renders
 
@@ -124,3 +128,4 @@ Suggested order: `--draft` → debug views.
 ## Changelog
 
 - 2026-01-14: Roadmap cleanup (removed completed checklist clutter, kept a short “Current Baseline” summary)
+- 2026-01-14: Added stats diagnostic scenes; `--stats` analysis suggests area-light shadow sampling dominates work
