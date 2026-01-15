@@ -2,6 +2,7 @@
 pub(all) struct Shape {
   object : Renderable
   mut material : Material
+  mut material_layer : MaterialLayer?
   // Do not modify transform or inv_transform directly.
   // Instead, use `set_transform`.
   mut transform : Matrix
@@ -92,13 +93,23 @@ pub fn Shape::new_object(object : &Object) -> Shape {
 ///|
 pub fn Shape::new(object : Renderable) -> Shape {
   let material = material()
+  let material_layer = None
   let transform = mat4ident()
   let inv_transform = mat4ident()
   let parent = None
   let bounds = None
   let id = id_counter.val
   id_counter.val += 1
-  { object, material, transform, inv_transform, parent, bounds, id }
+  {
+    object,
+    material,
+    material_layer,
+    transform,
+    inv_transform,
+    parent,
+    bounds,
+    id,
+  }
 }
 
 ///|
@@ -114,6 +125,15 @@ pub fn Shape::clone(self : Shape) -> Shape {
   }
   let s = Shape::new(object)
   s.material = self.material.clone()
+  s.material_layer = match self.material_layer {
+    Some(layer) =>
+      Some({
+        top: layer.top.clone(),
+        mask: layer.mask.clone(),
+        opacity: layer.opacity,
+      })
+    None => None
+  }
   s.transform = self.transform.clone()
   s.inv_transform = self.inv_transform.clone()
   // Parent is intentionally not cloned to avoid cycles or incorrect linking
@@ -141,7 +161,9 @@ pub fn Shape::local_intersect(self : Shape, local_ray : Ray) -> Intersections {
     }
     Group(group) => {
       let bounds = group.bounds()
-      if not(bounds.local_intersect(local_ray)) {
+      let passed = bounds.local_intersect(local_ray)
+      stats_record_group_bounds_test(passed)
+      if not(passed) {
         return intersections([])
       }
       group.local_intersect(self, local_ray)
@@ -168,6 +190,20 @@ pub fn Shape::local_intersect(self : Shape, local_ray : Ray) -> Intersections {
           hit.uv_u = uv_u
           hit.uv_v = uv_v
           hit.has_uv = true
+          match (triangle.uv1b, triangle.uv2b, triangle.uv3b) {
+            (Some(uv1b), Some(uv2b), Some(uv3b)) => {
+              let uv_u1 = uv1b.0 * (1.0 - t.1 - t.2) +
+                uv2b.0 * t.1 +
+                uv3b.0 * t.2
+              let uv_v1 = uv1b.1 * (1.0 - t.1 - t.2) +
+                uv2b.1 * t.1 +
+                uv3b.1 * t.2
+              hit.uv_u1 = uv_u1
+              hit.uv_v1 = uv_v1
+              hit.has_uv1 = true
+            }
+            _ => ()
+          }
           hit
         }),
       )
@@ -186,6 +222,20 @@ pub fn Shape::local_intersect(self : Shape, local_ray : Ray) -> Intersections {
           hit.uv_u = uv_u
           hit.uv_v = uv_v
           hit.has_uv = true
+          match (triangle.uv1b, triangle.uv2b, triangle.uv3b) {
+            (Some(uv1b), Some(uv2b), Some(uv3b)) => {
+              let uv_u1 = uv1b.0 * (1.0 - t.1 - t.2) +
+                uv2b.0 * t.1 +
+                uv3b.0 * t.2
+              let uv_v1 = uv1b.1 * (1.0 - t.1 - t.2) +
+                uv2b.1 * t.1 +
+                uv3b.1 * t.2
+              hit.uv_u1 = uv_u1
+              hit.uv_v1 = uv_v1
+              hit.has_uv1 = true
+            }
+            _ => ()
+          }
           hit
         }),
       )
@@ -259,6 +309,23 @@ pub fn Shape::children(self : Shape) -> Array[Shape] {
 }
 
 ///|
+pub fn Shape::estimated_primitive_count(self : Shape) -> Int {
+  match self.object {
+    Group(group) => {
+      let mut total = 0
+      for child in group.children {
+        total = total + child.estimated_primitive_count()
+      }
+      total
+    }
+    CSG(csg) =>
+      csg.left.estimated_primitive_count() +
+      csg.right.estimated_primitive_count()
+    _ => 1
+  }
+}
+
+///|
 pub fn Shape::add_child(self : Shape, child : Shape) -> Unit {
   match self.object {
     Group(group) => {
@@ -300,6 +367,15 @@ pub fn Shape::world_to_object(self : Shape, point : Tuple) -> Tuple {
 }
 
 ///|
+pub fn Shape::object_to_world(self : Shape, point : Tuple) -> Tuple {
+  let point = self.transform.mul_tuple(point)
+  match self.parent {
+    Some(parent) => parent.object_to_world(point)
+    _ => point
+  }
+}
+
+///|
 pub fn Shape::normal_to_world(self : Shape, normal : Tuple) -> Tuple {
   let normal = self.inv_transform.transpose().mul_tuple(normal)
   normal.w = 0
@@ -308,6 +384,17 @@ pub fn Shape::normal_to_world(self : Shape, normal : Tuple) -> Tuple {
     Some(parent) => parent.normal_to_world(normal)
     _ => normal
   }
+}
+
+///|
+pub fn Shape::world_normal_to_object(self : Shape, normal : Tuple) -> Tuple {
+  let normal = match self.parent {
+    Some(parent) => parent.world_normal_to_object(normal)
+    _ => normal
+  }
+  let normal = self.transform.transpose().mul_tuple(normal)
+  normal.w = 0
+  normal.normalize()
 }
 
 ///|

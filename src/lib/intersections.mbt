@@ -7,6 +7,9 @@ pub(all) struct Intersection {
   mut uv_u : Double
   mut uv_v : Double
   mut has_uv : Bool
+  mut uv_u1 : Double
+  mut uv_v1 : Double
+  mut has_uv1 : Bool
 }
 
 ///|
@@ -16,7 +19,18 @@ pub fn intersection(
   u? : Double = 0,
   v? : Double = 0,
 ) -> Intersection {
-  { t, shape, u, v, uv_u: 0.0, uv_v: 0.0, has_uv: false }
+  {
+    t,
+    shape,
+    u,
+    v,
+    uv_u: 0.0,
+    uv_v: 0.0,
+    has_uv: false,
+    uv_u1: 0.0,
+    uv_v1: 0.0,
+    has_uv1: false,
+  }
 }
 
 ///|
@@ -110,6 +124,9 @@ pub(all) struct Computations {
   uv_u : Double
   uv_v : Double
   has_uv : Bool
+  uv_u1 : Double
+  uv_v1 : Double
+  has_uv1 : Bool
 }
 
 ///|
@@ -124,12 +141,31 @@ pub fn Intersection::prepare_computations(
   }
   let t = self.t
   let shape = self.shape
-  let point = ray.position(t)
+  let mut point = ray.position(t)
   let eyev = -ray.direction
   let mut normalv = shape.normal_at(point, hit=Some(self))
   let inside = normalv.dot(eyev) < 0
   if inside {
     normalv = -normalv
+  }
+
+  // Optional displacement mapping: offset the hit point along the (possibly
+  // flipped) geometric normal. This is a simple shading-time displacement and
+  // does not change silhouette (no tessellation).
+  match shape.material.displacement_pattern {
+    Some(pat) => {
+      let strength = shape.material.displacement_strength
+      if strength != 0.0 {
+        let uv = if self.has_uv { Some((self.uv_u, self.uv_v)) } else { None }
+        let h = pat
+          .pattern_at_shape(shape, point, normal=normalv, uv?)
+          .luminance()
+        // Map height [0,1] to displacement [-strength,+strength].
+        let disp = (h - 0.5) * 2.0 * strength
+        point = point + normalv.mul_scalar(disp)
+      }
+    }
+    None => ()
   }
   let delta = normalv.mul_scalar(EPSILON)
   let over_point = point + delta
@@ -190,6 +226,9 @@ pub fn Intersection::prepare_computations(
     uv_u: self.uv_u,
     uv_v: self.uv_v,
     has_uv: self.has_uv,
+    uv_u1: self.uv_u1,
+    uv_v1: self.uv_v1,
+    has_uv1: self.has_uv1,
   }
 }
 

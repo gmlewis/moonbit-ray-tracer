@@ -1,187 +1,151 @@
-# Ray Tracer Improvement Plans
+# Ray Tracer Roadmap (Clean)
 
-This document outlines a comprehensive plan to take the MoonBit ray tracer to the next level, transforming it from a learning project into a genuinely useful and modern ray tracing tool.
+This file is intentionally forward-looking.
 
-## Priority 1: Foundation & Usability (Critical for making the tool usable)
+- Completed work is summarized briefly (no checkboxes).
+- Only remaining work is tracked as checkboxes.
 
-### Scene Description System
-- [x] Design TOML scene description format
-- [x] Implement scene file parser
-- [x] Create scene loader that builds World objects from descriptions
-- [x] Add validation and error handling for scene files
-- [x] Create example scene files for testing
-- [x] Document scene format specification
+Last refreshed: 2026-01-14
 
-### Command Line Interface
-- [x] Design CLI argument structure and commands
-- [x] Implement basic `render` command with scene file input
-- [x] Add output format options (PNG, PPM)
-- [x] Add basic rendering options (resolution, samples)
-- [x] Implement progress reporting during rendering
-- [x] Add `--help` and usage documentation
+## Current Baseline (Already Implemented)
 
-### Web Interface (Basic)
-- [ ] Create basic HTML/JS frontend for scene editing
-- [ ] Implement WebAssembly integration for ray tracer
-- [ ] Add drag-and-drop scene file loading
-- [ ] Create simple scene preview (wireframe/basic)
-- [ ] Add material/lighting parameter controls
-- [ ] Implement real-time parameter adjustment
+Core engine + scene system:
+- TOML scene format + async scene loading
+- Render CLI (PNG/PPM, progress output, resolution/samples overrides)
+- Quick preview preset (`--draft`) for faster iteration
+- Render statistics (`--stats`) for rays/shadows/intersections + BVH bounds culling
+- Stats diagnostic scenes (`examples/stats-*.toml`) to isolate bottlenecks
+- BVH acceleration + cooperative (async) rendering
 
-## Priority 2: Performance (Critical for practical use)
+Materials, textures, and patterns:
+- Phong + PBR (metallic/roughness) shading
+- Texture loading (PNG/JPG/HDR) + UV mapping (including mesh UVs)
+- Normal mapping (procedural bump via height→normal, and glTF normalTexture w/ tangents)
+- Material layering via `layer_material` + `layer_mask`
+- Rich procedural pattern library (noise/fBm/marble/wood/voronoi, compositing, warps, triplanar, levels/threshold/posterize/gradient_map, etc.)
 
-### Spatial Acceleration Structures
-- [x] Axis-Aligned Bounding Box (AABB) system
-- [x] Bounding Volume Hierarchy (BVH) builder
-- [x] BVH traversal for ray intersection
-- [x] Spatial partitioning for scene objects
-- [ ] Optimize BVH construction for different scene types
-- [ ] Benchmark intersection performance improvements
+Vector masks + text:
+- `Graphic` assets (gmlewis/fonts/draw) + `graphic_mask`
+- TOML-native text (`graphics.*.type="text"` and `patterns.*.type="text_mask"`) driven by `MOONBIT_FONTS_DIR`
 
-### Parallel Rendering (Cooperative Multitasking)
-- [x] Implement tile-based / line-based asynchronous rendering
-- [x] Add yielding (`pause()`) for responsiveness
-- [ ] Research future MoonBit threading capabilities
-- [ ] Optimize memory usage for long-running renders
-- [ ] Benchmark overhead of cooperative multitasking
+Lighting:
+- Analytical point lights
+- Area lights (rectangular) with multi-sample shadows
+- Area light sampling cap (`--area-steps`) for faster soft-shadow previews
 
-### Progressive Rendering
-- [ ] Implement progressive pixel sampling
-- [ ] Create adaptive sampling based on image variance
-- [ ] Implement render time estimation
-- [ ] Add progressive quality indicators
+## Now (Highest Priority Next Steps)
 
-## Priority 3: Modern Rendering Features
+### Stats-driven findings (what dominates runtime)
 
-### Physically Based Rendering (PBR)
-- [x] Research PBR material models (metallic/roughness)
-- [x] Implement Cook-Torrance BRDF
-- [x] Add Fresnel calculations
-- [x] Implement importance sampling for materials (partially, for analytical lights)
-- [x] Add material energy conservation
-- [x] Create PBR material presets (metal, plastic, glass, etc.)
+From the `examples/stats-*.toml` diagnostics and a small `glb-demo` run with `--stats`:
 
-### Advanced Lighting
-- [x] Implement area lights (rectangular, circular)
-- [x] Add environment/IBL (Image-Based Lighting)
-- [ ] Implement global illumination (path tracing)
-- [ ] Add light importance sampling
-- [ ] Implement volumetric lighting effects
-- [ ] Add caustics rendering
+- **Area light scenes are dominated by shadow sampling**: with a 16×16 area light, `shadow/primary = 256` and bounds culling is effectively 0% (there’s little BVH work to save).
+- **glTF/triangle-heavy scenes are dominated by BVH traversal + primitive tests**: in `glb-demo` at 240×135×1, `estimated primitive tests avg/intersect_world ≈ 1258`, `group bounds culled ≈ 39%`, and `group bounds tests avg/ray ≈ 269`.
+- **Secondary rays are non-trivial in GLB scenes**: `secondary/primary ≈ 2.6` and `shadow/primary ≈ 5.7`, so “even at samples=1” you can still get a lot of work.
 
-### Anti-Aliasing & Sampling
-- [x] Implement supersampling anti-aliasing (SSAA)
-- [ ] Add temporal anti-aliasing for animations
-- [x] Implement jittered sampling patterns
-- [ ] Add adaptive sampling based on edge detection
-- [ ] Optimize sample distribution algorithms
-- [ ] Add configurable sampling quality levels
+### Suggested “First Wins” (High Payoff / Low Risk)
 
-## Priority 4: Advanced Features
+If you only pick a couple of items to start with, these tend to deliver the most benefit per hour:
 
-### Texture & Material System
-- [x] Implement texture loading (PNG, JPG, HDR) (decode + sampling)
-- [x] Add UV mapping support (spherical/planar/cylindrical/cubic + mesh UVs)
-- [ ] Implement normal mapping
-- [ ] Add displacement mapping
-- [ ] Create extensive procedural texture system (noise, patterns)
-- [ ] Implement material layering/blending/masking
+Already implemented: `--draft`, `--stats`, `--area-steps`, plus the `examples/stats-*.toml` diagnostic scenes.
 
-### Animation System
-- [ ] Design keyframe animation framework
-- [ ] Implement object transformation animations
-- [ ] Add camera animation support
-- [ ] Create timeline and interpolation system
-- [ ] Add material property animations
-- [ ] Implement motion blur rendering
+- **Debug views (normals/albedo/roughness)**: Medium effort, huge debugging leverage when something is “black/noisy/wrong.”
+- **Make `--draft` cap area-light sampling by default**: Low effort, immediate payoff for any soft-shadow scene (still overrideable via `--area-steps`).
+- **Fast shadow mode for previews**: Medium effort, big payoff for area lights without fully changing scene lighting.
 
-### Advanced Geometry
-- [ ] Expand OBJ file support (materials/MTL, textures)
-- [x] Add GLTF format support
-- [ ] Implement mesh subdivision
-- [ ] Add procedural geometry generation
-- [ ] Create geometry optimization tools
-- [ ] Implement level-of-detail (LOD) system
+Suggested order: debug views → `--draft` default area cap → fast shadow mode.
 
-## Priority 5: Ecosystem & Tools
+### Performance & UX
+- [ ] Add more “preview render” controls
+  - [ ] Optional: `--draft` should also set a default `--area-steps` cap unless explicitly overridden
+  - [ ] Document trade-offs (noise vs speed)
+- [ ] Area-light performance controls (highest payoff for soft-shadow scenes)
+  - [ ] Optional: separate `u_steps`/`v_steps` caps (beyond the current `--area-steps`)
+  - [ ] Fast shadow mode: stratified subset sampling for previews
+  - [ ] Consider per-light overrides in TOML (scene-local defaults)
+- [ ] BVH traversal + triangle intersection optimization (highest payoff for glTF scenes)
+  - [ ] Reduce group bounds tests per ray (stack/iteration strategy, data layout)
+  - [ ] Improve BVH build heuristics (partitioning strategy; consider SAH-like splits)
+  - [ ] Reduce allocations/copies in intersection collection on hot paths
+- [ ] Benchmark and optimize BVH construction for different scene types
+- [ ] Reduce memory overhead for long-running renders
 
-### Plugin Architecture
-- [ ] Design plugin interface specification (maybe via wasm?)
-- [ ] Implement plugin loading system
-- [ ] Create example plugins (materials, shapes, post-effects)
-- [ ] Add plugin discovery and management
-- [ ] Create plugin development documentation
-- [ ] Implement plugin validation and sandboxing
+### Rendering Quality (Big Visual Wins)
+- [ ] Better sampling controls
+  - [ ] Adaptive sampling for edges/high-frequency regions
+  - [ ] Clear, minimal sampling controls (favor explicit flags over many named presets)
 
-### Debugging & Development Tools
-- [ ] Implement ray visualization system
-- [ ] Add performance profiling tools
-- [ ] Create material debugging modes
-- [ ] Add intersection visualization
-- [ ] Implement render statistics and analytics
-- [x] Create automated test runner + unit tests
+## Next (Modern Lighting & Realism)
 
-### Documentation & Examples
-- [ ] Create comprehensive API documentation
-- [ ] Write getting-started tutorial series
-- [ ] Create example scene gallery with source
-- [ ] Document best practices and optimization tips
-- [ ] Add video tutorials for complex features
-- [ ] Create community contribution guidelines
+### Global Illumination
+- [ ] Path tracing / indirect lighting (at least one-bounce GI)
+- [ ] Light importance sampling (reduce noise, especially with multiple lights)
 
-## Priority 6: Advanced Graphics & Optimization
+### Emissive Materials (Neon “for real”)
+- [ ] Add emissive material parameters (color + strength)
+- [ ] Mesh lights: treat emissive geometry as light sources
+  - [ ] MIS between BSDF sampling and light sampling
+- [ ] Add a scene helper for “neon tube” lights (capsule/cylinder + emissive material)
+- [ ] Add a canonical neon example scene that relies on emission + bloom
 
-### GPU Acceleration
-- [ ] Research WebGPU compute shader capabilities
-- [ ] Implement GPU ray tracing pipeline
-- [ ] Optimize memory bandwidth for GPU rendering
-- [ ] Add GPU/CPU hybrid rendering modes
-- [ ] Implement GPU-accelerated acceleration structures
-- [ ] Benchmark GPU vs CPU performance
+### Volumetrics & Caustics
+- [ ] Volumetric effects (fog/participating media)
+- [ ] Caustics strategy (explicit sampling or photon-like approaches)
 
-### Post-Processing Pipeline
-- [ ] Implement tone mapping operators
-- [ ] Add color grading and correction tools
-- [ ] Implement bloom and lens flare effects
-- [ ] Add depth of field simulation
-- [ ] Create customizable post-processing chains
-- [ ] Add real-time preview for post-effects
+## Geometry & Asset Pipeline
 
-### Denoising
-- [ ] Research AI-based denoising algorithms
-- [ ] Implement temporal denoising for animations
-- [ ] Add edge-preserving filters
-- [ ] Create adaptive denoising based on sample count
-- [ ] Implement multiple denoising algorithm options
-- [ ] Add denoising quality/performance trade-offs
+- [ ] OBJ improvements (materials/MTL, textures)
+- [ ] Mesh subdivision / smoothing options
+- [ ] LOD strategies
+- [ ] Optional: MikkTSpace compatibility for tangent parity with DCC/glTF tooling
 
-## Implementation Phases
+## Text & Graphics: Next Capabilities
 
-### Phase 1: Foundation (Weeks 1-4)
-Focus on Scene Description System and basic CLI to make the tool actually usable by others.
+- [ ] Text decals with good ergonomics
+  - [ ] Planar projection “decal” helper (pattern transform + mask)
+  - [ ] Optional: UV-space stamping when UVs exist
+- [ ] Text/Graphic extrusion to solid geometry
+  - [ ] Profiles → triangulation + side walls
+  - [ ] UV mapping strategies for extruded geometry
+  - [ ] Example scenes: extruded logo/text; masked decal on a surface
+  - [ ] Focused unit tests for profile→mesh and mask evaluation
 
-### Phase 2: Performance (Weeks 5-8)
-Implement parallel rendering and basic spatial acceleration to handle realistic scene complexity.
+## Post-Processing
 
-### Phase 3: Modern Rendering (Weeks 9-16)
-Add PBR materials and advanced lighting to produce professional-quality output.
+- [ ] Tone mapping controls/operators (beyond current defaults)
+- [ ] Bloom (needed for emissive neon look)
+  - [ ] Threshold + soft-knee + multi-pass blur + composite
+  - [ ] Establish HDR ordering (accumulate HDR → bloom → tone map → output)
+- [ ] Depth of field
+- [ ] Composable post-processing chain configuration
 
-### Phase 4: Polish & Ecosystem (Weeks 17-24)
-Complete the tool with documentation, examples, and advanced features.
+## Shader Authoring (OSL)
 
-## Success Metrics
+- [ ] Investigate Open Shading Language (OSL)-style support
+  - [ ] Define a safe shader IR for patterns/materials (pure functions, no I/O)
+  - [ ] Choose execution model: interpreter vs bytecode vs codegen
+  - [ ] TOML integration: `type="osl"` with `file`/`code` + `params`
+  - [ ] Start with a small subset (math/noise/conditionals)
+  - [ ] One demo scene + small gallery comparing built-ins vs OSL
 
-- [ ] Render complex scenes (1000+ objects) in reasonable time
-- [x] Support standard 3D file formats (OBJ, GLTF) (baseline import; OBJ materials/MTL still TODO)
-- [ ] Produce photorealistic images comparable to commercial tools
-- [ ] Provide intuitive user interface for non-programmers
-- [ ] Maintain code quality and comprehensive test coverage
-- [ ] Build active community of users and contributors
+## Tooling & Ecosystem (Lower Priority)
 
-## Notes
+- [ ] Web UI (WASM) for scene editing and rapid iteration
+- [ ] Debug views (ray visualization, normals/albedo/roughness passes)
+- [ ] Plugin architecture (likely wasm-based)
+- [ ] Denoising (start with simple spatial filters; consider temporal later)
+- [ ] GPU acceleration research (WebGPU compute)
 
-- Each checkbox represents a substantial development task (1-5 days of work)
-- Some tasks may be parallelizable or can be worked on incrementally
-- Priority levels can be adjusted based on user feedback and development progress
-- Consider creating separate GitHub issues for major features
-- Regular benchmarking and testing should accompany each implementation phase
+## Lowest Priority (Nice-to-Have)
+
+- [ ] Progressive rendering (deprioritized)
+  - [ ] Progressive pixel sampling (early image + refinement)
+  - [ ] Adaptive sampling based on variance
+  - [ ] Time estimation + quality indicators
+
+## Changelog
+
+- 2026-01-14: Roadmap cleanup (removed completed checklist clutter, kept a short “Current Baseline” summary)
+- 2026-01-14: Added stats diagnostic scenes; `--stats` analysis suggests area-light shadow sampling dominates work
+- 2026-01-14: Added BVH bounds-test stats; `glb-demo` suggests BVH traversal/triangle tests dominate in glTF scenes
+- 2026-01-14: Added `--area-steps` to cap area-light sampling for much faster soft-shadow previews

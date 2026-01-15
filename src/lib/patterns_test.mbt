@@ -99,6 +99,19 @@ impl PatternTrait for TestPattern with uv_at(_self, _u, _v) {
 }
 
 ///|
+impl PatternTrait for TestPattern with pattern_at_with_info(
+  self,
+  point,
+  _normal,
+  uv,
+) {
+  match uv {
+    Some((u, v)) => self.uv_at(u, v)
+    None => self.pattern_at(point)
+  }
+}
+
+///|
 test "The default pattern transformation (p.182)" {
   let pattern = test_pattern()
   assert_eq(pattern.transform, mat4ident())
@@ -116,7 +129,11 @@ test "A pattern with an object transformation (p.182)" {
   let shape = sphere()
   shape.set_transform(scaling(2, 2, 2))
   let pattern = test_pattern()
-  let c = pattern.pattern_at_shape(shape, point(2, 3, 4))
+  let c = pattern.pattern_at_shape(
+    shape,
+    point(2, 3, 4),
+    normal=vector(0, 0, 0),
+  )
   assert_eq(c, color(1, 1.5, 2))
 }
 
@@ -125,7 +142,11 @@ test "A pattern with a pattern transformation (p.182)" {
   let shape = sphere()
   let pattern = test_pattern()
   pattern.set_pattern_transform(scaling(2, 2, 2))
-  let c = pattern.pattern_at_shape(shape, point(2, 3, 4))
+  let c = pattern.pattern_at_shape(
+    shape,
+    point(2, 3, 4),
+    normal=vector(0, 0, 0),
+  )
   assert_eq(c, color(1, 1.5, 2))
 }
 
@@ -135,7 +156,11 @@ test "A pattern with both an object and a pattern transformation (p.182)" {
   shape.set_transform(scaling(2, 2, 2))
   let pattern = test_pattern()
   pattern.set_pattern_transform(translation(0.5, 1, 1.5))
-  let c = pattern.pattern_at_shape(shape, point(2.5, 3, 3.5))
+  let c = pattern.pattern_at_shape(
+    shape,
+    point(2.5, 3, 3.5),
+    normal=vector(0, 0, 0),
+  )
   assert_eq(c, color(0.75, 0.5, 0.25))
 }
 

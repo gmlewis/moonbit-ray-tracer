@@ -1,0 +1,55 @@
+# Stats diagnostic: shadow-heavy scene
+#
+# Purpose: make shadow rays dominate via a high-sample area light.
+# Use with: scripts/run-example.py stats-shadows --stats --samples 1 -o /tmp/stats-shadows.png
+
+[scene]
+name = "Stats Diagnostic - Shadows"
+description = "Shadow-heavy scene (area light with many samples) for --stats profiling"
+version = "1.0"
+
+[scene.render]
+width = 240
+height = 135
+samples = 1
+max_bounces = 1
+background = [0.05, 0.05, 0.08]
+
+[camera]
+position = [0.0, 3.0, -8.0]
+look_at = [0.0, 1.0, 0.0]
+up = [0.0, 1.0, 0.0]
+field_of_view = 0.785
+
+[[lights]]
+type = "area"
+position = [-3.0, 7.0, -3.0]
+u_vec = [6.0, 0.0, 0.0]
+u_steps = 16
+v_vec = [0.0, 0.0, 6.0]
+v_steps = 16
+intensity = [1.3, 1.3, 1.3]
+
+[materials.floor]
+color = [0.25, 0.25, 0.25]
+ambient = 0.05
+diffuse = 0.95
+specular = 0.0
+reflective = 0.0
+
+[materials.sphere]
+color = [0.85, 0.45, 0.1]
+ambient = 0.05
+diffuse = 0.9
+specular = 0.2
+shininess = 80.0
+reflective = 0.0
+
+[[objects]]
+type = "plane"
+material = "floor"
+
+[[objects]]
+type = "sphere"
+material = "sphere"
+transform = { translation = [0.0, 1.0, 0.0] }

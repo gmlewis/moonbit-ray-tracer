@@ -1,0 +1,340 @@
+# TOML-native Text + Graphic Masks: Neon Portal
+[scene]
+name = "Neon Portal"
+description = "TOML-native text becomes a first-class mask: neon typography decals in a sci-fi corridor with a CSG portal ring"
+version = "1.0"
+
+[scene.render]
+width = 1200
+height = 675
+samples = 6
+max_bounces = 2
+background = [0.02, 0.02, 0.03]
+divide = 1
+exposure = 1.15
+
+[camera]
+position = [0.0, 2.4, -9.6]
+look_at = [0.0, 1.7, 4.6]
+up = [0.0, 1.0, 0.0]
+field_of_view = 0.72
+
+# A subtle HDR environment gives nicer metal/glass reflections.
+[environment]
+type = "texture"
+file = "examples/assets/pool_1k.hdr"
+mapping = "spherical"
+
+# Lights: a big soft key + a few colored rims.
+[[lights]]
+type = "area"
+position = [-4.5, 7.0, -5.0]
+u_vec = [9.0, 0.0, 0.0]
+u_steps = 2
+v_vec = [0.0, 0.0, 9.0]
+v_steps = 2
+intensity = [1.25, 1.22, 1.18]
+
+# Cornell-box-style colored walls: red/green side area lights.
+[[lights]]
+type = "area"
+position = [-5.9, 0.8, -1.5]
+u_vec = [0.0, 5.0, 0.0]
+u_steps = 2
+v_vec = [0.0, 0.0, 7.0]
+v_steps = 2
+intensity = [0.90, 0.12, 0.12]
+
+[[lights]]
+type = "area"
+position = [5.9, 0.8, -1.5]
+u_vec = [0.0, 5.0, 0.0]
+u_steps = 2
+v_vec = [0.0, 0.0, -7.0]
+v_steps = 2
+intensity = [0.12, 0.90, 0.12]
+
+
+# -----------------------------------------------------------------------------
+# Patterns
+# -----------------------------------------------------------------------------
+
+# A vibrant neon fill pattern that reads as "paint".
+[patterns.neon_fill]
+type = "gradient_map"
+colors = [
+  [0.05, 0.02, 0.10],
+  [0.10, 0.75, 0.95],
+  [0.95, 0.25, 0.85],
+  [0.95, 0.90, 0.35]
+]
+
+[patterns.neon_fill.pattern]
+type = "warp"
+amplitude = 0.35
+
+[patterns.neon_fill.pattern.base]
+type = "fbm"
+seed = 29
+scale = 1.7
+octaves = 6
+lacunarity = 2.0
+gain = 0.55
+
+[patterns.neon_fill.pattern.warp]
+type = "fbm"
+seed = 3
+scale = 2.8
+octaves = 5
+lacunarity = 2.0
+gain = 0.50
+
+# Subtle wall variation so the corridor isn't a flat gray.
+[patterns.wall_base]
+type = "mix"
+
+[patterns.wall_base.a]
+type = "checkers"
+colors = [
+  [0.05, 0.06, 0.08],
+  [0.05, 0.06, 0.08],
+]
+
+[patterns.wall_base.b]
+type = "checkers"
+colors = [
+  [0.10, 0.06, 0.14],
+  [0.10, 0.06, 0.14],
+]
+
+[patterns.wall_base.mask]
+type = "levels"
+in_min = 0.25
+in_max = 0.85
+out_min = 0.0
+out_max = 1.0
+gamma = 1.10
+
+[patterns.wall_base.mask.pattern]
+type = "fbm"
+seed = 11
+scale = 0.9
+octaves = 5
+lacunarity = 2.0
+gain = 0.55
+
+# Floor typography: kept close to camera so it reads clearly.
+[patterns.floor_text]
+type = "text_mask"
+text = "MoonBit"
+font = "lato_lightitalic"
+size = 26.0
+align = "center"
+y_up = true
+line_height = 1.20
+curve_segments = 18
+inside = [1.0, 1.0, 1.0]
+outside = [0.0, 0.0, 0.0]
+
+# Scale/position the mask into world (x,z) space (no objects occlude this area).
+[patterns.floor_text.transform]
+translation = [0.0, 0.0, 0.2]
+scale = [0.055, 1.0, 0.055]
+
+# Floor base: mix stone vs subtle neon stripes using the bloom medallion.
+[patterns.floor_base]
+type = "mix"
+
+[patterns.floor_base.a]
+type = "checkers"
+colors = [
+  [0.05, 0.05, 0.06],
+  [0.06, 0.06, 0.07],
+]
+
+[patterns.floor_base.b]
+type = "stripes"
+colors = [
+  [0.10, 0.85, 0.95],
+  [0.95, 0.25, 0.85],
+]
+
+[patterns.floor_base.mask]
+type = "levels"
+in_min = 0.15
+in_max = 0.95
+out_min = 0.0
+out_max = 1.0
+gamma = 1.15
+
+[patterns.floor_base.mask.pattern]
+type = "voronoi"
+seed = 5
+scale = 6.0
+jitter = 1.0
+mode = "crackle"
+edge_scale = 18.0
+
+# Wall typography (separate from the floor, so it never overlaps).
+[patterns.wall_text]
+type = "text_mask"
+text = "TOML NATIVE TEXT"
+font = "lato_lightitalic"
+size = 20.0
+align = "center"
+y_up = true
+line_height = 1.2
+curve_segments = 18
+inside = [1.0, 1.0, 1.0]
+outside = [0.0, 0.0, 0.0]
+
+# On the wall plane, object-space (x,z) maps to (horizontal, vertical).
+[patterns.wall_text.transform]
+translation = [0.0, 0.0, 6.8]
+scale = [0.10, 1.0, 0.10]
+
+
+# -----------------------------------------------------------------------------
+# Materials
+# -----------------------------------------------------------------------------
+
+[materials.floor_base]
+lighting_mode = "pbr"
+color = [0.12, 0.12, 0.14]
+ambient = 0.02
+metallic = 0.0
+roughness = 0.12
+reflective = 0.22
+pattern = "floor_base"
+
+[materials.neon_paint]
+lighting_mode = "phong"
+color = [0.20, 0.75, 0.95]
+ambient = 0.55
+diffuse = 0.75
+specular = 0.08
+shininess = 80.0
+reflective = 0.02
+pattern = "neon_fill"
+
+# Layered floor: glossy stone + neon typography mask.
+[materials.floor]
+lighting_mode = "pbr"
+color = [0.12, 0.12, 0.14]
+ambient = 0.02
+metallic = 0.0
+roughness = 0.12
+reflective = 0.22
+pattern = "floor_base"
+layer_material = "neon_paint"
+layer_mask = "floor_text"
+layer_opacity = 1.0
+
+[materials.wall]
+color = [0.08, 0.08, 0.10]
+ambient = 0.12
+diffuse = 0.85
+specular = 0.05
+shininess = 40.0
+pattern = "wall_base"
+layer_material = "neon_paint"
+layer_mask = "wall_text"
+layer_opacity = 0.95
+
+[materials.wall_sides]
+color = [0.08, 0.08, 0.10]
+ambient = 0.10
+diffuse = 0.90
+specular = 0.04
+shininess = 30.0
+pattern = "wall_base"
+
+[materials.gold]
+lighting_mode = "pbr"
+color = [1.0, 0.84, 0.0]
+ambient = 0.0
+metallic = 1.0
+roughness = 0.12
+reflective = 0.25
+
+[materials.chrome]
+lighting_mode = "pbr"
+color = [1.0, 1.0, 1.0]
+ambient = 0.0
+metallic = 1.0
+roughness = 0.045
+reflective = 0.9
+
+[materials.glass]
+lighting_mode = "phong"
+color = [1.0, 1.0, 1.0]
+ambient = 0.0
+diffuse = 0.08
+specular = 0.95
+shininess = 300.0
+reflective = 0.9
+transparency = 0.92
+refractive_index = 1.52
+
+[materials.velvet]
+lighting_mode = "phong"
+color = [0.25, 0.05, 0.18]
+ambient = 0.06
+diffuse = 0.92
+specular = 0.10
+shininess = 60.0
+
+
+# -----------------------------------------------------------------------------
+# Templates / Scene Objects
+# -----------------------------------------------------------------------------
+
+[[objects]]
+type = "plane"
+material = "floor"
+
+[[objects]]
+type = "plane"
+material = "wall"
+transform = { translation = [0.0, 0.0, 9.0], rotation = [-1.571, 0.0, 0.0] }
+
+# Corridor side walls (subtle, mostly to catch colored light).
+[[objects]]
+type = "plane"
+material = "wall_sides"
+transform = { translation = [-6.0, 0.0, 0.0], rotation = [0.0, 0.0, 1.571] }
+
+[[objects]]
+type = "plane"
+material = "wall_sides"
+transform = { translation = [6.0, 0.0, 0.0], rotation = [0.0, 0.0, -1.571] }
+
+# The portal: a hollow tube (CSG difference) + a glass core.
+[[objects]]
+type = "csg"
+material = "chrome"
+properties = { operation = "difference" }
+transform = { translation = [0.0, 2.2, 5.8], rotation = [1.571, 0.0, 0.0] }
+left = { type = "cylinder", properties = { minimum = -0.25, maximum = 0.25, closed = true }, transform = { scale = [2.25, 1.0, 2.25] } }
+right = { type = "cylinder", properties = { minimum = -0.30, maximum = 0.30, closed = true }, transform = { scale = [1.75, 1.0, 1.75] } }
+
+[[objects]]
+type = "sphere"
+material = "glass"
+transform = { translation = [0.0, 2.2, 5.8], scale = [0.85, 0.85, 0.85] }
+
+# A few "signal" spheres near the portal (kept away from the floor text).
+[[objects]]
+type = "sphere"
+material = "gold"
+transform = { translation = [-2.1, 1.1, 4.4], scale = [0.35, 0.35, 0.35] }
+
+[[objects]]
+type = "sphere"
+material = "chrome"
+transform = { translation = [2.2, 1.35, 4.8], scale = [0.28, 0.28, 0.28] }
+
+[[objects]]
+type = "cube"
+material = { color = [0.10, 0.02, 0.08], ambient = 0.05, diffuse = 0.9, specular = 0.08, shininess = 60.0 }
+transform = { translation = [0.0, 0.65, 6.6], scale = [0.55, 1.25, 0.10], rotation = [0.0, 0.6, 0.0] }

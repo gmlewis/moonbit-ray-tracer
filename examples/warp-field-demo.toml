@@ -1,0 +1,148 @@
+# Warp-field demo (procedural patterns as vector fields)
+[scene]
+name = "Warp Field Demo"
+description = "Use any pattern graph as a warp field to domain-warp a base pattern"
+version = "1.0"
+
+[scene.render]
+width = 1100
+height = 650
+samples = 1
+max_bounces = 4
+background = [0.06, 0.06, 0.08]
+
+[camera]
+position = [0.0, 3.2, -10.5]
+look_at = [0.0, 1.1, 0.0]
+up = [0.0, 1.0, 0.0]
+field_of_view = 0.785
+
+[[lights]]
+type = "point"
+position = [-10.0, 10.0, -10.0]
+intensity = [1.0, 1.0, 1.0]
+
+[[lights]]
+type = "point"
+position = [8.0, 8.0, 6.0]
+intensity = [0.35, 0.35, 0.45]
+
+# Base pattern: crisp stripes make warping obvious
+[patterns.base]
+type = "checkers"
+colors = [
+  [0.92, 0.92, 0.96],
+  [0.08, 0.08, 0.10]
+]
+
+# Warp field: start with fBm, then map luminance into an RGB palette.
+# The warp node interprets RGB as a 3D offset direction (scaled by amplitude).
+[patterns.warp_field]
+type = "gradient_map"
+colors = [
+  [0.25, 0.55, 0.50],
+  [0.75, 0.35, 0.55],
+  [0.45, 0.75, 0.35],
+  [0.70, 0.60, 0.85]
+]
+
+[patterns.warp_field.pattern]
+type = "fbm"
+seed = 3
+scale = 3.0
+octaves = 5
+lacunarity = 2.0
+gain = 0.5
+
+[patterns.unwarped]
+type = "triplanar"
+scale = 1.4
+sharpness = 1.0
+
+[patterns.unwarped.pattern]
+type = "checkers"
+colors = [[0.92, 0.92, 0.96], [0.08, 0.08, 0.10]]
+
+[patterns.warped_low]
+type = "warp"
+amplitude = 0.18
+
+[patterns.warped_low.base]
+type = "triplanar"
+scale = 1.4
+sharpness = 1.0
+
+[patterns.warped_low.base.pattern]
+type = "checkers"
+colors = [[0.92, 0.92, 0.96], [0.08, 0.08, 0.10]]
+
+[patterns.warped_low.warp]
+type = "gradient_map"
+colors = [
+  [0.25, 0.55, 0.50],
+  [0.75, 0.35, 0.55],
+  [0.45, 0.75, 0.35],
+  [0.70, 0.60, 0.85]
+]
+
+[patterns.warped_low.warp.pattern]
+type = "fbm"
+seed = 3
+scale = 3.0
+octaves = 5
+lacunarity = 2.0
+gain = 0.5
+
+[patterns.warped_high]
+type = "warp"
+amplitude = 0.42
+
+[patterns.warped_high.base]
+type = "triplanar"
+scale = 1.4
+sharpness = 1.0
+
+[patterns.warped_high.base.pattern]
+type = "checkers"
+colors = [[0.92, 0.92, 0.96], [0.08, 0.08, 0.10]]
+
+[patterns.warped_high.warp]
+type = "gradient_map"
+colors = [
+  [0.25, 0.55, 0.50],
+  [0.75, 0.35, 0.55],
+  [0.45, 0.75, 0.35],
+  [0.70, 0.60, 0.85]
+]
+
+[patterns.warped_high.warp.pattern]
+type = "fbm"
+seed = 3
+scale = 3.0
+octaves = 5
+lacunarity = 2.0
+gain = 0.5
+
+# Floor
+[[objects]]
+type = "plane"
+material = { color = [0.25, 0.25, 0.28], ambient = 0.25, diffuse = 0.9, specular = 0.0 }
+
+# Spheres: same base, different warp amplitudes
+[[objects]]
+type = "sphere"
+material = { ambient = 0.1, diffuse = 0.85, specular = 0.18, shininess = 120.0, pattern = "unwarped" }
+transform = { translation = [-4.5, 1.0, 1.6] }
+pattern_transform = { scale = [0.8, 0.8, 0.8] }
+
+[[objects]]
+type = "sphere"
+material = { ambient = 0.1, diffuse = 0.85, specular = 0.18, shininess = 120.0, pattern = "warped_low" }
+transform = { translation = [0.0, 1.0, 1.2] }
+pattern_transform = { scale = [0.8, 0.8, 0.8] }
+
+[[objects]]
+type = "sphere"
+material = { ambient = 0.1, diffuse = 0.85, specular = 0.18, shininess = 120.0, pattern = "warped_high" }
+transform = { translation = [4.5, 1.0, 1.6] }
+pattern_transform = { scale = [0.8, 0.8, 0.8] }

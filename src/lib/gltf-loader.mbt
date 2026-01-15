@@ -94,6 +94,41 @@ fn GltfData::read_vec3(
 }
 
 ///|
+fn GltfData::read_tangents(
+  self : GltfData,
+  accessor_idx : Int,
+) -> Array[(Tuple, Double)] {
+  let accessor = match self.gltf.accessors.get(accessor_idx) {
+    Some(a) => a
+    None => return []
+  }
+  if accessor.type_ != "VEC4" {
+    return []
+  }
+  let (reader, stride) = match self.get_accessor_reader(accessor_idx) {
+    Some(r) => r
+    None => return []
+  }
+  let res = []
+  for i in 0..<accessor.count {
+    let start_offset = reader.offset
+    let x = reader.read_float32().to_double()
+    let y = reader.read_float32().to_double()
+    let z = reader.read_float32().to_double()
+    let w = reader.read_float32().to_double()
+
+    // We flip Z for vectors in this ray tracer; that reflection changes handedness,
+    // so also flip the tangent's handedness sign.
+    let sign = if w < 0.0 { 1.0 } else { -1.0 }
+    res.push((vector(x, y, -z), sign))
+    if stride > 16 {
+      reader.offset = start_offset + stride
+    }
+  }
+  res
+}
+
+///|
 pub fn GltfData::read_indices(
   self : GltfData,
   accessor_idx : Int,
@@ -384,10 +419,26 @@ pub fn GltfData::load_mesh(self : GltfData, mesh_idx : Int) -> Shape {
       Some(i) => self.read_vec2(i)
       None => []
     }
+    let uv1_idx = primitive.attributes.get("TEXCOORD_1")
+    let uvs1 = match uv1_idx {
+      Some(i) => self.read_vec2(i)
+      None => []
+    }
+    let has_uv1 = uvs.length() > 0 &&
+      uvs1.length() > 0 &&
+      uvs1.length() == positions.length()
+    let tangent_idx = primitive.attributes.get("TANGENT")
+    let tangents = match tangent_idx {
+      Some(i) => self.read_tangents(i)
+      None => []
+    }
     let material = match primitive.material {
       Some(mat_idx) => self.load_material(mat_idx)
       None => material()
     }
+    let use_gltf_tangents = uvs.length() > 0 &&
+      tangents.length() > 0 &&
+      tangents.length() == positions.length()
     match primitive.indices {
       Some(indices_idx) => {
         let indices = self.read_indices(indices_idx)
@@ -395,18 +446,125 @@ pub fn GltfData::load_mesh(self : GltfData, mesh_idx : Int) -> Shape {
           let i1 = indices[i]
           let i2 = indices[i + 1]
           let i3 = indices[i + 2]
+          let (tu, tv) = if use_gltf_tangents {
+            let e1 = positions[i2] - positions[i1]
+            let e2 = positions[i3] - positions[i1]
+            let n = e2.cross(e1).normalize()
+            let t = tangents[i1].0 + tangents[i2].0 + tangents[i3].0
+            let mut tangent_u = if t.magnitude() < 1.e-12 {
+              vector(0, 0, 0)
+            } else {
+              t.normalize()
+            }
+            tangent_u = (tangent_u - n.mul_scalar(n.dot(tangent_u))).normalize()
+            let s = tangents[i1].1 + tangents[i2].1 + tangents[i3].1
+            let sign = if s < 0.0 { -1.0 } else { 1.0 }
+            let tangent_v = n.cross(tangent_u).mul_scalar(sign).normalize()
+            (tangent_u, tangent_v)
+          } else {
+            (vector(0, 0, 0), vector(0, 0, 0))
+          }
           let tri = if uvs.length() > 0 {
             if normals.length() > 0 {
-              smooth_triangle_uv(
+              if use_gltf_tangents {
+                if has_uv1 {
+                  smooth_triangle_uv_with_tangents_and_extra_uv(
+                    positions[i1],
+                    positions[i2],
+                    positions[i3],
+                    normals[i1],
+                    normals[i2],
+                    normals[i3],
+                    uvs[i1],
+                    uvs[i2],
+                    uvs[i3],
+                    tu,
+                    tv,
+                    uvs1[i1],
+                    uvs1[i2],
+                    uvs1[i3],
+                  )
+                } else {
+                  smooth_triangle_uv_with_tangents(
+                    positions[i1],
+                    positions[i2],
+                    positions[i3],
+                    normals[i1],
+                    normals[i2],
+                    normals[i3],
+                    uvs[i1],
+                    uvs[i2],
+                    uvs[i3],
+                    tu,
+                    tv,
+                  )
+                }
+              } else if has_uv1 {
+                smooth_triangle_uv_with_extra_uv(
+                  positions[i1],
+                  positions[i2],
+                  positions[i3],
+                  normals[i1],
+                  normals[i2],
+                  normals[i3],
+                  uvs[i1],
+                  uvs[i2],
+                  uvs[i3],
+                  uvs1[i1],
+                  uvs1[i2],
+                  uvs1[i3],
+                )
+              } else {
+                smooth_triangle_uv(
+                  positions[i1],
+                  positions[i2],
+                  positions[i3],
+                  normals[i1],
+                  normals[i2],
+                  normals[i3],
+                  uvs[i1],
+                  uvs[i2],
+                  uvs[i3],
+                )
+              }
+            } else if use_gltf_tangents {
+              if has_uv1 {
+                triangle_uv_with_tangents_and_extra_uv(
+                  positions[i1],
+                  positions[i2],
+                  positions[i3],
+                  uvs[i1],
+                  uvs[i2],
+                  uvs[i3],
+                  tu,
+                  tv,
+                  uvs1[i1],
+                  uvs1[i2],
+                  uvs1[i3],
+                )
+              } else {
+                triangle_uv_with_tangents(
+                  positions[i1],
+                  positions[i2],
+                  positions[i3],
+                  uvs[i1],
+                  uvs[i2],
+                  uvs[i3],
+                  tu,
+                  tv,
+                )
+              }
+            } else if has_uv1 {
+              triangle_uv_with_extra_uv(
                 positions[i1],
                 positions[i2],
                 positions[i3],
-                normals[i1],
-                normals[i2],
-                normals[i3],
                 uvs[i1],
                 uvs[i2],
                 uvs[i3],
+                uvs1[i1],
+                uvs1[i2],
+                uvs1[i3],
               )
             } else {
               triangle_uv(
@@ -437,18 +595,125 @@ pub fn GltfData::load_mesh(self : GltfData, mesh_idx : Int) -> Shape {
       None =>
         // Non-indexed
         for i = 0; i < positions.length(); i = i + 3 {
+          let (tu, tv) = if use_gltf_tangents {
+            let e1 = positions[i + 1] - positions[i]
+            let e2 = positions[i + 2] - positions[i]
+            let n = e2.cross(e1).normalize()
+            let t = tangents[i].0 + tangents[i + 1].0 + tangents[i + 2].0
+            let mut tangent_u = if t.magnitude() < 1.e-12 {
+              vector(0, 0, 0)
+            } else {
+              t.normalize()
+            }
+            tangent_u = (tangent_u - n.mul_scalar(n.dot(tangent_u))).normalize()
+            let s = tangents[i].1 + tangents[i + 1].1 + tangents[i + 2].1
+            let sign = if s < 0.0 { -1.0 } else { 1.0 }
+            let tangent_v = n.cross(tangent_u).mul_scalar(sign).normalize()
+            (tangent_u, tangent_v)
+          } else {
+            (vector(0, 0, 0), vector(0, 0, 0))
+          }
           let tri = if uvs.length() > 0 {
             if normals.length() > 0 {
-              smooth_triangle_uv(
+              if use_gltf_tangents {
+                if has_uv1 {
+                  smooth_triangle_uv_with_tangents_and_extra_uv(
+                    positions[i],
+                    positions[i + 1],
+                    positions[i + 2],
+                    normals[i],
+                    normals[i + 1],
+                    normals[i + 2],
+                    uvs[i],
+                    uvs[i + 1],
+                    uvs[i + 2],
+                    tu,
+                    tv,
+                    uvs1[i],
+                    uvs1[i + 1],
+                    uvs1[i + 2],
+                  )
+                } else {
+                  smooth_triangle_uv_with_tangents(
+                    positions[i],
+                    positions[i + 1],
+                    positions[i + 2],
+                    normals[i],
+                    normals[i + 1],
+                    normals[i + 2],
+                    uvs[i],
+                    uvs[i + 1],
+                    uvs[i + 2],
+                    tu,
+                    tv,
+                  )
+                }
+              } else if has_uv1 {
+                smooth_triangle_uv_with_extra_uv(
+                  positions[i],
+                  positions[i + 1],
+                  positions[i + 2],
+                  normals[i],
+                  normals[i + 1],
+                  normals[i + 2],
+                  uvs[i],
+                  uvs[i + 1],
+                  uvs[i + 2],
+                  uvs1[i],
+                  uvs1[i + 1],
+                  uvs1[i + 2],
+                )
+              } else {
+                smooth_triangle_uv(
+                  positions[i],
+                  positions[i + 1],
+                  positions[i + 2],
+                  normals[i],
+                  normals[i + 1],
+                  normals[i + 2],
+                  uvs[i],
+                  uvs[i + 1],
+                  uvs[i + 2],
+                )
+              }
+            } else if use_gltf_tangents {
+              if has_uv1 {
+                triangle_uv_with_tangents_and_extra_uv(
+                  positions[i],
+                  positions[i + 1],
+                  positions[i + 2],
+                  uvs[i],
+                  uvs[i + 1],
+                  uvs[i + 2],
+                  tu,
+                  tv,
+                  uvs1[i],
+                  uvs1[i + 1],
+                  uvs1[i + 2],
+                )
+              } else {
+                triangle_uv_with_tangents(
+                  positions[i],
+                  positions[i + 1],
+                  positions[i + 2],
+                  uvs[i],
+                  uvs[i + 1],
+                  uvs[i + 2],
+                  tu,
+                  tv,
+                )
+              }
+            } else if has_uv1 {
+              triangle_uv_with_extra_uv(
                 positions[i],
                 positions[i + 1],
                 positions[i + 2],
-                normals[i],
-                normals[i + 1],
-                normals[i + 2],
                 uvs[i],
                 uvs[i + 1],
                 uvs[i + 2],
+                uvs1[i],
+                uvs1[i + 1],
+                uvs1[i + 2],
               )
             } else {
               triangle_uv(
@@ -532,8 +797,17 @@ pub fn GltfData::load_material(self : GltfData, mat_idx : Int) -> Material {
   match g_mat.normal_texture {
     Some(info) =>
       match self.load_material_texture(info.index, linear=true) {
-        // TODO: Use normal_texture
-        Some(_tex) => ()
+        Some(tex) => {
+          mat.normal_texture = Some(tex)
+          mat.normal_texture_scale = match info.scale {
+            Some(s) => s
+            None => 1.0
+          }
+          mat.normal_texture_texcoord = match info.tex_coord {
+            Some(tc) => tc
+            None => 0
+          }
+        }
         None => ()
       }
     None => ()

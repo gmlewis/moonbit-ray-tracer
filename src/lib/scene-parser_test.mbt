@@ -276,6 +276,150 @@ test "parse material with pattern reference" {
 }
 
 ///|
+test "parse material with normal_pattern affects lighting" {
+  let toml_content =
+    #|[scene]
+    #|name = "Normal Pattern Scene"
+    #|[camera]
+    #|position = [0, 0, -5]
+    #|look_at = [0, 0, 0]
+    #|up = [0, 1, 0]
+    #|field_of_view = 1.0
+    #|
+    #|[patterns.h]
+    #|type = "fbm"
+    #|seed = 1
+    #|scale = 3.0
+    #|octaves = 3
+    #|
+    #|[materials.flat]
+    #|color = [1, 1, 1]
+    #|ambient = 0.0
+    #|diffuse = 0.9
+    #|specular = 0.9
+    #|shininess = 200.0
+    #|normal_pattern = "h"
+    #|normal_strength = 0.0
+    #|
+    #|[materials.bump]
+    #|color = [1, 1, 1]
+    #|ambient = 0.0
+    #|diffuse = 0.9
+    #|specular = 0.9
+    #|shininess = 200.0
+    #|normal_pattern = "h"
+    #|normal_strength = 5.0
+    #|
+    #|[[lights]]
+    #|type = "point"
+    #|position = [-10, 10, -10]
+    #|intensity = [1, 1, 1]
+    #|
+    #|[[objects]]
+    #|type = "sphere"
+    #|material = "flat"
+    #|
+    #|[[objects]]
+    #|type = "sphere"
+    #|material = "bump"
+    #|transform = { translation = [2, 0, 0] }
+    #|
+  let scene = @lib.parse_scene(toml_content)
+  inspect(scene.world.shapes.length(), content="2")
+  let flat_shape = scene.world.shapes[0]
+  let bump_shape = scene.world.shapes[1]
+  match
+    (flat_shape.material.normal_pattern, bump_shape.material.normal_pattern) {
+    (Some(_), Some(_)) => ()
+    _ => abort("expected normal_pattern to be resolved")
+  }
+  inspect(flat_shape.material.normal_strength, content="0")
+  inspect(bump_shape.material.normal_strength, content="5")
+  let light = scene.world.lights[0]
+  let position = @lib.point(0.35, 0.42, -0.84)
+  let eyev = @lib.vector(0.0, 0.0, -1.0)
+  let normalv = @lib.vector(0.0, 0.0, -1.0)
+  let c_flat = flat_shape.material.lighting(
+    light,
+    position,
+    eyev,
+    normalv,
+    shape=Some(flat_shape),
+  )
+  let c_bump = bump_shape.material.lighting(
+    light,
+    position,
+    eyev,
+    normalv,
+    shape=Some(bump_shape),
+  )
+
+  // Bump should perturb the normal enough to change the computed color.
+  assert_eq(c_flat == c_bump, false)
+}
+
+///|
+test "parse displacement - inline material" {
+  let toml_content =
+    #|[scene]
+    #|name = "Displacement Inline Material Scene"
+    #|[camera]
+    #|position = [0,0,-5]
+    #|look_at = [0,0,0]
+    #|up = [0,1,0]
+    #|field_of_view = 1.0
+    #|[patterns.h]
+    #|type = "fbm"
+    #|seed = 1
+    #|scale = 3.0
+    #|octaves = 3
+    #|[[objects]]
+    #|type = "sphere"
+    #|material = { displacement_pattern = "h", displacement_strength = 1.0 }
+    #|
+  let scene = @lib.parse_scene(toml_content)
+  inspect(scene.world.shapes.length(), content="1")
+  let s = scene.world.shapes[0]
+  inspect(s.material.displacement_strength, content="1")
+  match s.material.displacement_pattern {
+    Some(_) => ()
+    None => abort("expected displacement_pattern to be resolved")
+  }
+}
+
+///|
+test "parse displacement - referenced material" {
+  let toml_content =
+    #|[scene]
+    #|name = "Displacement Ref Material Scene"
+    #|[camera]
+    #|position = [0,0,-5]
+    #|look_at = [0,0,0]
+    #|up = [0,1,0]
+    #|field_of_view = 1.0
+    #|[patterns.h]
+    #|type = "fbm"
+    #|seed = 1
+    #|scale = 3.0
+    #|octaves = 3
+    #|[materials.disp]
+    #|displacement_pattern = "h"
+    #|displacement_strength = 1.0
+    #|[[objects]]
+    #|type = "sphere"
+    #|material = "disp"
+    #|
+  let scene = @lib.parse_scene(toml_content)
+  inspect(scene.world.shapes.length(), content="1")
+  let s = scene.world.shapes[0]
+  inspect(s.material.displacement_strength, content="1")
+  match s.material.displacement_pattern {
+    Some(_) => ()
+    None => abort("expected displacement_pattern to be resolved")
+  }
+}
+
+///|
 test "propagate material to CSG children" {
   let toml_content =
     #|[scene]

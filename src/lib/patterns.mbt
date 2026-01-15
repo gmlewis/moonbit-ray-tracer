@@ -10,6 +10,7 @@ pub(all) struct Pattern {
 pub(open) trait PatternTrait: Show {
   pattern_at(Self, Tuple) -> Color
   uv_at(Self, Double, Double) -> Color
+  pattern_at_with_info(Self, Tuple, Tuple, (Double, Double)?) -> Color
   clone(Self) -> Pattern
 }
 
@@ -28,6 +29,16 @@ pub impl PatternTrait for Pattern with pattern_at(self, point) {
 ///|
 pub impl PatternTrait for Pattern with uv_at(self, u, v) {
   self.pattern.uv_at(u, v)
+}
+
+///|
+pub impl PatternTrait for Pattern with pattern_at_with_info(
+  self,
+  point,
+  normal,
+  uv,
+) {
+  self.pattern.pattern_at_with_info(point, normal, uv)
 }
 
 ///|
@@ -57,15 +68,21 @@ pub fn Pattern::pattern_at_shape(
   self : Pattern,
   shape : Shape,
   world_point : Tuple,
+  normal? : Tuple,
   uv? : (Double, Double),
 ) -> Color {
-  match uv {
-    Some((u, v)) => return self.uv_at(u, v)
-    None => ()
-  }
   let object_point = shape.world_to_object(world_point)
   let pattern_point = self.inv_transform.mul_tuple(object_point)
-  self.pattern.pattern_at(pattern_point)
+  let n = match normal {
+    Some(n) => {
+      let object_normal = shape.world_normal_to_object(n)
+      let pattern_normal = self.transform.transpose().mul_tuple(object_normal)
+      pattern_normal.w = 0
+      pattern_normal.normalize()
+    }
+    None => vector(0, 0, 0)
+  }
+  self.pattern.pattern_at_with_info(pattern_point, n, uv)
 }
 
 ///|

@@ -1,0 +1,76 @@
+# Stats diagnostic: recursion-heavy scene
+#
+# Purpose: make secondary rays dominate via opposing mirrors + a glass sphere.
+# Use with: scripts/run-example.py stats-recursion --stats --samples 1 -o /tmp/stats-recursion.png
+
+[scene]
+name = "Stats Diagnostic - Recursion"
+description = "Recursion-heavy scene (mirrors + glass) for --stats profiling"
+version = "1.0"
+
+[scene.render]
+width = 240
+height = 135
+samples = 1
+max_bounces = 8
+background = [0.01, 0.01, 0.01]
+
+[camera]
+position = [0.0, 1.8, -10.0]
+look_at = [0.0, 1.2, 0.0]
+up = [0.0, 1.0, 0.0]
+field_of_view = 0.785
+
+[[lights]]
+type = "point"
+position = [-6.0, 8.0, -6.0]
+intensity = [1.0, 1.0, 1.0]
+
+[materials.mirror]
+color = [0.1, 0.1, 0.1]
+ambient = 0.0
+diffuse = 0.1
+specular = 0.9
+shininess = 250.0
+reflective = 0.95
+transparency = 0.0
+refractive_index = 1.0
+
+[materials.glass]
+color = [1.0, 1.0, 1.0]
+ambient = 0.0
+diffuse = 0.05
+specular = 0.9
+shininess = 300.0
+reflective = 0.6
+transparency = 0.9
+refractive_index = 1.5
+
+[materials.floor]
+color = [0.15, 0.15, 0.15]
+ambient = 0.05
+diffuse = 0.95
+specular = 0.0
+reflective = 0.0
+
+# Floor
+[[objects]]
+type = "plane"
+material = "floor"
+
+# Mirror walls facing each other
+[[objects]]
+type = "plane"
+material = "mirror"
+transform = { translation = [0.0, 0.0, -6.0], rotation = [1.5708, 0.0, 0.0] }
+
+[[objects]]
+type = "plane"
+material = "mirror"
+transform = { translation = [0.0, 0.0, 6.0], rotation = [-1.5708, 0.0, 0.0] }
+
+# Glass sphere in the middle
+[[objects]]
+type = "sphere"
+material = "glass"
+transform = { translation = [0.0, 1.0, 0.0] }

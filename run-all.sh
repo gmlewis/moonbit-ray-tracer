@@ -16,15 +16,35 @@
 # moon run src/ch15
 
 # Scene examples using the render CLI
-moon run src/render -- -s examples/area-light-demo.toml -o area-light-demo.png --samples 4 --divide 1
-moon run src/render -- -s examples/art-gallery.toml -o art-gallery.png --samples 4 --divide 1
-moon run src/render -- -s examples/box-demo.toml -o box-demo.png --samples 4 --divide 1
-moon run src/render -- -s examples/checkers-scene.toml -o checkers-scene.png --samples 8 --divide 1
-moon run src/render -- -s examples/csg-demo.toml -o csg-demo.png --samples 4 --divide 1
-moon run src/render -- -s examples/environment-demo.toml -o environment-demo.png --samples 4 --divide 1
-moon run src/render -- -s examples/glass-spheres.toml -o glass-spheres.png --samples 4 --divide 1
-moon run src/render -- -s examples/glb-demo.toml -o glb-demo.png --samples 4 --divide 1
-moon run src/render -- -s examples/patterns-showcase.toml -o patterns-showcase.png --samples 4 --divide 1
-moon run src/render -- -s examples/pbr-demo.toml -o pbr-demo.png --samples 4 --divide 1
-moon run src/render -- -s examples/simple-sphere.toml -o simple-sphere.png --samples 4 --divide 1
-moon run src/render -- -s examples/texture-demo.toml -o texture-demo.png --samples 4 --divide 1
+./scripts/run-example.py area-light-demo
+./scripts/run-example.py art-gallery
+./scripts/run-example.py bias-gain-demo
+./scripts/run-example.py box-demo
+./scripts/run-example.py bump-demo
+./scripts/run-example.py checkers-scene --samples 8
+./scripts/run-example.py contrast-demo
+./scripts/run-example.py csg-demo
+./scripts/run-example.py displacement-demo
+./scripts/run-example.py environment-demo
+./scripts/run-example.py glass-spheres
+./scripts/run-example.py glb-demo
+./scripts/run-example.py gradient-map-demo
+./scripts/run-example.py graphic-mask-demo
+./scripts/run-example.py levels-demo
+./scripts/run-example.py mask-demo
+./scripts/run-example.py material-layer-demo
+./scripts/run-example.py neon-portal-demo
+./scripts/run-example.py normal-tangent-mirror-demo
+./scripts/run-example.py patterns-showcase
+./scripts/run-example.py pbr-demo
+./scripts/run-example.py pbr-channels-demo
+./scripts/run-example.py posterize-demo
+./scripts/run-example.py procedural-textures
+./scripts/run-example.py simple-sphere
+./scripts/run-example.py texture-demo
+./scripts/run-example.py threshold-demo
+./scripts/run-example.py triplanar-demo
+./scripts/run-example.py triplanar-glb-demo
+./scripts/run-example.py voronoi-edges-demo
+./scripts/run-example.py voronoi-f1f2-demo
+./scripts/run-example.py warp-field-demo

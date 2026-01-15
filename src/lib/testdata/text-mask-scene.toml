@@ -1,0 +1,21 @@
+[scene]
+name = "Text Mask Pattern Scene"
+
+[camera]
+position = [0.0, 0.0, -5.0]
+look_at = [0.0, 0.0, 0.0]
+up = [0.0, 1.0, 0.0]
+field_of_view = 1.047
+
+[patterns.label]
+type = "text_mask"
+text = "A"
+font = "lato_lightitalic"
+size = 1.0
+align = "center"
+inside = [1.0, 1.0, 1.0]
+outside = [0.0, 0.0, 0.0]
+
+[[objects]]
+type = "sphere"
+material = { pattern = "label" }

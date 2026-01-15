@@ -3,6 +3,8 @@ _build/
 target
 .mooncakes/
 .moonagent/
+.venv/
+.vscode/
 *.glb
 *.md
 *.obj

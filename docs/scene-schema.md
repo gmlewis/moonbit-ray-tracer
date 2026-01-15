@@ -15,7 +15,7 @@ This document provides the exact schema definition for TOML scene files.
 ```toml
 [
   [m00, m01, m02, m03],
-  [m10, m11, m12, m13], 
+  [m10, m11, m12, m13],
   [m20, m21, m22, m23],
   [m30, m31, m32, m33]
 ]
@@ -27,7 +27,7 @@ This document provides the exact schema definition for TOML scene files.
 # Root level - all sections optional except [scene] and [camera]
 [scene]                          # REQUIRED
 name = "string"                  # OPTIONAL
-description = "string"           # OPTIONAL  
+description = "string"           # OPTIONAL
 version = "string"               # OPTIONAL
 
 [scene.render]                   # OPTIONAL
@@ -58,7 +58,16 @@ shininess = 200.0                # OPTIONAL, default: 200.0, range: >= 1.0
 reflective = 0.0                 # OPTIONAL, default: 0.0, range: [0.0, 1.0]
 transparency = 0.0               # OPTIONAL, default: 0.0, range: [0.0, 1.0]
 refractive_index = 1.0           # OPTIONAL, default: 1.0, range: >= 1.0
+lighting_mode = "phong"           # OPTIONAL, default: "phong", enum: ["phong", "pbr"]
+metallic = 0.0                   # OPTIONAL, default: 0.0, range: [0.0, 1.0] (PBR)
+roughness = 0.5                  # OPTIONAL, default: 0.5, range: [0.0, 1.0] (PBR)
 pattern = "pattern_name"         # OPTIONAL, reference to [patterns.NAME]
+metallic_pattern = "pattern_name"  # OPTIONAL, scalar field via luminance, reference to [patterns.NAME]
+roughness_pattern = "pattern_name" # OPTIONAL, scalar field via luminance, reference to [patterns.NAME]
+normal_pattern = "pattern_name"    # OPTIONAL, height field via luminance, reference to [patterns.NAME]
+normal_strength = 0.0              # OPTIONAL, default: 0.0, range: >= 0.0
+displacement_pattern = "pattern_name" # OPTIONAL, reference to [patterns.NAME]
+displacement_strength = 0.0         # OPTIONAL, default: 0.0, range: >= 0.0
 
 [patterns]                       # OPTIONAL, table of patterns
 [patterns.NAME]                  # Pattern definition
@@ -79,7 +88,7 @@ material = "material_name"       # OPTIONAL, reference to [materials.NAME]
 [objects.material]               # OPTIONAL, inline material (mutually exclusive with material reference)
 # Same structure as [materials.NAME]
 
-[objects.transform]              # OPTIONAL, object transform  
+[objects.transform]              # OPTIONAL, object transform
 translation = [0.0, 0.0, 0.0]    # OPTIONAL, type: Vector3
 rotation = [0.0, 0.0, 0.0]       # OPTIONAL, type: Vector3 (radians)
 scale = [1.0, 1.0, 1.0]          # OPTIONAL, type: Vector3
@@ -109,7 +118,7 @@ file = "path/to/model.obj"       # REQUIRED for mesh, string path
 [[objects.left]]                 # REQUIRED for CSG, single object
 # Same structure as [[objects]]
 
-[[objects.right]]                # REQUIRED for CSG, single object  
+[[objects.right]]                # REQUIRED for CSG, single object
 # Same structure as [[objects]]
 
 # Group children
@@ -167,7 +176,7 @@ file = "path/to/model.obj"       # REQUIRED for mesh, string path
 - Missing required sections/fields
 - Invalid data types
 
-### Validation Errors  
+### Validation Errors
 - Values outside allowed ranges
 - Invalid enum values
 - Broken references

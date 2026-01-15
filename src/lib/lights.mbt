@@ -31,13 +31,20 @@ pub fn area_light(
 }
 
 ///|
-pub fn Light::point_at(self : Light, u : Int, v : Int) -> Tuple {
+pub fn Light::point_at_uv(self : Light, u : Double, v : Double) -> Tuple {
   match self.kind {
     Point => self.position
     Area(uvec, _, vvec, _) =>
-      self.position +
-      uvec.mul_scalar(u.to_double() + 0.5) +
-      vvec.mul_scalar(v.to_double() + 0.5)
+      self.position + uvec.mul_scalar(u) + vvec.mul_scalar(v)
+  }
+}
+
+///|
+pub fn Light::point_at(self : Light, u : Int, v : Int) -> Tuple {
+  match self.kind {
+    Point => self.position
+    Area(_, _, _, _) =>
+      self.point_at_uv(u.to_double() + 0.5, v.to_double() + 0.5)
   }
 }
 
@@ -46,5 +53,32 @@ pub fn Light::samples(self : Light) -> Int {
   match self.kind {
     Point => 1
     Area(_, u_steps, _, v_steps) => u_steps * v_steps
+  }
+}
+
+///|
+pub fn Light::cap_area_steps(self : Light, max_steps : Int) -> Light {
+  if max_steps <= 0 {
+    return self
+  }
+  match self.kind {
+    Point => self
+    Area(uvec, u_steps, vvec, v_steps) => {
+      let nu = if u_steps > max_steps { max_steps } else { u_steps }
+      let nv = if v_steps > max_steps { max_steps } else { v_steps }
+      if nu == u_steps && nv == v_steps {
+        return self
+      }
+      // Preserve full light extent while changing sample grid resolution.
+      let full_u = uvec.mul_scalar(u_steps.to_double())
+      let full_v = vvec.mul_scalar(v_steps.to_double())
+      let new_uvec = full_u.div_scalar(nu.to_double())
+      let new_vvec = full_v.div_scalar(nv.to_double())
+      {
+        position: self.position,
+        intensity: self.intensity,
+        kind: Area(new_uvec, nu, new_vvec, nv),
+      }
+    }
   }
 }

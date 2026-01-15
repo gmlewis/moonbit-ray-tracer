@@ -1,12 +1,16 @@
 {
   "name": "gmlewis/ray-tracer",
-  "version": "0.10.30",
+  "version": "0.10.32",
   "deps": {
-    "gmlewis/image": "0.16.34",
-    "gmlewis/io": "0.22.19",
-    "gmlewis/base64": "0.15.5",
     "bob/toml": "0.1.6",
-    "moonbitlang/async": "0.16.0",
+    "gmlewis/base64": "0.15.5",
+    "gmlewis/flate": "0.36.0",
+    "gmlewis/fonts": "0.19.0",
+    "gmlewis/gzip": "0.34.0",
+    "gmlewis/image": "0.17.0",
+    "gmlewis/io": "0.23.0",
+    "moonbitlang/async": "0.16.1",
+    "moonbitlang/x": "0.4.38",
     "TheWaWaR/clap": "0.2.6"
   },
   "readme": "README.md",

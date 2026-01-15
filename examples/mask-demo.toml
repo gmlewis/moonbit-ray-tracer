@@ -1,0 +1,230 @@
+# Mask demo (procedural patterns as scalar fields)
+[scene]
+name = "Mask Demo"
+description = "Use any pattern graph as a mask for mixing (luminance-driven blend)"
+version = "1.0"
+
+[scene.render]
+width = 1100
+height = 650
+samples = 1
+max_bounces = 4
+background = [0.06, 0.06, 0.08]
+
+[camera]
+position = [0.0, 3.2, -10.5]
+look_at = [0.0, 1.1, 0.0]
+up = [0.0, 1.0, 0.0]
+field_of_view = 0.785
+
+[[lights]]
+type = "point"
+position = [-10.0, 10.0, -10.0]
+intensity = [1.0, 1.0, 1.0]
+
+[[lights]]
+type = "point"
+position = [8.0, 8.0, 6.0]
+intensity = [0.35, 0.35, 0.45]
+
+# Source patterns (A/B)
+[patterns.a]
+type = "gradient_map"
+colors = [
+  [0.08, 0.10, 0.14],
+  [0.20, 0.12, 0.55],
+  [0.10, 0.75, 0.95],
+  [0.95, 0.90, 0.35]
+]
+
+[patterns.a.pattern]
+type = "fbm"
+seed = 29
+scale = 2.0
+octaves = 5
+
+[patterns.b]
+type = "marble"
+colors = [
+  [0.92, 0.92, 0.96],
+  [0.18, 0.18, 0.22]
+]
+seed = 7
+scale = 1.6
+octaves = 5
+frequency = 6.0
+strength = 2.2
+
+# Mask source (same underlying noise, shown with different shaping)
+[patterns.mask_noise]
+type = "fbm"
+seed = 11
+scale = 2.2
+octaves = 5
+
+[patterns.mask_soft]
+type = "mix"
+
+[patterns.mask_soft.a]
+type = "gradient_map"
+colors = [[0.0,0.0,0.0], [1.0,1.0,1.0]]
+
+[patterns.mask_soft.a.pattern]
+type = "fbm"
+seed = 11
+scale = 2.2
+octaves = 5
+
+[patterns.mask_soft.b]
+type = "gradient_map"
+colors = [[0.0,0.0,0.0], [1.0,1.0,1.0]]
+
+[patterns.mask_soft.b.pattern]
+type = "fbm"
+seed = 11
+scale = 2.2
+octaves = 5
+
+[patterns.mask_soft.mask]
+type = "fbm"
+seed = 11
+scale = 2.2
+octaves = 5
+
+# Soft mix: mask is raw fBm (smooth blend)
+[patterns.mixed_soft]
+type = "mix"
+
+[patterns.mixed_soft.a]
+type = "gradient_map"
+colors = [
+  [0.08, 0.10, 0.14],
+  [0.20, 0.12, 0.55],
+  [0.10, 0.75, 0.95],
+  [0.95, 0.90, 0.35]
+]
+
+[patterns.mixed_soft.a.pattern]
+type = "fbm"
+seed = 29
+scale = 2.0
+octaves = 5
+
+[patterns.mixed_soft.b]
+type = "marble"
+colors = [[0.92, 0.92, 0.96], [0.18, 0.18, 0.22]]
+seed = 7
+scale = 1.6
+octaves = 5
+frequency = 6.0
+strength = 2.2
+
+[patterns.mixed_soft.mask]
+type = "fbm"
+seed = 11
+scale = 2.2
+octaves = 5
+
+# Sharper mix: mask is shaped via levels (more contrasty transitions)
+[patterns.mixed_sharp]
+type = "mix"
+
+[patterns.mixed_sharp.a]
+type = "gradient_map"
+colors = [
+  [0.08, 0.10, 0.14],
+  [0.20, 0.12, 0.55],
+  [0.10, 0.75, 0.95],
+  [0.95, 0.90, 0.35]
+]
+
+[patterns.mixed_sharp.a.pattern]
+type = "fbm"
+seed = 29
+scale = 2.0
+octaves = 5
+
+[patterns.mixed_sharp.b]
+type = "marble"
+colors = [[0.92, 0.92, 0.96], [0.18, 0.18, 0.22]]
+seed = 7
+scale = 1.6
+octaves = 5
+frequency = 6.0
+strength = 2.2
+
+[patterns.mixed_sharp.mask]
+type = "levels"
+in_min = 0.35
+in_max = 0.65
+out_min = 0.0
+out_max = 1.0
+gamma = 0.85
+
+[patterns.mixed_sharp.mask.pattern]
+type = "fbm"
+seed = 11
+scale = 2.2
+octaves = 5
+
+# Hard mix: mask is thresholded (binary cutout)
+[patterns.mixed_hard]
+type = "mix"
+
+[patterns.mixed_hard.a]
+type = "gradient_map"
+colors = [
+  [0.08, 0.10, 0.14],
+  [0.20, 0.12, 0.55],
+  [0.10, 0.75, 0.95],
+  [0.95, 0.90, 0.35]
+]
+
+[patterns.mixed_hard.a.pattern]
+type = "fbm"
+seed = 29
+scale = 2.0
+octaves = 5
+
+[patterns.mixed_hard.b]
+type = "marble"
+colors = [[0.92, 0.92, 0.96], [0.18, 0.18, 0.22]]
+seed = 7
+scale = 1.6
+octaves = 5
+frequency = 6.0
+strength = 2.2
+
+[patterns.mixed_hard.mask]
+type = "threshold"
+threshold = 0.52
+
+[patterns.mixed_hard.mask.pattern]
+type = "fbm"
+seed = 11
+scale = 2.2
+octaves = 5
+
+# Floor
+[[objects]]
+type = "plane"
+material = { color = [0.25, 0.25, 0.28], ambient = 0.25, diffuse = 0.9, specular = 0.0 }
+
+# Spheres: same A/B, different mask shaping
+[[objects]]
+type = "sphere"
+material = { ambient = 0.1, diffuse = 0.85, specular = 0.18, shininess = 120.0, pattern = "mixed_soft" }
+transform = { translation = [-4.5, 1.0, 1.6] }
+pattern_transform = { scale = [0.9, 0.9, 0.9] }
+
+[[objects]]
+type = "sphere"
+material = { ambient = 0.1, diffuse = 0.85, specular = 0.18, shininess = 120.0, pattern = "mixed_sharp" }
+transform = { translation = [0.0, 1.0, 1.2] }
+pattern_transform = { scale = [0.9, 0.9, 0.9] }
+
+[[objects]]
+type = "sphere"
+material = { ambient = 0.1, diffuse = 0.85, specular = 0.18, shininess = 120.0, pattern = "mixed_hard" }
+transform = { translation = [4.5, 1.0, 1.6] }
+pattern_transform = { scale = [0.9, 0.9, 0.9] }

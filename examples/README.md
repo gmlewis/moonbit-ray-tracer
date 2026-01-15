@@ -38,7 +38,7 @@ Shows Constructive Solid Geometry (CSG) operations for complex shape creation.
 
 **Features demonstrated:**
 - CSG union operations
-- CSG intersection operations  
+- CSG intersection operations
 - CSG difference operations
 - Nested CSG operations
 - Complex hierarchical shapes
@@ -47,12 +47,145 @@ Shows Constructive Solid Geometry (CSG) operations for complex shape creation.
 Comprehensive demonstration of all available pattern types and their applications.
 
 **Features demonstrated:**
-- All pattern types: stripes, checkers, gradient, rings, gradient_rings, gradient_checkers
+- Classic pattern types: stripes, checkers, gradient, rings, gradient_rings, gradient_checkers
 - Pattern transformations (scale, rotation)
 - Patterns on different shape types
 - Pattern color definitions
 
+### [`procedural-textures.toml`](procedural-textures.toml)
+Demonstrates procedural patterns (noise/fBm/marble/wood/voronoi) and compositing (invert/mix/warp).
+
+**Features demonstrated:**
+- Procedural textures that don’t require images
+- Nested inline pattern definitions for compositing
+- Domain warping for more organic results
+
+### [`glb-demo.toml`](glb-demo.toml)
+Demonstrates loading a GLB model.
+
+### [`triplanar-glb-demo.toml`](triplanar-glb-demo.toml)
+Demonstrates overriding a GLB’s materials with a procedural `triplanar` pattern.
+
+### [`normal-tangent-mirror-demo.toml`](normal-tangent-mirror-demo.toml)
+Demonstrates using glTF-provided mesh tangents (ATTRIBUTE `TANGENT`) for correct tangent-space normal mapping, including mirrored handedness.
+
+### [`levels-demo.toml`](levels-demo.toml)
+Demonstrates `levels` (remap + gamma shaping) applied to procedural noise.
+
+### [`bias-gain-demo.toml`](bias-gain-demo.toml)
+Demonstrates `bias_gain` (bias shifts midtones; gain reshapes shadows/highlights).
+
+### [`contrast-demo.toml`](contrast-demo.toml)
+Demonstrates `contrast` around a pivot (default 0.5).
+
+### [`threshold-demo.toml`](threshold-demo.toml)
+Demonstrates `threshold` turning noise into bold graphic masks.
+
+### [`posterize-demo.toml`](posterize-demo.toml)
+Demonstrates `posterize` quantization (bolder banding as steps decrease).
+
+### [`gradient-map-demo.toml`](gradient-map-demo.toml)
+Demonstrates `gradient_map` (palette mapping from noise luminance).
+
+### [`triplanar-demo.toml`](triplanar-demo.toml)
+Demonstrates `triplanar` projection using surface normals.
+
+### [`voronoi-edges-demo.toml`](voronoi-edges-demo.toml)
+Demonstrates Voronoi `edges` and `crackle` modes.
+
+### [`voronoi-f1f2-demo.toml`](voronoi-f1f2-demo.toml)
+Demonstrates Voronoi `f1`, `f2`, and `f2_minus_f1` feature-distance outputs.
+
+### [`bump-demo.toml`](bump-demo.toml)
+Demonstrates procedural bump mapping using `normal_pattern` + `normal_strength`.
+
+### [`displacement-demo.toml`](displacement-demo.toml)
+Demonstrates `displacement_pattern` + `displacement_strength` (simple shading-time displacement; no silhouette changes).
+
+### [`material-layer-demo.toml`](material-layer-demo.toml)
+Demonstrates blending two full materials using `layer_material` + `layer_mask`.
+
+### [`pbr-demo.toml`](pbr-demo.toml)
+Demonstrates a basic PBR setup with varying constant `metallic` and `roughness`.
+
+### [`pbr-channels-demo.toml`](pbr-channels-demo.toml)
+Demonstrates driving PBR channels from procedural patterns via `metallic_pattern` and `roughness_pattern`.
+
+What to look for:
+- Metallic sphere shows alternating bands that shift between metal-like vs dielectric-like response.
+- Roughness spheres show varying highlight sharpness (smooth fBm) and chunky regions (posterized).
+
+### [`mask-demo.toml`](mask-demo.toml)
+Demonstrates using any pattern graph as a **mask** (scalar field) to drive `mix`.
+
+### [`graphic-mask-demo.toml`](graphic-mask-demo.toml)
+Demonstrates loading a `gmlewis/fonts/draw` `Graphic` from JSON and using it as a crisp vector mask.
+
+Regenerate the demo asset (from the gmlewis/fonts repo):
+
+```bash
+echo "MoonBit Render Test" | ./scripts/render-to-json.py -o examples/assets/moonbit-bloom.json
+```
+
+### [`neon-portal-demo.toml`](neon-portal-demo.toml)
+A scene that uses TOML-native text to build crisp vector masks at runtime.
+
+**Features demonstrated:**
+- `text_mask` pattern for decals/labels
+- Material layering via `layer_material` + `layer_mask`
+- CSG portal ring + glass core
+- Cornell-box-style colored side lighting (red/green)
+
+### [`warp-field-demo.toml`](warp-field-demo.toml)
+Demonstrates using any pattern graph as a **warp field** (vector-ish RGB) to drive domain warping.
+
 ## Using the Examples
+
+### Rendering an example
+
+Use the helper script (it resolves `examples/<name>.toml` automatically):
+
+```bash
+./scripts/run-example.py neon-portal-demo --draft
+```
+
+Override quality/resolution explicitly as needed:
+
+```bash
+./scripts/run-example.py neon-portal-demo --samples 6 -w 1200 -H 675
+```
+
+Print render statistics (useful when optimizing slow scenes):
+
+```bash
+./scripts/run-example.py neon-portal-demo --draft --stats
+```
+
+Cap area-light sampling for faster soft-shadow previews:
+
+```bash
+./scripts/run-example.py area-light-demo --stats --area-steps 4
+```
+
+### Stats diagnostic scenes
+
+These scenes are purpose-built to make `--stats` easier to interpret by isolating common cost drivers:
+
+- `stats-intersections.toml`: many shapes (intersection-heavy)
+- `stats-shadows.toml`: area light with many samples (shadow-heavy)
+- `stats-recursion.toml`: mirrors + glass (secondary-ray heavy)
+
+Example:
+
+```bash
+python3 scripts/run-example.py stats-shadows --stats --samples 1 -o /tmp/stats-shadows.png
+```
+
+Note: scenes that use TOML-native text require `MOONBIT_FONTS_DIR` to be set:
+
+```bash
+MOONBIT_FONTS_DIR=/path/to/moonbit-16-fonts ./scripts/run-example.py neon-portal-demo --draft
+```
 
 1. Copy any example file as a starting point for your own scenes
 2. Modify the camera position, lighting, or materials to experiment

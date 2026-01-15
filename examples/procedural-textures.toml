@@ -1,0 +1,193 @@
+# Procedural textures demo - noise, marble/wood, voronoi, warping, and compositing
+[scene]
+name = "Procedural Textures"
+description = "Noise-based textures + fun combinations (warp/mix/voronoi)"
+version = "1.0"
+
+[scene.render]
+width = 1100
+height = 650
+samples = 1
+max_bounces = 4
+background = [0.08, 0.08, 0.10]
+
+[camera]
+position = [0.0, 3.2, -10.5]
+look_at = [0.0, 1.1, 0.0]
+up = [0.0, 1.0, 0.0]
+field_of_view = 0.785
+
+[[lights]]
+type = "point"
+position = [-10.0, 10.0, -10.0]
+intensity = [1.0, 1.0, 1.0]
+
+[[lights]]
+type = "point"
+position = [8.0, 8.0, 6.0]
+intensity = [0.45, 0.45, 0.55]
+
+# Patterns
+[patterns.marble_cream]
+type = "marble"
+colors = [
+  [0.96, 0.93, 0.86],
+  [0.28, 0.25, 0.22]
+]
+seed = 7
+scale = 1.25
+octaves = 5
+frequency = 4.0
+strength = 3.0
+
+[patterns.wood_walnut]
+type = "wood"
+colors = [
+  [0.60, 0.38, 0.22],
+  [0.32, 0.20, 0.12],
+  [0.75, 0.55, 0.32]
+]
+seed = 11
+scale = 1.0
+octaves = 5
+ring_frequency = 7.0
+turbulence = 0.6
+
+[patterns.voronoi_cells]
+type = "voronoi"
+seed = 23
+scale = 2.5
+jitter = 1.0
+mode = "cells"
+
+[patterns.warped_marble]
+type = "warp"
+amplitude = 0.45
+
+[patterns.warped_marble.base]
+type = "marble"
+colors = [
+  [0.95, 0.86, 0.40],
+  [0.20, 0.18, 0.12]
+]
+seed = 3
+scale = 1.2
+frequency = 5.0
+strength = 2.5
+
+[patterns.warped_marble.warp]
+type = "fbm"
+seed = 101
+scale = 2.2
+octaves = 4
+
+[patterns.mixed_wood_marble]
+type = "mix"
+
+[patterns.mixed_wood_marble.a]
+type = "wood"
+colors = [
+  [0.66, 0.46, 0.26],
+  [0.28, 0.18, 0.10]
+]
+seed = 19
+scale = 1.1
+ring_frequency = 8.0
+turbulence = 0.7
+
+[patterns.mixed_wood_marble.b]
+type = "marble"
+colors = [
+  [0.20, 0.32, 0.50],
+  [0.90, 0.92, 0.98]
+]
+seed = 29
+scale = 1.4
+frequency = 3.5
+strength = 2.0
+
+[patterns.mixed_wood_marble.mask]
+type = "fbm"
+seed = 5
+scale = 1.8
+octaves = 5
+
+[patterns.bias_gain_midtones]
+type = "bias_gain"
+bias = 0.30
+gain = 0.55
+
+[patterns.bias_gain_midtones.pattern]
+type = "fbm"
+seed = 37
+scale = 2.2
+octaves = 5
+
+[patterns.contrast_hard]
+type = "contrast"
+contrast = 1.8
+pivot = 0.5
+
+[patterns.contrast_hard.pattern]
+type = "fbm"
+seed = 41
+scale = 2.0
+octaves = 5
+
+# Materials
+[materials.base]
+color = [1.0, 1.0, 1.0]
+ambient = 0.05
+diffuse = 0.85
+specular = 0.20
+shininess = 120.0
+reflective = 0.08
+
+# Floor
+[[objects]]
+type = "plane"
+material = { color = [0.25, 0.25, 0.28], ambient = 0.2, diffuse = 0.9, specular = 0.0 }
+
+# Spheres (left to right)
+[[objects]]
+type = "sphere"
+material = { ambient = 0.1, diffuse = 0.8, specular = 0.25, shininess = 160.0, reflective = 0.10, pattern = "marble_cream" }
+transform = { translation = [-4.5, 1.0, 1.6] }
+pattern_transform = { scale = [0.7, 0.7, 0.7] }
+
+[[objects]]
+type = "sphere"
+material = { ambient = 0.1, diffuse = 0.8, specular = 0.22, shininess = 140.0, reflective = 0.08, pattern = "wood_walnut" }
+transform = { translation = [-2.2, 1.0, -0.3] }
+pattern_transform = { scale = [0.8, 0.8, 0.8], rotation = [0.0, 0.6, 0.0] }
+
+[[objects]]
+type = "sphere"
+material = { ambient = 0.1, diffuse = 0.85, specular = 0.12, shininess = 80.0, reflective = 0.05, pattern = "voronoi_cells" }
+transform = { translation = [0.0, 1.0, 1.4] }
+pattern_transform = { scale = [0.55, 0.55, 0.55] }
+
+[[objects]]
+type = "sphere"
+material = { ambient = 0.1, diffuse = 0.8, specular = 0.25, shininess = 160.0, reflective = 0.10, pattern = "warped_marble" }
+transform = { translation = [2.2, 1.0, -0.3] }
+pattern_transform = { scale = [0.8, 0.8, 0.8] }
+
+[[objects]]
+type = "sphere"
+material = { ambient = 0.1, diffuse = 0.8, specular = 0.22, shininess = 140.0, reflective = 0.08, pattern = "mixed_wood_marble" }
+transform = { translation = [4.5, 1.0, 1.6] }
+pattern_transform = { scale = [0.75, 0.75, 0.75] }
+
+# Back row (extra nodes)
+[[objects]]
+type = "sphere"
+material = { ambient = 0.1, diffuse = 0.85, specular = 0.16, shininess = 120.0, reflective = 0.06, pattern = "bias_gain_midtones" }
+transform = { translation = [-2.2, 1.0, 3.8], scale = [0.85, 0.85, 0.85] }
+pattern_transform = { scale = [0.9, 0.9, 0.9] }
+
+[[objects]]
+type = "sphere"
+material = { ambient = 0.1, diffuse = 0.85, specular = 0.16, shininess = 120.0, reflective = 0.06, pattern = "contrast_hard" }
+transform = { translation = [2.2, 1.0, 3.8], scale = [0.85, 0.85, 0.85] }
+pattern_transform = { scale = [0.9, 0.9, 0.9] }

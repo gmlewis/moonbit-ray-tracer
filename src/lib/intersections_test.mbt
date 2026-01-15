@@ -239,8 +239,32 @@ test "prepare_computations preserves UV coordinates and has_uv flag" {
   i.uv_u = 0.2
   i.uv_v = 0.4
   i.has_uv = true
+  i.uv_u1 = 0.6
+  i.uv_v1 = 0.8
+  i.has_uv1 = true
   let comps = i.prepare_computations(r)
   assert_eq(comps.uv_u, 0.2)
   assert_eq(comps.uv_v, 0.4)
   assert_eq(comps.has_uv, true)
+  assert_eq(comps.uv_u1, 0.6)
+  assert_eq(comps.uv_v1, 0.8)
+  assert_eq(comps.has_uv1, true)
+}
+
+///|
+test "prepare_computations applies displacement mapping" {
+  let r = ray(point(0, 0, -5), vector(0, 0, 1))
+  let s = sphere()
+
+  // Constant height=1.0 -> displacement = strength.
+  s.material.displacement_pattern = Some(
+    stripe_pattern([color(1, 1, 1), color(1, 1, 1)]),
+  )
+  s.material.displacement_strength = 0.5
+  let i = @lib.intersection(4, s)
+  let comps = i.prepare_computations(r)
+
+  // Original hit point would be z=-1. Displacement moves along normal (0,0,-1)
+  // by +0.5 -> z=-1.5.
+  assert_true((comps.point.z - -1.5).abs() < 1.e-6)
 }
