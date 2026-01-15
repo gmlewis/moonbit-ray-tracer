@@ -37,6 +37,7 @@ def main(argv: list[str]) -> int:
             "\n"
             "Anything after <scene> is passed through to `moon run src/render -- ...`.\n"
             "Defaults are applied if not provided: --samples 4 --divide 1\n"
+            "Tip: pass --draft for a quick preview preset.\n"
             "If -o/--output is not provided, output defaults to '<scene-stem>.png'.\n",
             file=sys.stderr,
         )
@@ -56,7 +57,8 @@ def main(argv: list[str]) -> int:
         passthrough = ["-o", f"{scene_path.stem}.png", *passthrough]
 
     # Common defaults used by run-all.sh (overrideable).
-    if not _has_flag(passthrough, "--samples"):
+    # If the user requested --draft, let the renderer pick draft-friendly defaults.
+    if not _has_flag(passthrough, "--samples") and not _has_flag(passthrough, "--draft"):
         passthrough = [*passthrough, "--samples", "4"]
     if not _has_flag(passthrough, "--divide"):
         passthrough = [*passthrough, "--divide", "1"]

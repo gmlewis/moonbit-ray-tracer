@@ -141,6 +141,26 @@ Demonstrates using any pattern graph as a **warp field** (vector-ish RGB) to dri
 
 ## Using the Examples
 
+### Rendering an example
+
+Use the helper script (it resolves `examples/<name>.toml` automatically):
+
+```bash
+./scripts/run-example.py neon-portal-demo --draft
+```
+
+Override quality/resolution explicitly as needed:
+
+```bash
+./scripts/run-example.py neon-portal-demo --samples 6 -w 1200 -H 675
+```
+
+Note: scenes that use TOML-native text require `MOONBIT_FONTS_DIR` to be set:
+
+```bash
+MOONBIT_FONTS_DIR=/path/to/moonbit-16-fonts ./scripts/run-example.py neon-portal-demo --draft
+```
+
 1. Copy any example file as a starting point for your own scenes
 2. Modify the camera position, lighting, or materials to experiment
 3. Add or remove objects to create your own compositions

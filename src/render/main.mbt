@@ -6,6 +6,9 @@ async fn main {
     "width": @cli.opt_int(0, short='w', help="Override output width"),
     "height": @cli.opt_int(0, short='H', help="Override output height"),
     "samples": @cli.opt_int(0, help="Override samples per pixel"),
+    "draft": @cli.flag(
+      help="Quick preview preset (lower resolution/samples/bounces unless overridden)",
+    ),
     "debug": @cli.flag(help="Print parsed scene summary (materials/patterns)"),
     "divide": @cli.opt_int(
       0,
@@ -38,21 +41,57 @@ async fn main {
   world.background = settings.background
 
   // Apply overrides
-  let w = args.int("width")
-  if w > 0 {
-    settings.width = w
-    camera = @lib.camera(w, settings.height, camera.field_of_view)
+  let draft = args.flag("draft")
+  let w_override = args.int("width")
+  let h_override = args.int("height")
+  let s_override = args.int("samples")
+  let mut target_w = settings.width
+  let mut target_h = settings.height
+  if draft {
+    // Prefer fast iteration defaults.
+    // Only auto-adjust resolution when the user hasn't explicitly overridden it.
+    if w_override <= 0 && h_override <= 0 {
+      let max_w = 640
+      let max_h = 360
+      let sw = settings.width.to_double()
+      let sh = settings.height.to_double()
+      let mut scale = max_w.to_double() / sw
+      let scale_h = max_h.to_double() / sh
+      if scale_h < scale {
+        scale = scale_h
+      }
+      if scale < 1.0 {
+        let nw = (sw * scale).to_int()
+        let nh = (sh * scale).to_int()
+        target_w = if nw < 1 { 1 } else { nw }
+        target_h = if nh < 1 { 1 } else { nh }
+      }
+    }
+
+    // Only force low samples when the user hasn't explicitly overridden it.
+    if s_override <= 0 {
+      settings.samples = 1
+    }
+
+    // Cap bounces for speed (never increases the scene's requested bounces).
+    if settings.max_bounces > 2 {
+      settings.max_bounces = 2
+    }
+  }
+  if w_override > 0 {
+    target_w = w_override
+  }
+  if h_override > 0 {
+    target_h = h_override
+  }
+  if target_w != settings.width || target_h != settings.height {
+    settings.width = target_w
+    settings.height = target_h
+    camera = @lib.camera(settings.width, settings.height, camera.field_of_view)
     camera.transform = parsed_scene.camera.transform
   }
-  let h = args.int("height")
-  if h > 0 {
-    settings.height = h
-    camera = @lib.camera(settings.width, h, camera.field_of_view)
-    camera.transform = parsed_scene.camera.transform
-  }
-  let s = args.int("samples")
-  if s > 0 {
-    settings.samples = s
+  if s_override > 0 {
+    settings.samples = s_override
   }
   let d = args.int("divide")
   if d > 0 {
