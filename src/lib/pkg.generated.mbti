@@ -124,6 +124,8 @@ pub fn posterize_pattern(Pattern, steps? : Int) -> Pattern
 
 pub fn ray(Tuple, Tuple) -> Ray
 
+pub fn render_stats() -> RenderStats
+
 pub fn ring_pattern(Array[Color]) -> Pattern
 
 pub fn rotation_x(Double) -> Matrix
@@ -836,6 +838,19 @@ pub(all) struct RenderSettings {
 pub impl Eq for RenderSettings
 pub impl Show for RenderSettings
 
+pub(all) struct RenderStats {
+  mut rays_total : Int
+  mut rays_hit : Int
+  mut rays_miss : Int
+  mut shadow_rays : Int
+  mut reflected_rays : Int
+  mut refracted_rays : Int
+  mut intersect_world_calls : Int
+  mut shape_intersect_calls : Int
+  mut intersections_total : Int
+}
+pub fn RenderStats::summary(Self, Int, Int, Int) -> String
+
 pub(all) enum Renderable {
   Object(&Object)
   Group(Group)
@@ -1110,6 +1125,8 @@ pub(all) struct World {
   mut lights : Array[Light]
   mut background : Color
   mut environment_map : Pattern?
+  mut stats_enabled : Bool
+  mut stats : RenderStats
 }
 pub fn World::color_at(Self, Ray, remaining? : Int) -> Color
 pub fn World::intersect_world(Self, Ray) -> Intersections

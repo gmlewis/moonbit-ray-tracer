@@ -7,6 +7,8 @@ pub(all) struct World {
   mut lights : Array[Light]
   mut background : Color
   mut environment_map : Pattern?
+  mut stats_enabled : Bool
+  mut stats : RenderStats
 }
 
 ///|
@@ -15,7 +17,14 @@ pub fn world() -> World {
   let lights = []
   let background = color(0, 0, 0)
   let environment_map = None
-  { shapes, lights, background, environment_map }
+  {
+    shapes,
+    lights,
+    background,
+    environment_map,
+    stats_enabled: false,
+    stats: render_stats(),
+  }
 }
 
 ///|
@@ -34,14 +43,29 @@ pub fn default_world() -> World {
   let lights = [light]
   let background = color(0, 0, 0)
   let environment_map = None
-  { shapes, lights, background, environment_map }
+  {
+    shapes,
+    lights,
+    background,
+    environment_map,
+    stats_enabled: false,
+    stats: render_stats(),
+  }
 }
 
 ///|
 pub fn World::intersect_world(self : World, ray : Ray) -> Intersections {
+  if self.stats_enabled {
+    self.stats.intersect_world_calls = self.stats.intersect_world_calls + 1
+    self.stats.shape_intersect_calls = self.stats.shape_intersect_calls +
+      self.shapes.length()
+  }
   let xs = []
   for obj in self.shapes {
     let x = obj.intersect(ray)
+    if self.stats_enabled {
+      self.stats.intersections_total = self.stats.intersections_total + x.count
+    }
     xs.append(x.xs)
   }
   intersections(xs)
@@ -180,6 +204,9 @@ pub fn World::color_at(
   ray : Ray,
   remaining? : Int = MAX_BOUNCES,
 ) -> Color {
+  if self.stats_enabled {
+    self.stats.rays_total = self.stats.rays_total + 1
+  }
   let xs = self.intersect_world(ray)
   let hit = match xs.hit() {
     None =>
@@ -187,11 +214,22 @@ pub fn World::color_at(
         Some(env) => {
           // Map ray direction to UV
           let (u, v) = spherical_map(ray.direction)
+          if self.stats_enabled {
+            self.stats.rays_miss = self.stats.rays_miss + 1
+          }
           return env.uv_at(u, v)
         }
-        None => return self.background
+        None => {
+          if self.stats_enabled {
+            self.stats.rays_miss = self.stats.rays_miss + 1
+          }
+          return self.background
+        }
       }
     Some(hit) => hit
+  }
+  if self.stats_enabled {
+    self.stats.rays_hit = self.stats.rays_hit + 1
   }
   let comps = hit.prepare_computations(ray, xs~)
   self.shade_hit(comps, remaining~)
@@ -203,6 +241,9 @@ pub fn World::is_shadowed(
   point : Tuple,
   light_pos : Tuple,
 ) -> Bool {
+  if self.stats_enabled {
+    self.stats.shadow_rays = self.stats.shadow_rays + 1
+  }
   let v = light_pos - point
   let distance = v.magnitude()
   let direction = v.normalize()
@@ -255,6 +296,9 @@ pub fn World::reflected_color(
   if remaining <= 0 || reflective == 0 {
     return color(0, 0, 0)
   }
+  if self.stats_enabled {
+    self.stats.reflected_rays = self.stats.reflected_rays + 1
+  }
   let mut reflect_dir = comps.reflectv
   if material.lighting_mode == PBR && material.roughness > 0 {
     let jitter = pseudo_random_vector(comps.point).mul_scalar(
@@ -298,6 +342,9 @@ pub fn World::refracted_color(
 ) -> Color {
   if remaining <= 0 || comps.shape.material.transparency == 0 {
     return color(0, 0, 0)
+  }
+  if self.stats_enabled {
+    self.stats.refracted_rays = self.stats.refracted_rays + 1
   }
   // find the ratio of first index of refraction to the second
   let n_ratio = comps.n1 / comps.n2

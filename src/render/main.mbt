@@ -9,6 +9,9 @@ async fn main {
     "draft": @cli.flag(
       help="Quick preview preset (lower resolution/samples/bounces unless overridden)",
     ),
+    "stats": @cli.flag(
+      help="Print render statistics (ray/shadow/intersection counts)",
+    ),
     "debug": @cli.flag(help="Print parsed scene summary (materials/patterns)"),
     "divide": @cli.opt_int(
       0,
@@ -158,6 +161,11 @@ async fn main {
   println("Rendering \{parsed_scene.metadata.name}...")
   println("Resolution: \{settings.width}x\{settings.height}")
   println("Samples: \{settings.samples}")
+  let stats_enabled = args.flag("stats")
+  if stats_enabled {
+    world.stats_enabled = true
+    world.stats = @lib.render_stats()
+  }
   async fn write_progress(msg : String) -> Unit {
     // Best-effort terminal output; ignore failures.
     @stdio.stdout.write(msg) catch {
@@ -209,6 +217,11 @@ async fn main {
       @cli.eprintln("error saving output: \{e}")
       abort("")
     }
+  }
+  if stats_enabled {
+    println(
+      world.stats.summary(settings.width, settings.height, settings.samples),
+    )
   }
   println("Done.")
 }

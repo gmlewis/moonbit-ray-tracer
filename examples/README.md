@@ -155,6 +155,12 @@ Override quality/resolution explicitly as needed:
 ./scripts/run-example.py neon-portal-demo --samples 6 -w 1200 -H 675
 ```
 
+Print render statistics (useful when optimizing slow scenes):
+
+```bash
+./scripts/run-example.py neon-portal-demo --draft --stats
+```
+
 Note: scenes that use TOML-native text require `MOONBIT_FONTS_DIR` to be set:
 
 ```bash

@@ -12,6 +12,7 @@ Last refreshed: 2026-01-14
 Core engine + scene system:
 - TOML scene format + async scene loading
 - Render CLI (PNG/PPM, progress output, resolution/samples overrides)
+- Render statistics (`--stats`) for rays/shadows/intersections
 - BVH acceleration + cooperative (async) rendering
 
 Materials, textures, and patterns:
@@ -36,10 +37,9 @@ Lighting:
 If you only pick a couple of items to start with, these tend to deliver the most benefit per hour:
 
 - **Fast preview defaults (`--draft` preset)**: Improves every iteration loop immediately (scene tweaking, debugging, demos). Mostly CLI plumbing + documented trade-offs.
-- **Render statistics (timing/samples/rays)**: Makes performance work measurable and regressions obvious.
 - **Debug views (normals/albedo/roughness)**: Medium effort, huge debugging leverage when something is “black/noisy/wrong.”
 
-Suggested order: `--draft` → stats → debug views.
+Suggested order: `--draft` → debug views.
 
 ### Performance & UX
 - [ ] Make “preview renders” fast by default
@@ -110,7 +110,6 @@ Suggested order: `--draft` → stats → debug views.
 
 - [ ] Web UI (WASM) for scene editing and rapid iteration
 - [ ] Debug views (ray visualization, normals/albedo/roughness passes)
-- [ ] Render statistics (timing, samples, rays)
 - [ ] Plugin architecture (likely wasm-based)
 - [ ] Denoising (start with simple spatial filters; consider temporal later)
 - [ ] GPU acceleration research (WebGPU compute)
