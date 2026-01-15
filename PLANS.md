@@ -36,11 +36,10 @@ Lighting:
 If you only pick a couple of items to start with, these tend to deliver the most benefit per hour:
 
 - **Fast preview defaults (`--draft` preset)**: Improves every iteration loop immediately (scene tweaking, debugging, demos). Mostly CLI plumbing + documented trade-offs.
-- **Progressive rendering (early image + refinement)**: Big perceived usability win; start simple (save/refresh every N samples or seconds) before adding adaptive sampling.
 - **Render statistics (timing/samples/rays)**: Makes performance work measurable and regressions obvious.
 - **Debug views (normals/albedo/roughness)**: Medium effort, huge debugging leverage when something is “black/noisy/wrong.”
 
-Suggested order: `--draft` → basic progressive → stats → debug views.
+Suggested order: `--draft` → stats → debug views.
 
 ### Performance & UX
 - [ ] Make “preview renders” fast by default
@@ -50,13 +49,9 @@ Suggested order: `--draft` → basic progressive → stats → debug views.
 - [ ] Reduce memory overhead for long-running renders
 
 ### Rendering Quality (Big Visual Wins)
-- [ ] Progressive rendering
-  - [ ] Progressive pixel sampling (early image + refinement)
-  - [ ] Adaptive sampling based on variance
-  - [ ] Time estimation + quality indicators
 - [ ] Better sampling controls
   - [ ] Adaptive sampling for edges/high-frequency regions
-  - [ ] Configurable sampling “quality presets”
+  - [ ] Clear, minimal sampling controls (favor explicit flags over many named presets)
 
 ## Next (Modern Lighting & Realism)
 
@@ -119,6 +114,13 @@ Suggested order: `--draft` → basic progressive → stats → debug views.
 - [ ] Plugin architecture (likely wasm-based)
 - [ ] Denoising (start with simple spatial filters; consider temporal later)
 - [ ] GPU acceleration research (WebGPU compute)
+
+## Lowest Priority (Nice-to-Have)
+
+- [ ] Progressive rendering (deprioritized)
+  - [ ] Progressive pixel sampling (early image + refinement)
+  - [ ] Adaptive sampling based on variance
+  - [ ] Time estimation + quality indicators
 
 ## Changelog
 
