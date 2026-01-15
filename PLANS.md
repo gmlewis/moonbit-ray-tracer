@@ -47,16 +47,17 @@ From the `examples/stats-*.toml` diagnostics and a small `glb-demo` run with `--
 
 If you only pick a couple of items to start with, these tend to deliver the most benefit per hour:
 
-- **Fast preview defaults (`--draft` preset)**: Improves every iteration loop immediately (scene tweaking, debugging, demos). Mostly CLI plumbing + documented trade-offs.
+Already implemented: `--draft`, `--stats`, `--area-steps`, plus the `examples/stats-*.toml` diagnostic scenes.
 
 - **Debug views (normals/albedo/roughness)**: Medium effort, huge debugging leverage when something is “black/noisy/wrong.”
-- **Shadow/area-light performance controls**: High payoff now that `--stats` shows shadow sampling dominating work in area-light scenes.
+- **Make `--draft` cap area-light sampling by default**: Low effort, immediate payoff for any soft-shadow scene (still overrideable via `--area-steps`).
+- **Fast shadow mode for previews**: Medium effort, big payoff for area lights without fully changing scene lighting.
 
-Suggested order: debug views → shadow/area-light performance controls.
+Suggested order: debug views → `--draft` default area cap → fast shadow mode.
 
 ### Performance & UX
 - [ ] Add more “preview render” controls
-  - [ ] Optional: `--draft` should also cap area-light samples (or add `--area-steps` overrides)
+  - [ ] Optional: `--draft` should also set a default `--area-steps` cap unless explicitly overridden
   - [ ] Document trade-offs (noise vs speed)
 - [ ] Area-light performance controls (highest payoff for soft-shadow scenes)
   - [ ] Optional: separate `u_steps`/`v_steps` caps (beyond the current `--area-steps`)
@@ -147,3 +148,4 @@ Suggested order: debug views → shadow/area-light performance controls.
 - 2026-01-14: Roadmap cleanup (removed completed checklist clutter, kept a short “Current Baseline” summary)
 - 2026-01-14: Added stats diagnostic scenes; `--stats` analysis suggests area-light shadow sampling dominates work
 - 2026-01-14: Added BVH bounds-test stats; `glb-demo` suggests BVH traversal/triangle tests dominate in glTF scenes
+- 2026-01-14: Added `--area-steps` to cap area-light sampling for much faster soft-shadow previews
