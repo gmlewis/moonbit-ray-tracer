@@ -1,0 +1,163 @@
+# Stats diagnostic: intersection-heavy scene
+#
+# Purpose: drive up per-ray intersection work by adding many shapes.
+# Use with: scripts/run-example.py stats-intersections --stats --samples 1 -o /tmp/stats-intersections.png
+
+[scene]
+name = "Stats Diagnostic - Intersections"
+description = "Intersection-heavy scene (many spheres) for --stats profiling"
+version = "1.0"
+
+[scene.render]
+width = 240
+height = 135
+samples = 1
+max_bounces = 1
+background = [0.02, 0.02, 0.02]
+
+[camera]
+position = [0.0, 4.0, -14.0]
+look_at = [0.0, 0.8, 0.0]
+up = [0.0, 1.0, 0.0]
+field_of_view = 0.785
+
+[[lights]]
+type = "point"
+position = [-12.0, 14.0, -12.0]
+intensity = [1.0, 1.0, 1.0]
+
+[materials.floor]
+color = [0.18, 0.18, 0.18]
+ambient = 0.1
+diffuse = 0.9
+specular = 0.0
+shininess = 50.0
+reflective = 0.0
+
+[materials.matte]
+color = [0.75, 0.30, 0.25]
+ambient = 0.05
+diffuse = 0.95
+specular = 0.0
+shininess = 50.0
+reflective = 0.0
+
+# Floor
+[[objects]]
+type = "plane"
+material = "floor"
+
+# Grid of small spheres (100 total)
+[[objects]]
+type = "group"
+children = [
+  { type = "sphere", material = "matte", transform = { translation = [-4.5, 0.35, -4.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [-3.5, 0.35, -4.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [-2.5, 0.35, -4.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [-1.5, 0.35, -4.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [-0.5, 0.35, -4.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [0.5, 0.35, -4.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [1.5, 0.35, -4.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [2.5, 0.35, -4.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [3.5, 0.35, -4.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [4.5, 0.35, -4.5], scale = [0.35, 0.35, 0.35] } },
+
+  { type = "sphere", material = "matte", transform = { translation = [-4.5, 0.35, -3.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [-3.5, 0.35, -3.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [-2.5, 0.35, -3.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [-1.5, 0.35, -3.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [-0.5, 0.35, -3.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [0.5, 0.35, -3.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [1.5, 0.35, -3.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [2.5, 0.35, -3.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [3.5, 0.35, -3.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [4.5, 0.35, -3.5], scale = [0.35, 0.35, 0.35] } },
+
+  { type = "sphere", material = "matte", transform = { translation = [-4.5, 0.35, -2.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [-3.5, 0.35, -2.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [-2.5, 0.35, -2.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [-1.5, 0.35, -2.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [-0.5, 0.35, -2.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [0.5, 0.35, -2.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [1.5, 0.35, -2.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [2.5, 0.35, -2.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [3.5, 0.35, -2.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [4.5, 0.35, -2.5], scale = [0.35, 0.35, 0.35] } },
+
+  { type = "sphere", material = "matte", transform = { translation = [-4.5, 0.35, -1.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [-3.5, 0.35, -1.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [-2.5, 0.35, -1.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [-1.5, 0.35, -1.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [-0.5, 0.35, -1.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [0.5, 0.35, -1.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [1.5, 0.35, -1.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [2.5, 0.35, -1.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [3.5, 0.35, -1.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [4.5, 0.35, -1.5], scale = [0.35, 0.35, 0.35] } },
+
+  { type = "sphere", material = "matte", transform = { translation = [-4.5, 0.35, -0.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [-3.5, 0.35, -0.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [-2.5, 0.35, -0.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [-1.5, 0.35, -0.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [-0.5, 0.35, -0.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [0.5, 0.35, -0.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [1.5, 0.35, -0.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [2.5, 0.35, -0.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [3.5, 0.35, -0.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [4.5, 0.35, -0.5], scale = [0.35, 0.35, 0.35] } },
+
+  { type = "sphere", material = "matte", transform = { translation = [-4.5, 0.35, 0.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [-3.5, 0.35, 0.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [-2.5, 0.35, 0.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [-1.5, 0.35, 0.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [-0.5, 0.35, 0.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [0.5, 0.35, 0.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [1.5, 0.35, 0.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [2.5, 0.35, 0.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [3.5, 0.35, 0.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [4.5, 0.35, 0.5], scale = [0.35, 0.35, 0.35] } },
+
+  { type = "sphere", material = "matte", transform = { translation = [-4.5, 0.35, 1.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [-3.5, 0.35, 1.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [-2.5, 0.35, 1.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [-1.5, 0.35, 1.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [-0.5, 0.35, 1.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [0.5, 0.35, 1.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [1.5, 0.35, 1.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [2.5, 0.35, 1.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [3.5, 0.35, 1.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [4.5, 0.35, 1.5], scale = [0.35, 0.35, 0.35] } },
+
+  { type = "sphere", material = "matte", transform = { translation = [-4.5, 0.35, 2.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [-3.5, 0.35, 2.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [-2.5, 0.35, 2.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [-1.5, 0.35, 2.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [-0.5, 0.35, 2.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [0.5, 0.35, 2.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [1.5, 0.35, 2.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [2.5, 0.35, 2.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [3.5, 0.35, 2.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [4.5, 0.35, 2.5], scale = [0.35, 0.35, 0.35] } },
+
+  { type = "sphere", material = "matte", transform = { translation = [-4.5, 0.35, 3.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [-3.5, 0.35, 3.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [-2.5, 0.35, 3.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [-1.5, 0.35, 3.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [-0.5, 0.35, 3.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [0.5, 0.35, 3.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [1.5, 0.35, 3.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [2.5, 0.35, 3.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [3.5, 0.35, 3.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [4.5, 0.35, 3.5], scale = [0.35, 0.35, 0.35] } },
+
+  { type = "sphere", material = "matte", transform = { translation = [-4.5, 0.35, 4.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [-3.5, 0.35, 4.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [-2.5, 0.35, 4.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [-1.5, 0.35, 4.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [-0.5, 0.35, 4.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [0.5, 0.35, 4.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [1.5, 0.35, 4.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [2.5, 0.35, 4.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [3.5, 0.35, 4.5], scale = [0.35, 0.35, 0.35] } },
+  { type = "sphere", material = "matte", transform = { translation = [4.5, 0.35, 4.5], scale = [0.35, 0.35, 0.35] } }
+]

@@ -161,6 +161,20 @@ Print render statistics (useful when optimizing slow scenes):
 ./scripts/run-example.py neon-portal-demo --draft --stats
 ```
 
+### Stats diagnostic scenes
+
+These scenes are purpose-built to make `--stats` easier to interpret by isolating common cost drivers:
+
+- `stats-intersections.toml`: many shapes (intersection-heavy)
+- `stats-shadows.toml`: area light with many samples (shadow-heavy)
+- `stats-recursion.toml`: mirrors + glass (secondary-ray heavy)
+
+Example:
+
+```bash
+python3 scripts/run-example.py stats-shadows --stats --samples 1 -o /tmp/stats-shadows.png
+```
+
 Note: scenes that use TOML-native text require `MOONBIT_FONTS_DIR` to be set:
 
 ```bash
