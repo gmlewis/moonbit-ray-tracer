@@ -7,8 +7,6 @@
 // - vector (for warps/flows)
 
 ///|
-
-///|
 pub enum VectorDecoding {
   /// Interpret RGB as [0,1] components.
   Unit01
