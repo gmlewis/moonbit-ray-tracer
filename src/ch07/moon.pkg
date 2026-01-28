@@ -1,0 +1,12 @@
+import {
+  "gmlewis/ray-tracer/lib",
+  "moonbitlang/async",
+  "moonbitlang/async/fs",
+  "moonbitlang/core/builtin",
+  "moonbitlang/core/double",
+  "moonbitlang/core/math",
+}
+
+options(
+  "is-main": true,
+)

@@ -1,13 +1,13 @@
 // Generated using `moon info`, DON'T EDIT IT
 package "gmlewis/ray-tracer/lib"
 
-import(
-  "gmlewis/fonts"
-  "gmlewis/fonts/draw"
-  "gmlewis/fonts/geom"
-  "gmlewis/image"
-  "gmlewis/ray-tracer/hdr"
-)
+import {
+  "gmlewis/fonts",
+  "gmlewis/fonts/draw",
+  "gmlewis/fonts/geom",
+  "gmlewis/image",
+  "gmlewis/ray-tracer/hdr",
+}
 
 // Values
 pub const EPSILON : Double = 0.00001

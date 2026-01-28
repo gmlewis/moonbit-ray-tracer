@@ -1,0 +1,10 @@
+import {
+  "gmlewis/io",
+  "moonbitlang/core/builtin",
+  "moonbitlang/core/cmp",
+  "moonbitlang/core/double",
+  "moonbitlang/core/json",
+  "moonbitlang/core/math",
+  "moonbitlang/core/random",
+  "moonbitlang/core/strconv",
+}
