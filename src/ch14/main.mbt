@@ -59,7 +59,7 @@ async fn main {
 
   //
   let floor = plane()
-  floor..set_transform(rotation_y(0.9))
+  floor.set_transform(rotation_y(0.9))
   floor.material.pattern = Some(
     {
       let p = pattern.clone()
@@ -71,7 +71,7 @@ async fn main {
 
   //
   let hex = hexagon()
-  hex..set_transform(translation(0, 0.5, 0))
+  hex.set_transform(translation(0, 0.5, 0))
 
   //
   let world = world()
@@ -121,7 +121,7 @@ fn hexagon_edge() -> @lib.Shape {
 ///|
 fn hexagon_side() -> @lib.Shape {
   let g = @lib.group()
-  g..add_child(hexagon_corner())..add_child(hexagon_edge())
+  g..add_child(hexagon_corner()).add_child(hexagon_edge())
   g
 }
 
@@ -130,7 +130,7 @@ fn hexagon() -> @lib.Shape {
   let hex = @lib.group()
   for n in 0..<6 {
     let side = hexagon_side()
-    side..set_transform(rotation_y(n.to_double() * @math.PI / 3))
+    side.set_transform(rotation_y(n.to_double() * @math.PI / 3))
     hex.add_child(side)
   }
   hex

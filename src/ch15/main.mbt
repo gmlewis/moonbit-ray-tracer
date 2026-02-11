@@ -53,7 +53,7 @@ async fn main {
 
   //
   let floor = plane()
-  floor..set_transform(rotation_y(0.9))
+  floor.set_transform(rotation_y(0.9))
   floor.material.pattern = Some(
     {
       let p = pattern.clone()
@@ -71,7 +71,7 @@ async fn main {
     e => return println(e)
   }
   let obj = parser.obj_to_group()
-  obj..set_transform(rotation_x(-@math.PI / 2) * scaling(0.15, 0.15, 0.15))
+  obj.set_transform(rotation_x(-@math.PI / 2) * scaling(0.15, 0.15, 0.15))
 
   //
   let world = world()

@@ -200,7 +200,6 @@ test "color_at() with mutually reflective surfaces (p.199)" {
   let r = ray(point(0, 0, 0), vector(0, 1, 0))
   // should terminate successfully
   let _ = w.color_at(r)
-
 }
 
 ///|

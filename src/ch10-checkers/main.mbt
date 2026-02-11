@@ -62,7 +62,7 @@ async fn main {
 
   //
   let floor = plane()
-  floor..set_transform(rotation_y(0.9))
+  floor.set_transform(rotation_y(0.9))
   floor.material.pattern = Some(
     {
       let p = pattern.clone()
@@ -74,7 +74,7 @@ async fn main {
 
   //
   let middle = sphere()
-  middle..set_transform(
+  middle.set_transform(
     translation(-0.5, 1, 0.5) *
     rotation_x(1.9) *
     rotation_y(0.9) *
@@ -92,7 +92,7 @@ async fn main {
 
   //
   let right = sphere()
-  right..set_transform(
+  right.set_transform(
     translation(1.5, 0.5, -0.5) *
     scaling(0.5, 0.5, 0.5) *
     rotation_x(0.9) *
@@ -111,7 +111,7 @@ async fn main {
 
   //
   let left = sphere()
-  left..set_transform(
+  left.set_transform(
     translation(-1.5, 0.33, -0.75) *
     scaling(0.33, 0.33, 0.33) *
     rotation_x(1.3) *

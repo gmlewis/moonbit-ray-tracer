@@ -21,7 +21,7 @@ pub fn smooth_triangle(
   n3 : Tuple,
 ) -> Shape {
   let bounds = Bounds::new()
-  bounds..update(p1)..update(p2)..update(p3)
+  bounds..update(p1)..update(p2).update(p3)
   let e1 = p2 - p1
   let e2 = p3 - p1
   Shape::new_smooth_triangle({ p1, p2, p3, n1, n2, n3, e1, e2, bounds })

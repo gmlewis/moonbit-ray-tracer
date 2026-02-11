@@ -12,7 +12,7 @@ pub(all) struct Triangle {
 ///|
 pub fn triangle(p1 : Tuple, p2 : Tuple, p3 : Tuple) -> Shape {
   let bounds = Bounds::new()
-  bounds..update(p1)..update(p2)..update(p3)
+  bounds..update(p1)..update(p2).update(p3)
   let e1 = p2 - p1
   let e2 = p3 - p1
   let normal = e2.cross(e1).normalize()

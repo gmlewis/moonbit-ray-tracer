@@ -1,3 +1,3 @@
 #!/bin/bash -ex
 moon fmt && moon info
-moon test --target native
+moon test -j 12 --target native

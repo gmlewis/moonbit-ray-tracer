@@ -39,7 +39,7 @@ test "Intersecting a ray with a non-empty group (p.254)" {
   }
   let g = {
     let g = @lib.group()
-    g..add_child(s1)..add_child(s2)..add_child(s3)
+    g..add_child(s1)..add_child(s2).add_child(s3)
     g
   }
   let r = ray(point(0, 0, -5), vector(0, 0, 1))
@@ -60,7 +60,7 @@ test "Intersecting a transformed group (p.255)" {
   }
   let g = {
     let g = @lib.group()
-    g..set_transform(scaling(2, 2, 2))..add_child(s)
+    g..set_transform(scaling(2, 2, 2)).add_child(s)
     g
   }
   let r = ray(point(10, 0, -10), vector(0, 0, 1))

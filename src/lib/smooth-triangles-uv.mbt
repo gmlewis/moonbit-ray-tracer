@@ -32,7 +32,7 @@ pub fn smooth_triangle_uv(
   uv3 : (Double, Double),
 ) -> Shape {
   let bounds = Bounds::new()
-  bounds..update(p1)..update(p2)..update(p3)
+  bounds..update(p1)..update(p2).update(p3)
   let e1 = p2 - p1
   let e2 = p3 - p1
   let geom_normal = e2.cross(e1).normalize()
@@ -144,7 +144,7 @@ pub fn smooth_triangle_uv_with_tangents(
   tangent_v0 : Tuple,
 ) -> Shape {
   let bounds = Bounds::new()
-  bounds..update(p1)..update(p2)..update(p3)
+  bounds..update(p1)..update(p2).update(p3)
   let e1 = p2 - p1
   let e2 = p3 - p1
   let geom_normal = e2.cross(e1).normalize()
