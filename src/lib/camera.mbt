@@ -76,7 +76,7 @@ pub async fn Camera::render(
         let ray = self.ray_for_pixel(x, y)
         color = world.color_at(ray, remaining=max_bounces)
       } else {
-        for s in 0..<samples {
+        for _ in 0..<samples {
           let rx = rng.double()
           let ry = rng.double()
           let ray = self.ray_for_pixel(x, y, offset_x=rx, offset_y=ry)

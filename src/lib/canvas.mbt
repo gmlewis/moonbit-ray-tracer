@@ -74,8 +74,8 @@ pub fn Canvas::write_pixel(
 /// clear clears the canvas to the provided color.
 pub fn Canvas::clear(self : Canvas, color : Color) -> Unit {
   let mut off = 0
-  for y in 0..<self.height {
-    for x in 0..<self.width {
+  for _ in 0..<self.height {
+    for _ in 0..<self.width {
       self.red[off] = color.red
       self.green[off] = color.green
       self.blue[off] = color.blue
@@ -120,7 +120,7 @@ pub fn Canvas::to_ppm(self : Canvas) -> String {
   lines.push("\{self.width} \{self.height}")
   lines.push("255")
   let mut off = 0
-  for y in 0..<self.height {
+  for _ in 0..<self.height {
     let mut line = StringBuilder::new(size_hint=MAX_PPM_LINE_LENGTH)
     let mut len = 0
     let f = fn(v : Double) {
@@ -139,7 +139,7 @@ pub fn Canvas::to_ppm(self : Canvas) -> String {
         len += s.length()
       }
     }
-    for x in 0..<self.width {
+    for _ in 0..<self.width {
       f(self.red[off])
       f(self.green[off])
       f(self.blue[off])

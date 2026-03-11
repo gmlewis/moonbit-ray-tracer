@@ -76,7 +76,7 @@ fn GltfData::read_vec3(
     None => return []
   }
   let res = []
-  for i in 0..<accessor.count {
+  for _ in 0..<accessor.count {
     let start_offset = reader.offset
     let x = reader.read_float32().to_double()
     let y = reader.read_float32().to_double()
@@ -110,7 +110,7 @@ fn GltfData::read_tangents(
     None => return []
   }
   let res = []
-  for i in 0..<accessor.count {
+  for _ in 0..<accessor.count {
     let start_offset = reader.offset
     let x = reader.read_float32().to_double()
     let y = reader.read_float32().to_double()
@@ -142,7 +142,7 @@ pub fn GltfData::read_indices(
     None => return []
   }
   let res = []
-  for i in 0..<accessor.count {
+  for _ in 0..<accessor.count {
     let start_offset = reader.offset
     let idx = match accessor.component_type {
       5121 => reader.read_uint8().reinterpret_as_int()
@@ -383,7 +383,7 @@ pub fn GltfData::read_vec2(
     None => return []
   }
   let res = []
-  for i in 0..<accessor.count {
+  for _ in 0..<accessor.count {
     let start_offset = reader.offset
     let u = reader.read_float32().to_double()
     let v = reader.read_float32().to_double()
