@@ -47,7 +47,7 @@ fn check_cone_cap(ray : Ray, t : Double, y : Double) -> Bool {
 fn Cone::intersect_caps(self : Cone, ray : Ray, xs : Array[Double]) -> Unit {
   // caps only matter if the cone is closed, and might possibly be
   // intersected by the ray.
-  if not(self.closed) || ray.direction.y.abs() < EPSILON {
+  if !self.closed || ray.direction.y.abs() < EPSILON {
     return
   }
   // check for an intersection with the lower end cap by intersecting

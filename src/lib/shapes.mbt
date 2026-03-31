@@ -163,7 +163,7 @@ pub fn Shape::local_intersect(self : Shape, local_ray : Ray) -> Intersections {
       let bounds = group.bounds()
       let passed = bounds.local_intersect(local_ray)
       stats_record_group_bounds_test(passed)
-      if not(passed) {
+      if !passed {
         return intersections([])
       }
       group.local_intersect(self, local_ray)

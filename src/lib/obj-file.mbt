@@ -147,7 +147,7 @@ fn parse_args(
       continue
     }
     try {
-      let v = @strconv.parse_double(arg)
+      let v = @string.parse_double(arg)
       doubles.push(v)
     } catch {
       _ => return string_fn(parts)

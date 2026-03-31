@@ -188,7 +188,7 @@ fn GraphicMaskPattern::graphic_profiles_contain_point(
 
   // Fast reject: most points are outside the overall graphic bounds.
   match self.overall_bbox {
-    Some(bbox) => if not(bbox_contains_pt(bbox, pt)) { return false }
+    Some(bbox) => if !bbox_contains_pt(bbox, pt) { return false }
     None => ()
   }
 
@@ -198,7 +198,7 @@ fn GraphicMaskPattern::graphic_profiles_contain_point(
     let outer = profile.0
     let holes = profile.1
     let bbox = self.profile_bboxes[i]
-    if not(bbox_contains_pt(bbox, pt)) {
+    if !bbox_contains_pt(bbox, pt) {
       continue
     }
     if @draw.is_point_in_poly(pt, outer) {
@@ -209,7 +209,7 @@ fn GraphicMaskPattern::graphic_profiles_contain_point(
           break
         }
       }
-      if not(in_hole) {
+      if !in_hole {
         return true
       }
     }

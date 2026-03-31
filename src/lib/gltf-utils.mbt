@@ -46,7 +46,7 @@ pub fn BinaryReader::read_float32(self : BinaryReader) -> Float {
 
 ///|
 pub fn decode_base64_uri(uri : String) -> Bytes? {
-  if not(uri.has_prefix("data:")) {
+  if !uri.has_prefix("data:") {
     return None
   }
   let mut comma_idx = -1

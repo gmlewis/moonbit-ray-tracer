@@ -33,11 +33,9 @@ pub fn intersection_allowed(
   inside_right : Bool,
 ) -> Bool {
   match op {
-    Union =>
-      (left_hit && not(inside_right)) || (not(left_hit) && not(inside_left))
-    Intersection => (left_hit && inside_right) || (not(left_hit) && inside_left)
-    Difference =>
-      (left_hit && not(inside_right)) || (not(left_hit) && inside_left)
+    Union => (left_hit && !inside_right) || (!left_hit && !inside_left)
+    Intersection => (left_hit && inside_right) || (!left_hit && inside_left)
+    Difference => (left_hit && !inside_right) || (!left_hit && inside_left)
   }
 }
 
@@ -68,9 +66,9 @@ pub fn CSG::filter_intersections(
       result.push(i)
     }
     if left_hit {
-      inside_left = not(inside_left)
+      inside_left = !inside_left
     } else {
-      inside_right = not(inside_right)
+      inside_right = !inside_right
     }
   }
   intersections(result)

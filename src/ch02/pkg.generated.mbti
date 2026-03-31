@@ -8,8 +8,7 @@ package "gmlewis/ray-tracer/ch02"
 // Types and methods
 type Environment
 
-type Projectile
-pub impl Show for Projectile
+type Projectile derive(Show)
 
 // Type aliases
 

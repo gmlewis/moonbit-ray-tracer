@@ -57,10 +57,10 @@ pub fn decode(bytes : Bytes) -> HdrImage raise HdrError {
   if parts.length() != 4 {
     raise HdrError("Invalid resolution line: " + line)
   }
-  let height = @strconv.parse_int(parts[1].to_string()) catch {
+  let height = @string.parse_int(parts[1].to_string()) catch {
     _ => raise HdrError("Invalid height: " + parts[1].to_string())
   }
-  let width = @strconv.parse_int(parts[3].to_string()) catch {
+  let width = @string.parse_int(parts[3].to_string()) catch {
     _ => raise HdrError("Invalid width: " + parts[3].to_string())
   }
   let data = Array::make(width * height * 3, 0.0)

@@ -7,8 +7,7 @@ pub fn decode(Bytes) -> HdrImage raise HdrError
 // Errors
 pub suberror HdrError {
   HdrError(String)
-}
-pub impl Show for HdrError
+} derive(Show)
 
 // Types and methods
 pub(all) struct HdrImage {

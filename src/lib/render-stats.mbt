@@ -34,11 +34,11 @@ pub fn stats_disable() -> Unit {
 
 ///|
 pub fn stats_record_group_bounds_test(passed : Bool) -> Unit {
-  if not(stats_global_enabled.val) {
+  if !stats_global_enabled.val {
     return
   }
   stats_group_bounds_tests.val = stats_group_bounds_tests.val + 1
-  if not(passed) {
+  if !passed {
     stats_group_bounds_culled.val = stats_group_bounds_culled.val + 1
   }
 }

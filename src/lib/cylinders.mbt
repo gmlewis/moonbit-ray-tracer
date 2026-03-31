@@ -43,7 +43,7 @@ fn Cylinder::intersect_caps(
 ) -> Unit {
   // caps only matter if the cylinder is closed, and might possibly be
   // intersected by the ray.
-  if not(self.closed) || ray.direction.y.abs() < EPSILON {
+  if !self.closed || ray.direction.y.abs() < EPSILON {
     return
   }
   // check for an intersection with the lower end cap by intersecting
