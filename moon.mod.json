@@ -9,7 +9,7 @@
     "gmlewis/gzip": "0.34.4",
     "gmlewis/image": "0.17.4",
     "gmlewis/io": "0.23.4",
-    "moonbitlang/async": "0.16.8",
+    "moonbitlang/async": "0.17.0",
     "moonbitlang/x": "0.4.38",
     "TheWaWaR/clap": "0.2.6"
   },
