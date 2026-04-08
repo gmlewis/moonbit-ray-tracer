@@ -2,14 +2,19 @@
 pub(all) enum LightKind {
   Point
   Area(Tuple, Int, Tuple, Int) // u_vec, u_steps, v_vec, v_steps
-} derive(Show, Eq)
+} derive(Eq)
 
 ///|
 pub(all) struct Light {
   position : Tuple // Corner for area light, position for point light
   intensity : Color
   kind : LightKind
-} derive(Show, Eq)
+} derive(Eq)
+
+///|
+pub impl Show for Light with output(self, logger) {
+  logger.write_string(self.to_string())
+}
 
 ///|
 pub fn point_light(position : Tuple, intensity : Color) -> Light {

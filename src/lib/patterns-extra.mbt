@@ -794,7 +794,25 @@ pub(all) enum VoronoiMode {
   F1
   F2
   F2MinusF1
-} derive(Show, Eq)
+} derive(Eq)
+
+///|
+pub fn VoronoiMode::to_string(self : VoronoiMode) -> String {
+  match self {
+    Distance => "distance"
+    Cells => "cells"
+    Edges => "edges"
+    Crackle => "crackle"
+    F1 => "f1"
+    F2 => "f2"
+    F2MinusF1 => "f2-minus-f1"
+  }
+}
+
+///|
+pub impl Show for VoronoiMode with output(self, logger) {
+  logger.write_string(self.to_string())
+}
 
 ///|
 pub(all) struct VoronoiPattern {

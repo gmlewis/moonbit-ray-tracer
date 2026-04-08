@@ -14,6 +14,7 @@ import {
   "moonbitlang/async",
   "moonbitlang/async/fs",
   "moonbitlang/async/stdio",
+  "moonbitlang/core/debug",
   "moonbitlang/core/builtin",
   "moonbitlang/core/cmp",
   "moonbitlang/core/double",

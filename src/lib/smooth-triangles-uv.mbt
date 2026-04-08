@@ -17,7 +17,7 @@ pub(all) struct SmoothTriangleUV {
   tangent_u : Tuple
   tangent_v : Tuple
   bounds : Bounds
-} derive(Show, Eq)
+} derive(Eq)
 
 ///|
 pub fn smooth_triangle_uv(
@@ -272,6 +272,16 @@ pub fn SmoothTriangleUV::clone(self : SmoothTriangleUV) -> SmoothTriangleUV {
     tangent_v: self.tangent_v,
     bounds: self.bounds,
   }
+}
+
+///|
+pub fn SmoothTriangleUV::to_string(self : SmoothTriangleUV) -> String {
+  "smooth_triangle_uv(\{self.p1}, \{self.p2}, \{self.p3}, \{self.n1}, \{self.n2}, \{self.n3}, \{self.uv1}, \{self.uv2}, \{self.uv3})"
+}
+
+///|
+pub impl Show for SmoothTriangleUV with output(self, logger) {
+  logger.write_string(self.to_string())
 }
 
 ///|

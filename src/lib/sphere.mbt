@@ -1,6 +1,6 @@
 ///|
 /// Sphere represents a sphere with radius 1.
-pub(all) struct Sphere {} derive(Show, Eq)
+pub(all) struct Sphere {} derive(Eq)
 
 ///|
 let _Sphere : &Object = Sphere::{  }
@@ -20,8 +20,8 @@ pub fn glass_sphere() -> Shape {
 }
 
 ///|
-pub impl Show for Sphere with to_string(_self) {
-  "sphere()"
+pub impl Show for Sphere with output(_self, logger) {
+  logger.write_string("sphere()")
 }
 
 ///|

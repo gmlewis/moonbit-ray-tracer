@@ -1,5 +1,5 @@
 ///|
-pub(all) struct MatrixRow(Array[Double]) derive(Show)
+pub(all) struct MatrixRow(Array[Double])
 
 ///|
 pub fn MatrixRow::op_get(self : MatrixRow, col : Int) -> Double {

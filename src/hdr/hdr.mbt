@@ -30,7 +30,14 @@ pub(all) struct HdrImage {
 ///|
 pub suberror HdrError {
   HdrError(String)
-} derive(Show)
+}
+
+///|
+pub impl Show for HdrError with output(self, logger) {
+  match self {
+    HdrError(msg) => logger.write_string(msg)
+  }
+}
 
 ///|
 pub fn decode(bytes : Bytes) -> HdrImage raise HdrError {

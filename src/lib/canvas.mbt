@@ -7,7 +7,7 @@ pub(all) struct Canvas {
   blue : Array[Double]
   mut exposure : Double
   mut use_tone_mapping : Bool
-} derive(Show, Eq)
+} derive(Eq)
 
 ///|
 pub fn canvas(width : Int, height : Int) -> Canvas {

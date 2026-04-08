@@ -12,7 +12,14 @@ pub(all) struct ObjFile {
 ///|
 suberror ParserError {
   ParserError(String)
-} derive(Show, Eq)
+} derive(Eq)
+
+///|
+pub impl Show for ParserError with output(self, logger) {
+  match self {
+    ParserError(msg) => logger.write_string(msg)
+  }
+}
 
 ///|
 pub fn parse_obj_file(buf : String) -> ObjFile raise ParserError {

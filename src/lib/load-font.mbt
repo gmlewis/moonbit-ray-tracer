@@ -4,7 +4,7 @@ pub using @fonts {type Font}
 ///|
 pub suberror LoaderError {
   LoaderError(String)
-} derive(Show, Eq)
+} derive(Eq)
 
 ///|
 /// `load_font` attempts to load a font by its name from the `all-fonts` directory.

@@ -3,14 +3,19 @@ pub(all) enum Operation {
   Union
   Intersection
   Difference
-} derive(Show, Eq)
+} derive(Eq)
+
+///|
+pub impl Show for Operation with output(self, logger) {
+  logger.write_string(self.to_string())
+}
 
 ///|
 pub(all) struct CSG {
   operation : Operation
   left : Shape
   right : Shape
-} derive(Show, Eq)
+} derive(Eq)
 
 ///|
 pub fn csg(operation : Operation, left : Shape, right : Shape) -> Shape {
@@ -46,6 +51,11 @@ pub fn CSG::clone(self : CSG) -> CSG {
     left: self.left.clone(),
     right: self.right.clone(),
   }
+}
+
+///|
+pub impl Show for CSG with output(self, logger) {
+  logger.write_string(self.to_string())
 }
 
 ///|

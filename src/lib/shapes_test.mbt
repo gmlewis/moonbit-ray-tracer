@@ -38,12 +38,12 @@ impl Object for TestShape with clone(self) {
 }
 
 ///|
-impl Show for TestShape with to_string(self) {
+pub fn TestShape::to_string(self : TestShape) -> String {
   "test_shape(\{self.saved_ray})"
 }
 
 ///|
-impl Show for TestShape with output(self, logger) {
+pub impl Show for TestShape with output(self, logger) {
   logger.write_string(self.to_string())
 }
 

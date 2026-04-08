@@ -7,7 +7,7 @@ pub(all) struct Camera {
   pixel_size : Double
   half_width : Double
   half_height : Double
-} derive(Show, Eq)
+} derive(Eq)
 
 ///|
 pub fn camera(hsize : Int, vsize : Int, field_of_view : Double) -> Camera {

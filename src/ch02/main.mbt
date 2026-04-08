@@ -17,7 +17,7 @@ let vector = @lib.vector
 struct Projectile {
   position : Tuple
   velocity : Tuple
-} derive(Show)
+}
 
 ///|
 fn projectile(position : Tuple, velocity : Tuple) -> Projectile {

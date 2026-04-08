@@ -9,7 +9,7 @@ pub(all) struct SmoothTriangle {
   e1 : Tuple
   e2 : Tuple
   bounds : Bounds
-} derive(Show, Eq)
+} derive(Eq)
 
 ///|
 pub fn smooth_triangle(
@@ -50,6 +50,16 @@ pub fn SmoothTriangle::clone(self : SmoothTriangle) -> SmoothTriangle {
     e2: self.e2,
     bounds: self.bounds,
   }
+}
+
+///|
+pub fn SmoothTriangle::to_string(self : SmoothTriangle) -> String {
+  "smooth_triangle(\{self.p1}, \{self.p2}, \{self.p3}, \{self.n1}, \{self.n2}, \{self.n3})"
+}
+
+///|
+pub impl Show for SmoothTriangle with output(self, logger) {
+  logger.write_string(self.to_string())
 }
 
 ///|

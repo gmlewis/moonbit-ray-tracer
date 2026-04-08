@@ -1,6 +1,6 @@
 ///|
 /// Plane represents an infinite plane along the x and z axes.
-pub(all) struct Plane {} derive(Show, Eq)
+pub(all) struct Plane {} derive(Eq)
 
 ///|
 let _Plane : &Object = Plane::{  }
@@ -12,8 +12,8 @@ pub fn plane() -> Shape {
 }
 
 ///|
-pub impl Show for Plane with to_string(_self) {
-  "plane()"
+pub impl Show for Plane with output(_self, logger) {
+  logger.write_string("plane()")
 }
 
 ///|

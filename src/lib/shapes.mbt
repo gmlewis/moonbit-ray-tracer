@@ -69,11 +69,6 @@ pub fn Shape::object_space_bounds(self : Shape) -> Bounds {
 }
 
 ///|
-pub impl Show for Shape with to_string(self) {
-  self.object.to_string()
-}
-
-///|
 pub impl Show for Shape with output(self, logger) {
   logger.write_string(self.object.to_string())
 }

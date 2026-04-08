@@ -2,7 +2,12 @@
 pub(all) enum LightingMode {
   Phong
   PBR
-} derive(Show, Eq)
+} derive(Eq)
+
+///|
+pub impl Show for LightingMode with output(self, logger) {
+  logger.write_string(self.to_string())
+}
 
 ///|
 pub(all) struct Material {
@@ -31,7 +36,12 @@ pub(all) struct Material {
   mut roughness : Double
   mut roughness_pattern : Pattern?
   mut lighting_mode : LightingMode
-} derive(Show, Eq)
+} derive(Eq)
+
+///|
+pub impl Show for Material with output(self, logger) {
+  logger.write_string(self.to_string())
+}
 
 ///|
 pub fn material() -> Material {
@@ -146,7 +156,12 @@ pub(all) struct MaterialLayer {
   top : Material
   mask : Pattern
   opacity : Double
-} derive(Show, Eq)
+} derive(Eq)
+
+///|
+pub impl Show for MaterialLayer with output(self, logger) {
+  logger.write_string(self.to_string())
+}
 
 ///|
 fn get_shape_tangent_basis_world(shape : Shape) -> (Tuple, Tuple)? {

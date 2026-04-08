@@ -69,6 +69,11 @@ test "A stripe pattern supports more than two colors" {
 struct TestPattern {}
 
 ///|
+pub fn TestPattern::to_string(_self : TestPattern) -> String {
+  "test_pattern()"
+}
+
+///|
 impl PatternTrait for TestPattern with clone(_self) {
   test_pattern()
 }

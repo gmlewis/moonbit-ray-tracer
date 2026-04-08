@@ -2,7 +2,14 @@
 /// Scene parsing errors
 pub suberror SceneParseError {
   SceneParseError(String)
-} derive(Show, Eq)
+} derive(Eq)
+
+///|
+pub impl Show for SceneParseError with output(self, logger) {
+  match self {
+    SceneParseError(msg) => logger.write_string(msg)
+  }
+}
 
 ///|
 /// Parsed scene structure containing all scene components
@@ -25,7 +32,7 @@ pub(all) struct RenderSettings {
   mut background : Color
   mut divide : Int
   mut exposure : Double
-} derive(Show, Eq)
+} derive(Eq)
 
 ///|
 /// Scene metadata
@@ -33,7 +40,7 @@ pub(all) struct SceneMetadata {
   name : String
   description : String
   version : String
-} derive(Show, Eq)
+} derive(Eq)
 
 ///|
 /// Helper functions for extracting values from TOML tables
@@ -1508,12 +1515,17 @@ async fn parse_pattern_with_io(
     "texture" => {
       let file = get_string_required(pattern_table, "file")
       let bytes = @fs.read_file(file).binary() catch {
-        e => raise SceneParseError("Failed to read texture file \{file}: \{e}")
+        e =>
+          raise SceneParseError(
+            "Failed to read texture file \{file}: " + e.to_string(),
+          )
       }
       let canvas = if file.has_suffix(".hdr") {
         let hdr_img = @hdr.decode(bytes) catch {
           e =>
-            raise SceneParseError("Failed to decode HDR texture \{file}: \{e}")
+            raise SceneParseError(
+              "Failed to decode HDR texture \{file}: " + e.to_string(),
+            )
         }
         Canvas::from_hdr(hdr_img)
       } else {
@@ -1740,7 +1752,7 @@ async fn parse_object_with_io(
         e => raise SceneParseError("Failed to read OBJ file \{file}: \{e}")
       }
       let obj_file = parse_obj_file(content) catch {
-        e => raise SceneParseError("OBJ parse error \{file}: \{e}")
+        e => raise SceneParseError("OBJ parse error \{file}: " + e.to_string())
       }
       obj_file.obj_to_group()
     }

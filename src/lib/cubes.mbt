@@ -1,6 +1,6 @@
 ///|
 /// Cube represents a unit cube at the origin.
-pub(all) struct Cube {} derive(Show, Eq)
+pub(all) struct Cube {} derive(Eq)
 
 ///|
 let _Cube : &Object = Cube::{  }
@@ -12,8 +12,8 @@ pub fn cube() -> Shape {
 }
 
 ///|
-pub impl Show for Cube with to_string(_self) {
-  "cube()"
+pub impl Show for Cube with output(_self, logger) {
+  logger.write_string("cube()")
 }
 
 ///|

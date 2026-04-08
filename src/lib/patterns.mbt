@@ -4,7 +4,7 @@ pub(all) struct Pattern {
   // Do not modify transform directly. Use `set_transform` instead.
   mut transform : Matrix
   mut inv_transform : Matrix
-} derive(Show)
+}
 
 ///|
 pub(open) trait PatternTrait: Show {
@@ -12,6 +12,19 @@ pub(open) trait PatternTrait: Show {
   uv_at(Self, Double, Double) -> Color
   pattern_at_with_info(Self, Tuple, Tuple, (Double, Double)?) -> Color
   clone(Self) -> Pattern
+}
+
+///|
+pub impl Show for Pattern with output(self, logger) {
+  logger.write_string(
+    "{pattern: " +
+    self.pattern.to_string() +
+    ", transform: " +
+    self.transform.to_string() +
+    ", inv_transform: " +
+    self.inv_transform.to_string() +
+    "}",
+  )
 }
 
 ///|
@@ -96,7 +109,12 @@ pub(open) trait Mapping: Show {
 }
 
 ///|
-pub(all) struct SphericalMapping {} derive(Show, Eq)
+pub(all) struct SphericalMapping {} derive(Eq)
+
+///|
+pub impl Show for SphericalMapping with output(_self, logger) {
+  logger.write_string("spherical_mapping()")
+}
 
 ///|
 pub impl Mapping for SphericalMapping with map(_self, p) {
@@ -110,7 +128,12 @@ pub impl Mapping for SphericalMapping with map(_self, p) {
 }
 
 ///|
-pub(all) struct PlanarMapping {} derive(Show, Eq)
+pub(all) struct PlanarMapping {} derive(Eq)
+
+///|
+pub impl Show for PlanarMapping with output(_self, logger) {
+  logger.write_string("planar_mapping()")
+}
 
 ///|
 pub impl Mapping for PlanarMapping with map(_self, p) {
@@ -120,7 +143,12 @@ pub impl Mapping for PlanarMapping with map(_self, p) {
 }
 
 ///|
-pub(all) struct CylindricalMapping {} derive(Show, Eq)
+pub(all) struct CylindricalMapping {} derive(Eq)
+
+///|
+pub impl Show for CylindricalMapping with output(_self, logger) {
+  logger.write_string("cylindrical_mapping()")
+}
 
 ///|
 pub impl Mapping for CylindricalMapping with map(_self, p) {
@@ -132,7 +160,12 @@ pub impl Mapping for CylindricalMapping with map(_self, p) {
 }
 
 ///|
-pub(all) struct CubicMapping {} derive(Show, Eq)
+pub(all) struct CubicMapping {} derive(Eq)
+
+///|
+pub impl Show for CubicMapping with output(_self, logger) {
+  logger.write_string("cubic_mapping()")
+}
 
 ///|
 pub impl Mapping for CubicMapping with map(_self, p) {

@@ -7,7 +7,7 @@ pub(all) struct Triangle {
   e2 : Tuple
   normal : Tuple
   bounds : Bounds
-} derive(Show, Eq)
+} derive(Eq)
 
 ///|
 pub fn triangle(p1 : Tuple, p2 : Tuple, p3 : Tuple) -> Shape {
@@ -40,6 +40,16 @@ pub fn Triangle::clone(self : Triangle) -> Triangle {
     normal: self.normal,
     bounds: self.bounds,
   }
+}
+
+///|
+pub fn Triangle::to_string(self : Triangle) -> String {
+  "triangle(\{self.p1}, \{self.p2}, \{self.p3})"
+}
+
+///|
+pub impl Show for Triangle with output(self, logger) {
+  logger.write_string(self.to_string())
 }
 
 ///|

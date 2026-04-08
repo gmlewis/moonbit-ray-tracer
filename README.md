@@ -37,10 +37,10 @@ The code has been updated to support compiler:
 
 ```bash
 $ moon version --all
-moon 0.1.20260330 (c527f57 2026-03-30) ~/.moon/bin/moon
-moonc v0.8.4+4d98d95d4 (2026-03-30) ~/.moon/bin/moonc
-moonrun 0.1.20260330 (c527f57 2026-03-30) ~/.moon/bin/moonrun
-moon-pilot 0.0.1-df92511 (2026-03-30) ~/.moon/bin/moon-pilot
+moon 0.1.20260403 (bbb13a8 2026-04-03) ~/.moon/bin/moon
+moonc v0.9.0+9f1423bcb (2026-04-07) ~/.moon/bin/moonc
+moonrun 0.1.20260403 (bbb13a8 2026-04-03) ~/.moon/bin/moonrun
+moon-pilot 0.0.1-df92511 (2026-04-07) ~/.moon/bin/moon-pilot
 ```
 
 ----------------------------------------------------------------------

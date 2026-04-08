@@ -211,13 +211,15 @@ pub fn world() -> World
 // Errors
 pub suberror LoaderError {
   LoaderError(String)
-} derive(Eq, Show)
+} derive(Eq)
 
-type ParserError derive(Eq, Show)
+type ParserError derive(Eq)
+pub impl Show for ParserError
 
 pub suberror SceneParseError {
   SceneParseError(String)
-} derive(Eq, Show)
+} derive(Eq)
+pub impl Show for SceneParseError
 
 // Types and methods
 pub(all) struct BiasGainPattern {
@@ -241,7 +243,7 @@ pub fn BinaryReader::read_uint8(Self) -> UInt
 pub(all) struct Bounds {
   mut min : Tuple
   mut max : Tuple
-} derive(Eq, Show)
+} derive(Eq)
 pub fn Bounds::depth(Self) -> Double
 pub fn Bounds::enlarge(Self, Self) -> Unit
 pub fn Bounds::height(Self) -> Double
@@ -255,9 +257,10 @@ pub(all) struct CSG {
   operation : Operation
   left : Shape
   right : Shape
-} derive(Eq, Show)
+} derive(Eq)
 pub fn CSG::clone(Self) -> Self
 pub fn CSG::filter_intersections(Self, Intersections) -> Intersections
+pub impl Show for CSG
 
 pub(all) struct Camera {
   hsize : Int
@@ -267,7 +270,7 @@ pub(all) struct Camera {
   pixel_size : Double
   half_width : Double
   half_height : Double
-} derive(Eq, Show)
+} derive(Eq)
 pub fn Camera::ray_for_pixel(Self, Int, Int, offset_x? : Double, offset_y? : Double) -> Ray
 pub async fn Camera::render(Self, World, samples? : Int, max_bounces? : Int, progress? : async (Int) -> Unit) -> Canvas
 
@@ -279,7 +282,7 @@ pub(all) struct Canvas {
   blue : Array[Double]
   mut exposure : Double
   mut use_tone_mapping : Bool
-} derive(Eq, Show)
+} derive(Eq)
 pub fn Canvas::clear(Self, Color) -> Unit
 pub fn Canvas::from_hdr(@hdr.HdrImage) -> Self
 pub fn Canvas::from_image(&@image.Image, linear? : Bool) -> Self
@@ -340,8 +343,9 @@ pub(all) struct Cone {
   minimum : Double
   maximum : Double
   closed : Bool
-} derive(Eq, Show)
+} derive(Eq)
 pub impl Object for Cone
+pub impl Show for Cone
 
 pub(all) struct ContrastPattern {
   pattern : Pattern
@@ -352,23 +356,27 @@ pub impl PatternTrait for ContrastPattern
 pub impl Show for ContrastPattern
 
 pub(all) struct Cube {
-} derive(Eq, Show)
+} derive(Eq)
 pub impl Object for Cube
+pub impl Show for Cube
 
 pub(all) struct CubicMapping {
-} derive(Eq, Show)
+} derive(Eq)
 pub impl Mapping for CubicMapping
+pub impl Show for CubicMapping
 
 pub(all) struct Cylinder {
   minimum : Double
   maximum : Double
   closed : Bool
-} derive(Eq, Show)
+} derive(Eq)
 pub impl Object for Cylinder
+pub impl Show for Cylinder
 
 pub(all) struct CylindricalMapping {
-} derive(Eq, Show)
+} derive(Eq)
 pub impl Mapping for CylindricalMapping
+pub impl Show for CylindricalMapping
 
 pub(all) struct FbmPattern {
   seed : Int
@@ -383,7 +391,7 @@ pub impl Show for FbmPattern
 pub struct Field {
   pattern : Pattern
   vector_decoding : VectorDecoding
-} derive(Show)
+}
 pub fn Field::color_at(Self, Tuple) -> Color
 pub fn Field::color_at_with_info(Self, Tuple, Tuple, (Double, Double)?) -> Color
 pub fn Field::color_uv_at(Self, Double, Double) -> Color
@@ -612,21 +620,23 @@ pub(all) struct Light {
   position : Tuple
   intensity : Color
   kind : LightKind
-} derive(Eq, Show)
+} derive(Eq)
 pub fn Light::cap_area_steps(Self, Int) -> Self
 pub fn Light::point_at(Self, Int, Int) -> Tuple
 pub fn Light::point_at_uv(Self, Double, Double) -> Tuple
 pub fn Light::samples(Self) -> Int
+pub impl Show for Light
 
 pub(all) enum LightKind {
   Point
   Area(Tuple, Int, Tuple, Int)
-} derive(Eq, Show)
+} derive(Eq)
 
 pub(all) enum LightingMode {
   Phong
   PBR
-} derive(Eq, Show)
+} derive(Eq)
+pub impl Show for LightingMode
 
 pub(all) struct MarblePattern {
   colors : Array[Color]
@@ -666,15 +676,17 @@ pub(all) struct Material {
   mut roughness : Double
   mut roughness_pattern : Pattern?
   mut lighting_mode : LightingMode
-} derive(Eq, Show)
+} derive(Eq)
 pub fn Material::clone(Self) -> Self
 pub fn Material::lighting(Self, Light, Tuple, Tuple, Tuple, in_shadow? : Bool, shape? : Shape?, uv0? : (Double, Double), uv1? : (Double, Double)) -> Color
+pub impl Show for Material
 
 pub(all) struct MaterialLayer {
   top : Material
   mask : Pattern
   opacity : Double
-} derive(Eq, Show)
+} derive(Eq)
+pub impl Show for MaterialLayer
 
 pub(all) struct Matrix(Array[MatrixRow])
 pub fn Matrix::clone(Self) -> Self
@@ -704,7 +716,7 @@ pub impl Eq for Matrix
 pub impl Mul for Matrix
 pub impl Show for Matrix
 
-pub(all) struct MatrixRow(Array[Double]) derive(Show)
+pub(all) struct MatrixRow(Array[Double])
 #deprecated
 pub fn MatrixRow::inner(Self) -> Array[Double]
 pub fn MatrixRow::op_get(Self, Int) -> Double
@@ -738,7 +750,8 @@ pub(all) enum Operation {
   Union
   Intersection
   Difference
-} derive(Eq, Show)
+} derive(Eq)
+pub impl Show for Operation
 
 pub(all) struct ParsedScene {
   world : World
@@ -753,20 +766,23 @@ pub(all) struct Pattern {
   pattern : &PatternTrait
   mut transform : Matrix
   mut inv_transform : Matrix
-} derive(Show)
+}
 pub fn Pattern::new(&PatternTrait) -> Self
 pub fn Pattern::pattern_at_shape(Self, Shape, Tuple, normal? : Tuple, uv? : (Double, Double)) -> Color
 pub fn Pattern::set_pattern_transform(Self, Matrix) -> Unit
 pub impl PatternTrait for Pattern
 pub impl Eq for Pattern
+pub impl Show for Pattern
 
 pub(all) struct PlanarMapping {
-} derive(Eq, Show)
+} derive(Eq)
 pub impl Mapping for PlanarMapping
+pub impl Show for PlanarMapping
 
 pub(all) struct Plane {
-} derive(Eq, Show)
+} derive(Eq)
 pub impl Object for Plane
+pub impl Show for Plane
 
 pub(all) struct PosterizePattern {
   pattern : Pattern
@@ -792,7 +808,7 @@ pub(all) struct RenderSettings {
   mut background : Color
   mut divide : Int
   mut exposure : Double
-} derive(Eq, Show)
+} derive(Eq)
 
 pub(all) struct RenderStats {
   mut rays_total : Int
@@ -816,6 +832,7 @@ pub(all) enum Renderable {
   TriangleUV(TriangleUV)
   SmoothTriangleUV(SmoothTriangleUV)
 }
+pub fn Renderable::to_string(Self) -> String
 pub impl Show for Renderable
 
 pub(all) struct RingPattern {
@@ -829,7 +846,7 @@ pub(all) struct SceneMetadata {
   name : String
   description : String
   version : String
-} derive(Eq, Show)
+} derive(Eq)
 
 pub(all) struct Shape {
   object : Renderable
@@ -878,11 +895,13 @@ pub(all) struct SmoothTriangle {
   e1 : Tuple
   e2 : Tuple
   bounds : Bounds
-} derive(Eq, Show)
+} derive(Eq)
 pub fn SmoothTriangle::bounds(Self) -> Bounds
 pub fn SmoothTriangle::clone(Self) -> Self
 pub fn SmoothTriangle::local_intersect(Self, Ray) -> Array[(Double, Double, Double)]
 pub fn SmoothTriangle::local_normal_at(Self, Tuple, Intersection) -> Tuple
+pub fn SmoothTriangle::to_string(Self) -> String
+pub impl Show for SmoothTriangle
 
 pub(all) struct SmoothTriangleUV {
   p1 : Tuple
@@ -902,19 +921,23 @@ pub(all) struct SmoothTriangleUV {
   tangent_u : Tuple
   tangent_v : Tuple
   bounds : Bounds
-} derive(Eq, Show)
+} derive(Eq)
 pub fn SmoothTriangleUV::bounds(Self) -> Bounds
 pub fn SmoothTriangleUV::clone(Self) -> Self
 pub fn SmoothTriangleUV::local_intersect(Self, Ray) -> Array[(Double, Double, Double)]
 pub fn SmoothTriangleUV::local_normal_at(Self, Tuple, Intersection) -> Tuple
+pub fn SmoothTriangleUV::to_string(Self) -> String
+pub impl Show for SmoothTriangleUV
 
 pub(all) struct Sphere {
-} derive(Eq, Show)
+} derive(Eq)
 pub impl Object for Sphere
+pub impl Show for Sphere
 
 pub(all) struct SphericalMapping {
-} derive(Eq, Show)
+} derive(Eq)
 pub impl Mapping for SphericalMapping
+pub impl Show for SphericalMapping
 
 pub(all) struct StripePattern {
   colors : Array[Color]
@@ -948,11 +971,13 @@ pub(all) struct Triangle {
   e2 : Tuple
   normal : Tuple
   bounds : Bounds
-} derive(Eq, Show)
+} derive(Eq)
 pub fn Triangle::bounds(Self) -> Bounds
 pub fn Triangle::clone(Self) -> Self
 pub fn Triangle::local_intersect(Self, Ray) -> Array[(Double, Double, Double)]
 pub fn Triangle::local_normal_at(Self, Tuple) -> Tuple
+pub fn Triangle::to_string(Self) -> String
+pub impl Show for Triangle
 
 pub(all) struct TriangleUV {
   p1 : Tuple
@@ -970,11 +995,13 @@ pub(all) struct TriangleUV {
   tangent_u : Tuple
   tangent_v : Tuple
   bounds : Bounds
-} derive(Eq, Show)
+} derive(Eq)
 pub fn TriangleUV::bounds(Self) -> Bounds
 pub fn TriangleUV::clone(Self) -> Self
 pub fn TriangleUV::local_intersect(Self, Ray) -> Array[(Double, Double, Double)]
 pub fn TriangleUV::local_normal_at(Self, Tuple) -> Tuple
+pub fn TriangleUV::to_string(Self) -> String
+pub impl Show for TriangleUV
 
 pub(all) struct TriplanarPattern {
   pattern : Pattern
@@ -1014,7 +1041,7 @@ pub impl Sub for Tuple
 pub enum VectorDecoding {
   Unit01
   Signed
-} derive(Eq, Show)
+} derive(Eq)
 
 pub(all) enum VoronoiMode {
   Distance
@@ -1024,7 +1051,9 @@ pub(all) enum VoronoiMode {
   F1
   F2
   F2MinusF1
-} derive(Eq, Show)
+} derive(Eq)
+pub fn VoronoiMode::to_string(Self) -> String
+pub impl Show for VoronoiMode
 
 pub(all) struct VoronoiPattern {
   seed : Int

@@ -186,6 +186,11 @@ test "Bump mapping perturbs sphere normal (deterministic)" {
 struct RampX {}
 
 ///|
+pub fn RampX::to_string(_self : RampX) -> String {
+  "rampx()"
+}
+
+///|
 impl PatternTrait for RampX with clone(_self) {
   rampx_pattern()
 }

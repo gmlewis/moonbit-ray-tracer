@@ -4,7 +4,7 @@ pub(all) struct Cone {
   minimum : Double
   maximum : Double
   closed : Bool
-} derive(Show, Eq)
+} derive(Eq)
 
 ///|
 let _Cone : &Object = Cone::{ minimum: 0, maximum: 0, closed: false }
@@ -28,8 +28,10 @@ pub impl Object for Cone with bounds(self) {
 }
 
 ///|
-pub impl Show for Cone with to_string(_self) {
-  "cone()"
+pub impl Show for Cone with output(self, logger) {
+  logger.write_string(
+    "cone(minimum=\{self.minimum}, maximum=\{self.maximum}, closed=\{self.closed})",
+  )
 }
 
 // a helper function to reduce duplication.

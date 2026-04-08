@@ -10,15 +10,15 @@ pub(all) enum Renderable {
 }
 
 ///|
-pub impl Show for Renderable with to_string(self) {
+pub fn Renderable::to_string(self : Renderable) -> String {
   match self {
     Object(object) => object.to_string()
     Group(group) => group.to_string()
     Triangle(triangle) => triangle.to_string()
     SmoothTriangle(triangle) => triangle.to_string()
     CSG(csg) => csg.to_string()
-    TriangleUV(_) => "triangle_uv()"
-    SmoothTriangleUV(_) => "smooth_triangle_uv()"
+    TriangleUV(triangle) => triangle.to_string()
+    SmoothTriangleUV(triangle) => triangle.to_string()
   }
 }
 

@@ -4,7 +4,7 @@ pub(all) struct Cylinder {
   minimum : Double
   maximum : Double
   closed : Bool
-} derive(Show, Eq)
+} derive(Eq)
 
 ///|
 let _Cylinder : &Object = Cylinder::{ minimum: 0, maximum: 0, closed: false }
@@ -20,8 +20,8 @@ pub fn cylinder(
 }
 
 ///|
-pub impl Show for Cylinder with to_string(_self) {
-  "cylinder()"
+pub impl Show for Cylinder with output(_self, logger) {
+  logger.write_string("cylinder()")
 }
 
 // a helper function to reduce duplication.
