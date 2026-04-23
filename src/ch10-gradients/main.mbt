@@ -147,8 +147,8 @@ async fn main {
 
   //
   try {
-    @fs.write_file("ch10-gradients.ppm", canvas.to_ppm(), create=0o644)
-    @fs.write_file("ch10-gradients.png", canvas.to_png(), create=0o644)
+    @fs.write_file("ch10-gradients.ppm", canvas.to_ppm(), permission=0o644)
+    @fs.write_file("ch10-gradients.png", canvas.to_png(), permission=0o644)
   } catch {
     _ => println("error writing ch10-gradients.png")
   }

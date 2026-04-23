@@ -228,9 +228,9 @@ async fn main {
   println("Saving to \{output_path}...")
   try {
     if output_path.has_suffix(".ppm") {
-      @fs.write_file(output_path, canvas.to_ppm(), create=0o644)
+      @fs.write_file(output_path, canvas.to_ppm(), permission=0o644)
     } else {
-      @fs.write_file(output_path, canvas.to_png(), create=0o644)
+      @fs.write_file(output_path, canvas.to_png(), permission=0o644)
     }
   } catch {
     e => {

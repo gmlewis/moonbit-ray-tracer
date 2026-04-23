@@ -67,8 +67,8 @@ async fn main {
 
   //
   try {
-    @fs.write_file("ch6.ppm", c.to_ppm(), create=0o644)
-    @fs.write_file("ch6.png", c.to_png(), create=0o644)
+    @fs.write_file("ch6.ppm", c.to_ppm(), permission=0o644)
+    @fs.write_file("ch6.png", c.to_png(), permission=0o644)
   } catch {
     _ => println("error writing ch6.png")
   }

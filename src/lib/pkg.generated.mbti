@@ -694,8 +694,6 @@ pub fn Matrix::cofactor(Self, Int, Int) -> Double
 pub fn Matrix::copy(Self, Self) -> Unit
 pub fn Matrix::determinant(Self) -> Double
 pub fn Matrix::dump(Self) -> String
-#deprecated
-pub fn Matrix::inner(Self) -> Array[MatrixRow]
 pub fn Matrix::inverse(Self) -> Self
 pub fn Matrix::is_invertible(Self) -> Bool
 pub fn Matrix::minor(Self, Int, Int) -> Double
@@ -717,8 +715,6 @@ pub impl Mul for Matrix
 pub impl Show for Matrix
 
 pub(all) struct MatrixRow(Array[Double])
-#deprecated
-pub fn MatrixRow::inner(Self) -> Array[Double]
 pub fn MatrixRow::op_get(Self, Int) -> Double
 pub fn MatrixRow::op_set(Self, Int, Double) -> Unit
 
