@@ -212,7 +212,7 @@ fn apply_material_and_transform(
   if has_material_inline {
     let material_table = match object_table.get("material") {
       Some(@toml.TomlTable(table)) => table
-      _ => Map::new()
+      _ => Map([])
     }
     match material_table.get("pattern") {
       Some(@toml.TomlString(pattern_name)) =>

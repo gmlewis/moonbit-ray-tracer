@@ -1,7 +1,7 @@
 ///|
 struct TestShape {
   mut saved_ray : Ray
-} derive(Eq)
+} derive(Debug, Eq)
 
 ///|
 impl Object for TestShape with bounds(_self) {
@@ -127,7 +127,7 @@ test "Computing the normal on a transformed shape (p.168)" {
 ///|
 test "A shape has a parent attribute (p.253)" {
   let s = test_shape()
-  assert_eq(s.parent, None)
+  @debug.assert_eq(s.parent, None)
 }
 
 ///|

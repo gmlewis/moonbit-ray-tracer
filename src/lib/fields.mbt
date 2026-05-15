@@ -12,13 +12,13 @@ pub enum VectorDecoding {
   Unit01
   /// Interpret RGB as [-1,1] components via (c*2-1).
   Signed
-} derive(Eq)
+} derive(Debug, Eq)
 
 ///|
 pub struct Field {
   pattern : Pattern
   vector_decoding : VectorDecoding
-}
+} derive(Debug)
 
 ///|
 pub fn field(

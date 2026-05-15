@@ -34,7 +34,7 @@ test "The hit, when all intersections have positive t (p.101)" {
   let i2 = @lib.intersection(2, s)
   let xs = intersections([i1, i2])
   let i = xs.hit()
-  assert_eq(i, Some(i1))
+  @debug.assert_eq(i, Some(i1))
 }
 
 ///|
@@ -44,7 +44,7 @@ test "The hit, when some intersections have negative t (p.102)" {
   let i2 = @lib.intersection(1, s)
   let xs = intersections([i2, i1])
   let i = xs.hit()
-  assert_eq(i, Some(i2))
+  @debug.assert_eq(i, Some(i2))
 }
 
 ///|
@@ -54,7 +54,7 @@ test "The hit, when all intersections have negative t (p.102)" {
   let i2 = @lib.intersection(-1, s)
   let xs = intersections([i2, i1])
   let i = xs.hit()
-  assert_eq(i, None)
+  @debug.assert_eq(i, None)
 }
 
 ///|
@@ -66,7 +66,7 @@ test "The hit is always the lowest non-negative intersection (p.102)" {
   let i4 = @lib.intersection(2, s)
   let xs = intersections([i1, i2, i3, i4])
   let i = xs.hit()
-  assert_eq(i, Some(i4))
+  @debug.assert_eq(i, Some(i4))
 }
 
 ///|

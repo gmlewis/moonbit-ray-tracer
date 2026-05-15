@@ -7,6 +7,7 @@ import {
   "gmlewis/fonts/geom",
   "gmlewis/image",
   "gmlewis/ray-tracer/hdr",
+  "moonbitlang/core/debug",
 }
 
 // Values
@@ -226,7 +227,7 @@ pub(all) struct BiasGainPattern {
   pattern : Pattern
   bias : Double
   gain : Double
-}
+} derive(@debug.Debug)
 pub impl PatternTrait for BiasGainPattern
 pub impl Show for BiasGainPattern
 
@@ -243,7 +244,7 @@ pub fn BinaryReader::read_uint8(Self) -> UInt
 pub(all) struct Bounds {
   mut min : Tuple
   mut max : Tuple
-} derive(Eq)
+} derive(Eq, @debug.Debug)
 pub fn Bounds::depth(Self) -> Double
 pub fn Bounds::enlarge(Self, Self) -> Unit
 pub fn Bounds::height(Self) -> Double
@@ -257,7 +258,7 @@ pub(all) struct CSG {
   operation : Operation
   left : Shape
   right : Shape
-} derive(Eq)
+} derive(Eq, @debug.Debug)
 pub fn CSG::clone(Self) -> Self
 pub fn CSG::filter_intersections(Self, Intersections) -> Intersections
 pub impl Show for CSG
@@ -282,7 +283,7 @@ pub(all) struct Canvas {
   blue : Array[Double]
   mut exposure : Double
   mut use_tone_mapping : Bool
-} derive(Eq)
+} derive(Eq, @debug.Debug)
 pub fn Canvas::clear(Self, Color) -> Unit
 pub fn Canvas::from_hdr(@hdr.HdrImage) -> Self
 pub fn Canvas::from_image(&@image.Image, linear? : Bool) -> Self
@@ -296,7 +297,7 @@ pub fn Canvas::write_pixel(Self, Int, Int, Color) -> Unit
 
 pub(all) struct CheckersPattern {
   colors : Array[Color]
-} derive(Eq)
+} derive(Eq, @debug.Debug)
 pub fn CheckersPattern::to_string(Self) -> String
 pub impl PatternTrait for CheckersPattern
 pub impl Show for CheckersPattern
@@ -305,7 +306,7 @@ pub(all) struct Color {
   red : Double
   green : Double
   blue : Double
-}
+} derive(@debug.Debug)
 pub fn Color::clamp_valid(Self) -> Self
 pub fn Color::clone(Self) -> Self
 pub fn Color::luminance(Self) -> Double
@@ -343,7 +344,7 @@ pub(all) struct Cone {
   minimum : Double
   maximum : Double
   closed : Bool
-} derive(Eq)
+} derive(Eq, @debug.Debug)
 pub impl Object for Cone
 pub impl Show for Cone
 
@@ -351,17 +352,17 @@ pub(all) struct ContrastPattern {
   pattern : Pattern
   contrast : Double
   pivot : Double
-}
+} derive(@debug.Debug)
 pub impl PatternTrait for ContrastPattern
 pub impl Show for ContrastPattern
 
 pub(all) struct Cube {
-} derive(Eq)
+} derive(Eq, @debug.Debug)
 pub impl Object for Cube
 pub impl Show for Cube
 
 pub(all) struct CubicMapping {
-} derive(Eq)
+} derive(Eq, @debug.Debug)
 pub impl Mapping for CubicMapping
 pub impl Show for CubicMapping
 
@@ -369,12 +370,12 @@ pub(all) struct Cylinder {
   minimum : Double
   maximum : Double
   closed : Bool
-} derive(Eq)
+} derive(Eq, @debug.Debug)
 pub impl Object for Cylinder
 pub impl Show for Cylinder
 
 pub(all) struct CylindricalMapping {
-} derive(Eq)
+} derive(Eq, @debug.Debug)
 pub impl Mapping for CylindricalMapping
 pub impl Show for CylindricalMapping
 
@@ -384,14 +385,14 @@ pub(all) struct FbmPattern {
   octaves : Int
   lacunarity : Double
   gain : Double
-} derive(Eq)
+} derive(Eq, @debug.Debug)
 pub impl PatternTrait for FbmPattern
 pub impl Show for FbmPattern
 
 pub struct Field {
   pattern : Pattern
   vector_decoding : VectorDecoding
-}
+} derive(@debug.Debug)
 pub fn Field::color_at(Self, Tuple) -> Color
 pub fn Field::color_at_with_info(Self, Tuple, Tuple, (Double, Double)?) -> Color
 pub fn Field::color_uv_at(Self, Double, Double) -> Color
@@ -520,7 +521,7 @@ pub(all) struct GltfTextureInfo {
 
 pub(all) struct GradientCheckersPattern {
   colors : Array[Color]
-} derive(Eq)
+} derive(Eq, @debug.Debug)
 pub fn GradientCheckersPattern::to_string(Self) -> String
 pub impl PatternTrait for GradientCheckersPattern
 pub impl Show for GradientCheckersPattern
@@ -528,20 +529,20 @@ pub impl Show for GradientCheckersPattern
 pub(all) struct GradientMapPattern {
   pattern : Pattern
   colors : Array[Color]
-}
+} derive(@debug.Debug)
 pub impl PatternTrait for GradientMapPattern
 pub impl Show for GradientMapPattern
 
 pub(all) struct GradientPattern {
   colors : Array[Color]
-} derive(Eq)
+} derive(Eq, @debug.Debug)
 pub fn GradientPattern::to_string(Self) -> String
 pub impl PatternTrait for GradientPattern
 pub impl Show for GradientPattern
 
 pub(all) struct GradientRingPattern {
   colors : Array[Color]
-} derive(Eq)
+} derive(Eq, @debug.Debug)
 pub fn GradientRingPattern::to_string(Self) -> String
 pub impl PatternTrait for GradientRingPattern
 pub impl Show for GradientRingPattern
@@ -555,14 +556,14 @@ pub(all) struct GraphicMaskPattern {
   inside : Color
   outside : Color
   style : Bool
-}
+} derive(@debug.Debug)
 pub impl PatternTrait for GraphicMaskPattern
 pub impl Show for GraphicMaskPattern
 
 pub(all) struct Group {
   children : Array[Shape]
   mut bounds : Bounds?
-}
+} derive(@debug.Debug)
 pub fn Group::bounds(Self) -> Bounds
 pub fn Group::clone(Self) -> Self
 pub fn Group::divide(Self, Int) -> Unit
@@ -583,7 +584,7 @@ pub(all) struct Intersection {
   mut uv_u1 : Double
   mut uv_v1 : Double
   mut has_uv1 : Bool
-}
+} derive(@debug.Debug)
 pub fn Intersection::prepare_computations(Self, Ray, xs? : Intersections) -> Computations
 pub fn Intersection::to_string(Self) -> String
 pub impl Eq for Intersection
@@ -601,7 +602,7 @@ pub fn Intersections::to_ts(Self) -> Array[Double]
 
 pub(all) struct InvertPattern {
   pattern : Pattern
-}
+} derive(@debug.Debug)
 pub impl PatternTrait for InvertPattern
 pub impl Show for InvertPattern
 
@@ -612,7 +613,7 @@ pub(all) struct LevelsPattern {
   out_min : Double
   out_max : Double
   gamma : Double
-}
+} derive(@debug.Debug)
 pub impl PatternTrait for LevelsPattern
 pub impl Show for LevelsPattern
 
@@ -620,7 +621,7 @@ pub(all) struct Light {
   position : Tuple
   intensity : Color
   kind : LightKind
-} derive(Eq)
+} derive(Eq, @debug.Debug)
 pub fn Light::cap_area_steps(Self, Int) -> Self
 pub fn Light::point_at(Self, Int, Int) -> Tuple
 pub fn Light::point_at_uv(Self, Double, Double) -> Tuple
@@ -630,12 +631,12 @@ pub impl Show for Light
 pub(all) enum LightKind {
   Point
   Area(Tuple, Int, Tuple, Int)
-} derive(Eq)
+} derive(Eq, @debug.Debug)
 
 pub(all) enum LightingMode {
   Phong
   PBR
-} derive(Eq)
+} derive(Eq, @debug.Debug)
 pub impl Show for LightingMode
 
 pub(all) struct MarblePattern {
@@ -647,7 +648,7 @@ pub(all) struct MarblePattern {
   gain : Double
   frequency : Double
   strength : Double
-}
+} derive(@debug.Debug)
 pub impl PatternTrait for MarblePattern
 pub impl Show for MarblePattern
 
@@ -676,7 +677,7 @@ pub(all) struct Material {
   mut roughness : Double
   mut roughness_pattern : Pattern?
   mut lighting_mode : LightingMode
-} derive(Eq)
+} derive(Eq, @debug.Debug)
 pub fn Material::clone(Self) -> Self
 pub fn Material::lighting(Self, Light, Tuple, Tuple, Tuple, in_shadow? : Bool, shape? : Shape?, uv0? : (Double, Double), uv1? : (Double, Double)) -> Color
 pub impl Show for Material
@@ -685,10 +686,10 @@ pub(all) struct MaterialLayer {
   top : Material
   mask : Pattern
   opacity : Double
-} derive(Eq)
+} derive(Eq, @debug.Debug)
 pub impl Show for MaterialLayer
 
-pub(all) struct Matrix(Array[MatrixRow])
+pub(all) struct Matrix(Array[MatrixRow]) derive(@debug.Debug)
 pub fn Matrix::clone(Self) -> Self
 pub fn Matrix::cofactor(Self, Int, Int) -> Double
 pub fn Matrix::copy(Self, Self) -> Unit
@@ -714,7 +715,7 @@ pub impl Eq for Matrix
 pub impl Mul for Matrix
 pub impl Show for Matrix
 
-pub(all) struct MatrixRow(Array[Double])
+pub(all) struct MatrixRow(Array[Double]) derive(@debug.Debug)
 pub fn MatrixRow::op_get(Self, Int) -> Double
 pub fn MatrixRow::op_set(Self, Int, Double) -> Unit
 
@@ -722,14 +723,14 @@ pub(all) struct MixPattern {
   a : Pattern
   b : Pattern
   mask : Field
-}
+} derive(@debug.Debug)
 pub impl PatternTrait for MixPattern
 pub impl Show for MixPattern
 
 pub(all) struct NoisePattern {
   seed : Int
   scale : Double
-} derive(Eq)
+} derive(Eq, @debug.Debug)
 pub impl PatternTrait for NoisePattern
 pub impl Show for NoisePattern
 
@@ -746,7 +747,7 @@ pub(all) enum Operation {
   Union
   Intersection
   Difference
-} derive(Eq)
+} derive(Eq, @debug.Debug)
 pub impl Show for Operation
 
 pub(all) struct ParsedScene {
@@ -762,7 +763,7 @@ pub(all) struct Pattern {
   pattern : &PatternTrait
   mut transform : Matrix
   mut inv_transform : Matrix
-}
+} derive(@debug.Debug)
 pub fn Pattern::new(&PatternTrait) -> Self
 pub fn Pattern::pattern_at_shape(Self, Shape, Tuple, normal? : Tuple, uv? : (Double, Double)) -> Color
 pub fn Pattern::set_pattern_transform(Self, Matrix) -> Unit
@@ -771,26 +772,26 @@ pub impl Eq for Pattern
 pub impl Show for Pattern
 
 pub(all) struct PlanarMapping {
-} derive(Eq)
+} derive(Eq, @debug.Debug)
 pub impl Mapping for PlanarMapping
 pub impl Show for PlanarMapping
 
 pub(all) struct Plane {
-} derive(Eq)
+} derive(Eq, @debug.Debug)
 pub impl Object for Plane
 pub impl Show for Plane
 
 pub(all) struct PosterizePattern {
   pattern : Pattern
   steps : Int
-}
+} derive(@debug.Debug)
 pub impl PatternTrait for PosterizePattern
 pub impl Show for PosterizePattern
 
 pub(all) struct Ray {
   origin : Tuple
   direction : Tuple
-}
+} derive(@debug.Debug)
 pub fn Ray::position(Self, Double) -> Tuple
 pub fn Ray::transform(Self, Matrix) -> Self
 pub impl Eq for Ray
@@ -827,13 +828,13 @@ pub(all) enum Renderable {
   CSG(CSG)
   TriangleUV(TriangleUV)
   SmoothTriangleUV(SmoothTriangleUV)
-}
+} derive(@debug.Debug)
 pub fn Renderable::to_string(Self) -> String
 pub impl Show for Renderable
 
 pub(all) struct RingPattern {
   colors : Array[Color]
-} derive(Eq)
+} derive(Eq, @debug.Debug)
 pub fn RingPattern::to_string(Self) -> String
 pub impl PatternTrait for RingPattern
 pub impl Show for RingPattern
@@ -853,7 +854,7 @@ pub(all) struct Shape {
   mut parent : Shape?
   mut bounds : Bounds?
   id : UInt
-}
+} derive(@debug.Debug)
 pub fn Shape::add_child(Self, Self) -> Unit
 pub fn Shape::bounds(Self) -> Bounds
 pub fn Shape::children(Self) -> Array[Self]
@@ -891,7 +892,7 @@ pub(all) struct SmoothTriangle {
   e1 : Tuple
   e2 : Tuple
   bounds : Bounds
-} derive(Eq)
+} derive(Eq, @debug.Debug)
 pub fn SmoothTriangle::bounds(Self) -> Bounds
 pub fn SmoothTriangle::clone(Self) -> Self
 pub fn SmoothTriangle::local_intersect(Self, Ray) -> Array[(Double, Double, Double)]
@@ -917,7 +918,7 @@ pub(all) struct SmoothTriangleUV {
   tangent_u : Tuple
   tangent_v : Tuple
   bounds : Bounds
-} derive(Eq)
+} derive(Eq, @debug.Debug)
 pub fn SmoothTriangleUV::bounds(Self) -> Bounds
 pub fn SmoothTriangleUV::clone(Self) -> Self
 pub fn SmoothTriangleUV::local_intersect(Self, Ray) -> Array[(Double, Double, Double)]
@@ -926,18 +927,18 @@ pub fn SmoothTriangleUV::to_string(Self) -> String
 pub impl Show for SmoothTriangleUV
 
 pub(all) struct Sphere {
-} derive(Eq)
+} derive(Eq, @debug.Debug)
 pub impl Object for Sphere
 pub impl Show for Sphere
 
 pub(all) struct SphericalMapping {
-} derive(Eq)
+} derive(Eq, @debug.Debug)
 pub impl Mapping for SphericalMapping
 pub impl Show for SphericalMapping
 
 pub(all) struct StripePattern {
   colors : Array[Color]
-} derive(Eq)
+} derive(Eq, @debug.Debug)
 pub fn StripePattern::to_string(Self) -> String
 pub impl PatternTrait for StripePattern
 pub impl Show for StripePattern
@@ -945,7 +946,7 @@ pub impl Show for StripePattern
 pub(all) struct Texture {
   canvas : Canvas
   mapping : &Mapping
-}
+} derive(@debug.Debug)
 pub impl PatternTrait for Texture
 pub impl Eq for Texture
 pub impl Show for Texture
@@ -955,7 +956,7 @@ pub(all) struct ThresholdPattern {
   threshold : Double
   low : Color
   high : Color
-}
+} derive(@debug.Debug)
 pub impl PatternTrait for ThresholdPattern
 pub impl Show for ThresholdPattern
 
@@ -967,7 +968,7 @@ pub(all) struct Triangle {
   e2 : Tuple
   normal : Tuple
   bounds : Bounds
-} derive(Eq)
+} derive(Eq, @debug.Debug)
 pub fn Triangle::bounds(Self) -> Bounds
 pub fn Triangle::clone(Self) -> Self
 pub fn Triangle::local_intersect(Self, Ray) -> Array[(Double, Double, Double)]
@@ -991,7 +992,7 @@ pub(all) struct TriangleUV {
   tangent_u : Tuple
   tangent_v : Tuple
   bounds : Bounds
-} derive(Eq)
+} derive(Eq, @debug.Debug)
 pub fn TriangleUV::bounds(Self) -> Bounds
 pub fn TriangleUV::clone(Self) -> Self
 pub fn TriangleUV::local_intersect(Self, Ray) -> Array[(Double, Double, Double)]
@@ -1003,7 +1004,7 @@ pub(all) struct TriplanarPattern {
   pattern : Pattern
   scale : Double
   sharpness : Double
-}
+} derive(@debug.Debug)
 pub impl PatternTrait for TriplanarPattern
 pub impl Show for TriplanarPattern
 
@@ -1012,7 +1013,7 @@ pub(all) struct Tuple {
   mut y : Double
   mut z : Double
   mut w : Double
-}
+} derive(@debug.Debug)
 pub fn Tuple::abs(Self) -> Self
 pub fn Tuple::cross(Self, Self) -> Self
 pub fn Tuple::div_scalar(Self, Double) -> Self
@@ -1037,7 +1038,7 @@ pub impl Sub for Tuple
 pub enum VectorDecoding {
   Unit01
   Signed
-} derive(Eq)
+} derive(Eq, @debug.Debug)
 
 pub(all) enum VoronoiMode {
   Distance
@@ -1047,7 +1048,7 @@ pub(all) enum VoronoiMode {
   F1
   F2
   F2MinusF1
-} derive(Eq)
+} derive(Eq, @debug.Debug)
 pub fn VoronoiMode::to_string(Self) -> String
 pub impl Show for VoronoiMode
 
@@ -1057,7 +1058,7 @@ pub(all) struct VoronoiPattern {
   jitter : Double
   mode : VoronoiMode
   edge_scale : Double
-}
+} derive(@debug.Debug)
 pub impl PatternTrait for VoronoiPattern
 pub impl Show for VoronoiPattern
 
@@ -1065,7 +1066,7 @@ pub(all) struct WarpPattern {
   base : Pattern
   warp : Field
   amplitude : Double
-}
+} derive(@debug.Debug)
 pub impl PatternTrait for WarpPattern
 pub impl Show for WarpPattern
 
@@ -1078,7 +1079,7 @@ pub(all) struct WoodPattern {
   gain : Double
   ring_frequency : Double
   turbulence : Double
-}
+} derive(@debug.Debug)
 pub impl PatternTrait for WoodPattern
 pub impl Show for WoodPattern
 
@@ -1103,18 +1104,18 @@ pub fn World::shade_hit(Self, Computations, remaining? : Int) -> Color
 pub using @fonts {type Font}
 
 // Traits
-pub(open) trait Mapping : Show {
+pub(open) trait Mapping : @debug.Debug + Show {
   map(Self, Tuple) -> (Double, Double)
 }
 
-pub(open) trait Object : Show {
+pub(open) trait Object : @debug.Debug + Show {
   local_intersect(Self, Ray) -> Array[Double]
   local_normal_at(Self, Tuple) -> Tuple
   bounds(Self) -> Bounds
   clone(Self) -> &Object
 }
 
-pub(open) trait PatternTrait : Show {
+pub(open) trait PatternTrait : @debug.Debug + Show {
   pattern_at(Self, Tuple) -> Color
   uv_at(Self, Double, Double) -> Color
   pattern_at_with_info(Self, Tuple, Tuple, (Double, Double)?) -> Color

@@ -15,7 +15,7 @@ pub(all) struct Shape {
   // operation to be safe in future parallel threaded runtimes, but for now
   // this is all single-threaded and unprotected.
   id : UInt
-}
+} derive(Debug)
 
 ///|
 let id_counter : Ref[UInt] = { val: 0 }

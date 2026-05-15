@@ -7,7 +7,7 @@ test "CSG is created with an operation and two shapes (p.293)" {
   assert_eq(c.operation, Union)
   assert_eq(c.left, s1)
   assert_eq(c.right, s2)
-  assert_eq(s1.parent, Some(parent))
+  @debug.assert_eq(s1.parent, Some(parent))
 }
 
 ///|
@@ -40,7 +40,7 @@ test "Evaluating the rule for a CSG operation (p.294)" {
   ]
   for tt in tests {
     let got = intersection_allowed(tt.0, tt.1, tt.2, tt.3)
-    assert_eq((tt.0, tt.1, tt.2, tt.3, got), tt)
+    @debug.assert_eq((tt.0, tt.1, tt.2, tt.3, got), tt)
   }
 }
 

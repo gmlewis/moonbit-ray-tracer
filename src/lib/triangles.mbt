@@ -7,7 +7,7 @@ pub(all) struct Triangle {
   e2 : Tuple
   normal : Tuple
   bounds : Bounds
-} derive(Eq)
+} derive(Debug, Eq)
 
 ///|
 pub fn triangle(p1 : Tuple, p2 : Tuple, p3 : Tuple) -> Shape {

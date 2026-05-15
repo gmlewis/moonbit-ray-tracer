@@ -4,7 +4,7 @@ pub(all) struct Cone {
   minimum : Double
   maximum : Double
   closed : Bool
-} derive(Eq)
+} derive(Debug, Eq)
 
 ///|
 let _Cone : &Object = Cone::{ minimum: 0, maximum: 0, closed: false }

@@ -10,7 +10,7 @@ pub(all) struct Intersection {
   mut uv_u1 : Double
   mut uv_v1 : Double
   mut has_uv1 : Bool
-}
+} derive(Debug)
 
 ///|
 pub fn intersection(

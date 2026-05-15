@@ -1,6 +1,6 @@
 ///|
 /// Cube represents a unit cube at the origin.
-pub(all) struct Cube {} derive(Eq)
+pub(all) struct Cube {} derive(Debug, Eq)
 
 ///|
 let _Cube : &Object = Cube::{  }

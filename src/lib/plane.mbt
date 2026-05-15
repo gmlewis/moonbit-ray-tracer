@@ -1,6 +1,6 @@
 ///|
 /// Plane represents an infinite plane along the x and z axes.
-pub(all) struct Plane {} derive(Eq)
+pub(all) struct Plane {} derive(Debug, Eq)
 
 ///|
 let _Plane : &Object = Plane::{  }

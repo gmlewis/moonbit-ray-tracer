@@ -4,7 +4,7 @@ pub(all) struct Color {
   green : Double
   blue : Double
   // alpha : Double
-}
+} derive(Debug)
 
 ///|
 pub fn Color::clone(self : Color) -> Color {

@@ -3,7 +3,7 @@
 pub(all) struct Ray {
   origin : Tuple
   direction : Tuple
-}
+} derive(Debug)
 
 ///|
 pub fn ray(origin : Tuple, direction : Tuple) -> Ray {

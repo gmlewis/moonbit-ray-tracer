@@ -1,8 +1,8 @@
 ///|
 test "Creating a world (p.134)" {
   let w = world()
-  assert_eq(w.shapes, [])
-  assert_eq(w.lights, [])
+  @debug.assert_eq(w.shapes, [])
+  @debug.assert_eq(w.lights, [])
 }
 
 ///|
@@ -18,8 +18,8 @@ test "The default world (p.134)" {
     s
   }
   let w = default_world()
-  assert_eq(w.shapes, [s1, s2])
-  assert_eq(w.lights, [light])
+  @debug.assert_eq(w.shapes, [s1, s2])
+  @debug.assert_eq(w.lights, [light])
 }
 
 ///|

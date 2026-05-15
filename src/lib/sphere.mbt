@@ -1,6 +1,6 @@
 ///|
 /// Sphere represents a sphere with radius 1.
-pub(all) struct Sphere {} derive(Eq)
+pub(all) struct Sphere {} derive(Debug, Eq)
 
 ///|
 let _Sphere : &Object = Sphere::{  }

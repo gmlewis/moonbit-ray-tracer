@@ -2,7 +2,7 @@
 pub(all) enum LightingMode {
   Phong
   PBR
-} derive(Eq)
+} derive(Debug, Eq)
 
 ///|
 pub impl Show for LightingMode with output(self, logger) {
@@ -36,7 +36,7 @@ pub(all) struct Material {
   mut roughness : Double
   mut roughness_pattern : Pattern?
   mut lighting_mode : LightingMode
-} derive(Eq)
+} derive(Debug, Eq)
 
 ///|
 pub impl Show for Material with output(self, logger) {
@@ -156,7 +156,7 @@ pub(all) struct MaterialLayer {
   top : Material
   mask : Pattern
   opacity : Double
-} derive(Eq)
+} derive(Debug, Eq)
 
 ///|
 pub impl Show for MaterialLayer with output(self, logger) {

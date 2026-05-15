@@ -3,7 +3,7 @@ pub(all) enum Operation {
   Union
   Intersection
   Difference
-} derive(Eq)
+} derive(Debug, Eq)
 
 ///|
 pub impl Show for Operation with output(self, logger) {
@@ -15,7 +15,7 @@ pub(all) struct CSG {
   operation : Operation
   left : Shape
   right : Shape
-} derive(Eq)
+} derive(Debug, Eq)
 
 ///|
 pub fn csg(operation : Operation, left : Shape, right : Shape) -> Shape {

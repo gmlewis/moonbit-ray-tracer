@@ -160,7 +160,7 @@ fn parse_render_settings(
   let render_table = match scene_table.get("render") {
     Some(@toml.TomlTable(table)) => table
     Some(_) => raise SceneParseError("scene.render must be a table")
-    None => Map::new() // Use defaults if not specified
+    None => Map([]) // Use defaults if not specified
   }
   let width = get_int_or_default(render_table, "width", 800)
   if width <= 0 {
@@ -218,7 +218,7 @@ fn parse_camera(
 fn parse_materials(
   root : Map[String, @toml.TomlValue],
 ) -> Map[String, Material] raise SceneParseError {
-  let materials = Map::new()
+  let materials = Map([])
   match root.get("materials") {
     Some(@toml.TomlTable(materials_table)) =>
       materials_table.each(fn(name, material_value) {
@@ -392,7 +392,7 @@ fn parse_templates(
   materials : Map[String, Material],
   patterns : Map[String, Pattern],
 ) -> Map[String, Shape] raise SceneParseError {
-  let templates = Map::new()
+  let templates = Map([])
   match root.get("definitions") {
     Some(@toml.TomlTable(definitions_table)) => {
       let keys = []
@@ -412,7 +412,7 @@ fn parse_templates(
 fn parse_patterns(
   root : Map[String, @toml.TomlValue],
 ) -> Map[String, Pattern] raise SceneParseError {
-  let patterns = Map::new()
+  let patterns = Map([])
   match root.get("patterns") {
     Some(@toml.TomlTable(patterns_table)) => {
       let keys = []
@@ -922,7 +922,7 @@ pub fn parse_scene(toml_content : String) -> ParsedScene raise SceneParseError {
     g.divide(render_settings.divide)
     world.shapes = [g]
   }
-  { world, camera, render_settings, metadata, templates, graphics: Map::new() }
+  { world, camera, render_settings, metadata, templates, graphics: Map([]) }
 }
 
 ///|
@@ -1000,7 +1000,7 @@ pub async fn parse_scene_file(
 async fn parse_graphics_with_io(
   root : Map[String, @toml.TomlValue],
 ) -> Map[String, @draw.Graphic] raise SceneParseError {
-  let graphics = Map::new()
+  let graphics = Map([])
   match root.get("graphics") {
     Some(@toml.TomlTable(graphics_table)) => {
       let keys = []
@@ -1113,7 +1113,7 @@ async fn make_text_graphic(
     let dy_per_line = -y_scale * advance
     let items = []
     for i in 0..<lines.length() {
-      let mut line = lines[i].to_string()
+      let mut line = lines[i].to_owned()
       if line.has_suffix("\r") && line.length() > 0 {
         line = line.unsafe_substring(start=0, end=line.length() - 1)
       }
@@ -1309,7 +1309,7 @@ async fn parse_patterns_with_io(
   root : Map[String, @toml.TomlValue],
   graphics : Map[String, @draw.Graphic],
 ) -> Map[String, Pattern] raise SceneParseError {
-  let patterns = Map::new()
+  let patterns = Map([])
   match root.get("patterns") {
     Some(@toml.TomlTable(patterns_table)) => {
       let keys = []
@@ -1608,7 +1608,7 @@ async fn parse_templates_with_io(
   materials : Map[String, Material],
   patterns : Map[String, Pattern],
 ) -> Map[String, Shape] raise SceneParseError {
-  let templates = Map::new()
+  let templates = Map([])
   match root.get("definitions") {
     Some(@toml.TomlTable(definitions_table)) => {
       let keys = []

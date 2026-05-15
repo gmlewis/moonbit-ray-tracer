@@ -107,7 +107,7 @@ test "voronoi f1/f2/f2-f1 outputs are consistent" {
 ///|
 struct ConstPattern {
   c : Color
-}
+} derive(Debug)
 
 ///|
 pub fn ConstPattern::to_string(self : ConstPattern) -> String {
@@ -153,7 +153,7 @@ fn const_pattern(c : Color) -> Pattern {
 }
 
 ///|
-struct UVCoordPattern {}
+struct UVCoordPattern {} derive(Debug)
 
 ///|
 pub fn UVCoordPattern::to_string(_self : UVCoordPattern) -> String {

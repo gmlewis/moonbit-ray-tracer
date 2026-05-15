@@ -82,7 +82,7 @@ pub fn parse_obj_file(buf : String) -> ObjFile raise ParserError {
   //
   let lines = buf.split("\n")
   for line in lines {
-    let line = line.trim().to_string()
+    let line = line.trim().to_owned()
     if line.length() == 0 {
       // silently ignored
     } else if line.has_prefix("v ") {
@@ -108,7 +108,7 @@ pub fn parse_obj_file(buf : String) -> ObjFile raise ParserError {
       let group_name = line
         .unsafe_substring(start=2, end=line.length())
         .trim()
-        .to_string()
+        .to_owned()
       last_group = group()
       named_groups[group_name] = last_group
     } else {
@@ -144,7 +144,7 @@ fn parse_args(
   double_fn : (Array[Double]) -> Unit raise ParserError,
   string_fn? : (Array[String]) -> Unit raise ParserError = fn(_args) {  },
 ) -> Unit raise ParserError {
-  let parts = s.split(sep).map(fn(s) { s.trim().to_string() }).collect()
+  let parts = s.split(sep).map(fn(s) { s.trim().to_owned() }).collect()
   let doubles = Array::new(capacity=parts.length())
   for arg in parts {
     if arg == "" {

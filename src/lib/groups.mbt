@@ -2,7 +2,7 @@
 pub(all) struct Group {
   children : Array[Shape]
   mut bounds : Bounds?
-}
+} derive(Debug)
 
 ///|
 pub fn group() -> Shape {

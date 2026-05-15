@@ -175,7 +175,7 @@ fn parse_mesh_primitive(json : Json) -> GltfMeshPrimitive? {
       }
     None => return None
   }
-  let attributes = Map::new()
+  let attributes = Map([])
   attr_obj.each(fn(k, v) {
     match get_int(v) {
       Some(i) => attributes.set(k, i)

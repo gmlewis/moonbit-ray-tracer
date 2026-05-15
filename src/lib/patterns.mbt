@@ -4,10 +4,10 @@ pub(all) struct Pattern {
   // Do not modify transform directly. Use `set_transform` instead.
   mut transform : Matrix
   mut inv_transform : Matrix
-}
+} derive(Debug)
 
 ///|
-pub(open) trait PatternTrait: Show {
+pub(open) trait PatternTrait: Debug + Show {
   pattern_at(Self, Tuple) -> Color
   uv_at(Self, Double, Double) -> Color
   pattern_at_with_info(Self, Tuple, Tuple, (Double, Double)?) -> Color
@@ -104,12 +104,12 @@ pub fn Pattern::pattern_at_shape(
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 ///|
-pub(open) trait Mapping: Show {
+pub(open) trait Mapping: Debug + Show {
   map(Self, Tuple) -> (Double, Double)
 }
 
 ///|
-pub(all) struct SphericalMapping {} derive(Eq)
+pub(all) struct SphericalMapping {} derive(Debug, Eq)
 
 ///|
 pub impl Show for SphericalMapping with output(_self, logger) {
@@ -128,7 +128,7 @@ pub impl Mapping for SphericalMapping with map(_self, p) {
 }
 
 ///|
-pub(all) struct PlanarMapping {} derive(Eq)
+pub(all) struct PlanarMapping {} derive(Debug, Eq)
 
 ///|
 pub impl Show for PlanarMapping with output(_self, logger) {
@@ -143,7 +143,7 @@ pub impl Mapping for PlanarMapping with map(_self, p) {
 }
 
 ///|
-pub(all) struct CylindricalMapping {} derive(Eq)
+pub(all) struct CylindricalMapping {} derive(Debug, Eq)
 
 ///|
 pub impl Show for CylindricalMapping with output(_self, logger) {
@@ -160,7 +160,7 @@ pub impl Mapping for CylindricalMapping with map(_self, p) {
 }
 
 ///|
-pub(all) struct CubicMapping {} derive(Eq)
+pub(all) struct CubicMapping {} derive(Debug, Eq)
 
 ///|
 pub impl Show for CubicMapping with output(_self, logger) {

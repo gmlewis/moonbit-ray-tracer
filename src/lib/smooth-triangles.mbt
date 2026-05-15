@@ -9,7 +9,7 @@ pub(all) struct SmoothTriangle {
   e1 : Tuple
   e2 : Tuple
   bounds : Bounds
-} derive(Eq)
+} derive(Debug, Eq)
 
 ///|
 pub fn smooth_triangle(

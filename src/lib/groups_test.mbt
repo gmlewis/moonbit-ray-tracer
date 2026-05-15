@@ -13,7 +13,7 @@ test "Adding a child to a group (p.253)" {
   let children = g.children()
   assert_eq(children.length(), 1)
   assert_eq(children[0], s)
-  assert_eq(s.parent, Some(g))
+  @debug.assert_eq(s.parent, Some(g))
 }
 
 ///|

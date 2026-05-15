@@ -7,7 +7,7 @@ pub(all) struct Canvas {
   blue : Array[Double]
   mut exposure : Double
   mut use_tone_mapping : Bool
-} derive(Eq)
+} derive(Debug, Eq)
 
 ///|
 pub fn canvas(width : Int, height : Int) -> Canvas {
@@ -184,7 +184,7 @@ pub fn Canvas::from_png(png_data : Bytes, linear? : Bool = false) -> Canvas? {
   if err is None {
     Some(Canvas::from_image(img, linear~))
   } else {
-    println("Error decoding PNG: \{err}")
+    println("Error decoding PNG: \{err.unwrap().to_repr()}")
     None
   }
 }
@@ -196,7 +196,7 @@ pub fn Canvas::from_jpeg(jpeg_data : Bytes, linear? : Bool = false) -> Canvas? {
   if err is None {
     Some(Canvas::from_image(img, linear~))
   } else {
-    println("Error decoding JPEG: \{err}")
+    println("Error decoding JPEG: \{err.unwrap().to_repr()}")
     None
   }
 }

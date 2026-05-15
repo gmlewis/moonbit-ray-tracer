@@ -4,7 +4,7 @@ pub(all) struct Cylinder {
   minimum : Double
   maximum : Double
   closed : Bool
-} derive(Eq)
+} derive(Debug, Eq)
 
 ///|
 let _Cylinder : &Object = Cylinder::{ minimum: 0, maximum: 0, closed: false }

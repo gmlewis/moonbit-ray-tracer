@@ -135,20 +135,20 @@ async fn main {
         "\{indent}  material: ambient=\{s.material.ambient} diffuse=\{s.material.diffuse} specular=\{s.material.specular} shininess=\{s.material.shininess}",
       )
       println(
-        "\{indent}  material: metallic=\{s.material.metallic} metallic_pattern=\{s.material.metallic_pattern}",
+        "\{indent}  material: metallic=\{s.material.metallic} metallic_pattern=\{to_repr(s.material.metallic_pattern)}",
       )
       println(
-        "\{indent}  material: roughness=\{s.material.roughness} roughness_pattern=\{s.material.roughness_pattern}",
+        "\{indent}  material: roughness=\{s.material.roughness} roughness_pattern=\{to_repr(s.material.roughness_pattern)}",
       )
-      println("\{indent}  material: pattern=\{s.material.pattern}")
+      println("\{indent}  material: pattern=\{to_repr(s.material.pattern)}")
       println(
-        "\{indent}  material: normal_pattern=\{s.material.normal_pattern} normal_strength=\{s.material.normal_strength}",
-      )
-      println(
-        "\{indent}  material: displacement_pattern=\{s.material.displacement_pattern} displacement_strength=\{s.material.displacement_strength}",
+        "\{indent}  material: normal_pattern=\{to_repr(s.material.normal_pattern)} normal_strength=\{s.material.normal_strength}",
       )
       println(
-        "\{indent}  material: normal_texture=\{s.material.normal_texture} normal_texture_scale=\{s.material.normal_texture_scale} normal_texture_texcoord=\{s.material.normal_texture_texcoord}",
+        "\{indent}  material: displacement_pattern=\{to_repr(s.material.displacement_pattern)} displacement_strength=\{s.material.displacement_strength}",
+      )
+      println(
+        "\{indent}  material: normal_texture=\{to_repr(s.material.normal_texture)} normal_texture_scale=\{s.material.normal_texture_scale} normal_texture_texcoord=\{s.material.normal_texture_texcoord}",
       )
       match s.object {
         Group(g) => {
@@ -216,7 +216,7 @@ async fn main {
     None => {
       // Default to scene name + .png
       let base = if scene_path.has_suffix(".toml") {
-        scene_path[0:scene_path.length() - 5].to_string()
+        scene_path[0:scene_path.length() - 5].to_owned()
       } else {
         scene_path
       }

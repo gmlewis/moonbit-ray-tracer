@@ -15,7 +15,7 @@ pub(all) struct TriangleUV {
   tangent_u : Tuple
   tangent_v : Tuple
   bounds : Bounds
-} derive(Eq)
+} derive(Debug, Eq)
 
 ///|
 pub fn triangle_uv(
@@ -254,7 +254,7 @@ pub fn TriangleUV::clone(self : TriangleUV) -> TriangleUV {
 
 ///|
 pub fn TriangleUV::to_string(self : TriangleUV) -> String {
-  "triangle_uv(\{self.p1}, \{self.p2}, \{self.p3}, \{self.uv1}, \{self.uv2}, \{self.uv3})"
+  "triangle_uv(\{self.p1}, \{self.p2}, \{self.p3}, \{to_repr(self.uv1)}, \{to_repr(self.uv2)}, \{to_repr(self.uv3)})"
 }
 
 ///|

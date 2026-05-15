@@ -15,7 +15,7 @@ pub(all) struct GraphicMaskPattern {
   inside : Color
   outside : Color
   style : Bool
-}
+} derive(Debug)
 
 ///|
 pub impl Show for GraphicMaskPattern with output(_self, logger) {

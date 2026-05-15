@@ -2,7 +2,7 @@
 pub(all) struct Bounds {
   mut min : Tuple
   mut max : Tuple
-} derive(Eq)
+} derive(Debug, Eq)
 
 ///|
 pub fn Bounds::new() -> Bounds {

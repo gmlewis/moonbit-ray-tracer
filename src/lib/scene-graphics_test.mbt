@@ -5,9 +5,11 @@ async test "parse_scene_file loads graphics assets" {
   }
   match scene.graphics.get("square") {
     Some(g) =>
-      inspect(
+      @debug.debug_inspect(
         g.bounding_box(),
-        content="Some({min: {x: 2, y: 3}, max: {x: 6, y: 8}})",
+        content=(
+          #|Some({ min: { x: 2, y: 3 }, max: { x: 6, y: 8 } })
+        ),
       )
     None => abort("expected graphics.square to be loaded")
   }

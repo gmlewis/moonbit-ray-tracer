@@ -8,7 +8,7 @@ pub(all) struct Tuple {
   mut y : Double
   mut z : Double
   mut w : Double
-}
+} derive(Debug)
 
 ///|
 pub fn tuple(x : Double, y : Double, z : Double, w : Double) -> Tuple {

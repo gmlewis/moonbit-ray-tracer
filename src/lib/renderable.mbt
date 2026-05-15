@@ -7,7 +7,7 @@ pub(all) enum Renderable {
   CSG(CSG)
   TriangleUV(TriangleUV)
   SmoothTriangleUV(SmoothTriangleUV)
-}
+} derive(Debug)
 
 ///|
 pub fn Renderable::to_string(self : Renderable) -> String {
