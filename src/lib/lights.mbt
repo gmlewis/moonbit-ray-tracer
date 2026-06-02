@@ -12,7 +12,7 @@ pub(all) struct Light {
 } derive(Debug, Eq)
 
 ///|
-pub impl Show for Light with output(self, logger) {
+pub impl Show for Light with fn output(self, logger) {
   logger.write_string(self.to_string())
 }
 

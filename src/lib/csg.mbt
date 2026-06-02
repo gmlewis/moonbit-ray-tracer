@@ -6,7 +6,7 @@ pub(all) enum Operation {
 } derive(Debug, Eq)
 
 ///|
-pub impl Show for Operation with output(self, logger) {
+pub impl Show for Operation with fn output(self, logger) {
   logger.write_string(self.to_string())
 }
 
@@ -54,7 +54,7 @@ pub fn CSG::clone(self : CSG) -> CSG {
 }
 
 ///|
-pub impl Show for CSG with output(self, logger) {
+pub impl Show for CSG with fn output(self, logger) {
   logger.write_string(self.to_string())
 }
 

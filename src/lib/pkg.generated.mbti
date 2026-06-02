@@ -1105,20 +1105,20 @@ pub using @fonts {type Font}
 
 // Traits
 pub(open) trait Mapping : @debug.Debug + Show {
-  map(Self, Tuple) -> (Double, Double)
+  fn map(Self, Tuple) -> (Double, Double)
 }
 
 pub(open) trait Object : @debug.Debug + Show {
-  local_intersect(Self, Ray) -> Array[Double]
-  local_normal_at(Self, Tuple) -> Tuple
-  bounds(Self) -> Bounds
-  clone(Self) -> &Object
+  fn local_intersect(Self, Ray) -> Array[Double]
+  fn local_normal_at(Self, Tuple) -> Tuple
+  fn bounds(Self) -> Bounds
+  fn clone(Self) -> &Object
 }
 
 pub(open) trait PatternTrait : @debug.Debug + Show {
-  pattern_at(Self, Tuple) -> Color
-  uv_at(Self, Double, Double) -> Color
-  pattern_at_with_info(Self, Tuple, Tuple, (Double, Double)?) -> Color
-  clone(Self) -> Pattern
+  fn pattern_at(Self, Tuple) -> Color
+  fn uv_at(Self, Double, Double) -> Color
+  fn pattern_at_with_info(Self, Tuple, Tuple, (Double, Double)?) -> Color
+  fn clone(Self) -> Pattern
 }
 

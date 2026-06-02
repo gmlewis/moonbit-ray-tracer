@@ -27,7 +27,7 @@ pub fn Color::to_string(self : Color) -> String {
 }
 
 ///|
-pub impl Show for Color with output(self, logger) {
+pub impl Show for Color with fn output(self, logger) {
   logger.write_string(self.to_string())
 }
 
@@ -50,13 +50,13 @@ pub fn Color::luminance(self : Color) -> Double {
 }
 
 ///|
-pub impl Eq for Color with equal(self, other) {
+pub impl Eq for Color with fn equal(self, other) {
   let { red, green, blue } = self - other
   red.abs() < EPSILON && green.abs() < EPSILON && blue.abs() < EPSILON
 }
 
 ///|
-pub impl Add for Color with add(self, other) {
+pub impl Add for Color with fn add(self, other) {
   let red = self.red + other.red
   let green = self.green + other.green
   let blue = self.blue + other.blue
@@ -64,7 +64,7 @@ pub impl Add for Color with add(self, other) {
 }
 
 ///|
-pub impl Sub for Color with sub(self, other) {
+pub impl Sub for Color with fn sub(self, other) {
   let red = self.red - other.red
   let green = self.green - other.green
   let blue = self.blue - other.blue
@@ -72,7 +72,7 @@ pub impl Sub for Color with sub(self, other) {
 }
 
 ///|
-pub impl Mul for Color with mul(self, other) {
+pub impl Mul for Color with fn mul(self, other) {
   let red = self.red * other.red
   let green = self.green * other.green
   let blue = self.blue * other.blue

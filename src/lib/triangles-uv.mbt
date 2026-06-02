@@ -258,7 +258,7 @@ pub fn TriangleUV::to_string(self : TriangleUV) -> String {
 }
 
 ///|
-pub impl Show for TriangleUV with output(self, logger) {
+pub impl Show for TriangleUV with fn output(self, logger) {
   logger.write_string(self.to_string())
 }
 

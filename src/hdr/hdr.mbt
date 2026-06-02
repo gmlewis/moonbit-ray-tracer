@@ -33,7 +33,7 @@ pub suberror HdrError {
 }
 
 ///|
-pub impl Show for HdrError with output(self, logger) {
+pub impl Show for HdrError with fn output(self, logger) {
   match self {
     HdrError(msg) => logger.write_string(msg)
   }

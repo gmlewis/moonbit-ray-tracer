@@ -11,17 +11,17 @@ pub fn StripePattern::to_string(self : StripePattern) -> String {
 }
 
 ///|
-pub impl Show for StripePattern with output(self, logger) {
+pub impl Show for StripePattern with fn output(self, logger) {
   logger.write_string(self.to_string())
 }
 
 ///|
-pub impl PatternTrait for StripePattern with clone(self) {
+pub impl PatternTrait for StripePattern with fn clone(self) {
   stripe_pattern(self.colors)
 }
 
 ///|
-pub impl PatternTrait for StripePattern with pattern_at(self, point) {
+pub impl PatternTrait for StripePattern with fn pattern_at(self, point) {
   let ncols = self.colors.length()
   let index = @math.floor(point.x).to_int()
   let index = if index >= 0 {
@@ -33,7 +33,7 @@ pub impl PatternTrait for StripePattern with pattern_at(self, point) {
 }
 
 ///|
-pub impl PatternTrait for StripePattern with uv_at(self, u, _v) {
+pub impl PatternTrait for StripePattern with fn uv_at(self, u, _v) {
   let ncols = self.colors.length()
   let index = @math.floor(u * ncols.to_double()).to_int()
   let index = if index >= 0 {
@@ -45,7 +45,7 @@ pub impl PatternTrait for StripePattern with uv_at(self, u, _v) {
 }
 
 ///|
-pub impl PatternTrait for StripePattern with pattern_at_with_info(
+pub impl PatternTrait for StripePattern with fn pattern_at_with_info(
   self,
   point,
   _normal,
@@ -80,17 +80,17 @@ pub fn GradientPattern::to_string(self : GradientPattern) -> String {
 }
 
 ///|
-pub impl Show for GradientPattern with output(self, logger) {
+pub impl Show for GradientPattern with fn output(self, logger) {
   logger.write_string(self.to_string())
 }
 
 ///|
-pub impl PatternTrait for GradientPattern with clone(self) {
+pub impl PatternTrait for GradientPattern with fn clone(self) {
   gradient_pattern(self.colors)
 }
 
 ///|
-pub impl PatternTrait for GradientPattern with pattern_at(self, point) {
+pub impl PatternTrait for GradientPattern with fn pattern_at(self, point) {
   let ncols = self.colors.length()
   let t = point.x - @math.floor(point.x)
   let index = @math.floor(point.x).to_int()
@@ -105,7 +105,7 @@ pub impl PatternTrait for GradientPattern with pattern_at(self, point) {
 }
 
 ///|
-pub impl PatternTrait for GradientPattern with uv_at(self, u, _v) {
+pub impl PatternTrait for GradientPattern with fn uv_at(self, u, _v) {
   let ncols = self.colors.length()
   let t = u * ncols.to_double()
   let index = @math.floor(t).to_int() % ncols
@@ -116,7 +116,7 @@ pub impl PatternTrait for GradientPattern with uv_at(self, u, _v) {
 }
 
 ///|
-pub impl PatternTrait for GradientPattern with pattern_at_with_info(
+pub impl PatternTrait for GradientPattern with fn pattern_at_with_info(
   self,
   point,
   _normal,
@@ -151,17 +151,17 @@ pub fn RingPattern::to_string(self : RingPattern) -> String {
 }
 
 ///|
-pub impl Show for RingPattern with output(self, logger) {
+pub impl Show for RingPattern with fn output(self, logger) {
   logger.write_string(self.to_string())
 }
 
 ///|
-pub impl PatternTrait for RingPattern with clone(self) {
+pub impl PatternTrait for RingPattern with fn clone(self) {
   ring_pattern(self.colors)
 }
 
 ///|
-pub impl PatternTrait for RingPattern with pattern_at(self, point) {
+pub impl PatternTrait for RingPattern with fn pattern_at(self, point) {
   let ncols = self.colors.length()
   let r = (point.x * point.x + point.z * point.z).sqrt()
   let index = @math.floor(r).to_int() % ncols
@@ -169,7 +169,7 @@ pub impl PatternTrait for RingPattern with pattern_at(self, point) {
 }
 
 ///|
-pub impl PatternTrait for RingPattern with uv_at(self, u, v) {
+pub impl PatternTrait for RingPattern with fn uv_at(self, u, v) {
   let ncols = self.colors.length()
   let dist = ((u - 0.5) * (u - 0.5) + (v - 0.5) * (v - 0.5)).sqrt()
   let index = @math.floor(dist * 2.0 * ncols.to_double()).to_int() % ncols
@@ -177,7 +177,7 @@ pub impl PatternTrait for RingPattern with uv_at(self, u, v) {
 }
 
 ///|
-pub impl PatternTrait for RingPattern with pattern_at_with_info(
+pub impl PatternTrait for RingPattern with fn pattern_at_with_info(
   self,
   point,
   _normal,
@@ -212,17 +212,17 @@ pub fn GradientRingPattern::to_string(self : GradientRingPattern) -> String {
 }
 
 ///|
-pub impl Show for GradientRingPattern with output(self, logger) {
+pub impl Show for GradientRingPattern with fn output(self, logger) {
   logger.write_string(self.to_string())
 }
 
 ///|
-pub impl PatternTrait for GradientRingPattern with clone(self) {
+pub impl PatternTrait for GradientRingPattern with fn clone(self) {
   gradient_ring_pattern(self.colors)
 }
 
 ///|
-pub impl PatternTrait for GradientRingPattern with pattern_at(self, point) {
+pub impl PatternTrait for GradientRingPattern with fn pattern_at(self, point) {
   let ncols = self.colors.length()
   let r = (point.x * point.x + point.z * point.z).sqrt()
   let t = r - @math.floor(r)
@@ -233,7 +233,7 @@ pub impl PatternTrait for GradientRingPattern with pattern_at(self, point) {
 }
 
 ///|
-pub impl PatternTrait for GradientRingPattern with uv_at(self, u, v) {
+pub impl PatternTrait for GradientRingPattern with fn uv_at(self, u, v) {
   let ncols = self.colors.length()
   let dist = ((u - 0.5) * (u - 0.5) + (v - 0.5) * (v - 0.5)).sqrt()
   let t = dist * 2.0 * ncols.to_double()
@@ -245,7 +245,7 @@ pub impl PatternTrait for GradientRingPattern with uv_at(self, u, v) {
 }
 
 ///|
-pub impl PatternTrait for GradientRingPattern with pattern_at_with_info(
+pub impl PatternTrait for GradientRingPattern with fn pattern_at_with_info(
   self,
   point,
   _normal,
@@ -280,17 +280,17 @@ pub fn CheckersPattern::to_string(self : CheckersPattern) -> String {
 }
 
 ///|
-pub impl Show for CheckersPattern with output(self, logger) {
+pub impl Show for CheckersPattern with fn output(self, logger) {
   logger.write_string(self.to_string())
 }
 
 ///|
-pub impl PatternTrait for CheckersPattern with clone(self) {
+pub impl PatternTrait for CheckersPattern with fn clone(self) {
   checkers_pattern(self.colors)
 }
 
 ///|
-pub impl PatternTrait for CheckersPattern with pattern_at(self, point) {
+pub impl PatternTrait for CheckersPattern with fn pattern_at(self, point) {
   let ncols = self.colors.length()
   let index = @math.floor(point.x + 0.00001).to_int() +
     @math.floor(point.y + 0.00001).to_int() +
@@ -304,7 +304,7 @@ pub impl PatternTrait for CheckersPattern with pattern_at(self, point) {
 }
 
 ///|
-pub impl PatternTrait for CheckersPattern with uv_at(self, u, v) {
+pub impl PatternTrait for CheckersPattern with fn uv_at(self, u, v) {
   let ncols = self.colors.length()
   let index = @math.floor(u * 2.0 + 0.00001).to_int() +
     @math.floor(v * 2.0 + 0.00001).to_int()
@@ -317,7 +317,7 @@ pub impl PatternTrait for CheckersPattern with uv_at(self, u, v) {
 }
 
 ///|
-pub impl PatternTrait for CheckersPattern with pattern_at_with_info(
+pub impl PatternTrait for CheckersPattern with fn pattern_at_with_info(
   self,
   point,
   _normal,
@@ -346,25 +346,25 @@ pub(all) struct Texture {
 } derive(Debug)
 
 ///|
-pub impl Show for Texture with output(_self, logger) {
+pub impl Show for Texture with fn output(_self, logger) {
   logger.write_string("texture()")
 }
 
 ///|
-pub impl PatternTrait for Texture with pattern_at(self, point) {
+pub impl PatternTrait for Texture with fn pattern_at(self, point) {
   let (u, v) = self.mapping.map(point)
   self.uv_at(u, v)
 }
 
 ///|
-pub impl PatternTrait for Texture with uv_at(self, u, v) {
+pub impl PatternTrait for Texture with fn uv_at(self, u, v) {
   let u = u - @math.floor(u)
   let v = v - @math.floor(v)
   self.canvas.pixel_at_bilinear(u, v)
 }
 
 ///|
-pub impl PatternTrait for Texture with pattern_at_with_info(
+pub impl PatternTrait for Texture with fn pattern_at_with_info(
   self,
   point,
   _normal,
@@ -377,12 +377,12 @@ pub impl PatternTrait for Texture with pattern_at_with_info(
 }
 
 ///|
-pub impl PatternTrait for Texture with clone(self) {
+pub impl PatternTrait for Texture with fn clone(self) {
   texture(self.canvas, mapping=self.mapping)
 }
 
 ///|
-pub impl Eq for Texture with equal(self, other) {
+pub impl Eq for Texture with fn equal(self, other) {
   self.canvas == other.canvas
 }
 
@@ -415,17 +415,20 @@ pub fn GradientCheckersPattern::to_string(
 }
 
 ///|
-pub impl Show for GradientCheckersPattern with output(self, logger) {
+pub impl Show for GradientCheckersPattern with fn output(self, logger) {
   logger.write_string(self.to_string())
 }
 
 ///|
-pub impl PatternTrait for GradientCheckersPattern with clone(self) {
+pub impl PatternTrait for GradientCheckersPattern with fn clone(self) {
   gradient_checkers_pattern(self.colors)
 }
 
 ///|
-pub impl PatternTrait for GradientCheckersPattern with pattern_at(self, point) {
+pub impl PatternTrait for GradientCheckersPattern with fn pattern_at(
+  self,
+  point,
+) {
   let ncols = self.colors.length()
   let x_floor = @math.floor(point.x)
   let y_floor = @math.floor(point.y)
@@ -443,7 +446,7 @@ pub impl PatternTrait for GradientCheckersPattern with pattern_at(self, point) {
 }
 
 ///|
-pub impl PatternTrait for GradientCheckersPattern with uv_at(self, u, v) {
+pub impl PatternTrait for GradientCheckersPattern with fn uv_at(self, u, v) {
   let ncols = self.colors.length()
   let t = (u + v) * 2.0
   let index = @math.floor(t).to_int() % ncols
@@ -454,7 +457,7 @@ pub impl PatternTrait for GradientCheckersPattern with uv_at(self, u, v) {
 }
 
 ///|
-pub impl PatternTrait for GradientCheckersPattern with pattern_at_with_info(
+pub impl PatternTrait for GradientCheckersPattern with fn pattern_at_with_info(
   self,
   point,
   _normal,
@@ -516,28 +519,28 @@ pub(all) struct NoisePattern {
 } derive(Debug, Eq)
 
 ///|
-pub impl Show for NoisePattern with output(self, logger) {
+pub impl Show for NoisePattern with fn output(self, logger) {
   logger.write_string("noise(seed=\{self.seed}, scale=\{self.scale})")
 }
 
 ///|
-pub impl PatternTrait for NoisePattern with clone(self) {
+pub impl PatternTrait for NoisePattern with fn clone(self) {
   noise_pattern(seed=self.seed, scale=self.scale)
 }
 
 ///|
-pub impl PatternTrait for NoisePattern with pattern_at(self, point) {
+pub impl PatternTrait for NoisePattern with fn pattern_at(self, point) {
   let v = value_noise3(point.mul_scalar(self.scale), self.seed)
   color(v, v, v)
 }
 
 ///|
-pub impl PatternTrait for NoisePattern with uv_at(self, u, v) {
+pub impl PatternTrait for NoisePattern with fn uv_at(self, u, v) {
   self.pattern_at(point(u, 0.0, v))
 }
 
 ///|
-pub impl PatternTrait for NoisePattern with pattern_at_with_info(
+pub impl PatternTrait for NoisePattern with fn pattern_at_with_info(
   self,
   point,
   _normal,
@@ -564,14 +567,14 @@ pub(all) struct FbmPattern {
 } derive(Debug, Eq)
 
 ///|
-pub impl Show for FbmPattern with output(self, logger) {
+pub impl Show for FbmPattern with fn output(self, logger) {
   logger.write_string(
     "fbm(seed=\{self.seed}, scale=\{self.scale}, octaves=\{self.octaves})",
   )
 }
 
 ///|
-pub impl PatternTrait for FbmPattern with clone(self) {
+pub impl PatternTrait for FbmPattern with fn clone(self) {
   fbm_pattern(
     seed=self.seed,
     scale=self.scale,
@@ -582,7 +585,7 @@ pub impl PatternTrait for FbmPattern with clone(self) {
 }
 
 ///|
-pub impl PatternTrait for FbmPattern with pattern_at(self, point) {
+pub impl PatternTrait for FbmPattern with fn pattern_at(self, point) {
   let v = fbm3(
     point.mul_scalar(self.scale),
     self.seed,
@@ -594,12 +597,12 @@ pub impl PatternTrait for FbmPattern with pattern_at(self, point) {
 }
 
 ///|
-pub impl PatternTrait for FbmPattern with uv_at(self, u, v) {
+pub impl PatternTrait for FbmPattern with fn uv_at(self, u, v) {
   self.pattern_at(point(u, 0.0, v))
 }
 
 ///|
-pub impl PatternTrait for FbmPattern with pattern_at_with_info(
+pub impl PatternTrait for FbmPattern with fn pattern_at_with_info(
   self,
   point,
   _normal,
@@ -635,12 +638,12 @@ pub(all) struct MarblePattern {
 } derive(Debug)
 
 ///|
-pub impl Show for MarblePattern with output(_self, logger) {
+pub impl Show for MarblePattern with fn output(_self, logger) {
   logger.write_string("marble(...) ")
 }
 
 ///|
-pub impl PatternTrait for MarblePattern with clone(self) {
+pub impl PatternTrait for MarblePattern with fn clone(self) {
   marble_pattern(
     self.colors,
     seed=self.seed,
@@ -654,7 +657,7 @@ pub impl PatternTrait for MarblePattern with clone(self) {
 }
 
 ///|
-pub impl PatternTrait for MarblePattern with pattern_at(self, point) {
+pub impl PatternTrait for MarblePattern with fn pattern_at(self, point) {
   let p = point.mul_scalar(self.scale)
   let n = fbm3(p, self.seed, self.octaves, self.lacunarity, self.gain)
   let t = @math.sin((p.x * self.frequency + n * self.strength) * 2.0 * @math.PI)
@@ -663,12 +666,12 @@ pub impl PatternTrait for MarblePattern with pattern_at(self, point) {
 }
 
 ///|
-pub impl PatternTrait for MarblePattern with uv_at(self, u, v) {
+pub impl PatternTrait for MarblePattern with fn uv_at(self, u, v) {
   self.pattern_at(point(u, 0.0, v))
 }
 
 ///|
-pub impl PatternTrait for MarblePattern with pattern_at_with_info(
+pub impl PatternTrait for MarblePattern with fn pattern_at_with_info(
   self,
   point,
   _normal,
@@ -716,12 +719,12 @@ pub(all) struct WoodPattern {
 } derive(Debug)
 
 ///|
-pub impl Show for WoodPattern with output(_self, logger) {
+pub impl Show for WoodPattern with fn output(_self, logger) {
   logger.write_string("wood(...) ")
 }
 
 ///|
-pub impl PatternTrait for WoodPattern with clone(self) {
+pub impl PatternTrait for WoodPattern with fn clone(self) {
   wood_pattern(
     self.colors,
     seed=self.seed,
@@ -735,7 +738,7 @@ pub impl PatternTrait for WoodPattern with clone(self) {
 }
 
 ///|
-pub impl PatternTrait for WoodPattern with pattern_at(self, point) {
+pub impl PatternTrait for WoodPattern with fn pattern_at(self, point) {
   let p = point.mul_scalar(self.scale)
   let n = fbm3(p, self.seed, self.octaves, self.lacunarity, self.gain)
   let r = (p.x * p.x + p.z * p.z).sqrt()
@@ -745,12 +748,12 @@ pub impl PatternTrait for WoodPattern with pattern_at(self, point) {
 }
 
 ///|
-pub impl PatternTrait for WoodPattern with uv_at(self, u, v) {
+pub impl PatternTrait for WoodPattern with fn uv_at(self, u, v) {
   self.pattern_at(point(u, 0.0, v))
 }
 
 ///|
-pub impl PatternTrait for WoodPattern with pattern_at_with_info(
+pub impl PatternTrait for WoodPattern with fn pattern_at_with_info(
   self,
   point,
   _normal,
@@ -810,7 +813,7 @@ pub fn VoronoiMode::to_string(self : VoronoiMode) -> String {
 }
 
 ///|
-pub impl Show for VoronoiMode with output(self, logger) {
+pub impl Show for VoronoiMode with fn output(self, logger) {
   logger.write_string(self.to_string())
 }
 
@@ -824,14 +827,14 @@ pub(all) struct VoronoiPattern {
 } derive(Debug)
 
 ///|
-pub impl Show for VoronoiPattern with output(self, logger) {
+pub impl Show for VoronoiPattern with fn output(self, logger) {
   logger.write_string(
     "voronoi(seed=\{self.seed}, scale=\{self.scale}, mode=\{self.mode})",
   )
 }
 
 ///|
-pub impl PatternTrait for VoronoiPattern with clone(self) {
+pub impl PatternTrait for VoronoiPattern with fn clone(self) {
   voronoi_pattern(
     seed=self.seed,
     scale=self.scale,
@@ -842,7 +845,7 @@ pub impl PatternTrait for VoronoiPattern with clone(self) {
 }
 
 ///|
-pub impl PatternTrait for VoronoiPattern with pattern_at(self, p) {
+pub impl PatternTrait for VoronoiPattern with fn pattern_at(self, p) {
   let p = p.mul_scalar(self.scale)
   let (f1, f2, cx, cy) = voronoi2_f1_f2(p, self.seed, self.jitter)
   match self.mode {
@@ -893,12 +896,12 @@ pub impl PatternTrait for VoronoiPattern with pattern_at(self, p) {
 }
 
 ///|
-pub impl PatternTrait for VoronoiPattern with uv_at(self, u, v) {
+pub impl PatternTrait for VoronoiPattern with fn uv_at(self, u, v) {
   self.pattern_at(point(u, 0.0, v))
 }
 
 ///|
-pub impl PatternTrait for VoronoiPattern with pattern_at_with_info(
+pub impl PatternTrait for VoronoiPattern with fn pattern_at_with_info(
   self,
   point,
   _normal,
@@ -989,12 +992,12 @@ pub(all) struct LevelsPattern {
 } derive(Debug)
 
 ///|
-pub impl Show for LevelsPattern with output(_self, logger) {
+pub impl Show for LevelsPattern with fn output(_self, logger) {
   logger.write_string("levels(...)")
 }
 
 ///|
-pub impl PatternTrait for LevelsPattern with clone(self) {
+pub impl PatternTrait for LevelsPattern with fn clone(self) {
   levels_pattern(
     self.pattern.clone(),
     in_min=self.in_min,
@@ -1006,7 +1009,7 @@ pub impl PatternTrait for LevelsPattern with clone(self) {
 }
 
 ///|
-pub impl PatternTrait for LevelsPattern with pattern_at(self, point) {
+pub impl PatternTrait for LevelsPattern with fn pattern_at(self, point) {
   let c = self.pattern.pattern_at(point)
   color(
     remap_channel(
@@ -1037,7 +1040,7 @@ pub impl PatternTrait for LevelsPattern with pattern_at(self, point) {
 }
 
 ///|
-pub impl PatternTrait for LevelsPattern with uv_at(self, u, v) {
+pub impl PatternTrait for LevelsPattern with fn uv_at(self, u, v) {
   let c = self.pattern.uv_at(u, v)
   color(
     remap_channel(
@@ -1068,7 +1071,7 @@ pub impl PatternTrait for LevelsPattern with uv_at(self, u, v) {
 }
 
 ///|
-pub impl PatternTrait for LevelsPattern with pattern_at_with_info(
+pub impl PatternTrait for LevelsPattern with fn pattern_at_with_info(
   self,
   point,
   normal,
@@ -1152,17 +1155,17 @@ pub(all) struct BiasGainPattern {
 } derive(Debug)
 
 ///|
-pub impl Show for BiasGainPattern with output(_self, logger) {
+pub impl Show for BiasGainPattern with fn output(_self, logger) {
   logger.write_string("bias_gain(...)")
 }
 
 ///|
-pub impl PatternTrait for BiasGainPattern with clone(self) {
+pub impl PatternTrait for BiasGainPattern with fn clone(self) {
   bias_gain_pattern(self.pattern.clone(), bias=self.bias, gain=self.gain)
 }
 
 ///|
-pub impl PatternTrait for BiasGainPattern with pattern_at(self, point) {
+pub impl PatternTrait for BiasGainPattern with fn pattern_at(self, point) {
   let c = self.pattern.pattern_at(point)
   color(
     gain_value(bias_value(c.red, self.bias), self.gain),
@@ -1172,7 +1175,7 @@ pub impl PatternTrait for BiasGainPattern with pattern_at(self, point) {
 }
 
 ///|
-pub impl PatternTrait for BiasGainPattern with uv_at(self, u, v) {
+pub impl PatternTrait for BiasGainPattern with fn uv_at(self, u, v) {
   let c = self.pattern.uv_at(u, v)
   color(
     gain_value(bias_value(c.red, self.bias), self.gain),
@@ -1182,7 +1185,7 @@ pub impl PatternTrait for BiasGainPattern with uv_at(self, u, v) {
 }
 
 ///|
-pub impl PatternTrait for BiasGainPattern with pattern_at_with_info(
+pub impl PatternTrait for BiasGainPattern with fn pattern_at_with_info(
   self,
   point,
   normal,
@@ -1218,12 +1221,12 @@ pub(all) struct ContrastPattern {
 } derive(Debug)
 
 ///|
-pub impl Show for ContrastPattern with output(_self, logger) {
+pub impl Show for ContrastPattern with fn output(_self, logger) {
   logger.write_string("contrast(...)")
 }
 
 ///|
-pub impl PatternTrait for ContrastPattern with clone(self) {
+pub impl PatternTrait for ContrastPattern with fn clone(self) {
   contrast_pattern(
     self.pattern.clone(),
     contrast=self.contrast,
@@ -1232,7 +1235,7 @@ pub impl PatternTrait for ContrastPattern with clone(self) {
 }
 
 ///|
-pub impl PatternTrait for ContrastPattern with pattern_at(self, point) {
+pub impl PatternTrait for ContrastPattern with fn pattern_at(self, point) {
   let c = self.pattern.pattern_at(point)
   color(
     contrast_value(c.red, self.contrast, self.pivot),
@@ -1242,7 +1245,7 @@ pub impl PatternTrait for ContrastPattern with pattern_at(self, point) {
 }
 
 ///|
-pub impl PatternTrait for ContrastPattern with uv_at(self, u, v) {
+pub impl PatternTrait for ContrastPattern with fn uv_at(self, u, v) {
   let c = self.pattern.uv_at(u, v)
   color(
     contrast_value(c.red, self.contrast, self.pivot),
@@ -1252,7 +1255,7 @@ pub impl PatternTrait for ContrastPattern with uv_at(self, u, v) {
 }
 
 ///|
-pub impl PatternTrait for ContrastPattern with pattern_at_with_info(
+pub impl PatternTrait for ContrastPattern with fn pattern_at_with_info(
   self,
   point,
   normal,
@@ -1284,12 +1287,12 @@ pub(all) struct ThresholdPattern {
 } derive(Debug)
 
 ///|
-pub impl Show for ThresholdPattern with output(_self, logger) {
+pub impl Show for ThresholdPattern with fn output(_self, logger) {
   logger.write_string("threshold(...)")
 }
 
 ///|
-pub impl PatternTrait for ThresholdPattern with clone(self) {
+pub impl PatternTrait for ThresholdPattern with fn clone(self) {
   threshold_pattern(
     self.pattern.pattern.clone(),
     threshold=self.threshold,
@@ -1313,7 +1316,7 @@ fn threshold_eval(
 }
 
 ///|
-pub impl PatternTrait for ThresholdPattern with pattern_at(self, point) {
+pub impl PatternTrait for ThresholdPattern with fn pattern_at(self, point) {
   threshold_eval(
     self.pattern.scalar_at(point),
     self.threshold,
@@ -1323,7 +1326,7 @@ pub impl PatternTrait for ThresholdPattern with pattern_at(self, point) {
 }
 
 ///|
-pub impl PatternTrait for ThresholdPattern with uv_at(self, u, v) {
+pub impl PatternTrait for ThresholdPattern with fn uv_at(self, u, v) {
   threshold_eval(
     self.pattern.scalar_uv_at(u, v),
     self.threshold,
@@ -1333,7 +1336,7 @@ pub impl PatternTrait for ThresholdPattern with uv_at(self, u, v) {
 }
 
 ///|
-pub impl PatternTrait for ThresholdPattern with pattern_at_with_info(
+pub impl PatternTrait for ThresholdPattern with fn pattern_at_with_info(
   self,
   point,
   normal,
@@ -1369,12 +1372,12 @@ pub(all) struct PosterizePattern {
 } derive(Debug)
 
 ///|
-pub impl Show for PosterizePattern with output(_self, logger) {
+pub impl Show for PosterizePattern with fn output(_self, logger) {
   logger.write_string("posterize(...)")
 }
 
 ///|
-pub impl PatternTrait for PosterizePattern with clone(self) {
+pub impl PatternTrait for PosterizePattern with fn clone(self) {
   posterize_pattern(self.pattern.clone(), steps=self.steps)
 }
 
@@ -1388,7 +1391,7 @@ fn posterize_channel(x : Double, steps : Int) -> Double {
 }
 
 ///|
-pub impl PatternTrait for PosterizePattern with pattern_at(self, point) {
+pub impl PatternTrait for PosterizePattern with fn pattern_at(self, point) {
   let c = self.pattern.pattern_at(point)
   color(
     posterize_channel(c.red, self.steps),
@@ -1398,7 +1401,7 @@ pub impl PatternTrait for PosterizePattern with pattern_at(self, point) {
 }
 
 ///|
-pub impl PatternTrait for PosterizePattern with uv_at(self, u, v) {
+pub impl PatternTrait for PosterizePattern with fn uv_at(self, u, v) {
   let c = self.pattern.uv_at(u, v)
   color(
     posterize_channel(c.red, self.steps),
@@ -1408,7 +1411,7 @@ pub impl PatternTrait for PosterizePattern with uv_at(self, u, v) {
 }
 
 ///|
-pub impl PatternTrait for PosterizePattern with pattern_at_with_info(
+pub impl PatternTrait for PosterizePattern with fn pattern_at_with_info(
   self,
   point,
   normal,
@@ -1434,12 +1437,12 @@ pub(all) struct GradientMapPattern {
 } derive(Debug)
 
 ///|
-pub impl Show for GradientMapPattern with output(_self, logger) {
+pub impl Show for GradientMapPattern with fn output(_self, logger) {
   logger.write_string("gradient_map(...)")
 }
 
 ///|
-pub impl PatternTrait for GradientMapPattern with clone(self) {
+pub impl PatternTrait for GradientMapPattern with fn clone(self) {
   gradient_map_pattern(self.pattern.clone(), self.colors)
 }
 
@@ -1449,17 +1452,17 @@ fn gradient_map_eval(colors : Array[Color], c : Color) -> Color {
 }
 
 ///|
-pub impl PatternTrait for GradientMapPattern with pattern_at(self, point) {
+pub impl PatternTrait for GradientMapPattern with fn pattern_at(self, point) {
   gradient_map_eval(self.colors, self.pattern.pattern_at(point))
 }
 
 ///|
-pub impl PatternTrait for GradientMapPattern with uv_at(self, u, v) {
+pub impl PatternTrait for GradientMapPattern with fn uv_at(self, u, v) {
   gradient_map_eval(self.colors, self.pattern.uv_at(u, v))
 }
 
 ///|
-pub impl PatternTrait for GradientMapPattern with pattern_at_with_info(
+pub impl PatternTrait for GradientMapPattern with fn pattern_at_with_info(
   self,
   point,
   normal,
@@ -1487,12 +1490,12 @@ pub(all) struct TriplanarPattern {
 } derive(Debug)
 
 ///|
-pub impl Show for TriplanarPattern with output(_self, logger) {
+pub impl Show for TriplanarPattern with fn output(_self, logger) {
   logger.write_string("triplanar(...)")
 }
 
 ///|
-pub impl PatternTrait for TriplanarPattern with clone(self) {
+pub impl PatternTrait for TriplanarPattern with fn clone(self) {
   triplanar_pattern(
     self.pattern.clone(),
     scale=self.scale,
@@ -1501,19 +1504,19 @@ pub impl PatternTrait for TriplanarPattern with clone(self) {
 }
 
 ///|
-pub impl PatternTrait for TriplanarPattern with pattern_at(self, point) {
+pub impl PatternTrait for TriplanarPattern with fn pattern_at(self, point) {
   // Fallback to Z projection when normal isn't available.
   self.pattern.uv_at(point.x * self.scale, point.y * self.scale)
 }
 
 ///|
-pub impl PatternTrait for TriplanarPattern with uv_at(self, u, v) {
+pub impl PatternTrait for TriplanarPattern with fn uv_at(self, u, v) {
   // UV isn't meaningful for triplanar; treat UV as a 2D plane.
   self.pattern.uv_at(u * self.scale, v * self.scale)
 }
 
 ///|
-pub impl PatternTrait for TriplanarPattern with pattern_at_with_info(
+pub impl PatternTrait for TriplanarPattern with fn pattern_at_with_info(
   self,
   point,
   normal,
@@ -1556,28 +1559,28 @@ pub(all) struct InvertPattern {
 } derive(Debug)
 
 ///|
-pub impl Show for InvertPattern with output(_self, logger) {
+pub impl Show for InvertPattern with fn output(_self, logger) {
   logger.write_string("invert(...) ")
 }
 
 ///|
-pub impl PatternTrait for InvertPattern with clone(self) {
+pub impl PatternTrait for InvertPattern with fn clone(self) {
   invert_pattern(self.pattern.clone())
 }
 
 ///|
-pub impl PatternTrait for InvertPattern with pattern_at(self, point) {
+pub impl PatternTrait for InvertPattern with fn pattern_at(self, point) {
   let c = self.pattern.pattern_at(point)
   color(1.0 - c.red, 1.0 - c.green, 1.0 - c.blue)
 }
 
 ///|
-pub impl PatternTrait for InvertPattern with uv_at(self, u, v) {
+pub impl PatternTrait for InvertPattern with fn uv_at(self, u, v) {
   self.pattern_at(point(u, 0.0, v))
 }
 
 ///|
-pub impl PatternTrait for InvertPattern with pattern_at_with_info(
+pub impl PatternTrait for InvertPattern with fn pattern_at_with_info(
   self,
   point,
   _normal,
@@ -1602,17 +1605,17 @@ pub(all) struct MixPattern {
 } derive(Debug)
 
 ///|
-pub impl Show for MixPattern with output(_self, logger) {
+pub impl Show for MixPattern with fn output(_self, logger) {
   logger.write_string("mix(...) ")
 }
 
 ///|
-pub impl PatternTrait for MixPattern with clone(self) {
+pub impl PatternTrait for MixPattern with fn clone(self) {
   mix_pattern(self.a.clone(), self.b.clone(), self.mask.pattern.clone())
 }
 
 ///|
-pub impl PatternTrait for MixPattern with pattern_at(self, point) {
+pub impl PatternTrait for MixPattern with fn pattern_at(self, point) {
   let ca = self.a.pattern_at(point)
   let cb = self.b.pattern_at(point)
   let t = self.mask.scalar_at(point)
@@ -1620,12 +1623,12 @@ pub impl PatternTrait for MixPattern with pattern_at(self, point) {
 }
 
 ///|
-pub impl PatternTrait for MixPattern with uv_at(self, u, v) {
+pub impl PatternTrait for MixPattern with fn uv_at(self, u, v) {
   self.pattern_at(point(u, 0.0, v))
 }
 
 ///|
-pub impl PatternTrait for MixPattern with pattern_at_with_info(
+pub impl PatternTrait for MixPattern with fn pattern_at_with_info(
   self,
   point,
   _normal,
@@ -1650,12 +1653,12 @@ pub(all) struct WarpPattern {
 } derive(Debug)
 
 ///|
-pub impl Show for WarpPattern with output(_self, logger) {
+pub impl Show for WarpPattern with fn output(_self, logger) {
   logger.write_string("warp(...) ")
 }
 
 ///|
-pub impl PatternTrait for WarpPattern with clone(self) {
+pub impl PatternTrait for WarpPattern with fn clone(self) {
   warp_pattern(
     self.base.clone(),
     self.warp.pattern.clone(),
@@ -1664,7 +1667,7 @@ pub impl PatternTrait for WarpPattern with clone(self) {
 }
 
 ///|
-pub impl PatternTrait for WarpPattern with pattern_at(self, p) {
+pub impl PatternTrait for WarpPattern with fn pattern_at(self, p) {
   let dv = self.warp.vector_at(p)
   self.base.pattern_at(
     point(
@@ -1676,12 +1679,12 @@ pub impl PatternTrait for WarpPattern with pattern_at(self, p) {
 }
 
 ///|
-pub impl PatternTrait for WarpPattern with uv_at(self, u, v) {
+pub impl PatternTrait for WarpPattern with fn uv_at(self, u, v) {
   self.pattern_at(point(u, 0.0, v))
 }
 
 ///|
-pub impl PatternTrait for WarpPattern with pattern_at_with_info(
+pub impl PatternTrait for WarpPattern with fn pattern_at_with_info(
   self,
   point,
   _normal,

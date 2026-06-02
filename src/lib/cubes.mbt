@@ -12,12 +12,12 @@ pub fn cube() -> Shape {
 }
 
 ///|
-pub impl Show for Cube with output(_self, logger) {
+pub impl Show for Cube with fn output(_self, logger) {
   logger.write_string("cube()")
 }
 
 ///|
-pub impl Object for Cube with local_intersect(_self, ray) {
+pub impl Object for Cube with fn local_intersect(_self, ray) {
   let (xtmin, xtmax) = check_axis(ray.origin.x, ray.direction.x, -1, 1)
   let (ytmin, ytmax) = check_axis(ray.origin.y, ray.direction.y, -1, 1)
   let (ztmin, ztmax) = check_axis(ray.origin.z, ray.direction.z, -1, 1)
@@ -52,7 +52,7 @@ fn check_axis(
 }
 
 ///|
-pub impl Object for Cube with local_normal_at(_self, local_point) {
+pub impl Object for Cube with fn local_normal_at(_self, local_point) {
   let xabs = local_point.x.abs()
   let yabs = local_point.y.abs()
   let zabs = local_point.z.abs()
@@ -67,13 +67,13 @@ pub impl Object for Cube with local_normal_at(_self, local_point) {
 }
 
 ///|
-pub impl Object for Cube with bounds(_self) {
+pub impl Object for Cube with fn bounds(_self) {
   let min = point(-1, -1, -1)
   let max = point(1, 1, 1)
   { min, max }
 }
 
 ///|
-pub impl Object for Cube with clone(_self) {
+pub impl Object for Cube with fn clone(_self) {
   Cube::{  }
 }

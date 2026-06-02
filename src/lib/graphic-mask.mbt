@@ -18,12 +18,12 @@ pub(all) struct GraphicMaskPattern {
 } derive(Debug)
 
 ///|
-pub impl Show for GraphicMaskPattern with output(_self, logger) {
+pub impl Show for GraphicMaskPattern with fn output(_self, logger) {
   logger.write_string("graphic_mask(...) ")
 }
 
 ///|
-pub impl PatternTrait for GraphicMaskPattern with clone(self) {
+pub impl PatternTrait for GraphicMaskPattern with fn clone(self) {
   graphic_mask_pattern(
     self.graphic.clone(),
     curve_segments=self.curve_segments,
@@ -34,7 +34,7 @@ pub impl PatternTrait for GraphicMaskPattern with clone(self) {
 }
 
 ///|
-pub impl PatternTrait for GraphicMaskPattern with pattern_at(self, p) {
+pub impl PatternTrait for GraphicMaskPattern with fn pattern_at(self, p) {
   let pt = @draw.vec2(p.x, p.z)
   if self.graphic_profiles_contain_point(pt) {
     self.inside
@@ -44,7 +44,7 @@ pub impl PatternTrait for GraphicMaskPattern with pattern_at(self, p) {
 }
 
 ///|
-pub impl PatternTrait for GraphicMaskPattern with uv_at(self, u, v) {
+pub impl PatternTrait for GraphicMaskPattern with fn uv_at(self, u, v) {
   let pt = @draw.vec2(u, v)
   if self.graphic_profiles_contain_point(pt) {
     self.inside
@@ -54,7 +54,7 @@ pub impl PatternTrait for GraphicMaskPattern with uv_at(self, u, v) {
 }
 
 ///|
-pub impl PatternTrait for GraphicMaskPattern with pattern_at_with_info(
+pub impl PatternTrait for GraphicMaskPattern with fn pattern_at_with_info(
   self,
   point,
   _normal,

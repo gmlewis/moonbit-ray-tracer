@@ -69,12 +69,12 @@ pub fn Shape::object_space_bounds(self : Shape) -> Bounds {
 }
 
 ///|
-pub impl Show for Shape with output(self, logger) {
+pub impl Show for Shape with fn output(self, logger) {
   logger.write_string(self.object.to_string())
 }
 
 ///|
-pub impl Eq for Shape with equal(self, other) {
+pub impl Eq for Shape with fn equal(self, other) {
   // https://github.com/moonbitlang/core/issues/1304#issuecomment-2523373703
   // self.object == other.object &&
   self.material == other.material && self.transform == other.transform

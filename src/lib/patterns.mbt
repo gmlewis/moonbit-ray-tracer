@@ -8,14 +8,14 @@ pub(all) struct Pattern {
 
 ///|
 pub(open) trait PatternTrait: Debug + Show {
-  pattern_at(Self, Tuple) -> Color
-  uv_at(Self, Double, Double) -> Color
-  pattern_at_with_info(Self, Tuple, Tuple, (Double, Double)?) -> Color
-  clone(Self) -> Pattern
+  fn pattern_at(Self, Tuple) -> Color
+  fn uv_at(Self, Double, Double) -> Color
+  fn pattern_at_with_info(Self, Tuple, Tuple, (Double, Double)?) -> Color
+  fn clone(Self) -> Pattern
 }
 
 ///|
-pub impl Show for Pattern with output(self, logger) {
+pub impl Show for Pattern with fn output(self, logger) {
   logger.write_string(
     "{pattern: " +
     self.pattern.to_string() +
@@ -35,17 +35,17 @@ pub fn Pattern::new(pattern : &PatternTrait) -> Pattern {
 }
 
 ///|
-pub impl PatternTrait for Pattern with pattern_at(self, point) {
+pub impl PatternTrait for Pattern with fn pattern_at(self, point) {
   self.pattern.pattern_at(point)
 }
 
 ///|
-pub impl PatternTrait for Pattern with uv_at(self, u, v) {
+pub impl PatternTrait for Pattern with fn uv_at(self, u, v) {
   self.pattern.uv_at(u, v)
 }
 
 ///|
-pub impl PatternTrait for Pattern with pattern_at_with_info(
+pub impl PatternTrait for Pattern with fn pattern_at_with_info(
   self,
   point,
   normal,
@@ -55,12 +55,12 @@ pub impl PatternTrait for Pattern with pattern_at_with_info(
 }
 
 ///|
-pub impl Eq for Pattern with equal(self, other) {
+pub impl Eq for Pattern with fn equal(self, other) {
   self.transform == other.transform
 }
 
 ///|
-pub impl PatternTrait for Pattern with clone(self) {
+pub impl PatternTrait for Pattern with fn clone(self) {
   let pattern = self.pattern.clone().pattern
   let transform = self.transform.clone()
   let inv_transform = self.inv_transform.clone()
@@ -105,19 +105,19 @@ pub fn Pattern::pattern_at_shape(
 
 ///|
 pub(open) trait Mapping: Debug + Show {
-  map(Self, Tuple) -> (Double, Double)
+  fn map(Self, Tuple) -> (Double, Double)
 }
 
 ///|
 pub(all) struct SphericalMapping {} derive(Debug, Eq)
 
 ///|
-pub impl Show for SphericalMapping with output(_self, logger) {
+pub impl Show for SphericalMapping with fn output(_self, logger) {
   logger.write_string("spherical_mapping()")
 }
 
 ///|
-pub impl Mapping for SphericalMapping with map(_self, p) {
+pub impl Mapping for SphericalMapping with fn map(_self, p) {
   let theta = @math.atan2(p.x, p.z)
   let radius = (p.x * p.x + p.y * p.y + p.z * p.z).sqrt()
   let phi = @math.acos(p.y / radius)
@@ -131,12 +131,12 @@ pub impl Mapping for SphericalMapping with map(_self, p) {
 pub(all) struct PlanarMapping {} derive(Debug, Eq)
 
 ///|
-pub impl Show for PlanarMapping with output(_self, logger) {
+pub impl Show for PlanarMapping with fn output(_self, logger) {
   logger.write_string("planar_mapping()")
 }
 
 ///|
-pub impl Mapping for PlanarMapping with map(_self, p) {
+pub impl Mapping for PlanarMapping with fn map(_self, p) {
   let u = p.x - @math.floor(p.x)
   let v = p.z - @math.floor(p.z)
   (u, v)
@@ -146,12 +146,12 @@ pub impl Mapping for PlanarMapping with map(_self, p) {
 pub(all) struct CylindricalMapping {} derive(Debug, Eq)
 
 ///|
-pub impl Show for CylindricalMapping with output(_self, logger) {
+pub impl Show for CylindricalMapping with fn output(_self, logger) {
   logger.write_string("cylindrical_mapping()")
 }
 
 ///|
-pub impl Mapping for CylindricalMapping with map(_self, p) {
+pub impl Mapping for CylindricalMapping with fn map(_self, p) {
   let theta = @math.atan2(p.x, p.z)
   let raw_u = theta / (2.0 * @math.PI)
   let u = raw_u + 0.5
@@ -163,12 +163,12 @@ pub impl Mapping for CylindricalMapping with map(_self, p) {
 pub(all) struct CubicMapping {} derive(Debug, Eq)
 
 ///|
-pub impl Show for CubicMapping with output(_self, logger) {
+pub impl Show for CubicMapping with fn output(_self, logger) {
   logger.write_string("cubic_mapping()")
 }
 
 ///|
-pub impl Mapping for CubicMapping with map(_self, p) {
+pub impl Mapping for CubicMapping with fn map(_self, p) {
   let xabs = p.x.abs()
   let yabs = p.y.abs()
   let zabs = p.z.abs()

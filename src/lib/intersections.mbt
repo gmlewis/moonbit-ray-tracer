@@ -34,7 +34,7 @@ pub fn intersection(
 }
 
 ///|
-pub impl Eq for Intersection with equal(self, other) {
+pub impl Eq for Intersection with fn equal(self, other) {
   self.t == other.t // && self.object == other.object
 }
 
@@ -44,7 +44,7 @@ pub fn Intersection::to_string(self : Intersection) -> String {
 }
 
 ///|
-pub impl Show for Intersection with output(self, logger) {
+pub impl Show for Intersection with fn output(self, logger) {
   logger.write_string(self.to_string())
 }
 

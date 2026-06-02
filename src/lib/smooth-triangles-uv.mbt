@@ -280,7 +280,7 @@ pub fn SmoothTriangleUV::to_string(self : SmoothTriangleUV) -> String {
 }
 
 ///|
-pub impl Show for SmoothTriangleUV with output(self, logger) {
+pub impl Show for SmoothTriangleUV with fn output(self, logger) {
   logger.write_string(self.to_string())
 }
 

@@ -32,7 +32,7 @@ pub fn Matrix::to_string(self : Matrix) -> String {
 }
 
 ///|
-pub impl Show for Matrix with output(self, logger) {
+pub impl Show for Matrix with fn output(self, logger) {
   logger.write_string(self.to_string())
 }
 
@@ -55,7 +55,7 @@ pub fn Matrix::num_cols(self : Matrix) -> Int {
 }
 
 ///|
-pub impl Eq for Matrix with equal(self, other) {
+pub impl Eq for Matrix with fn equal(self, other) {
   let nrows = self.num_rows()
   if self.num_rows() != other.num_rows() {
     return false
@@ -83,7 +83,7 @@ pub impl Eq for Matrix with equal(self, other) {
 
 ///|
 /// Matrix multiplication - currently, only 4x4 is handled.
-pub impl Mul for Matrix with mul(self, o) {
+pub impl Mul for Matrix with fn mul(self, o) {
   let m = mat4zero()
   for row in 0..<4 {
     for col in 0..<4 {

@@ -191,12 +191,12 @@ pub fn RampX::to_string(_self : RampX) -> String {
 }
 
 ///|
-impl PatternTrait for RampX with clone(_self) {
+impl PatternTrait for RampX with fn clone(_self) {
   rampx_pattern()
 }
 
 ///|
-impl Show for RampX with output(self, logger) {
+impl Show for RampX with fn output(self, logger) {
   logger.write_string(self.to_string())
 }
 
@@ -206,19 +206,19 @@ fn rampx_pattern() -> Pattern {
 }
 
 ///|
-impl PatternTrait for RampX with pattern_at(_self, p) {
+impl PatternTrait for RampX with fn pattern_at(_self, p) {
   let t = p.x * 0.5 + 0.5
   let t = if t < 0.0 { 0.0 } else if t > 1.0 { 1.0 } else { t }
   color(t, t, t)
 }
 
 ///|
-impl PatternTrait for RampX with uv_at(self, u, v) {
+impl PatternTrait for RampX with fn uv_at(self, u, v) {
   self.pattern_at(point(u, 0.0, v))
 }
 
 ///|
-impl PatternTrait for RampX with pattern_at_with_info(self, p, _n, uv) {
+impl PatternTrait for RampX with fn pattern_at_with_info(self, p, _n, uv) {
   match uv {
     Some((u, v)) => self.uv_at(u, v)
     None => self.pattern_at(p)

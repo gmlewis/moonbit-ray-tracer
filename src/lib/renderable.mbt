@@ -23,6 +23,6 @@ pub fn Renderable::to_string(self : Renderable) -> String {
 }
 
 ///|
-pub impl Show for Renderable with output(self, logger) {
+pub impl Show for Renderable with fn output(self, logger) {
   logger.write_string(self.to_string())
 }

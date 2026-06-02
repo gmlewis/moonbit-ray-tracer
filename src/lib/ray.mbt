@@ -11,17 +11,17 @@ pub fn ray(origin : Tuple, direction : Tuple) -> Ray {
 }
 
 ///|
-pub impl Show for Ray with to_string(self) {
+pub impl Show for Ray with fn to_string(self) {
   "ray(\{self.origin}, \{self.direction})"
 }
 
 ///|
-pub impl Show for Ray with output(self, logger) {
+pub impl Show for Ray with fn output(self, logger) {
   logger.write_string(self.to_string())
 }
 
 ///|
-pub impl Eq for Ray with equal(self, other) {
+pub impl Eq for Ray with fn equal(self, other) {
   self.origin == other.origin && self.direction == other.direction
 }
 

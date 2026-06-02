@@ -20,7 +20,7 @@ pub fn cone(
 }
 
 ///|
-pub impl Object for Cone with bounds(self) {
+pub impl Object for Cone with fn bounds(self) {
   let r_max = @cmp.maximum(self.minimum.abs(), self.maximum.abs())
   let min = point(-r_max, self.minimum, -r_max)
   let max = point(r_max, self.maximum, r_max)
@@ -28,7 +28,7 @@ pub impl Object for Cone with bounds(self) {
 }
 
 ///|
-pub impl Show for Cone with output(self, logger) {
+pub impl Show for Cone with fn output(self, logger) {
   logger.write_string(
     "cone(minimum=\{self.minimum}, maximum=\{self.maximum}, closed=\{self.closed})",
   )
@@ -67,7 +67,7 @@ fn Cone::intersect_caps(self : Cone, ray : Ray, xs : Array[Double]) -> Unit {
 }
 
 ///|
-pub impl Object for Cone with local_intersect(self, ray) {
+pub impl Object for Cone with fn local_intersect(self, ray) {
   let xs = []
   let o = ray.origin
   let d = ray.direction
@@ -112,7 +112,7 @@ pub impl Object for Cone with local_intersect(self, ray) {
 }
 
 ///|
-pub impl Object for Cone with local_normal_at(self, local_point) {
+pub impl Object for Cone with fn local_normal_at(self, local_point) {
   let dist_sq = local_point.x * local_point.x + local_point.z * local_point.z
   if dist_sq < self.maximum * self.maximum &&
     local_point.y >= self.maximum - EPSILON {
@@ -132,6 +132,6 @@ pub impl Object for Cone with local_normal_at(self, local_point) {
 }
 
 ///|
-pub impl Object for Cone with clone(self) {
+pub impl Object for Cone with fn clone(self) {
   Cone::{ minimum: self.minimum, maximum: self.maximum, closed: self.closed }
 }

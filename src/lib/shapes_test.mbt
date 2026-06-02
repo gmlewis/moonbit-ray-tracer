@@ -4,23 +4,23 @@ struct TestShape {
 } derive(Debug, Eq)
 
 ///|
-impl Object for TestShape with bounds(_self) {
+impl Object for TestShape with fn bounds(_self) {
   @lib.Bounds::new()
 }
 
 ///|
-impl Object for TestShape with local_intersect(self, ray) {
+impl Object for TestShape with fn local_intersect(self, ray) {
   self.saved_ray = ray
   []
 }
 
 ///|
-impl Object for TestShape with local_normal_at(_self, point) -> Tuple {
+impl Object for TestShape with fn local_normal_at(_self, point) -> Tuple {
   vector(point.x, point.y, point.z)
 }
 
 ///|
-impl Object for TestShape with clone(self) {
+impl Object for TestShape with fn clone(self) {
   TestShape::{
     saved_ray: {
       origin: point(
@@ -43,7 +43,7 @@ pub fn TestShape::to_string(self : TestShape) -> String {
 }
 
 ///|
-pub impl Show for TestShape with output(self, logger) {
+pub impl Show for TestShape with fn output(self, logger) {
   logger.write_string(self.to_string())
 }
 

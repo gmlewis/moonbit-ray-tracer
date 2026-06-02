@@ -20,12 +20,12 @@ pub fn glass_sphere() -> Shape {
 }
 
 ///|
-pub impl Show for Sphere with output(_self, logger) {
+pub impl Show for Sphere with fn output(_self, logger) {
   logger.write_string("sphere()")
 }
 
 ///|
-pub impl Object for Sphere with local_intersect(_self, ray) {
+pub impl Object for Sphere with fn local_intersect(_self, ray) {
   // the vector from the sphere's center to the ray origin
   // (the sphere is centered at the world origin)
   let sphere_to_ray = ray.origin - point(0, 0, 0)
@@ -43,18 +43,18 @@ pub impl Object for Sphere with local_intersect(_self, ray) {
 }
 
 ///|
-pub impl Object for Sphere with local_normal_at(_self, local_point) {
+pub impl Object for Sphere with fn local_normal_at(_self, local_point) {
   local_point - point(0, 0, 0)
 }
 
 ///|
-pub impl Object for Sphere with bounds(_self) {
+pub impl Object for Sphere with fn bounds(_self) {
   let min = point(-1, -1, -1)
   let max = point(1, 1, 1)
   { min, max }
 }
 
 ///|
-pub impl Object for Sphere with clone(_self) {
+pub impl Object for Sphere with fn clone(_self) {
   Sphere::{  }
 }

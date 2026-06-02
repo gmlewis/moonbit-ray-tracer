@@ -5,7 +5,7 @@ pub suberror SceneParseError {
 } derive(Eq)
 
 ///|
-pub impl Show for SceneParseError with output(self, logger) {
+pub impl Show for SceneParseError with fn output(self, logger) {
   match self {
     SceneParseError(msg) => logger.write_string(msg)
   }

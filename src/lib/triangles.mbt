@@ -48,7 +48,7 @@ pub fn Triangle::to_string(self : Triangle) -> String {
 }
 
 ///|
-pub impl Show for Triangle with output(self, logger) {
+pub impl Show for Triangle with fn output(self, logger) {
   logger.write_string(self.to_string())
 }
 

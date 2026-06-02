@@ -115,27 +115,27 @@ pub fn ConstPattern::to_string(self : ConstPattern) -> String {
 }
 
 ///|
-pub impl Show for ConstPattern with output(self, logger) {
+pub impl Show for ConstPattern with fn output(self, logger) {
   logger.write_string(self.to_string())
 }
 
 ///|
-pub impl PatternTrait for ConstPattern with clone(self) {
+pub impl PatternTrait for ConstPattern with fn clone(self) {
   const_pattern(self.c)
 }
 
 ///|
-pub impl PatternTrait for ConstPattern with pattern_at(self, _p) {
+pub impl PatternTrait for ConstPattern with fn pattern_at(self, _p) {
   self.c
 }
 
 ///|
-pub impl PatternTrait for ConstPattern with uv_at(self, _u, _v) {
+pub impl PatternTrait for ConstPattern with fn uv_at(self, _u, _v) {
   self.c
 }
 
 ///|
-pub impl PatternTrait for ConstPattern with pattern_at_with_info(
+pub impl PatternTrait for ConstPattern with fn pattern_at_with_info(
   self,
   p,
   _normal,
@@ -161,23 +161,23 @@ pub fn UVCoordPattern::to_string(_self : UVCoordPattern) -> String {
 }
 
 ///|
-pub impl Show for UVCoordPattern with output(self, logger) {
+pub impl Show for UVCoordPattern with fn output(self, logger) {
   logger.write_string(self.to_string())
 }
 
 ///|
-pub impl PatternTrait for UVCoordPattern with clone(_self) {
+pub impl PatternTrait for UVCoordPattern with fn clone(_self) {
   uv_coord_pattern()
 }
 
 ///|
-pub impl PatternTrait for UVCoordPattern with pattern_at(self, p) {
+pub impl PatternTrait for UVCoordPattern with fn pattern_at(self, p) {
   // Treat object point as UV-like for convenience.
   self.uv_at(p.x, p.y)
 }
 
 ///|
-pub impl PatternTrait for UVCoordPattern with uv_at(_self, u, v) {
+pub impl PatternTrait for UVCoordPattern with fn uv_at(_self, u, v) {
   // Clamp to [0,1] so colors stay sane.
   let u = if u < 0.0 { 0.0 } else if u > 1.0 { 1.0 } else { u }
   let v = if v < 0.0 { 0.0 } else if v > 1.0 { 1.0 } else { v }
@@ -185,7 +185,7 @@ pub impl PatternTrait for UVCoordPattern with uv_at(_self, u, v) {
 }
 
 ///|
-pub impl PatternTrait for UVCoordPattern with pattern_at_with_info(
+pub impl PatternTrait for UVCoordPattern with fn pattern_at_with_info(
   self,
   p,
   _normal,

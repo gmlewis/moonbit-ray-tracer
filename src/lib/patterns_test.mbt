@@ -74,7 +74,7 @@ pub fn TestPattern::to_string(_self : TestPattern) -> String {
 }
 
 ///|
-impl PatternTrait for TestPattern with clone(_self) {
+impl PatternTrait for TestPattern with fn clone(_self) {
   test_pattern()
 }
 
@@ -84,7 +84,7 @@ impl PatternTrait for TestPattern with clone(_self) {
 // }
 
 ///|
-impl Show for TestPattern with output(self, logger) {
+impl Show for TestPattern with fn output(self, logger) {
   logger.write_string(self.to_string())
 }
 
@@ -94,17 +94,17 @@ fn test_pattern() -> Pattern {
 }
 
 ///|
-impl PatternTrait for TestPattern with pattern_at(_self, point) {
+impl PatternTrait for TestPattern with fn pattern_at(_self, point) {
   color(point.x, point.y, point.z)
 }
 
 ///|
-impl PatternTrait for TestPattern with uv_at(_self, _u, _v) {
+impl PatternTrait for TestPattern with fn uv_at(_self, _u, _v) {
   color(0, 0, 0)
 }
 
 ///|
-impl PatternTrait for TestPattern with pattern_at_with_info(
+impl PatternTrait for TestPattern with fn pattern_at_with_info(
   self,
   point,
   _normal,

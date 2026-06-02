@@ -12,12 +12,12 @@ pub fn plane() -> Shape {
 }
 
 ///|
-pub impl Show for Plane with output(_self, logger) {
+pub impl Show for Plane with fn output(_self, logger) {
   logger.write_string("plane()")
 }
 
 ///|
-pub impl Object for Plane with local_intersect(_self, ray) {
+pub impl Object for Plane with fn local_intersect(_self, ray) {
   if ray.direction.y.abs() < EPSILON {
     return []
   }
@@ -26,18 +26,18 @@ pub impl Object for Plane with local_intersect(_self, ray) {
 }
 
 ///|
-pub impl Object for Plane with local_normal_at(_self, _local_point) {
+pub impl Object for Plane with fn local_normal_at(_self, _local_point) {
   vector(0, 1, 0)
 }
 
 ///|
-pub impl Object for Plane with bounds(_self) {
+pub impl Object for Plane with fn bounds(_self) {
   let min = point(@double.neg_infinity, 0, @double.neg_infinity)
   let max = point(@double.infinity, 0, @double.infinity)
   { min, max }
 }
 
 ///|
-pub impl Object for Plane with clone(_self) {
+pub impl Object for Plane with fn clone(_self) {
   Plane::{  }
 }

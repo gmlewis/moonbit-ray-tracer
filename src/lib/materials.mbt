@@ -5,7 +5,7 @@ pub(all) enum LightingMode {
 } derive(Debug, Eq)
 
 ///|
-pub impl Show for LightingMode with output(self, logger) {
+pub impl Show for LightingMode with fn output(self, logger) {
   logger.write_string(self.to_string())
 }
 
@@ -39,7 +39,7 @@ pub(all) struct Material {
 } derive(Debug, Eq)
 
 ///|
-pub impl Show for Material with output(self, logger) {
+pub impl Show for Material with fn output(self, logger) {
   logger.write_string(self.to_string())
 }
 
@@ -159,7 +159,7 @@ pub(all) struct MaterialLayer {
 } derive(Debug, Eq)
 
 ///|
-pub impl Show for MaterialLayer with output(self, logger) {
+pub impl Show for MaterialLayer with fn output(self, logger) {
   logger.write_string(self.to_string())
 }
 

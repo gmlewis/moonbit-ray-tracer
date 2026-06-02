@@ -20,7 +20,7 @@ pub fn cylinder(
 }
 
 ///|
-pub impl Show for Cylinder with output(_self, logger) {
+pub impl Show for Cylinder with fn output(_self, logger) {
   logger.write_string("cylinder()")
 }
 
@@ -61,7 +61,7 @@ fn Cylinder::intersect_caps(
 }
 
 ///|
-pub impl Object for Cylinder with local_intersect(self, ray) {
+pub impl Object for Cylinder with fn local_intersect(self, ray) {
   let xs = []
   let a = ray.direction.x * ray.direction.x + ray.direction.z * ray.direction.z
   // ray is parallel to the y axis
@@ -100,7 +100,7 @@ pub impl Object for Cylinder with local_intersect(self, ray) {
 }
 
 ///|
-pub impl Object for Cylinder with local_normal_at(self, local_point) {
+pub impl Object for Cylinder with fn local_normal_at(self, local_point) {
   let dist = local_point.x * local_point.x + local_point.z * local_point.z
   if dist < 1 && local_point.y >= self.maximum - EPSILON {
     return vector(0, 1, 0)
@@ -112,14 +112,14 @@ pub impl Object for Cylinder with local_normal_at(self, local_point) {
 }
 
 ///|
-pub impl Object for Cylinder with bounds(self) {
+pub impl Object for Cylinder with fn bounds(self) {
   let min = point(-1, self.minimum, -1)
   let max = point(1, self.maximum, 1)
   { min, max }
 }
 
 ///|
-pub impl Object for Cylinder with clone(self) {
+pub impl Object for Cylinder with fn clone(self) {
   Cylinder::{
     minimum: self.minimum,
     maximum: self.maximum,
