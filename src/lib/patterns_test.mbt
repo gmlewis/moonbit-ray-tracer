@@ -117,6 +117,12 @@ impl PatternTrait for TestPattern with fn pattern_at_with_info(
 }
 
 ///|
+extend TestPattern with @gmlewis/ray-tracer/lib.PatternTrait::{
+  pattern_at,
+  uv_at,
+}
+
+///|
 test "The default pattern transformation (p.182)" {
   let pattern = test_pattern()
   assert_eq(pattern.transform, mat4ident())

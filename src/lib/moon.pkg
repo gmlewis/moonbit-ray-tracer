@@ -1,5 +1,5 @@
 import {
-  "bob/toml",
+  "bobzhang/toml",
   "gmlewis/base64",
   "gmlewis/flate",
   "gmlewis/fonts",

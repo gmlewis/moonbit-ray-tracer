@@ -28,7 +28,7 @@ pub fn parse_obj_file(buf : String) -> ObjFile raise ParserError {
   let mut ignored_lines = 0
   let vertices = [point(0, 0, 0)] // vertices[0] is unused
   let normals = [vector(0, 0, 0)] // normals[0] is unused
-  let named_groups = {}
+  let named_groups = Map([])
 
   // helper functions
   let add_vertex = fn(args : Array[Double]) -> Unit raise ParserError {

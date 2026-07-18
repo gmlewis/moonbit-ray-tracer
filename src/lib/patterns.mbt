@@ -18,7 +18,7 @@ pub(open) trait PatternTrait: Debug + Show {
 pub impl Show for Pattern with fn output(self, logger) {
   logger.write_string(
     "{pattern: " +
-    self.pattern.to_string() +
+    Show::to_string(self.pattern) +
     ", transform: " +
     self.transform.to_string() +
     ", inv_transform: " +

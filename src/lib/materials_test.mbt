@@ -226,6 +226,9 @@ impl PatternTrait for RampX with fn pattern_at_with_info(self, p, _n, uv) {
 }
 
 ///|
+extend RampX with @gmlewis/ray-tracer/lib.PatternTrait::{pattern_at, uv_at}
+
+///|
 test "Stripes with an object transformation (p.179)" {
   let object = sphere()
   object.set_transform(scaling(2, 2, 2))

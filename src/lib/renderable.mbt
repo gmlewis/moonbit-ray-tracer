@@ -12,7 +12,7 @@ pub(all) enum Renderable {
 ///|
 pub fn Renderable::to_string(self : Renderable) -> String {
   match self {
-    Object(object) => object.to_string()
+    Object(object) => Show::to_string(object)
     Group(group) => group.to_string()
     Triangle(triangle) => triangle.to_string()
     SmoothTriangle(triangle) => triangle.to_string()

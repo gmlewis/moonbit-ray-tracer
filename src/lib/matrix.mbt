@@ -253,27 +253,27 @@ pub fn Matrix::dump(self : Matrix) -> String {
   match nrows {
     2 =>
       (
-        #|mat2(
+        $|mat2(
         $|\{f(self[0][0])}, \{f(self[0][1])}, // row 0
         $|\{f(self[1][0])}, \{f(self[1][1])}, // row 1
-        #|)
+        $|)
       )
     3 =>
       (
-        #|mat3(
+        $|mat3(
         $|\{f(self[0][0])}, \{f(self[0][1])}, \{f(self[0][2])}, // row 0
         $|\{f(self[1][0])}, \{f(self[1][1])}, \{f(self[1][2])}, // row 1
         $|\{f(self[2][0])}, \{f(self[2][1])}, \{f(self[2][2])}, // row 2
-        #|)
+        $|)
       )
     4 =>
       (
-        #|mat4(
+        $|mat4(
         $|\{f(self[0][0])}, \{f(self[0][1])}, \{f(self[0][2])}, \{f(self[0][3])}, // row 0
         $|\{f(self[1][0])}, \{f(self[1][1])}, \{f(self[1][2])}, \{f(self[1][3])}, // row 1
         $|\{f(self[2][0])}, \{f(self[2][1])}, \{f(self[2][2])}, \{f(self[2][3])}, // row 2
         $|\{f(self[3][0])}, \{f(self[3][1])}, \{f(self[3][2])}, \{f(self[3][3])}, // row 3
-        #|)
+        $|)
       )
     _ => "unsupported nrows=\{nrows}"
   }

@@ -1,18 +1,18 @@
 name = "gmlewis/ray-tracer"
 
-version = "0.10.42"
+version = "0.10.43"
 
 import {
-  "bob/toml@0.1.6",
-  "gmlewis/base64@0.16.10",
-  "gmlewis/flate@0.36.9",
-  "gmlewis/fonts@0.19.11",
-  "gmlewis/gzip@0.34.9",
-  "gmlewis/image@0.17.9",
-  "gmlewis/io@0.23.12",
-  "moonbitlang/async@0.19.2",
+  "gmlewis/base64@0.16.11",
+  "gmlewis/flate@0.36.10",
+  "gmlewis/fonts@0.19.12",
+  "gmlewis/gzip@0.34.10",
+  "gmlewis/image@0.17.10",
+  "gmlewis/io@0.23.13",
+  "moonbitlang/async@0.20.2",
   "moonbitlang/x@0.4.38",
   "TheWaWaR/clap@0.2.6",
+  "bobzhang/toml@0.4.1",
 }
 
 readme = "README.md"
@@ -27,6 +27,4 @@ description = ""
 
 preferred_target = "native"
 
-options(
-  source: "src",
-)
+source = "src"
