@@ -2,12 +2,14 @@
 pub(all) struct MatrixRow(Array[Double]) derive(Debug)
 
 ///|
-pub fn MatrixRow::op_get(self : MatrixRow, col : Int) -> Double {
+#alias("_[_]")
+pub fn MatrixRow::get(self : MatrixRow, col : Int) -> Double {
   self.0[col]
 }
 
 ///|
-pub fn MatrixRow::op_set(self : MatrixRow, col : Int, v : Double) -> Unit {
+#alias("_[_]=_")
+pub fn MatrixRow::set(self : MatrixRow, col : Int, v : Double) -> Unit {
   self.0[col] = v
 }
 
@@ -18,7 +20,7 @@ pub(all) struct Matrix(Array[MatrixRow]) derive(Debug)
 pub fn Matrix::to_string(self : Matrix) -> String {
   let nrows = self.num_rows()
   let ncols = self.num_cols()
-  guard nrows == ncols
+  guard! nrows == ncols
   let rows = StringBuilder::new()
   for row in 0..<nrows {
     for col in 0..<ncols {
@@ -37,7 +39,8 @@ pub impl Show for Matrix with fn output(self, logger) {
 }
 
 ///|
-pub fn Matrix::op_get(self : Matrix, row : Int) -> MatrixRow {
+#alias("_[_]")
+pub fn Matrix::get(self : Matrix, row : Int) -> MatrixRow {
   self.0[row]
 }
 
@@ -115,7 +118,7 @@ pub fn Matrix::clone(self : Matrix) -> Matrix {
 pub fn Matrix::copy(self : Matrix, other : Matrix) -> Unit {
   let nrows = self.num_rows()
   let ncols = self.num_cols()
-  guard other.num_rows() == nrows && other.num_cols() == ncols
+  guard! other.num_rows() == nrows && other.num_cols() == ncols
   for row in 0..<nrows {
     for col in 0..<ncols {
       self[row][col] = other[row][col]
@@ -154,7 +157,7 @@ pub fn Matrix::mul_tuple(self : Matrix, o : Tuple) -> Tuple {
 pub fn Matrix::determinant(self : Matrix) -> Double {
   let nrows = self.num_rows()
   let ncols = self.num_cols()
-  guard nrows == ncols
+  guard! nrows == ncols
   if nrows == 2 {
     return self[0][0] * self[1][1] - self[0][1] * self[1][0]
   }
@@ -169,7 +172,7 @@ pub fn Matrix::determinant(self : Matrix) -> Double {
 pub fn Matrix::submatrix(self : Matrix, row : Int, col : Int) -> Matrix {
   let nrows = self.num_rows()
   let ncols = self.num_cols()
-  guard nrows == ncols
+  guard! nrows == ncols
   let result = Array::new(capacity=nrows - 1)
   for r in 0..<nrows {
     if r == row {
@@ -217,7 +220,7 @@ pub fn Matrix::inverse(self : Matrix) -> Matrix {
   }
   let nrows = self.num_rows()
   let ncols = self.num_cols()
-  guard nrows == ncols
+  guard! nrows == ncols
   let inv = self.clone()
   for row in 0..<nrows {
     for col in 0..<ncols {

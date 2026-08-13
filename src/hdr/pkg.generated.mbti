@@ -28,4 +28,3 @@ pub fn RGBE::to_rgb(Self) -> (Double, Double, Double)
 // Type aliases
 
 // Traits
-

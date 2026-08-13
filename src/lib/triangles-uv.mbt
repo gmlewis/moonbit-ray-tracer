@@ -254,7 +254,7 @@ pub fn TriangleUV::clone(self : TriangleUV) -> TriangleUV {
 
 ///|
 pub fn TriangleUV::to_string(self : TriangleUV) -> String {
-  "triangle_uv(\{self.p1}, \{self.p2}, \{self.p3}, \{to_repr(self.uv1)}, \{to_repr(self.uv2)}, \{to_repr(self.uv3)})"
+  "triangle_uv(\{self.p1}, \{self.p2}, \{self.p3}, \{Repr(self.uv1)}, \{Repr(self.uv2)}, \{Repr(self.uv3)})"
 }
 
 ///|

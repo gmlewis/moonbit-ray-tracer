@@ -276,7 +276,7 @@ pub fn SmoothTriangleUV::clone(self : SmoothTriangleUV) -> SmoothTriangleUV {
 
 ///|
 pub fn SmoothTriangleUV::to_string(self : SmoothTriangleUV) -> String {
-  "smooth_triangle_uv(\{self.p1}, \{self.p2}, \{self.p3}, \{self.n1}, \{self.n2}, \{self.n3}, \{to_repr(self.uv1)}, \{to_repr(self.uv2)}, \{to_repr(self.uv3)})"
+  "smooth_triangle_uv(\{self.p1}, \{self.p2}, \{self.p3}, \{self.n1}, \{self.n2}, \{self.n3}, \{Repr(self.uv1)}, \{Repr(self.uv2)}, \{Repr(self.uv3)})"
 }
 
 ///|

@@ -18,7 +18,7 @@ pub suberror LoaderError {
 /// instructions on how to generate the font.
 pub async fn load_font(font_name : String) -> Font raise LoaderError {
   let local_font_path = "all-fonts/\{font_name}.json.gz"
-  let env_dir = @sys.get_env_var("MOONBIT_FONTS_DIR")
+  let env_dir = @env.get_env_var("MOONBIT_FONTS_DIR")
   let env_font_path = match env_dir {
     Some(dir) =>
       if dir.has_suffix("/") {
@@ -88,7 +88,7 @@ pub async fn load_font(font_name : String) -> Font raise LoaderError {
     font
   } catch {
     @json.JsonDecodeError(e) =>
-      raise LoaderError("JSON decode error: \{to_repr(e)}")
+      raise LoaderError("JSON decode error: \{Repr(e)}")
     e => raise LoaderError("Unexpected error loading font: \{e}")
   }
 }

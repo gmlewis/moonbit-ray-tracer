@@ -596,8 +596,9 @@ pub(all) struct Intersections {
   hit : Intersection?
 }
 pub fn Intersections::from_ts(Array[Double], Shape) -> Self
+#alias("_[_]")
+pub fn Intersections::get(Self, Int) -> Intersection
 pub fn Intersections::hit(Self) -> Intersection?
-pub fn Intersections::op_get(Self, Int) -> Intersection
 pub fn Intersections::to_ts(Self) -> Array[Double]
 
 pub(all) struct InvertPattern {
@@ -695,13 +696,14 @@ pub fn Matrix::cofactor(Self, Int, Int) -> Double
 pub fn Matrix::copy(Self, Self) -> Unit
 pub fn Matrix::determinant(Self) -> Double
 pub fn Matrix::dump(Self) -> String
+#alias("_[_]")
+pub fn Matrix::get(Self, Int) -> MatrixRow
 pub fn Matrix::inverse(Self) -> Self
 pub fn Matrix::is_invertible(Self) -> Bool
 pub fn Matrix::minor(Self, Int, Int) -> Double
 pub fn Matrix::mul_tuple(Self, Tuple) -> Tuple
 pub fn Matrix::num_cols(Self) -> Int
 pub fn Matrix::num_rows(Self) -> Int
-pub fn Matrix::op_get(Self, Int) -> MatrixRow
 pub fn Matrix::rotate_x(Self, Double) -> Self
 pub fn Matrix::rotate_y(Self, Double) -> Self
 pub fn Matrix::rotate_z(Self, Double) -> Self
@@ -716,8 +718,10 @@ pub impl Mul for Matrix
 pub impl Show for Matrix
 
 pub(all) struct MatrixRow(Array[Double]) derive(@debug.Debug)
-pub fn MatrixRow::op_get(Self, Int) -> Double
-pub fn MatrixRow::op_set(Self, Int, Double) -> Unit
+#alias("_[_]")
+pub fn MatrixRow::get(Self, Int) -> Double
+#alias("_[_]=_")
+pub fn MatrixRow::set(Self, Int, Double) -> Unit
 
 pub(all) struct MixPattern {
   a : Pattern
@@ -1018,15 +1022,17 @@ pub fn Tuple::abs(Self) -> Self
 pub fn Tuple::cross(Self, Self) -> Self
 pub fn Tuple::div_scalar(Self, Double) -> Self
 pub fn Tuple::dot(Self, Self) -> Double
+#alias("_[_]")
+pub fn Tuple::get(Self, Int) -> Double
 pub fn Tuple::is_point(Self) -> Bool
 pub fn Tuple::is_vector(Self) -> Bool
 pub fn Tuple::magnitude(Self) -> Double
 pub fn Tuple::mul_scalar(Self, Double) -> Self
 pub fn Tuple::normalize(Self) -> Self
 pub fn Tuple::op_div(Self, Self) -> Self
-pub fn Tuple::op_get(Self, Int) -> Double
-pub fn Tuple::op_set(Self, Int, Double) -> Unit
 pub fn Tuple::reflect(Self, Self) -> Self
+#alias("_[_]=_")
+pub fn Tuple::set(Self, Int, Double) -> Unit
 pub fn Tuple::to_string(Self) -> String
 pub impl Add for Tuple
 pub impl Eq for Tuple
@@ -1121,4 +1127,3 @@ pub(open) trait PatternTrait : @debug.Debug + Show {
   fn pattern_at_with_info(Self, Tuple, Tuple, (Double, Double)?) -> Color
   fn clone(Self) -> Pattern
 }
-

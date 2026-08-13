@@ -18,7 +18,7 @@ async test "parse_scene_file loads graphics assets" {
 ///|
 async test "parse_scene_file loads TOML-native text graphics (if fonts available)" {
   // Keep CI/clean checkouts green: skip if fonts aren't configured.
-  match @sys.get_env_var("MOONBIT_FONTS_DIR") {
+  match @env.get_env_var("MOONBIT_FONTS_DIR") {
     None => return
     Some(_) => ()
   }
@@ -40,7 +40,7 @@ async test "parse_scene_file loads TOML-native text graphics (if fonts available
 
 ///|
 async test "parse_scene_file supports text_mask pattern shortcut (if fonts available)" {
-  match @sys.get_env_var("MOONBIT_FONTS_DIR") {
+  match @env.get_env_var("MOONBIT_FONTS_DIR") {
     None => return
     Some(_) => ()
   }

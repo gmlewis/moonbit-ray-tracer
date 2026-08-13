@@ -99,7 +99,8 @@ pub fn intersections(xs : Array[Intersection]) -> Intersections {
 // }
 
 ///|
-pub fn Intersections::op_get(self : Intersections, i : Int) -> Intersection {
+#alias("_[_]")
+pub fn Intersections::get(self : Intersections, i : Int) -> Intersection {
   self.xs[i]
 }
 
