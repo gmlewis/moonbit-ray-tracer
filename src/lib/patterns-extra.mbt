@@ -16,6 +16,16 @@ pub impl Show for StripePattern with fn output(self, logger) {
 }
 
 ///|
+
+///|
+pub extend StripePattern with PatternTrait::{
+  pattern_at,
+  uv_at,
+  pattern_at_with_info,
+  clone,
+}
+
+///|
 pub impl PatternTrait for StripePattern with fn clone(self) {
   stripe_pattern(self.colors)
 }
@@ -82,6 +92,16 @@ pub fn GradientPattern::to_string(self : GradientPattern) -> String {
 ///|
 pub impl Show for GradientPattern with fn output(self, logger) {
   logger.write_string(self.to_string())
+}
+
+///|
+
+///|
+pub extend GradientPattern with PatternTrait::{
+  pattern_at,
+  uv_at,
+  pattern_at_with_info,
+  clone,
 }
 
 ///|
@@ -156,6 +176,16 @@ pub impl Show for RingPattern with fn output(self, logger) {
 }
 
 ///|
+
+///|
+pub extend RingPattern with PatternTrait::{
+  pattern_at,
+  uv_at,
+  pattern_at_with_info,
+  clone,
+}
+
+///|
 pub impl PatternTrait for RingPattern with fn clone(self) {
   ring_pattern(self.colors)
 }
@@ -214,6 +244,16 @@ pub fn GradientRingPattern::to_string(self : GradientRingPattern) -> String {
 ///|
 pub impl Show for GradientRingPattern with fn output(self, logger) {
   logger.write_string(self.to_string())
+}
+
+///|
+
+///|
+pub extend GradientRingPattern with PatternTrait::{
+  pattern_at,
+  uv_at,
+  pattern_at_with_info,
+  clone,
 }
 
 ///|
@@ -285,6 +325,16 @@ pub impl Show for CheckersPattern with fn output(self, logger) {
 }
 
 ///|
+
+///|
+pub extend CheckersPattern with PatternTrait::{
+  pattern_at,
+  uv_at,
+  pattern_at_with_info,
+  clone,
+}
+
+///|
 pub impl PatternTrait for CheckersPattern with fn clone(self) {
   checkers_pattern(self.colors)
 }
@@ -348,6 +398,16 @@ pub(all) struct Texture {
 ///|
 pub impl Show for Texture with fn output(_self, logger) {
   logger.write_string("texture()")
+}
+
+///|
+
+///|
+pub extend Texture with PatternTrait::{
+  pattern_at,
+  uv_at,
+  pattern_at_with_info,
+  clone,
 }
 
 ///|
@@ -417,6 +477,16 @@ pub fn GradientCheckersPattern::to_string(
 ///|
 pub impl Show for GradientCheckersPattern with fn output(self, logger) {
   logger.write_string(self.to_string())
+}
+
+///|
+
+///|
+pub extend GradientCheckersPattern with PatternTrait::{
+  pattern_at,
+  uv_at,
+  pattern_at_with_info,
+  clone,
 }
 
 ///|
@@ -524,6 +594,16 @@ pub impl Show for NoisePattern with fn output(self, logger) {
 }
 
 ///|
+
+///|
+pub extend NoisePattern with PatternTrait::{
+  pattern_at,
+  uv_at,
+  pattern_at_with_info,
+  clone,
+}
+
+///|
 pub impl PatternTrait for NoisePattern with fn clone(self) {
   noise_pattern(seed=self.seed, scale=self.scale)
 }
@@ -571,6 +651,16 @@ pub impl Show for FbmPattern with fn output(self, logger) {
   logger.write_string(
     "fbm(seed=\{self.seed}, scale=\{self.scale}, octaves=\{self.octaves})",
   )
+}
+
+///|
+
+///|
+pub extend FbmPattern with PatternTrait::{
+  pattern_at,
+  uv_at,
+  pattern_at_with_info,
+  clone,
 }
 
 ///|
@@ -640,6 +730,16 @@ pub(all) struct MarblePattern {
 ///|
 pub impl Show for MarblePattern with fn output(_self, logger) {
   logger.write_string("marble(...) ")
+}
+
+///|
+
+///|
+pub extend MarblePattern with PatternTrait::{
+  pattern_at,
+  uv_at,
+  pattern_at_with_info,
+  clone,
 }
 
 ///|
@@ -721,6 +821,16 @@ pub(all) struct WoodPattern {
 ///|
 pub impl Show for WoodPattern with fn output(_self, logger) {
   logger.write_string("wood(...) ")
+}
+
+///|
+
+///|
+pub extend WoodPattern with PatternTrait::{
+  pattern_at,
+  uv_at,
+  pattern_at_with_info,
+  clone,
 }
 
 ///|
@@ -831,6 +941,16 @@ pub impl Show for VoronoiPattern with fn output(self, logger) {
   logger.write_string(
     "voronoi(seed=\{self.seed}, scale=\{self.scale}, mode=\{self.mode})",
   )
+}
+
+///|
+
+///|
+pub extend VoronoiPattern with PatternTrait::{
+  pattern_at,
+  uv_at,
+  pattern_at_with_info,
+  clone,
 }
 
 ///|
@@ -1564,6 +1684,16 @@ pub impl Show for InvertPattern with fn output(_self, logger) {
 }
 
 ///|
+
+///|
+pub extend InvertPattern with PatternTrait::{
+  pattern_at,
+  uv_at,
+  pattern_at_with_info,
+  clone,
+}
+
+///|
 pub impl PatternTrait for InvertPattern with fn clone(self) {
   invert_pattern(self.pattern.clone())
 }
@@ -1607,6 +1737,16 @@ pub(all) struct MixPattern {
 ///|
 pub impl Show for MixPattern with fn output(_self, logger) {
   logger.write_string("mix(...) ")
+}
+
+///|
+
+///|
+pub extend MixPattern with PatternTrait::{
+  pattern_at,
+  uv_at,
+  pattern_at_with_info,
+  clone,
 }
 
 ///|
@@ -1655,6 +1795,16 @@ pub(all) struct WarpPattern {
 ///|
 pub impl Show for WarpPattern with fn output(_self, logger) {
   logger.write_string("warp(...) ")
+}
+
+///|
+
+///|
+pub extend WarpPattern with PatternTrait::{
+  pattern_at,
+  uv_at,
+  pattern_at_with_info,
+  clone,
 }
 
 ///|

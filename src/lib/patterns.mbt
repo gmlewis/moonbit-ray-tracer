@@ -35,6 +35,14 @@ pub fn Pattern::new(pattern : &PatternTrait) -> Pattern {
 }
 
 ///|
+pub extend Pattern with PatternTrait::{
+  pattern_at,
+  uv_at,
+  pattern_at_with_info,
+  clone,
+}
+
+///|
 pub impl PatternTrait for Pattern with fn pattern_at(self, point) {
   self.pattern.pattern_at(point)
 }

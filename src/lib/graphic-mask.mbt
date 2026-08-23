@@ -23,6 +23,16 @@ pub impl Show for GraphicMaskPattern with fn output(_self, logger) {
 }
 
 ///|
+
+///|
+pub extend GraphicMaskPattern with PatternTrait::{
+  pattern_at,
+  uv_at,
+  pattern_at_with_info,
+  clone,
+}
+
+///|
 pub impl PatternTrait for GraphicMaskPattern with fn clone(self) {
   graphic_mask_pattern(
     self.graphic.clone(),

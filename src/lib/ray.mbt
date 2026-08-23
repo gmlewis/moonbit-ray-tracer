@@ -11,6 +11,11 @@ pub fn ray(origin : Tuple, direction : Tuple) -> Ray {
 }
 
 ///|
+
+///|
+pub extend Ray with Show::{to_string}
+
+///|
 pub impl Show for Ray with fn to_string(self) {
   "ray(\{self.origin}, \{self.direction})"
 }

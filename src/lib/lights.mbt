@@ -12,6 +12,11 @@ pub(all) struct Light {
 } derive(Debug, Eq)
 
 ///|
+
+///|
+pub extend Light with Show::{to_string}
+
+///|
 pub impl Show for Light with fn output(self, logger) {
   logger.write_string(self.to_string())
 }

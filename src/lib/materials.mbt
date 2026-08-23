@@ -5,6 +5,11 @@ pub(all) enum LightingMode {
 } derive(Debug, Eq)
 
 ///|
+
+///|
+pub extend LightingMode with Show::{to_string}
+
+///|
 pub impl Show for LightingMode with fn output(self, logger) {
   logger.write_string(self.to_string())
 }
@@ -37,6 +42,11 @@ pub(all) struct Material {
   mut roughness_pattern : Pattern?
   mut lighting_mode : LightingMode
 } derive(Debug, Eq)
+
+///|
+
+///|
+pub extend Material with Show::{to_string}
 
 ///|
 pub impl Show for Material with fn output(self, logger) {
@@ -157,6 +167,11 @@ pub(all) struct MaterialLayer {
   mask : Pattern
   opacity : Double
 } derive(Debug, Eq)
+
+///|
+
+///|
+pub extend MaterialLayer with Show::{to_string}
 
 ///|
 pub impl Show for MaterialLayer with fn output(self, logger) {

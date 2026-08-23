@@ -120,6 +120,16 @@ pub impl Show for ConstPattern with fn output(self, logger) {
 }
 
 ///|
+
+///|
+pub extend ConstPattern with PatternTrait::{
+  pattern_at,
+  uv_at,
+  pattern_at_with_info,
+  clone,
+}
+
+///|
 pub impl PatternTrait for ConstPattern with fn clone(self) {
   const_pattern(self.c)
 }
@@ -163,6 +173,16 @@ pub fn UVCoordPattern::to_string(_self : UVCoordPattern) -> String {
 ///|
 pub impl Show for UVCoordPattern with fn output(self, logger) {
   logger.write_string(self.to_string())
+}
+
+///|
+
+///|
+pub extend UVCoordPattern with PatternTrait::{
+  pattern_at,
+  uv_at,
+  pattern_at_with_info,
+  clone,
 }
 
 ///|

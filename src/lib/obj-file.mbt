@@ -15,6 +15,11 @@ suberror ParserError {
 } derive(Eq)
 
 ///|
+
+///|
+pub extend ParserError with Show::{to_string}
+
+///|
 pub impl Show for ParserError with fn output(self, logger) {
   match self {
     ParserError(msg) => logger.write_string(msg)
