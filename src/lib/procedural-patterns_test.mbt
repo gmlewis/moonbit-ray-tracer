@@ -219,7 +219,7 @@ pub impl PatternTrait for UVCoordPattern with fn pattern_at_with_info(
 
 ///|
 fn uv_coord_pattern() -> Pattern {
-  Pattern::new(UVCoordPattern::{  })
+  Pattern::new(UVCoordPattern::{ })
 }
 
 ///|

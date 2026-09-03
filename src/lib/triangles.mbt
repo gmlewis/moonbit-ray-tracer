@@ -16,7 +16,7 @@ pub fn triangle(p1 : Tuple, p2 : Tuple, p3 : Tuple) -> Shape {
   let e1 = p2 - p1
   let e2 = p3 - p1
   let normal = e2.cross(e1).normalize()
-  Shape::new_triangle({ p1, p2, p3, e1, e2, normal, bounds })
+  Shape::new_triangle({ p1, p2, p3, e1, e2, normal, bounds, })
 }
 
 ///|

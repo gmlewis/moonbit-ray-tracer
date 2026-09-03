@@ -122,7 +122,7 @@ pub fn parse_obj_file(buf : String) -> ObjFile raise ParserError {
   }
 
   //
-  { default_group, ignored_lines, vertices, normals, named_groups }
+  { default_group, ignored_lines, vertices, normals, named_groups, }
 }
 
 ///|

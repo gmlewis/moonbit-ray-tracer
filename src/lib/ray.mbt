@@ -7,7 +7,7 @@ pub(all) struct Ray {
 
 ///|
 pub fn ray(origin : Tuple, direction : Tuple) -> Ray {
-  { origin, direction }
+  { origin, direction, }
 }
 
 ///|
@@ -39,5 +39,5 @@ pub fn Ray::position(self : Ray, t : Double) -> Tuple {
 pub fn Ray::transform(self : Ray, m : Matrix) -> Ray {
   let origin = m.mul_tuple(self.origin)
   let direction = m.mul_tuple(self.direction)
-  { origin, direction }
+  { origin, direction, }
 }

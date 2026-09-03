@@ -450,9 +450,9 @@ pub impl Eq for Texture with fn equal(self, other) {
 pub fn texture(canvas : Canvas, mapping? : &Mapping) -> Pattern {
   let m : &Mapping = match mapping {
     Some(m) => m
-    None => PlanarMapping::{  } as &Mapping
+    None => PlanarMapping::{ } as &Mapping
   }
-  Pattern::new(Texture::{ canvas, mapping: m })
+  Pattern::new(Texture::{ canvas, mapping: m, })
 }
 
 ///|
@@ -634,7 +634,7 @@ pub impl PatternTrait for NoisePattern with fn pattern_at_with_info(
 
 ///|
 pub fn noise_pattern(seed? : Int = 0, scale? : Double = 1.0) -> Pattern {
-  Pattern::new(NoisePattern::{ seed, scale })
+  Pattern::new(NoisePattern::{ seed, scale, })
 }
 
 ///|
@@ -712,7 +712,7 @@ pub fn fbm_pattern(
   lacunarity? : Double = 2.0,
   gain? : Double = 0.5,
 ) -> Pattern {
-  Pattern::new(FbmPattern::{ seed, scale, octaves, lacunarity, gain })
+  Pattern::new(FbmPattern::{ seed, scale, octaves, lacunarity, gain, })
 }
 
 ///|
@@ -1041,7 +1041,7 @@ pub fn voronoi_pattern(
   mode? : VoronoiMode = VoronoiMode::Distance,
   edge_scale? : Double = 12.0,
 ) -> Pattern {
-  Pattern::new(VoronoiPattern::{ seed, scale, jitter, mode, edge_scale })
+  Pattern::new(VoronoiPattern::{ seed, scale, jitter, mode, edge_scale, })
 }
 
 ///|
@@ -1325,7 +1325,7 @@ pub fn bias_gain_pattern(
   bias? : Double = 0.5,
   gain? : Double = 0.5,
 ) -> Pattern {
-  Pattern::new(BiasGainPattern::{ pattern, bias, gain })
+  Pattern::new(BiasGainPattern::{ pattern, bias, gain, })
 }
 
 ///|
@@ -1395,7 +1395,7 @@ pub fn contrast_pattern(
   contrast? : Double = 1.0,
   pivot? : Double = 0.5,
 ) -> Pattern {
-  Pattern::new(ContrastPattern::{ pattern, contrast, pivot })
+  Pattern::new(ContrastPattern::{ pattern, contrast, pivot, })
 }
 
 ///|
@@ -1547,7 +1547,7 @@ pub impl PatternTrait for PosterizePattern with fn pattern_at_with_info(
 
 ///|
 pub fn posterize_pattern(pattern : Pattern, steps? : Int = 4) -> Pattern {
-  Pattern::new(PosterizePattern::{ pattern, steps })
+  Pattern::new(PosterizePattern::{ pattern, steps, })
 }
 
 ///|
@@ -1599,7 +1599,7 @@ pub fn gradient_map_pattern(
   pattern : Pattern,
   colors : Array[Color],
 ) -> Pattern {
-  Pattern::new(GradientMapPattern::{ pattern, colors })
+  Pattern::new(GradientMapPattern::{ pattern, colors, })
 }
 
 ///|
@@ -1670,7 +1670,7 @@ pub fn triplanar_pattern(
   scale? : Double = 1.0,
   sharpness? : Double = 1.0,
 ) -> Pattern {
-  Pattern::new(TriplanarPattern::{ pattern, scale, sharpness })
+  Pattern::new(TriplanarPattern::{ pattern, scale, sharpness, })
 }
 
 ///|
@@ -1782,7 +1782,7 @@ pub impl PatternTrait for MixPattern with fn pattern_at_with_info(
 
 ///|
 pub fn mix_pattern(a : Pattern, b : Pattern, mask : Pattern) -> Pattern {
-  Pattern::new(MixPattern::{ a, b, mask: field(mask) })
+  Pattern::new(MixPattern::{ a, b, mask: field(mask), })
 }
 
 ///|
@@ -1852,5 +1852,5 @@ pub fn warp_pattern(
   warp : Pattern,
   amplitude? : Double = 0.25,
 ) -> Pattern {
-  Pattern::new(WarpPattern::{ base, warp: field(warp), amplitude })
+  Pattern::new(WarpPattern::{ base, warp: field(warp), amplitude, })
 }

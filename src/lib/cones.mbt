@@ -7,7 +7,7 @@ pub(all) struct Cone {
 } derive(Debug, Eq)
 
 ///|
-let _Cone : &Object = Cone::{ minimum: 0, maximum: 0, closed: false }
+let _Cone : &Object = Cone::{ minimum: 0, maximum: 0, closed: false, }
 
 ///|
 pub fn cone(
@@ -15,7 +15,7 @@ pub fn cone(
   maximum? : Double = @double.infinity,
   closed? : Bool = false,
 ) -> Shape {
-  let cone = Cone::{ minimum, maximum, closed }
+  let cone = Cone::{ minimum, maximum, closed, }
   Shape::new_object(cone)
 }
 
@@ -24,7 +24,7 @@ pub impl Object for Cone with fn bounds(self) {
   let r_max = @cmp.maximum(self.minimum.abs(), self.maximum.abs())
   let min = point(-r_max, self.minimum, -r_max)
   let max = point(r_max, self.maximum, r_max)
-  { min, max }
+  { min, max, }
 }
 
 ///|
@@ -133,5 +133,5 @@ pub impl Object for Cone with fn local_normal_at(self, local_point) {
 
 ///|
 pub impl Object for Cone with fn clone(self) {
-  Cone::{ minimum: self.minimum, maximum: self.maximum, closed: self.closed }
+  Cone::{ minimum: self.minimum, maximum: self.maximum, closed: self.closed, }
 }

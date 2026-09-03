@@ -3,11 +3,11 @@
 pub(all) struct Cube {} derive(Debug, Eq)
 
 ///|
-let _Cube : &Object = Cube::{  }
+let _Cube : &Object = Cube::{ }
 
 ///|
 pub fn cube() -> Shape {
-  let cube = Cube::{  }
+  let cube = Cube::{ }
   Shape::new_object(cube)
 }
 
@@ -70,10 +70,10 @@ pub impl Object for Cube with fn local_normal_at(_self, local_point) {
 pub impl Object for Cube with fn bounds(_self) {
   let min = point(-1, -1, -1)
   let max = point(1, 1, 1)
-  { min, max }
+  { min, max, }
 }
 
 ///|
 pub impl Object for Cube with fn clone(_self) {
-  Cube::{  }
+  Cube::{ }
 }

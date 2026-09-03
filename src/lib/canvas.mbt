@@ -15,7 +15,7 @@ pub fn canvas(width : Int, height : Int) -> Canvas {
   let red = Array::make(size, 0.0)
   let green = Array::make(size, 0.0)
   let blue = Array::make(size, 0.0)
-  { width, height, red, green, blue, exposure: 1.0, use_tone_mapping: false }
+  { width, height, red, green, blue, exposure: 1.0, use_tone_mapping: false, }
 }
 
 ///|
@@ -121,13 +121,13 @@ pub fn Canvas::to_ppm(self : Canvas) -> String {
   lines.push("255")
   let mut off = 0
   for _ in 0..<self.height {
-    let mut line = StringBuilder::new(size_hint=MAX_PPM_LINE_LENGTH)
+    let mut line = StringBuilder(size_hint=MAX_PPM_LINE_LENGTH)
     let mut len = 0
     let f = fn(v : Double) {
       let s = clamp2ppm(v, self.exposure, self.use_tone_mapping)
       if len + 1 + s.length() > MAX_PPM_LINE_LENGTH {
         lines.push(line.to_string())
-        line = StringBuilder::new(size_hint=MAX_PPM_LINE_LENGTH)
+        line = StringBuilder(size_hint=MAX_PPM_LINE_LENGTH)
         line.write_string(s)
         len = s.length()
       } else {

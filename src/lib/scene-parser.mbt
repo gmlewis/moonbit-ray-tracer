@@ -145,7 +145,7 @@ fn parse_scene_metadata(
   let name = get_string_or_default(scene_table, "name", "Untitled Scene")
   let description = get_string_or_default(scene_table, "description", "")
   let version = get_string_or_default(scene_table, "version", "1.0")
-  { name, description, version }
+  { name, description, version, }
 }
 
 ///|
@@ -184,7 +184,7 @@ fn parse_render_settings(
   }
   let divide = get_int_or_default(render_table, "divide", 0)
   let exposure = get_float_or_default(render_table, "exposure", 1.0)
-  { width, height, samples, max_bounces, background, divide, exposure }
+  { width, height, samples, max_bounces, background, divide, exposure, }
 }
 
 ///|
@@ -922,7 +922,7 @@ pub fn parse_scene(toml_content : String) -> ParsedScene raise SceneParseError {
     g.divide(render_settings.divide)
     world.shapes = [g]
   }
-  { world, camera, render_settings, metadata, templates, graphics: Map([]) }
+  { world, camera, render_settings, metadata, templates, graphics: Map([]), }
 }
 
 ///|
@@ -993,7 +993,7 @@ pub async fn parse_scene_file(
     println("World divided.")
     world.shapes = [g]
   }
-  { world, camera, render_settings, metadata, templates, graphics }
+  { world, camera, render_settings, metadata, templates, graphics, }
 }
 
 ///|
@@ -1538,10 +1538,10 @@ async fn parse_pattern_with_io(
         pattern_table, "mapping", "planar",
       )
       let mapping : &Mapping = match mapping_type {
-        "spherical" => SphericalMapping::{  } as &Mapping
-        "planar" => PlanarMapping::{  } as &Mapping
-        "cylindrical" => CylindricalMapping::{  } as &Mapping
-        "cubic" => CubicMapping::{  } as &Mapping
+        "spherical" => SphericalMapping::{ } as &Mapping
+        "planar" => PlanarMapping::{ } as &Mapping
+        "cylindrical" => CylindricalMapping::{ } as &Mapping
+        "cubic" => CubicMapping::{ } as &Mapping
         _ => raise SceneParseError("Unknown mapping type: \{mapping_type}")
       }
       texture(canvas, mapping~)

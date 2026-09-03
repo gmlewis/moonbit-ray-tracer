@@ -31,7 +31,7 @@ pub impl Show for Pattern with fn output(self, logger) {
 pub fn Pattern::new(pattern : &PatternTrait) -> Pattern {
   let transform = mat4ident()
   let inv_transform = mat4ident()
-  { pattern, transform, inv_transform }
+  { pattern, transform, inv_transform, }
 }
 
 ///|
@@ -72,7 +72,7 @@ pub impl PatternTrait for Pattern with fn clone(self) {
   let pattern = self.pattern.clone().pattern
   let transform = self.transform.clone()
   let inv_transform = self.inv_transform.clone()
-  { pattern, transform, inv_transform }
+  { pattern, transform, inv_transform, }
 }
 
 ///|

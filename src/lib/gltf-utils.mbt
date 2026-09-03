@@ -10,7 +10,7 @@ pub fn BinaryReader::new(bytes : Bytes, offset? : Int) -> BinaryReader {
     Some(v) => v
     None => 0
   }
-  { bytes, offset }
+  { bytes, offset, }
 }
 
 ///|

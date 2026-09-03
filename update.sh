@@ -5,4 +5,5 @@ moon add --upgrade gmlewis/image
 moon add --upgrade gmlewis/io
 moon add --upgrade moonbitlang/async
 moon add --upgrade TheWaWaR/clap
+moon info
 ./test-all.sh

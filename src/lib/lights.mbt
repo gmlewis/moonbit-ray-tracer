@@ -23,7 +23,7 @@ pub impl Show for Light with fn output(self, logger) {
 
 ///|
 pub fn point_light(position : Tuple, intensity : Color) -> Light {
-  { position, intensity, kind: Point }
+  { position, intensity, kind: Point, }
 }
 
 ///|
@@ -37,7 +37,7 @@ pub fn area_light(
 ) -> Light {
   let uvec = full_uvec.div_scalar(u_steps.to_double())
   let vvec = full_vvec.div_scalar(v_steps.to_double())
-  { position: corner, intensity, kind: Area(uvec, u_steps, vvec, v_steps) }
+  { position: corner, intensity, kind: Area(uvec, u_steps, vvec, v_steps), }
 }
 
 ///|

@@ -12,7 +12,7 @@ pub(all) struct Tuple {
 
 ///|
 pub fn tuple(x : Double, y : Double, z : Double, w : Double) -> Tuple {
-  { x, y, z, w }
+  { x, y, z, w, }
 }
 
 ///|
@@ -61,7 +61,7 @@ pub fn Tuple::set(self : Tuple, i : Int, v : Double) -> Unit {
 
 ///|
 pub fn point(x : Double, y : Double, z : Double) -> Tuple {
-  { x, y, z, w: 1 }
+  { x, y, z, w: 1, }
 }
 
 ///|
@@ -71,7 +71,7 @@ pub fn Tuple::is_point(self : Tuple) -> Bool {
 
 ///|
 pub fn vector(x : Double, y : Double, z : Double) -> Tuple {
-  { x, y, z, w: 0 }
+  { x, y, z, w: 0, }
 }
 
 ///|
@@ -81,7 +81,7 @@ pub fn Tuple::is_vector(self : Tuple) -> Bool {
 
 ///|
 pub impl Eq for Tuple with fn equal(self, other) {
-  let { x, y, z, w } = (self - other).abs()
+  let { x, y, z, w, } = (self - other).abs()
   x < EPSILON && y < EPSILON && z < EPSILON && w < EPSILON
 }
 
@@ -91,7 +91,7 @@ pub impl Add for Tuple with fn add(self, other) {
   let y = self.y + other.y
   let z = self.z + other.z
   let w = self.w + other.w
-  { x, y, z, w }
+  { x, y, z, w, }
 }
 
 ///|
@@ -100,7 +100,7 @@ pub impl Sub for Tuple with fn sub(self, other) {
   let y = self.y - other.y
   let z = self.z - other.z
   let w = self.w - other.w
-  { x, y, z, w }
+  { x, y, z, w, }
 }
 
 ///|
@@ -109,7 +109,7 @@ pub impl Neg for Tuple with fn neg(self) {
   let y = -self.y
   let z = -self.z
   let w = -self.w
-  { x, y, z, w }
+  { x, y, z, w, }
 }
 
 ///|
@@ -118,7 +118,7 @@ pub impl Mul for Tuple with fn mul(self, other) {
   let y = self.y * other.y
   let z = self.z * other.z
   let w = self.w * other.w
-  { x, y, z, w }
+  { x, y, z, w, }
 }
 
 ///|
@@ -127,7 +127,7 @@ pub fn Tuple::mul_scalar(self : Tuple, other : Double) -> Tuple {
   let y = self.y * other
   let z = self.z * other
   let w = self.w * other
-  { x, y, z, w }
+  { x, y, z, w, }
 }
 
 ///|
@@ -136,7 +136,7 @@ pub fn Tuple::op_div(self : Tuple, other : Tuple) -> Tuple {
   let y = self.y / other.y
   let z = self.z / other.z
   let w = self.w / other.w
-  { x, y, z, w }
+  { x, y, z, w, }
 }
 
 ///|
@@ -145,7 +145,7 @@ pub fn Tuple::div_scalar(self : Tuple, other : Double) -> Tuple {
   let y = self.y / other
   let z = self.z / other
   let w = self.w / other
-  { x, y, z, w }
+  { x, y, z, w, }
 }
 
 ///|
@@ -154,12 +154,12 @@ pub fn Tuple::abs(self : Tuple) -> Tuple {
   let y = self.y.abs()
   let z = self.z.abs()
   let w = self.w.abs()
-  { x, y, z, w }
+  { x, y, z, w, }
 }
 
 ///|
 pub fn Tuple::magnitude(self : Tuple) -> Double {
-  let { x, y, z, w } = self
+  let { x, y, z, w, } = self
   (x * x + y * y + z * z + w * w).sqrt()
 }
 
@@ -183,7 +183,7 @@ pub fn Tuple::cross(self : Tuple, other : Tuple) -> Tuple {
   let x = self.y * other.z - self.z * other.y
   let y = self.z * other.x - self.x * other.z
   let z = self.x * other.y - self.y * other.x
-  { x, y, z, w: 0 }
+  { x, y, z, w: 0, }
 }
 
 ///|

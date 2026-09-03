@@ -21,7 +21,7 @@ struct Projectile {
 
 ///|
 fn projectile(position : Tuple, velocity : Tuple) -> Projectile {
-  { position, velocity }
+  { position, velocity, }
 }
 
 ///|
@@ -32,7 +32,7 @@ struct Environment {
 
 ///|
 fn environment(gravity : Tuple, wind : Tuple) -> Environment {
-  { gravity, wind }
+  { gravity, wind, }
 }
 
 ///|

@@ -8,8 +8,8 @@ pub(all) struct Color {
 
 ///|
 pub fn Color::clone(self : Color) -> Color {
-  let { red, green, blue } = self
-  { red, green, blue }
+  let { red, green, blue, } = self
+  { red, green, blue, }
 }
 
 ///|
@@ -33,7 +33,7 @@ pub impl Show for Color with fn output(self, logger) {
 
 ///|
 pub fn color(red : Double, green : Double, blue : Double) -> Color {
-  { red, green, blue }
+  { red, green, blue, }
 }
 
 ///|
@@ -51,7 +51,7 @@ pub fn Color::luminance(self : Color) -> Double {
 
 ///|
 pub impl Eq for Color with fn equal(self, other) {
-  let { red, green, blue } = self - other
+  let { red, green, blue, } = self - other
   red.abs() < EPSILON && green.abs() < EPSILON && blue.abs() < EPSILON
 }
 
@@ -60,7 +60,7 @@ pub impl Add for Color with fn add(self, other) {
   let red = self.red + other.red
   let green = self.green + other.green
   let blue = self.blue + other.blue
-  { red, green, blue }
+  { red, green, blue, }
 }
 
 ///|
@@ -68,7 +68,7 @@ pub impl Sub for Color with fn sub(self, other) {
   let red = self.red - other.red
   let green = self.green - other.green
   let blue = self.blue - other.blue
-  { red, green, blue }
+  { red, green, blue, }
 }
 
 ///|
@@ -76,7 +76,7 @@ pub impl Mul for Color with fn mul(self, other) {
   let red = self.red * other.red
   let green = self.green * other.green
   let blue = self.blue * other.blue
-  { red, green, blue }
+  { red, green, blue, }
 }
 
 ///|

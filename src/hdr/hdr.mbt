@@ -76,12 +76,12 @@ pub fn decode(bytes : Bytes) -> HdrImage raise HdrError {
   for y in 0..<height {
     read_scanline(reader, width, data, y * width * 3)
   }
-  { width, height, data }
+  { width, height, data, }
 }
 
 ///|
 fn read_line(reader : @io.Buffer) -> String {
-  let sb = StringBuilder::new()
+  let sb = StringBuilder()
   while true {
     let (b, err) = reader.read_byte()
     if err is Some(_) {

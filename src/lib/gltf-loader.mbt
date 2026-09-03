@@ -205,7 +205,7 @@ pub async fn load_gltf_file(path : String) -> Shape raise SceneParseError {
       None => ()
     }
   }
-  let data = GltfData::{ gltf, buffers }
+  let data = GltfData::{ gltf, buffers, }
   let shape = data.to_shape()
   shape
 }
@@ -247,7 +247,7 @@ fn load_glb(bytes : Bytes, _path : String) -> Shape raise SceneParseError {
     Some(g) => g
     None => raise SceneParseError("GLB missing JSON chunk")
   }
-  let data = GltfData::{ gltf, buffers }
+  let data = GltfData::{ gltf, buffers, }
   let shape = data.to_shape()
   shape
 }

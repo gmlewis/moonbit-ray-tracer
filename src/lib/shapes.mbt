@@ -18,7 +18,7 @@ pub(all) struct Shape {
 } derive(Debug)
 
 ///|
-let id_counter : Ref[UInt] = { val: 0 }
+let id_counter : Ref[UInt] = { val: 0, }
 
 ///|
 pub fn Shape::bounds(self : Shape) -> Bounds {

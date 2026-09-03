@@ -6,7 +6,7 @@ pub(all) struct Group {
 
 ///|
 pub fn group() -> Shape {
-  Shape::new_group(Group::{ children: [], bounds: None })
+  Shape::new_group(Group::{ children: [], bounds: None, })
 }
 
 ///|
@@ -49,7 +49,7 @@ pub fn Group::local_normal_at(_self : Group, _point : Tuple) -> Tuple {
 ///|
 pub fn Group::clone(self : Group) -> Group {
   let children = self.children.map(fn(c) { c.clone() })
-  { children, bounds: None }
+  { children, bounds: None, }
 }
 
 ///|

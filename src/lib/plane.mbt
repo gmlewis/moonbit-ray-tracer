@@ -3,11 +3,11 @@
 pub(all) struct Plane {} derive(Debug, Eq)
 
 ///|
-let _Plane : &Object = Plane::{  }
+let _Plane : &Object = Plane::{ }
 
 ///|
 pub fn plane() -> Shape {
-  let plane = Plane::{  }
+  let plane = Plane::{ }
   Shape::new_object(plane)
 }
 
@@ -34,10 +34,10 @@ pub impl Object for Plane with fn local_normal_at(_self, _local_point) {
 pub impl Object for Plane with fn bounds(_self) {
   let min = point(@double.neg_infinity, 0, @double.neg_infinity)
   let max = point(@double.infinity, 0, @double.infinity)
-  { min, max }
+  { min, max, }
 }
 
 ///|
 pub impl Object for Plane with fn clone(_self) {
-  Plane::{  }
+  Plane::{ }
 }

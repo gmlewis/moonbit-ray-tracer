@@ -96,7 +96,7 @@ fn parse_accessor(json : Json) -> GltfAccessor? {
       }
     None => None
   }
-  Some({ buffer_view, byte_offset, component_type, count, max, min, type_ })
+  Some({ buffer_view, byte_offset, component_type, count, max, min, type_, })
 }
 
 ///|
@@ -137,7 +137,7 @@ fn parse_buffer_view(json : Json) -> GltfBufferView? {
     Some(v) => get_int(v)
     None => None
   }
-  Some({ buffer, byte_offset, byte_length, byte_stride, target })
+  Some({ buffer, byte_offset, byte_length, byte_stride, target, })
 }
 
 ///|
@@ -158,7 +158,7 @@ fn parse_buffer(json : Json) -> GltfBuffer? {
       }
     None => return None
   }
-  Some({ uri, byte_length })
+  Some({ uri, byte_length, })
 }
 
 ///|
@@ -198,7 +198,7 @@ fn parse_mesh_primitive(json : Json) -> GltfMeshPrimitive? {
       }
     None => 4
   }
-  Some({ attributes, indices, material, mode })
+  Some({ attributes, indices, material, mode, })
 }
 
 ///|
@@ -219,7 +219,7 @@ fn parse_mesh(json : Json) -> GltfMesh? {
     Some(v) => get_string(v)
     None => None
   }
-  Some({ primitives, name })
+  Some({ primitives, name, })
 }
 
 ///|
@@ -276,7 +276,7 @@ fn parse_node(json : Json) -> GltfNode? {
     Some(v) => get_string(v)
     None => None
   }
-  Some({ mesh, children, matrix, translation, rotation, scale, name })
+  Some({ mesh, children, matrix, translation, rotation, scale, name, })
 }
 
 ///|
@@ -297,7 +297,7 @@ fn parse_scene_gltf(json : Json) -> GltfScene? {
     Some(v) => get_string(v)
     None => None
   }
-  Some({ nodes, name })
+  Some({ nodes, name, })
 }
 
 ///|
@@ -320,7 +320,7 @@ fn parse_texture_info(json : Json) -> GltfTextureInfo? {
     Some(v) => get_int(v)
     None => None
   }
-  Some({ index, tex_coord })
+  Some({ index, tex_coord, })
 }
 
 ///|
@@ -345,7 +345,7 @@ fn parse_normal_texture_info(json : Json) -> GltfNormalTextureInfo? {
     Some(v) => get_double(v)
     None => None
   }
-  Some({ index, tex_coord, scale })
+  Some({ index, tex_coord, scale, })
 }
 
 ///|
@@ -366,7 +366,7 @@ fn parse_texture(json : Json) -> GltfTexture? {
     Some(v) => get_string(v)
     None => None
   }
-  Some({ sampler, source, name })
+  Some({ sampler, source, name, })
 }
 
 ///|
@@ -391,7 +391,7 @@ fn parse_image(json : Json) -> GltfImage? {
     Some(v) => get_string(v)
     None => None
   }
-  Some({ uri, buffer_view, mime_type, name })
+  Some({ uri, buffer_view, mime_type, name, })
 }
 
 ///|

@@ -90,7 +90,7 @@ impl Show for TestPattern with fn output(self, logger) {
 
 ///|
 fn test_pattern() -> Pattern {
-  Pattern::new(TestPattern::{  })
+  Pattern::new(TestPattern::{ })
 }
 
 ///|

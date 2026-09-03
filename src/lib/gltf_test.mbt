@@ -53,7 +53,7 @@ test "load_node transformation" {
     textures: [],
     images: [],
   }
-  let data = GltfData::{ gltf, buffers: [] }
+  let data = GltfData::{ gltf, buffers: [], }
   let node = data.load_node(0)
   let expected = translation(1.0, 2.0, 3.0) * scaling(2.0, 2.0, 2.0)
   inspect(node.transform, content=expected.to_string())

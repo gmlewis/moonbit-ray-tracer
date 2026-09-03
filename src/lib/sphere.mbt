@@ -3,11 +3,11 @@
 pub(all) struct Sphere {} derive(Debug, Eq)
 
 ///|
-let _Sphere : &Object = Sphere::{  }
+let _Sphere : &Object = Sphere::{ }
 
 ///|
 pub fn sphere() -> Shape {
-  let sphere = Sphere::{  }
+  let sphere = Sphere::{ }
   Shape::new_object(sphere)
 }
 
@@ -51,10 +51,10 @@ pub impl Object for Sphere with fn local_normal_at(_self, local_point) {
 pub impl Object for Sphere with fn bounds(_self) {
   let min = point(-1, -1, -1)
   let max = point(1, 1, 1)
-  { min, max }
+  { min, max, }
 }
 
 ///|
 pub impl Object for Sphere with fn clone(_self) {
-  Sphere::{  }
+  Sphere::{ }
 }

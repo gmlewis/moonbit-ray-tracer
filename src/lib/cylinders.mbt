@@ -7,7 +7,7 @@ pub(all) struct Cylinder {
 } derive(Debug, Eq)
 
 ///|
-let _Cylinder : &Object = Cylinder::{ minimum: 0, maximum: 0, closed: false }
+let _Cylinder : &Object = Cylinder::{ minimum: 0, maximum: 0, closed: false, }
 
 ///|
 pub fn cylinder(
@@ -15,7 +15,7 @@ pub fn cylinder(
   maximum? : Double = @double.infinity,
   closed? : Bool = false,
 ) -> Shape {
-  let cylinder = Cylinder::{ minimum, maximum, closed }
+  let cylinder = Cylinder::{ minimum, maximum, closed, }
   Shape::new_object(cylinder)
 }
 
@@ -115,7 +115,7 @@ pub impl Object for Cylinder with fn local_normal_at(self, local_point) {
 pub impl Object for Cylinder with fn bounds(self) {
   let min = point(-1, self.minimum, -1)
   let max = point(1, self.maximum, 1)
-  { min, max }
+  { min, max, }
 }
 
 ///|

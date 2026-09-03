@@ -90,7 +90,7 @@ pub fn intersections(xs : Array[Intersection]) -> Intersections {
       break
     }
   }
-  { count, xs, hit }
+  { count, xs, hit, }
 }
 
 // ///

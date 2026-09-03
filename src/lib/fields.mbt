@@ -25,7 +25,7 @@ pub fn field(
   pattern : Pattern,
   vector_decoding? : VectorDecoding = VectorDecoding::Signed,
 ) -> Field {
-  { pattern, vector_decoding }
+  { pattern, vector_decoding, }
 }
 
 ///|

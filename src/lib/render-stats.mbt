@@ -12,13 +12,13 @@ pub(all) struct RenderStats {
 }
 
 ///|
-let stats_global_enabled : Ref[Bool] = { val: false }
+let stats_global_enabled : Ref[Bool] = { val: false, }
 
 ///|
-let stats_group_bounds_tests : Ref[Int] = { val: 0 }
+let stats_group_bounds_tests : Ref[Int] = { val: 0, }
 
 ///|
-let stats_group_bounds_culled : Ref[Int] = { val: 0 }
+let stats_group_bounds_culled : Ref[Int] = { val: 0, }
 
 ///|
 pub fn stats_enable_and_reset() -> Unit {

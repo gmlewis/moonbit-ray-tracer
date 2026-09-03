@@ -10,7 +10,7 @@ pub fn Bounds::new() -> Bounds {
   let max = point(
     @double.neg_infinity, @double.neg_infinity, @double.neg_infinity,
   )
-  { min, max }
+  { min, max, }
 }
 
 ///|

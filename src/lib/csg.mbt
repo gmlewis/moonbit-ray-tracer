@@ -24,7 +24,7 @@ pub(all) struct CSG {
 
 ///|
 pub fn csg(operation : Operation, left : Shape, right : Shape) -> Shape {
-  Shape::new_csg({ operation, left, right })
+  Shape::new_csg({ operation, left, right, })
 }
 
 ///|

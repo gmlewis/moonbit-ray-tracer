@@ -202,7 +202,7 @@ impl Show for RampX with fn output(self, logger) {
 
 ///|
 fn rampx_pattern() -> Pattern {
-  Pattern::new(RampX::{  })
+  Pattern::new(RampX::{ })
 }
 
 ///|
