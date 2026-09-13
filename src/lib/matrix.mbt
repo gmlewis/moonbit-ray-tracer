@@ -103,9 +103,9 @@ pub impl Mul for Matrix with fn mul(self, o) {
 pub fn Matrix::clone(self : Matrix) -> Matrix {
   let nrows = self.num_rows()
   let ncols = self.num_cols()
-  let result = Array::new(capacity=nrows)
+  let result = Array(capacity=nrows)
   for row in 0..<nrows {
-    let arr = Array::new(capacity=ncols)
+    let arr = Array(capacity=ncols)
     for col in 0..<ncols {
       arr.push(self[row][col])
     }
@@ -173,12 +173,12 @@ pub fn Matrix::submatrix(self : Matrix, row : Int, col : Int) -> Matrix {
   let nrows = self.num_rows()
   let ncols = self.num_cols()
   guard! nrows == ncols
-  let result = Array::new(capacity=nrows - 1)
+  let result = Array(capacity=nrows - 1)
   for r in 0..<nrows {
     if r == row {
       continue
     }
-    let arr = Array::new(capacity=ncols - 1)
+    let arr = Array(capacity=ncols - 1)
     for c in 0..<ncols {
       if c == col {
         continue

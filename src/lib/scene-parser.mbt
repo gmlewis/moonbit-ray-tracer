@@ -444,7 +444,7 @@ fn parse_pattern(value : @toml.TomlValue) -> Pattern raise SceneParseError {
   fn get_colors_optional() -> Array[Color] raise SceneParseError {
     match pattern_table.get("colors") {
       Some(@toml.TomlArray(arr)) => {
-        let colors = Array::new()
+        let colors = Array()
         for i = 0; i < arr.length(); i = i + 1 {
           colors.push(parse_color(arr[i]))
         }
@@ -640,7 +640,7 @@ fn parse_pattern(value : @toml.TomlValue) -> Pattern raise SceneParseError {
 fn parse_lights(
   root : Map[String, @toml.TomlValue],
 ) -> Array[Light] raise SceneParseError {
-  let lights = Array::new()
+  let lights = Array()
   match root.get("lights") {
     Some(@toml.TomlArray(lights_array)) =>
       for i = 0; i < lights_array.length(); i = i + 1 {
@@ -692,7 +692,7 @@ fn parse_objects(
   patterns : Map[String, Pattern],
   templates : Map[String, Shape],
 ) -> Array[Shape] raise SceneParseError {
-  let shapes = Array::new()
+  let shapes = Array()
   match root.get("objects") {
     Some(@toml.TomlArray(objects_array)) =>
       for i = 0; i < objects_array.length(); i = i + 1 {
@@ -1339,7 +1339,7 @@ async fn parse_pattern_with_io(
   fn get_colors_optional() -> Array[Color] raise SceneParseError {
     match pattern_table.get("colors") {
       Some(@toml.TomlArray(arr)) => {
-        let colors = Array::new()
+        let colors = Array()
         for i = 0; i < arr.length(); i = i + 1 {
           colors.push(parse_color(arr[i]))
         }
@@ -1633,7 +1633,7 @@ async fn parse_objects_with_io(
   patterns : Map[String, Pattern],
   templates : Map[String, Shape],
 ) -> Array[Shape] raise SceneParseError {
-  let shapes = Array::new()
+  let shapes = Array()
   match root.get("objects") {
     Some(@toml.TomlArray(objects_array)) =>
       for i = 0; i < objects_array.length(); i = i + 1 {
@@ -1832,7 +1832,7 @@ fn parse_vertices(
     @toml.TomlArray(arr) => arr
     _ => raise SceneParseError("vertices must be an array")
   }
-  let vertices = Array::new()
+  let vertices = Array()
   for i = 0; i < vertices_array.length(); i = i + 1 {
     let vertex = parse_vector3(vertices_array[i])
     vertices.push(point(vertex.0, vertex.1, vertex.2))
@@ -1849,7 +1849,7 @@ fn parse_matrix4x4(value : @toml.TomlValue) -> Matrix raise SceneParseError {
   if matrix_array.length() != 4 {
     raise SceneParseError("matrix must have exactly 4 rows")
   }
-  let matrix_values = Array::new()
+  let matrix_values = Array()
   for i = 0; i < 4; i = i + 1 {
     let row = match matrix_array[i] {
       @toml.TomlArray(row_arr) => {

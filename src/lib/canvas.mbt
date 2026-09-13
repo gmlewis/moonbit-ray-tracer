@@ -115,7 +115,7 @@ const MAX_PPM_LINE_LENGTH = 70
 
 ///|
 pub fn Canvas::to_ppm(self : Canvas) -> String {
-  let lines = Array::new(capacity=self.height + 4)
+  let lines = Array(capacity=self.height + 4)
   lines.push("P3")
   lines.push("\{self.width} \{self.height}")
   lines.push("255")

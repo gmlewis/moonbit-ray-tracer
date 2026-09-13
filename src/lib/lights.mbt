@@ -12,9 +12,13 @@ pub(all) struct Light {
 } derive(Debug, Eq)
 
 ///|
-
-///|
-pub extend Light with Show::{to_string}
+pub fn Light::to_string(self : Light) -> String {
+  match self.kind {
+    Point => "point_light(\{self.position}, \{self.intensity})"
+    Area(uvec, u_steps, vvec, v_steps) =>
+      "area_light(\{self.position}, \{uvec}, \{u_steps}, \{vvec}, \{v_steps}, \{self.intensity})"
+  }
+}
 
 ///|
 pub impl Show for Light with fn output(self, logger) {

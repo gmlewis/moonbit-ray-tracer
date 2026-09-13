@@ -3,7 +3,6 @@ import {
   "moonbitlang/async",
   "moonbitlang/async/fs",
   "moonbitlang/core/builtin",
-  "moonbitlang/core/double",
   "moonbitlang/core/math",
 }
 

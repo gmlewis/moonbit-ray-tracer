@@ -6,9 +6,13 @@ pub(all) enum Operation {
 } derive(Debug, Eq)
 
 ///|
-
-///|
-pub extend Operation with Show::{to_string}
+pub fn Operation::to_string(self : Operation) -> String {
+  match self {
+    Union => "union"
+    Intersection => "intersection"
+    Difference => "difference"
+  }
+}
 
 ///|
 pub impl Show for Operation with fn output(self, logger) {
@@ -59,9 +63,11 @@ pub fn CSG::clone(self : CSG) -> CSG {
 }
 
 ///|
-
-///|
-pub extend CSG with Show::{to_string}
+// Shallow like Group::to_string: a CSG tree can be deep, and --debug
+// already dumps the parsed shape hierarchy separately.
+pub fn CSG::to_string(self : CSG) -> String {
+  "csg(\{self.operation})"
+}
 
 ///|
 pub impl Show for CSG with fn output(self, logger) {

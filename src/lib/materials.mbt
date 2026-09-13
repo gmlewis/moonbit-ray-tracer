@@ -5,9 +5,13 @@ pub(all) enum LightingMode {
 } derive(Debug, Eq)
 
 ///|
-
-///|
-pub extend LightingMode with Show::{to_string}
+// Matches the accepted TOML spellings, like VoronoiMode::to_string.
+pub fn LightingMode::to_string(self : LightingMode) -> String {
+  match self {
+    Phong => "phong"
+    PBR => "pbr"
+  }
+}
 
 ///|
 pub impl Show for LightingMode with fn output(self, logger) {
@@ -44,9 +48,11 @@ pub(all) struct Material {
 } derive(Debug, Eq)
 
 ///|
-
-///|
-pub extend Material with Show::{to_string}
+// Scalar fields only: the pattern/texture fields are optional and print
+// verbosely, and callers that care about them use Repr in the --debug dump.
+pub fn Material::to_string(self : Material) -> String {
+  "material(color=\{self.color}, ambient=\{self.ambient}, diffuse=\{self.diffuse}, specular=\{self.specular}, shininess=\{self.shininess}, reflective=\{self.reflective}, transparency=\{self.transparency}, refractive_index=\{self.refractive_index}, metallic=\{self.metallic}, roughness=\{self.roughness}, lighting_mode=\{self.lighting_mode})"
+}
 
 ///|
 pub impl Show for Material with fn output(self, logger) {
@@ -171,7 +177,9 @@ pub(all) struct MaterialLayer {
 ///|
 
 ///|
-pub extend MaterialLayer with Show::{to_string}
+pub fn MaterialLayer::to_string(self : MaterialLayer) -> String {
+  "material_layer(opacity=\{self.opacity}, mask=\{self.mask}, top=\{self.top})"
+}
 
 ///|
 pub impl Show for MaterialLayer with fn output(self, logger) {

@@ -150,7 +150,7 @@ fn parse_args(
   string_fn? : (Array[String]) -> Unit raise ParserError = fn(_args) {  },
 ) -> Unit raise ParserError {
   let parts = s.split(sep).map(fn(s) { s.trim().to_owned() }).collect()
-  let doubles = Array::new(capacity=parts.length())
+  let doubles = Array(capacity=parts.length())
   for arg in parts {
     if arg == "" {
       if sep == "/" {
