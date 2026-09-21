@@ -2,6 +2,9 @@
 pub(all) struct MatrixRow(Array[Double]) derive(Debug)
 
 ///|
+pub extend MatrixRow with Debug::{to_repr}
+
+///|
 #alias("_[_]")
 pub fn MatrixRow::get(self : MatrixRow, col : Int) -> Double {
   self.0[col]
@@ -15,6 +18,9 @@ pub fn MatrixRow::set(self : MatrixRow, col : Int, v : Double) -> Unit {
 
 ///|
 pub(all) struct Matrix(Array[MatrixRow]) derive(Debug)
+
+///|
+pub extend Matrix with Debug::{to_repr}
 
 ///|
 pub fn Matrix::to_string(self : Matrix) -> String {
@@ -32,6 +38,13 @@ pub fn Matrix::to_string(self : Matrix) -> String {
   }
   "mat\{nrows}(\n\{rows})"
 }
+
+///|
+
+///|
+#deprecated("Use `Show::output` via the trait or `to_string` instead", skip_current_package=true)
+#doc(hidden)
+pub extend Matrix with Show::{output}
 
 ///|
 pub impl Show for Matrix with fn output(self, logger) {
@@ -56,6 +69,16 @@ pub fn Matrix::num_cols(self : Matrix) -> Int {
   }
   self.0[0].0.length()
 }
+
+///|
+
+///|
+pub extend Matrix with Eq::{equal}
+
+///|
+#deprecated("Use `!=` instead", skip_current_package=true)
+#doc(hidden)
+pub extend Matrix with Eq::{not_equal}
 
 ///|
 pub impl Eq for Matrix with fn equal(self, other) {
@@ -86,6 +109,11 @@ pub impl Eq for Matrix with fn equal(self, other) {
 
 ///|
 /// Matrix multiplication - currently, only 4x4 is handled.
+
+///|
+pub extend Matrix with Mul::{mul}
+
+///|
 pub impl Mul for Matrix with fn mul(self, o) {
   let m = mat4zero()
   for row in 0..<4 {

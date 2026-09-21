@@ -7,6 +7,9 @@ pub(all) struct Color {
 } derive(Debug)
 
 ///|
+pub extend Color with Debug::{to_repr}
+
+///|
 pub fn Color::clone(self : Color) -> Color {
   let { red, green, blue, } = self
   { red, green, blue, }
@@ -25,6 +28,13 @@ pub fn Color::to_string(self : Color) -> String {
   let b = round_to_fixed(self.blue, 5).to_string()
   "color(\{r}, \{g}, \{b})"
 }
+
+///|
+
+///|
+#deprecated("Use `Show::output` via the trait or `to_string` instead", skip_current_package=true)
+#doc(hidden)
+pub extend Color with Show::{output}
 
 ///|
 pub impl Show for Color with fn output(self, logger) {
@@ -50,10 +60,25 @@ pub fn Color::luminance(self : Color) -> Double {
 }
 
 ///|
+
+///|
+pub extend Color with Eq::{equal}
+
+///|
+#deprecated("Use `!=` instead", skip_current_package=true)
+#doc(hidden)
+pub extend Color with Eq::{not_equal}
+
+///|
 pub impl Eq for Color with fn equal(self, other) {
   let { red, green, blue, } = self - other
   red.abs() < EPSILON && green.abs() < EPSILON && blue.abs() < EPSILON
 }
+
+///|
+
+///|
+pub extend Color with Add::{add}
 
 ///|
 pub impl Add for Color with fn add(self, other) {
@@ -64,12 +89,22 @@ pub impl Add for Color with fn add(self, other) {
 }
 
 ///|
+
+///|
+pub extend Color with Sub::{sub}
+
+///|
 pub impl Sub for Color with fn sub(self, other) {
   let red = self.red - other.red
   let green = self.green - other.green
   let blue = self.blue - other.blue
   { red, green, blue, }
 }
+
+///|
+
+///|
+pub extend Color with Mul::{mul}
 
 ///|
 pub impl Mul for Color with fn mul(self, other) {

@@ -3,6 +3,17 @@
 pub(all) struct Cube {} derive(Debug, Eq)
 
 ///|
+pub extend Cube with Eq::{equal}
+
+///|
+#deprecated("Use `!=` instead", skip_current_package=true)
+#doc(hidden)
+pub extend Cube with Eq::{not_equal}
+
+///|
+pub extend Cube with Debug::{to_repr}
+
+///|
 let _Cube : &Object = Cube::{ }
 
 ///|
@@ -12,9 +23,24 @@ pub fn cube() -> Shape {
 }
 
 ///|
+
+///|
+pub extend Cube with Show::{to_string}
+
+///|
+#deprecated("Use `Show::output` via the trait or `to_string` instead", skip_current_package=true)
+#doc(hidden)
+pub extend Cube with Show::{output}
+
+///|
 pub impl Show for Cube with fn output(_self, logger) {
   logger.write_string("cube()")
 }
+
+///|
+
+///|
+pub extend Cube with Object::{bounds, clone, local_intersect, local_normal_at}
 
 ///|
 pub impl Object for Cube with fn local_intersect(_self, ray) {

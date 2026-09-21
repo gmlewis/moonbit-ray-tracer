@@ -1,8 +1,8 @@
 ///|
 test "noise_pattern produces deterministic grayscale" {
-  let p = noise_pattern(seed=42, scale=1.0)
-  let c1 = p.pattern_at(point(1.234, 2.345, 3.456))
-  let c2 = p.pattern_at(point(1.234, 2.345, 3.456))
+  let p = @lib.noise_pattern(seed=42, scale=1.0)
+  let c1 = p.pattern_at(@lib.point(1.234, 2.345, 3.456))
+  let c2 = p.pattern_at(@lib.point(1.234, 2.345, 3.456))
   assert_eq(c1, c2)
   assert_true((c1.red - c1.green).abs() < @lib.EPSILON)
   assert_true((c1.green - c1.blue).abs() < @lib.EPSILON)
@@ -11,67 +11,82 @@ test "noise_pattern produces deterministic grayscale" {
 
 ///|
 test "fbm_pattern stays within [0,1]" {
-  let p = fbm_pattern(seed=7, scale=1.3, octaves=6)
-  let c = p.pattern_at(point(-10.2, 0.3, 4.9))
+  let p = @lib.fbm_pattern(seed=7, scale=1.3, octaves=6)
+  let c = p.pattern_at(@lib.point(-10.2, 0.3, 4.9))
   assert_true(c.red >= 0.0 && c.red <= 1.0)
   assert_true((c.red - c.green).abs() < @lib.EPSILON)
 }
 
 ///|
 test "mix_pattern uses mask luminance" {
-  let red = stripe_pattern([color(1, 0, 0), color(1, 0, 0)])
-  let blue = stripe_pattern([color(0, 0, 1), color(0, 0, 1)])
-  let mask = checkers_pattern([color(0, 0, 0), color(1, 1, 1)])
-  let mix = mix_pattern(red, blue, mask)
+  let red = @lib.stripe_pattern([@lib.color(1, 0, 0), @lib.color(1, 0, 0)])
+  let blue = @lib.stripe_pattern([@lib.color(0, 0, 1), @lib.color(0, 0, 1)])
+  let mask = @lib.checkers_pattern([@lib.color(0, 0, 0), @lib.color(1, 1, 1)])
+  let mix = @lib.mix_pattern(red, blue, mask)
 
   // Even cell -> mask black -> choose red
-  let c0 = mix.pattern_at(point(0.1, 0.1, 0.1))
-  assert_eq(c0, color(1, 0, 0))
+  let c0 = mix.pattern_at(@lib.point(0.1, 0.1, 0.1))
+  assert_eq(c0, @lib.color(1, 0, 0))
 
   // Odd cell -> mask white -> choose blue
-  let c1 = mix.pattern_at(point(1.1, 0.1, 0.1))
-  assert_eq(c1, color(0, 0, 1))
+  let c1 = mix.pattern_at(@lib.point(1.1, 0.1, 0.1))
+  assert_eq(c1, @lib.color(0, 0, 1))
 }
 
 ///|
 test "bias_gain_pattern identity at 0.5" {
-  let base = stripe_pattern([color(0.25, 0.25, 0.25), color(0.25, 0.25, 0.25)])
-  let p = bias_gain_pattern(base, bias=0.5, gain=0.5)
-  let c = p.pattern_at(point(0.1, 0.2, 0.3))
+  let base = @lib.stripe_pattern([
+    @lib.color(0.25, 0.25, 0.25),
+    @lib.color(0.25, 0.25, 0.25),
+  ])
+  let p = @lib.bias_gain_pattern(base, bias=0.5, gain=0.5)
+  let c = p.pattern_at(@lib.point(0.1, 0.2, 0.3))
   assert_true((c.red - 0.25).abs() < @lib.EPSILON)
 }
 
 ///|
 test "bias_gain_pattern bias shifts midtones" {
-  let base = stripe_pattern([color(0.25, 0.25, 0.25), color(0.25, 0.25, 0.25)])
-  let p_low = bias_gain_pattern(base, bias=0.25, gain=0.5)
-  let p_high = bias_gain_pattern(base, bias=0.75, gain=0.5)
-  let c_low = p_low.pattern_at(point(0.1, 0.2, 0.3))
-  let c_high = p_high.pattern_at(point(0.1, 0.2, 0.3))
+  let base = @lib.stripe_pattern([
+    @lib.color(0.25, 0.25, 0.25),
+    @lib.color(0.25, 0.25, 0.25),
+  ])
+  let p_low = @lib.bias_gain_pattern(base, bias=0.25, gain=0.5)
+  let p_high = @lib.bias_gain_pattern(base, bias=0.75, gain=0.5)
+  let c_low = p_low.pattern_at(@lib.point(0.1, 0.2, 0.3))
+  let c_high = p_high.pattern_at(@lib.point(0.1, 0.2, 0.3))
   assert_true(c_low.red < 0.25)
   assert_true(c_high.red > 0.25)
 }
 
 ///|
 test "bias_gain_pattern gain affects shadows" {
-  let base = stripe_pattern([color(0.25, 0.25, 0.25), color(0.25, 0.25, 0.25)])
-  let p_bright = bias_gain_pattern(base, bias=0.5, gain=0.25)
-  let p_dark = bias_gain_pattern(base, bias=0.5, gain=0.75)
-  let c_bright = p_bright.pattern_at(point(0.1, 0.2, 0.3))
-  let c_dark = p_dark.pattern_at(point(0.1, 0.2, 0.3))
+  let base = @lib.stripe_pattern([
+    @lib.color(0.25, 0.25, 0.25),
+    @lib.color(0.25, 0.25, 0.25),
+  ])
+  let p_bright = @lib.bias_gain_pattern(base, bias=0.5, gain=0.25)
+  let p_dark = @lib.bias_gain_pattern(base, bias=0.5, gain=0.75)
+  let c_bright = p_bright.pattern_at(@lib.point(0.1, 0.2, 0.3))
+  let c_dark = p_dark.pattern_at(@lib.point(0.1, 0.2, 0.3))
   assert_true(c_bright.red > 0.25)
   assert_true(c_dark.red < 0.25)
 }
 
 ///|
 test "contrast_pattern clamps" {
-  let base = stripe_pattern([color(0.25, 0.25, 0.25), color(0.25, 0.25, 0.25)])
-  let p = contrast_pattern(base, contrast=2.0, pivot=0.5)
-  let c = p.pattern_at(point(0.1, 0.2, 0.3))
+  let base = @lib.stripe_pattern([
+    @lib.color(0.25, 0.25, 0.25),
+    @lib.color(0.25, 0.25, 0.25),
+  ])
+  let p = @lib.contrast_pattern(base, contrast=2.0, pivot=0.5)
+  let c = p.pattern_at(@lib.point(0.1, 0.2, 0.3))
   assert_true((c.red - 0.0).abs() < @lib.EPSILON)
-  let base2 = stripe_pattern([color(0.75, 0.75, 0.75), color(0.75, 0.75, 0.75)])
-  let p2 = contrast_pattern(base2, contrast=2.0, pivot=0.5)
-  let c2 = p2.pattern_at(point(0.1, 0.2, 0.3))
+  let base2 = @lib.stripe_pattern([
+    @lib.color(0.75, 0.75, 0.75),
+    @lib.color(0.75, 0.75, 0.75),
+  ])
+  let p2 = @lib.contrast_pattern(base2, contrast=2.0, pivot=0.5)
+  let c2 = p2.pattern_at(@lib.point(0.1, 0.2, 0.3))
   assert_true((c2.red - 1.0).abs() < @lib.EPSILON)
 }
 
@@ -80,10 +95,15 @@ test "voronoi f1/f2/f2-f1 outputs are consistent" {
   let seed = 23
   let scale = 3.0
   let jitter = 1.0
-  let p_f1 = voronoi_f1_pattern(seed~, scale~, jitter~)
-  let p_f2 = voronoi_f2_pattern(seed~, scale~, jitter~)
-  let p_df = voronoi_f2_minus_f1_pattern(seed~, scale~, jitter~, edge_scale=1.0)
-  let pt = point(0.12, 0.0, -0.34)
+  let p_f1 = @lib.voronoi_f1_pattern(seed~, scale~, jitter~)
+  let p_f2 = @lib.voronoi_f2_pattern(seed~, scale~, jitter~)
+  let p_df = @lib.voronoi_f2_minus_f1_pattern(
+    seed~,
+    scale~,
+    jitter~,
+    edge_scale=1.0,
+  )
+  let pt = @lib.point(0.12, 0.0, -0.34)
   let c1 = p_f1.pattern_at(pt)
   let c2 = p_f2.pattern_at(pt)
   let cd = p_df.pattern_at(pt)
@@ -106,7 +126,7 @@ test "voronoi f1/f2/f2-f1 outputs are consistent" {
 
 ///|
 struct ConstPattern {
-  c : Color
+  c : @lib.Color
 } derive(Debug)
 
 ///|
@@ -158,8 +178,8 @@ pub impl PatternTrait for ConstPattern with fn pattern_at_with_info(
 }
 
 ///|
-fn const_pattern(c : Color) -> Pattern {
-  Pattern::new(ConstPattern::{ c, })
+fn const_pattern(c : @lib.Color) -> @lib.Pattern {
+  @lib.Pattern::new(ConstPattern::{ c, })
 }
 
 ///|
@@ -201,7 +221,7 @@ pub impl PatternTrait for UVCoordPattern with fn uv_at(_self, u, v) {
   // Clamp to [0,1] so colors stay sane.
   let u = if u < 0.0 { 0.0 } else if u > 1.0 { 1.0 } else { u }
   let v = if v < 0.0 { 0.0 } else if v > 1.0 { 1.0 } else { v }
-  color(u, v, 0.0)
+  @lib.color(u, v, 0.0)
 }
 
 ///|
@@ -218,15 +238,21 @@ pub impl PatternTrait for UVCoordPattern with fn pattern_at_with_info(
 }
 
 ///|
-fn uv_coord_pattern() -> Pattern {
-  Pattern::new(UVCoordPattern::{ })
+fn uv_coord_pattern() -> @lib.Pattern {
+  @lib.Pattern::new(UVCoordPattern::{ })
 }
 
 ///|
 test "levels_pattern remaps and clamps" {
-  let base = const_pattern(color(0.25, 0.5, 0.75))
-  let p = levels_pattern(base, in_min=0.5, in_max=1.0, out_min=0.0, out_max=1.0)
-  let c = p.pattern_at(point(0.0, 0.0, 0.0))
+  let base = const_pattern(@lib.color(0.25, 0.5, 0.75))
+  let p = @lib.levels_pattern(
+    base,
+    in_min=0.5,
+    in_max=1.0,
+    out_min=0.0,
+    out_max=1.0,
+  )
+  let c = p.pattern_at(@lib.point(0.0, 0.0, 0.0))
   // 0.25 < in_min => clamp to 0
   assert_true((c.red - 0.0).abs() < @lib.EPSILON)
   // 0.5 maps to 0
@@ -237,22 +263,25 @@ test "levels_pattern remaps and clamps" {
 
 ///|
 test "threshold_pattern switches on luminance" {
-  let base = stripe_pattern([color(0.25, 0.25, 0.25), color(0.75, 0.75, 0.75)])
-  let p = threshold_pattern(
+  let base = @lib.stripe_pattern([
+    @lib.color(0.25, 0.25, 0.25),
+    @lib.color(0.75, 0.75, 0.75),
+  ])
+  let p = @lib.threshold_pattern(
     base,
     threshold=0.5,
-    low=color(1, 0, 0),
-    high=color(0, 0, 1),
+    low=@lib.color(1, 0, 0),
+    high=@lib.color(0, 0, 1),
   )
-  assert_eq(p.pattern_at(point(0.1, 0.0, 0.0)), color(1, 0, 0))
-  assert_eq(p.pattern_at(point(1.1, 0.0, 0.0)), color(0, 0, 1))
+  assert_eq(p.pattern_at(@lib.point(0.1, 0.0, 0.0)), @lib.color(1, 0, 0))
+  assert_eq(p.pattern_at(@lib.point(1.1, 0.0, 0.0)), @lib.color(0, 0, 1))
 }
 
 ///|
 test "posterize_pattern quantizes channels" {
-  let base = const_pattern(color(0.2, 0.6, 0.9))
-  let p = posterize_pattern(base, steps=4)
-  let c = p.pattern_at(point(0.0, 0.0, 0.0))
+  let base = const_pattern(@lib.color(0.2, 0.6, 0.9))
+  let p = @lib.posterize_pattern(base, steps=4)
+  let c = p.pattern_at(@lib.point(0.0, 0.0, 0.0))
   // With steps=4 => levels=3 and bins at {0, 1/3, 2/3, 1}
   assert_true((c.red - 0.0).abs() < 1.e-12)
   assert_true((c.green - 2.0 / 3.0).abs() < 1.e-12)
@@ -261,45 +290,48 @@ test "posterize_pattern quantizes channels" {
 
 ///|
 test "gradient_map_pattern maps scalar to palette" {
-  let base = stripe_pattern([
-    color(0.0, 0.0, 0.0),
-    color(0.5, 0.5, 0.5),
-    color(1.0, 1.0, 1.0),
+  let base = @lib.stripe_pattern([
+    @lib.color(0.0, 0.0, 0.0),
+    @lib.color(0.5, 0.5, 0.5),
+    @lib.color(1.0, 1.0, 1.0),
   ])
-  let p = gradient_map_pattern(base, [color(1, 0, 0), color(0, 0, 1)])
-  assert_eq(p.pattern_at(point(0.1, 0.0, 0.0)), color(1, 0, 0))
-  assert_eq(p.pattern_at(point(2.1, 0.0, 0.0)), color(0, 0, 1))
+  let p = @lib.gradient_map_pattern(base, [
+    @lib.color(1, 0, 0),
+    @lib.color(0, 0, 1),
+  ])
+  assert_eq(p.pattern_at(@lib.point(0.1, 0.0, 0.0)), @lib.color(1, 0, 0))
+  assert_eq(p.pattern_at(@lib.point(2.1, 0.0, 0.0)), @lib.color(0, 0, 1))
   // 0.5 maps to mid of palette
-  assert_eq(p.pattern_at(point(1.1, 0.0, 0.0)), color(0.5, 0.0, 0.5))
+  assert_eq(p.pattern_at(@lib.point(1.1, 0.0, 0.0)), @lib.color(0.5, 0.0, 0.5))
 }
 
 ///|
 test "triplanar_pattern picks correct projection when axis-aligned" {
   let base = uv_coord_pattern()
-  let p = triplanar_pattern(base, scale=1.0, sharpness=8.0)
-  let pt = point(0.2, 0.7, 0.4)
+  let p = @lib.triplanar_pattern(base, scale=1.0, sharpness=8.0)
+  let pt = @lib.point(0.2, 0.7, 0.4)
 
   // Normal X => use (z,y)
-  let cx = p.pattern_at_shape(sphere(), pt, normal=vector(1, 0, 0))
-  assert_eq(cx, color(0.4, 0.7, 0.0))
+  let cx = p.pattern_at_shape(@lib.sphere(), pt, normal=@lib.vector(1, 0, 0))
+  assert_eq(cx, @lib.color(0.4, 0.7, 0.0))
 
   // Normal Y => use (x,z)
-  let cy = p.pattern_at_shape(sphere(), pt, normal=vector(0, 1, 0))
-  assert_eq(cy, color(0.2, 0.4, 0.0))
+  let cy = p.pattern_at_shape(@lib.sphere(), pt, normal=@lib.vector(0, 1, 0))
+  assert_eq(cy, @lib.color(0.2, 0.4, 0.0))
 
   // Normal Z => use (x,y)
-  let cz = p.pattern_at_shape(sphere(), pt, normal=vector(0, 0, 1))
-  assert_eq(cz, color(0.2, 0.7, 0.0))
+  let cz = p.pattern_at_shape(@lib.sphere(), pt, normal=@lib.vector(0, 0, 1))
+  assert_eq(cz, @lib.color(0.2, 0.7, 0.0))
 }
 
 ///|
 test "triplanar_pattern blends projections" {
   let base = uv_coord_pattern()
-  let p = triplanar_pattern(base, scale=1.0, sharpness=1.0)
-  let pt = point(0.2, 0.7, 0.4)
+  let p = @lib.triplanar_pattern(base, scale=1.0, sharpness=1.0)
+  let pt = @lib.point(0.2, 0.7, 0.4)
 
   // Equal weights on X and Y.
-  let c = p.pattern_at_shape(sphere(), pt, normal=vector(1, 1, 0))
+  let c = p.pattern_at_shape(@lib.sphere(), pt, normal=@lib.vector(1, 1, 0))
   // 0.5 * (z,y) + 0.5 * (x,z) = (0.5*z + 0.5*x, 0.5*y + 0.5*z)
   assert_true((c.red - 0.3).abs() < 1.e-12)
   assert_true((c.green - 0.55).abs() < 1.e-12)
@@ -307,13 +339,13 @@ test "triplanar_pattern blends projections" {
 
 ///|
 test "warp_pattern uses RGB-as-vector (signed)" {
-  let red = color(1, 0, 0)
-  let blue = color(0, 0, 1)
-  let base = stripe_pattern([red, blue])
+  let red = @lib.color(1, 0, 0)
+  let blue = @lib.color(0, 0, 1)
+  let base = @lib.stripe_pattern([red, blue])
   // RGB (1,0.5,0.5) decodes to vector(1,0,0) in Signed mode.
-  let warp = const_pattern(color(1.0, 0.5, 0.5))
-  let p = warp_pattern(base, warp, amplitude=0.25)
+  let warp = const_pattern(@lib.color(1.0, 0.5, 0.5))
+  let p = @lib.warp_pattern(base, warp, amplitude=0.25)
 
   // Without warp at x=0.9 => red. With warp => x=1.15 => blue.
-  assert_eq(p.pattern_at(point(0.9, 0.0, 0.0)), blue)
+  assert_eq(p.pattern_at(@lib.point(0.9, 0.0, 0.0)), blue)
 }

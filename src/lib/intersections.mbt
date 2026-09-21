@@ -13,6 +13,9 @@ pub(all) struct Intersection {
 } derive(Debug)
 
 ///|
+pub extend Intersection with Debug::{to_repr}
+
+///|
 pub fn intersection(
   t : Double,
   shape : Shape,
@@ -34,6 +37,16 @@ pub fn intersection(
 }
 
 ///|
+
+///|
+pub extend Intersection with Eq::{equal}
+
+///|
+#deprecated("Use `!=` instead", skip_current_package=true)
+#doc(hidden)
+pub extend Intersection with Eq::{not_equal}
+
+///|
 pub impl Eq for Intersection with fn equal(self, other) {
   self.t == other.t // && self.object == other.object
 }
@@ -42,6 +55,13 @@ pub impl Eq for Intersection with fn equal(self, other) {
 pub fn Intersection::to_string(self : Intersection) -> String {
   "intersection(\{self.t})"
 }
+
+///|
+
+///|
+#deprecated("Use `Show::output` via the trait or `to_string` instead", skip_current_package=true)
+#doc(hidden)
+pub extend Intersection with Show::{output}
 
 ///|
 pub impl Show for Intersection with fn output(self, logger) {

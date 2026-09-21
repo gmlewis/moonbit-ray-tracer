@@ -1,7 +1,6 @@
 import {
   "bobzhang/toml",
   "gmlewis/base64",
-  "gmlewis/flate",
   "gmlewis/fonts",
   "gmlewis/fonts/draw",
   "gmlewis/gzip",
@@ -14,7 +13,6 @@ import {
   "moonbitlang/async",
   "moonbitlang/async/fs",
   "moonbitlang/async/stdio",
-  "moonbitlang/core/debug",
   "moonbitlang/core/builtin",
   "moonbitlang/core/cmp",
   "moonbitlang/core/double",
@@ -24,3 +22,7 @@ import {
   "moonbitlang/core/random",
   "moonbitlang/core/string",
 }
+
+import {
+  "moonbitlang/core/debug",
+} for "test"

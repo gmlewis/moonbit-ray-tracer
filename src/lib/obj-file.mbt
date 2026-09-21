@@ -15,9 +15,24 @@ suberror ParserError {
 } derive(Eq)
 
 ///|
+pub extend ParserError with Eq::{equal}
+
+///|
+#deprecated("Use `!=` instead", skip_current_package=true)
+#doc(hidden)
+pub extend ParserError with Eq::{not_equal}
+
+///|
 
 ///|
 pub extend ParserError with Show::{to_string}
+
+///|
+
+///|
+#deprecated("Use `Show::output` via the trait or `to_string` instead", skip_current_package=true)
+#doc(hidden)
+pub extend ParserError with Show::{output}
 
 ///|
 pub impl Show for ParserError with fn output(self, logger) {

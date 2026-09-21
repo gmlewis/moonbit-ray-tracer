@@ -1,6 +1,6 @@
 ///|
 struct TestShape {
-  mut saved_ray : Ray
+  mut saved_ray : @lib.Ray
 } derive(Debug, Eq)
 
 ///|
@@ -15,20 +15,20 @@ impl Object for TestShape with fn local_intersect(self, ray) {
 }
 
 ///|
-impl Object for TestShape with fn local_normal_at(_self, point) -> Tuple {
-  vector(point.x, point.y, point.z)
+impl Object for TestShape with fn local_normal_at(_self, point) -> @lib.Tuple {
+  @lib.vector(point.x, point.y, point.z)
 }
 
 ///|
 impl Object for TestShape with fn clone(self) {
   TestShape::{
     saved_ray: {
-      origin: point(
+      origin: @lib.point(
         self.saved_ray.origin.x,
         self.saved_ray.origin.y,
         self.saved_ray.origin.z,
       ),
-      direction: vector(
+      direction: @lib.vector(
         self.saved_ray.direction.x,
         self.saved_ray.direction.y,
         self.saved_ray.direction.z,
@@ -48,35 +48,35 @@ pub impl Show for TestShape with fn output(self, logger) {
 }
 
 ///|
-fn test_shape() -> Shape {
-  let saved_ray = ray(point(0, 0, 0), vector(0, 1, 0)) // initial value unimportant
-  Shape::new_object(TestShape::{ saved_ray, })
+fn test_shape() -> @lib.Shape {
+  let saved_ray = @lib.ray(@lib.point(0, 0, 0), @lib.vector(0, 1, 0)) // initial value unimportant
+  @lib.Shape::new_object(TestShape::{ saved_ray, })
 }
 
 ///|
 test "The default transformation (p.165)" {
   let s = test_shape()
-  assert_eq(s.transform, mat4ident())
+  assert_eq(s.transform, @lib.mat4ident())
 }
 
 ///|
 test "Assigning a transformation (p.166)" {
   let s = test_shape()
-  s.set_transform(translation(2, 3, 4))
-  assert_eq(s.transform, translation(2, 3, 4))
+  s.set_transform(@lib.translation(2, 3, 4))
+  assert_eq(s.transform, @lib.translation(2, 3, 4))
 }
 
 ///|
 test "The default material (p.166)" {
   let s = test_shape()
   let m = s.material
-  assert_eq(m, material())
+  assert_eq(m, @lib.material())
 }
 
 ///|
 test "Assiging a material (p.166)" {
   let s = test_shape()
-  let m = material()
+  let m = @lib.material()
   m.ambient = 1
   s.material = m
   assert_eq(s.material, m)
@@ -84,9 +84,9 @@ test "Assiging a material (p.166)" {
 
 ///|
 test "Intersecting a scaled shape with a ray (p.167)" {
-  let r = ray(point(0, 0, -5), vector(0, 0, 1))
+  let r = @lib.ray(@lib.point(0, 0, -5), @lib.vector(0, 0, 1))
   let s = test_shape()
-  s.set_transform(scaling(2, 2, 2))
+  s.set_transform(@lib.scaling(2, 2, 2))
   let _ = s.intersect(r)
   inspect(
     s.object,
@@ -96,9 +96,9 @@ test "Intersecting a scaled shape with a ray (p.167)" {
 
 ///|
 test "Intersecting a translated shape with a ray (p.167)" {
-  let r = ray(point(0, 0, -5), vector(0, 0, 1))
+  let r = @lib.ray(@lib.point(0, 0, -5), @lib.vector(0, 0, 1))
   let s = test_shape()
-  s.set_transform(translation(5, 0, 0))
+  s.set_transform(@lib.translation(5, 0, 0))
   let _ = s.intersect(r)
   inspect(
     s.object,
@@ -109,19 +109,19 @@ test "Intersecting a translated shape with a ray (p.167)" {
 ///|
 test "Computing the normal on a translated shape (p.168)" {
   let s = test_shape()
-  s.set_transform(translation(0, 1, 0))
-  let n = s.normal_at(point(0, 1.70711, -0.70711))
-  assert_eq(n, vector(0, 0.70711, -0.70711))
+  s.set_transform(@lib.translation(0, 1, 0))
+  let n = s.normal_at(@lib.point(0, 1.70711, -0.70711))
+  assert_eq(n, @lib.vector(0, 0.70711, -0.70711))
 }
 
 ///|
 test "Computing the normal on a transformed shape (p.168)" {
   let s = test_shape()
-  let m = scaling(1, 0.5, 1) * rotation_z(@math.PI / 5)
+  let m = @lib.scaling(1, 0.5, 1) * @lib.rotation_z(@math.PI / 5)
   s.set_transform(m)
   let sq2 = 2.0.sqrt() / 2
-  let n = s.normal_at(point(0, sq2, -sq2))
-  assert_eq(n, vector(0, 0.97014, -0.24254))
+  let n = s.normal_at(@lib.point(0, sq2, -sq2))
+  assert_eq(n, @lib.vector(0, 0.97014, -0.24254))
 }
 
 ///|
@@ -133,54 +133,54 @@ test "A shape has a parent attribute (p.253)" {
 ///|
 test "Converting a point from world to object space (p.256)" {
   let s = {
-    let s = sphere()
-    s.set_transform(translation(5, 0, 0))
+    let s = @lib.sphere()
+    s.set_transform(@lib.translation(5, 0, 0))
     s
   }
   let g2 = {
     let g = @lib.group()
-    g.set_transform(scaling(2, 2, 2))
+    g.set_transform(@lib.scaling(2, 2, 2))
     g.add_child(s)
     g
   }
-  @lib.group()..set_transform(rotation_y(@math.PI / 2)).add_child(g2)
-  let p = s.world_to_object(point(-2, 0, -10))
-  assert_eq(p, point(0, 0, -1))
+  @lib.group()..set_transform(@lib.rotation_y(@math.PI / 2)).add_child(g2)
+  let p = s.world_to_object(@lib.point(-2, 0, -10))
+  assert_eq(p, @lib.point(0, 0, -1))
 }
 
 ///|
 test "Converting a normal from object to world space (p.257)" {
   let s = {
-    let s = sphere()
-    s.set_transform(translation(5, 0, 0))
+    let s = @lib.sphere()
+    s.set_transform(@lib.translation(5, 0, 0))
     s
   }
   let g2 = {
     let g = @lib.group()
-    g.set_transform(scaling(1, 2, 3))
+    g.set_transform(@lib.scaling(1, 2, 3))
     g.add_child(s)
     g
   }
-  @lib.group()..set_transform(rotation_y(@math.PI / 2)).add_child(g2)
+  @lib.group()..set_transform(@lib.rotation_y(@math.PI / 2)).add_child(g2)
   let sq3 = 3.0.sqrt() / 3
-  let n = s.normal_to_world(vector(sq3, sq3, sq3))
-  assert_eq(n, vector(0.28571, 0.42857, -0.85714))
+  let n = s.normal_to_world(@lib.vector(sq3, sq3, sq3))
+  assert_eq(n, @lib.vector(0.28571, 0.42857, -0.85714))
 }
 
 ///|
 test "Finding the normal on a child object (p.258)" {
   let s = {
-    let s = sphere()
-    s.set_transform(translation(5, 0, 0))
+    let s = @lib.sphere()
+    s.set_transform(@lib.translation(5, 0, 0))
     s
   }
   let g2 = {
     let g = @lib.group()
-    g.set_transform(scaling(1, 2, 3))
+    g.set_transform(@lib.scaling(1, 2, 3))
     g.add_child(s)
     g
   }
-  @lib.group()..set_transform(rotation_y(@math.PI / 2)).add_child(g2)
-  let n = s.normal_at(point(1.7321, 1.1547, -5.5774))
-  assert_eq(n, vector(0.2857, 0.42854, -0.85716))
+  @lib.group()..set_transform(@lib.rotation_y(@math.PI / 2)).add_child(g2)
+  let n = s.normal_at(@lib.point(1.7321, 1.1547, -5.5774))
+  assert_eq(n, @lib.vector(0.2857, 0.42854, -0.85716))
 }

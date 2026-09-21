@@ -6,6 +6,9 @@ pub(all) struct Ray {
 } derive(Debug)
 
 ///|
+pub extend Ray with Debug::{to_repr}
+
+///|
 pub fn ray(origin : Tuple, direction : Tuple) -> Ray {
   { origin, direction, }
 }
@@ -16,6 +19,13 @@ pub fn ray(origin : Tuple, direction : Tuple) -> Ray {
 pub extend Ray with Show::{to_string}
 
 ///|
+
+///|
+#deprecated("Use `Show::output` via the trait or `to_string` instead", skip_current_package=true)
+#doc(hidden)
+pub extend Ray with Show::{output}
+
+///|
 pub impl Show for Ray with fn to_string(self) {
   "ray(\{self.origin}, \{self.direction})"
 }
@@ -24,6 +34,16 @@ pub impl Show for Ray with fn to_string(self) {
 pub impl Show for Ray with fn output(self, logger) {
   logger.write_string(self.to_string())
 }
+
+///|
+
+///|
+pub extend Ray with Eq::{equal}
+
+///|
+#deprecated("Use `!=` instead", skip_current_package=true)
+#doc(hidden)
+pub extend Ray with Eq::{not_equal}
 
 ///|
 pub impl Eq for Ray with fn equal(self, other) {

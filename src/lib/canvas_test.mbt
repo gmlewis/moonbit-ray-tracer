@@ -1,27 +1,27 @@
 ///|
 test "Creating a canvas (p.46)" {
-  let c = canvas(10, 20)
+  let c = @lib.canvas(10, 20)
   assert_eq(c.width, 10)
   assert_eq(c.height, 20)
   for y in 0..<c.height {
     for x in 0..<c.width {
-      assert_eq(c.pixel_at(x, y), color(0, 0, 0))
+      assert_eq(c.pixel_at(x, y), @lib.color(0, 0, 0))
     }
   }
 }
 
 ///|
 test "Writing pixels to a canvas (p.46)" {
-  let c = canvas(10, 20)
-  let red = color(1, 0, 0)
+  let c = @lib.canvas(10, 20)
+  let red = @lib.color(1, 0, 0)
   c.write_pixel(2, 3, red)
   assert_eq(c.pixel_at(2, 3), red)
-  assert_eq(c.pixel_at(0, 0), color(0, 0, 0))
+  assert_eq(c.pixel_at(0, 0), @lib.color(0, 0, 0))
 }
 
 ///|
 test "Constructing the PPM header (p.48)" {
-  let c = canvas(5, 3)
+  let c = @lib.canvas(5, 3)
   let ppm = c.to_ppm()
   let lines1to3 = ppm.split("\n")[0:3].map(fn(s) { s.to_owned() }).join("\n")
   inspect(
@@ -36,10 +36,10 @@ test "Constructing the PPM header (p.48)" {
 
 ///|
 test "Constructing the PPM pixel data (p.48)" {
-  let c = canvas(5, 3)
-  let c1 = color(1.5, 0, 0)
-  let c2 = color(0, 0.5, 0)
-  let c3 = color(-0.5, 0, 1)
+  let c = @lib.canvas(5, 3)
+  let c1 = @lib.color(1.5, 0, 0)
+  let c2 = @lib.color(0, 0.5, 0)
+  let c3 = @lib.color(-0.5, 0, 1)
   let ppm = c
     ..write_pixel(0, 0, c1)
     ..write_pixel(2, 1, c2)
@@ -58,10 +58,10 @@ test "Constructing the PPM pixel data (p.48)" {
 
 ///|
 test "Constructing the PNG pixel data" {
-  let c = canvas(5, 3)
-  let c1 = color(1.5, 0, 0)
-  let c2 = color(0, 0.5, 0)
-  let c3 = color(-0.5, 0, 1)
+  let c = @lib.canvas(5, 3)
+  let c1 = @lib.color(1.5, 0, 0)
+  let c2 = @lib.color(0, 0.5, 0)
+  let c3 = @lib.color(-0.5, 0, 1)
   let png = c
     ..write_pixel(0, 0, c1)
     ..write_pixel(2, 1, c2)
@@ -77,7 +77,7 @@ test "Constructing the PNG pixel data" {
 
 ///|
 test "Splitting long lines in PPM files (p.49)" {
-  let ppm = canvas(10, 2)..clear(color(1, 0.8, 0.6)).to_ppm()
+  let ppm = @lib.canvas(10, 2)..clear(@lib.color(1, 0.8, 0.6)).to_ppm()
   let lines4to6 = ppm.split("\n")[3:7].map(fn(s) { s.to_owned() }).join("\n")
   inspect(
     lines4to6,
@@ -92,6 +92,6 @@ test "Splitting long lines in PPM files (p.49)" {
 
 ///|
 test "PPM files are terminated by a newline character (p.49)" {
-  let ppm = canvas(5, 3).to_ppm()
+  let ppm = @lib.canvas(5, 3).to_ppm()
   inspect(ppm.code_unit_at(ppm.length() - 1), content="10")
 }

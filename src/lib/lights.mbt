@@ -5,11 +5,33 @@ pub(all) enum LightKind {
 } derive(Debug, Eq)
 
 ///|
+pub extend LightKind with Eq::{equal}
+
+///|
+#deprecated("Use `!=` instead", skip_current_package=true)
+#doc(hidden)
+pub extend LightKind with Eq::{not_equal}
+
+///|
+pub extend LightKind with Debug::{to_repr}
+
+///|
 pub(all) struct Light {
   position : Tuple // Corner for area light, position for point light
   intensity : Color
   kind : LightKind
 } derive(Debug, Eq)
+
+///|
+pub extend Light with Eq::{equal}
+
+///|
+#deprecated("Use `!=` instead", skip_current_package=true)
+#doc(hidden)
+pub extend Light with Eq::{not_equal}
+
+///|
+pub extend Light with Debug::{to_repr}
 
 ///|
 pub fn Light::to_string(self : Light) -> String {
@@ -19,6 +41,13 @@ pub fn Light::to_string(self : Light) -> String {
       "area_light(\{self.position}, \{uvec}, \{u_steps}, \{vvec}, \{v_steps}, \{self.intensity})"
   }
 }
+
+///|
+
+///|
+#deprecated("Use `Show::output` via the trait or `to_string` instead", skip_current_package=true)
+#doc(hidden)
+pub extend Light with Show::{output}
 
 ///|
 pub impl Show for Light with fn output(self, logger) {

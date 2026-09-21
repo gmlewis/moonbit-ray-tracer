@@ -20,6 +20,17 @@ pub(all) struct SmoothTriangleUV {
 } derive(Debug, Eq)
 
 ///|
+pub extend SmoothTriangleUV with Eq::{equal}
+
+///|
+#deprecated("Use `!=` instead", skip_current_package=true)
+#doc(hidden)
+pub extend SmoothTriangleUV with Eq::{not_equal}
+
+///|
+pub extend SmoothTriangleUV with Debug::{to_repr}
+
+///|
 pub fn smooth_triangle_uv(
   p1 : Tuple,
   p2 : Tuple,
@@ -278,6 +289,13 @@ pub fn SmoothTriangleUV::clone(self : SmoothTriangleUV) -> SmoothTriangleUV {
 pub fn SmoothTriangleUV::to_string(self : SmoothTriangleUV) -> String {
   "smooth_triangle_uv(\{self.p1}, \{self.p2}, \{self.p3}, \{self.n1}, \{self.n2}, \{self.n3}, \{Repr(self.uv1)}, \{Repr(self.uv2)}, \{Repr(self.uv3)})"
 }
+
+///|
+
+///|
+#deprecated("Use `Show::output` via the trait or `to_string` instead", skip_current_package=true)
+#doc(hidden)
+pub extend SmoothTriangleUV with Show::{output}
 
 ///|
 pub impl Show for SmoothTriangleUV with fn output(self, logger) {

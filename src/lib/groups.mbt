@@ -5,6 +5,9 @@ pub(all) struct Group {
 } derive(Debug)
 
 ///|
+pub extend Group with Debug::{to_repr}
+
+///|
 pub fn group() -> Shape {
   Shape::new_group(Group::{ children: [], bounds: None, })
 }

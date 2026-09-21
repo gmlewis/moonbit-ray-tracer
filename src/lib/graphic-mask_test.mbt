@@ -10,14 +10,14 @@ async test "graphic_mask pattern samples inside/outside" {
   }
   let inside = pattern.pattern_at_shape(
     shape,
-    point(0.5, 0.0, 0.5),
-    normal=vector(0, 0, 0),
+    @lib.point(0.5, 0.0, 0.5),
+    normal=@lib.vector(0, 0, 0),
   )
   let outside = pattern.pattern_at_shape(
     shape,
-    point(1.5, 0.0, 0.5),
-    normal=vector(0, 0, 0),
+    @lib.point(1.5, 0.0, 0.5),
+    normal=@lib.vector(0, 0, 0),
   )
-  assert_eq(inside, color(1, 1, 1))
-  assert_eq(outside, color(0, 0, 0))
+  assert_eq(inside, @lib.color(1, 1, 1))
+  assert_eq(outside, @lib.color(0, 0, 0))
 }

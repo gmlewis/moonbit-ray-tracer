@@ -5,6 +5,24 @@ pub suberror SceneParseError {
 } derive(Eq)
 
 ///|
+pub extend SceneParseError with Eq::{equal}
+
+///|
+#deprecated("Use `!=` instead", skip_current_package=true)
+#doc(hidden)
+pub extend SceneParseError with Eq::{not_equal}
+
+///|
+
+///|
+pub extend SceneParseError with Show::{to_string}
+
+///|
+#deprecated("Use `Show::output` via the trait or `to_string` instead", skip_current_package=true)
+#doc(hidden)
+pub extend SceneParseError with Show::{output}
+
+///|
 pub impl Show for SceneParseError with fn output(self, logger) {
   match self {
     SceneParseError(msg) => logger.write_string(msg)
@@ -35,12 +53,28 @@ pub(all) struct RenderSettings {
 } derive(Eq)
 
 ///|
+pub extend RenderSettings with Eq::{equal}
+
+///|
+#deprecated("Use `!=` instead", skip_current_package=true)
+#doc(hidden)
+pub extend RenderSettings with Eq::{not_equal}
+
+///|
 /// Scene metadata
 pub(all) struct SceneMetadata {
   name : String
   description : String
   version : String
 } derive(Eq)
+
+///|
+pub extend SceneMetadata with Eq::{equal}
+
+///|
+#deprecated("Use `!=` instead", skip_current_package=true)
+#doc(hidden)
+pub extend SceneMetadata with Eq::{not_equal}
 
 ///|
 /// Helper functions for extracting values from TOML tables

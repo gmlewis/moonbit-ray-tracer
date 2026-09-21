@@ -3,6 +3,17 @@
 pub(all) struct Sphere {} derive(Debug, Eq)
 
 ///|
+pub extend Sphere with Eq::{equal}
+
+///|
+#deprecated("Use `!=` instead", skip_current_package=true)
+#doc(hidden)
+pub extend Sphere with Eq::{not_equal}
+
+///|
+pub extend Sphere with Debug::{to_repr}
+
+///|
 let _Sphere : &Object = Sphere::{ }
 
 ///|
@@ -20,9 +31,24 @@ pub fn glass_sphere() -> Shape {
 }
 
 ///|
+
+///|
+pub extend Sphere with Show::{to_string}
+
+///|
+#deprecated("Use `Show::output` via the trait or `to_string` instead", skip_current_package=true)
+#doc(hidden)
+pub extend Sphere with Show::{output}
+
+///|
 pub impl Show for Sphere with fn output(_self, logger) {
   logger.write_string("sphere()")
 }
+
+///|
+
+///|
+pub extend Sphere with Object::{bounds, clone, local_intersect, local_normal_at}
 
 ///|
 pub impl Object for Sphere with fn local_intersect(_self, ray) {

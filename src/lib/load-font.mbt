@@ -7,6 +7,14 @@ pub suberror LoaderError {
 } derive(Eq)
 
 ///|
+pub extend LoaderError with Eq::{equal}
+
+///|
+#deprecated("Use `!=` instead", skip_current_package=true)
+#doc(hidden)
+pub extend LoaderError with Eq::{not_equal}
+
+///|
 /// `load_font` attempts to load a font by its name from the `all-fonts` directory.
 /// It first looks in the current directory's `all-fonts/` subdirectory.
 /// If not found, it checks the `MOONBIT_FONTS_DIR` environment variable and,

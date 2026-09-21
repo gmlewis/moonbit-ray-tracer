@@ -10,6 +10,17 @@ pub(all) struct Canvas {
 } derive(Debug, Eq)
 
 ///|
+pub extend Canvas with Eq::{equal}
+
+///|
+#deprecated("Use `!=` instead", skip_current_package=true)
+#doc(hidden)
+pub extend Canvas with Eq::{not_equal}
+
+///|
+pub extend Canvas with Debug::{to_repr}
+
+///|
 pub fn canvas(width : Int, height : Int) -> Canvas {
   let size = width * height
   let red = Array::make(size, 0.0)

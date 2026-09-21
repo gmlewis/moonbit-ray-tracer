@@ -10,6 +10,14 @@ pub(all) struct Camera {
 } derive(Eq)
 
 ///|
+pub extend Camera with Eq::{equal}
+
+///|
+#deprecated("Use `!=` instead", skip_current_package=true)
+#doc(hidden)
+pub extend Camera with Eq::{not_equal}
+
+///|
 pub fn camera(hsize : Int, vsize : Int, field_of_view : Double) -> Camera {
   let transform = mat4ident()
   let half_view = @math.tan(field_of_view / 2)

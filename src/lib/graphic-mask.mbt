@@ -18,6 +18,19 @@ pub(all) struct GraphicMaskPattern {
 } derive(Debug)
 
 ///|
+pub extend GraphicMaskPattern with Debug::{to_repr}
+
+///|
+
+///|
+pub extend GraphicMaskPattern with Show::{to_string}
+
+///|
+#deprecated("Use `Show::output` via the trait or `to_string` instead", skip_current_package=true)
+#doc(hidden)
+pub extend GraphicMaskPattern with Show::{output}
+
+///|
 pub impl Show for GraphicMaskPattern with fn output(_self, logger) {
   logger.write_string("graphic_mask(...) ")
 }

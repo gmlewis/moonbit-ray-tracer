@@ -6,6 +6,17 @@ pub(all) enum Operation {
 } derive(Debug, Eq)
 
 ///|
+pub extend Operation with Eq::{equal}
+
+///|
+#deprecated("Use `!=` instead", skip_current_package=true)
+#doc(hidden)
+pub extend Operation with Eq::{not_equal}
+
+///|
+pub extend Operation with Debug::{to_repr}
+
+///|
 pub fn Operation::to_string(self : Operation) -> String {
   match self {
     Union => "union"
@@ -13,6 +24,13 @@ pub fn Operation::to_string(self : Operation) -> String {
     Difference => "difference"
   }
 }
+
+///|
+
+///|
+#deprecated("Use `Show::output` via the trait or `to_string` instead", skip_current_package=true)
+#doc(hidden)
+pub extend Operation with Show::{output}
 
 ///|
 pub impl Show for Operation with fn output(self, logger) {
@@ -25,6 +43,17 @@ pub(all) struct CSG {
   left : Shape
   right : Shape
 } derive(Debug, Eq)
+
+///|
+pub extend CSG with Eq::{equal}
+
+///|
+#deprecated("Use `!=` instead", skip_current_package=true)
+#doc(hidden)
+pub extend CSG with Eq::{not_equal}
+
+///|
+pub extend CSG with Debug::{to_repr}
 
 ///|
 pub fn csg(operation : Operation, left : Shape, right : Shape) -> Shape {
@@ -68,6 +97,13 @@ pub fn CSG::clone(self : CSG) -> CSG {
 pub fn CSG::to_string(self : CSG) -> String {
   "csg(\{self.operation})"
 }
+
+///|
+
+///|
+#deprecated("Use `Show::output` via the trait or `to_string` instead", skip_current_package=true)
+#doc(hidden)
+pub extend CSG with Show::{output}
 
 ///|
 pub impl Show for CSG with fn output(self, logger) {

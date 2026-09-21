@@ -11,6 +11,9 @@ pub(all) struct Tuple {
 } derive(Debug)
 
 ///|
+pub extend Tuple with Debug::{to_repr}
+
+///|
 pub fn tuple(x : Double, y : Double, z : Double, w : Double) -> Tuple {
   { x, y, z, w, }
 }
@@ -29,6 +32,13 @@ pub fn Tuple::to_string(self : Tuple) -> String {
     "tuple(\{x}, \{y}, \{z}, \{w})"
   }
 }
+
+///|
+
+///|
+#deprecated("Use `Show::output` via the trait or `to_string` instead", skip_current_package=true)
+#doc(hidden)
+pub extend Tuple with Show::{output}
 
 ///|
 pub impl Show for Tuple with fn output(self, logger) {
@@ -80,10 +90,25 @@ pub fn Tuple::is_vector(self : Tuple) -> Bool {
 }
 
 ///|
+
+///|
+pub extend Tuple with Eq::{equal}
+
+///|
+#deprecated("Use `!=` instead", skip_current_package=true)
+#doc(hidden)
+pub extend Tuple with Eq::{not_equal}
+
+///|
 pub impl Eq for Tuple with fn equal(self, other) {
   let { x, y, z, w, } = (self - other).abs()
   x < EPSILON && y < EPSILON && z < EPSILON && w < EPSILON
 }
+
+///|
+
+///|
+pub extend Tuple with Add::{add}
 
 ///|
 pub impl Add for Tuple with fn add(self, other) {
@@ -95,6 +120,11 @@ pub impl Add for Tuple with fn add(self, other) {
 }
 
 ///|
+
+///|
+pub extend Tuple with Sub::{sub}
+
+///|
 pub impl Sub for Tuple with fn sub(self, other) {
   let x = self.x - other.x
   let y = self.y - other.y
@@ -104,6 +134,11 @@ pub impl Sub for Tuple with fn sub(self, other) {
 }
 
 ///|
+
+///|
+pub extend Tuple with Neg::{neg}
+
+///|
 pub impl Neg for Tuple with fn neg(self) {
   let x = -self.x
   let y = -self.y
@@ -111,6 +146,11 @@ pub impl Neg for Tuple with fn neg(self) {
   let w = -self.w
   { x, y, z, w, }
 }
+
+///|
+
+///|
+pub extend Tuple with Mul::{mul}
 
 ///|
 pub impl Mul for Tuple with fn mul(self, other) {

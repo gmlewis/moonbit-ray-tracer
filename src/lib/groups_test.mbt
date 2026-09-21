@@ -1,7 +1,7 @@
 ///|
 test "Creating a new group (p.253)" {
   let g = @lib.group()
-  assert_eq(g.transform, mat4ident())
+  assert_eq(g.transform, @lib.mat4ident())
   assert_eq(g.children().length(), 0)
 }
 
@@ -19,22 +19,22 @@ test "Adding a child to a group (p.253)" {
 ///|
 test "Intersecting a ray with an empty group (p.253)" {
   let g = @lib.group()
-  let r = ray(point(0, 0, 0), vector(0, 0, 1))
+  let r = @lib.ray(@lib.point(0, 0, 0), @lib.vector(0, 0, 1))
   let xs = g.local_intersect(r)
   assert_eq(xs.count, 0)
 }
 
 ///|
 test "Intersecting a ray with a non-empty group (p.254)" {
-  let s1 = sphere()
+  let s1 = @lib.sphere()
   let s2 = {
-    let s = sphere()
-    s.set_transform(translation(0, 0, -3))
+    let s = @lib.sphere()
+    s.set_transform(@lib.translation(0, 0, -3))
     s
   }
   let s3 = {
-    let s = sphere()
-    s.set_transform(translation(5, 0, 0))
+    let s = @lib.sphere()
+    s.set_transform(@lib.translation(5, 0, 0))
     s
   }
   let g = {
@@ -42,7 +42,7 @@ test "Intersecting a ray with a non-empty group (p.254)" {
     g..add_child(s1)..add_child(s2).add_child(s3)
     g
   }
-  let r = ray(point(0, 0, -5), vector(0, 0, 1))
+  let r = @lib.ray(@lib.point(0, 0, -5), @lib.vector(0, 0, 1))
   let xs = g.local_intersect(r)
   assert_eq(xs.count, 4)
   assert_eq(xs[0].shape, s2)
@@ -54,29 +54,29 @@ test "Intersecting a ray with a non-empty group (p.254)" {
 ///|
 test "Intersecting a transformed group (p.255)" {
   let s = {
-    let s = sphere()
-    s.set_transform(translation(5, 0, 0))
+    let s = @lib.sphere()
+    s.set_transform(@lib.translation(5, 0, 0))
     s
   }
   let g = {
     let g = @lib.group()
-    g..set_transform(scaling(2, 2, 2)).add_child(s)
+    g..set_transform(@lib.scaling(2, 2, 2)).add_child(s)
     g
   }
-  let r = ray(point(10, 0, -10), vector(0, 0, 1))
+  let r = @lib.ray(@lib.point(10, 0, -10), @lib.vector(0, 0, 1))
   let xs = g.intersect(r)
   assert_eq(xs.count, 2)
 }
 
 ///|
 test "partition_children splits a group's children" {
-  let s1 = sphere()
-  s1.set_transform(translation(-2, 0, 0))
-  let s2 = sphere()
-  s2.set_transform(translation(2, 0, 0))
-  let s3 = sphere()
-  s3.set_transform(translation(0, 0, 0))
-  let g = group()
+  let s1 = @lib.sphere()
+  s1.set_transform(@lib.translation(-2, 0, 0))
+  let s2 = @lib.sphere()
+  s2.set_transform(@lib.translation(2, 0, 0))
+  let s3 = @lib.sphere()
+  s3.set_transform(@lib.translation(0, 0, 0))
+  let g = @lib.group()
   g.add_child(s1)
   g.add_child(s2)
   g.add_child(s3)
@@ -93,13 +93,13 @@ test "partition_children splits a group's children" {
 
 ///|
 test "Subdividing a group with enough children" {
-  let s1 = sphere()
-  s1.set_transform(translation(-2, 0, 0))
-  let s2 = sphere()
-  s2.set_transform(translation(2, 0, 0))
-  let s3 = sphere()
-  s3.set_transform(translation(0, 0, 0))
-  let g = group()
+  let s1 = @lib.sphere()
+  s1.set_transform(@lib.translation(-2, 0, 0))
+  let s2 = @lib.sphere()
+  s2.set_transform(@lib.translation(2, 0, 0))
+  let s3 = @lib.sphere()
+  s3.set_transform(@lib.translation(0, 0, 0))
+  let g = @lib.group()
   g.add_child(s1)
   g.add_child(s2)
   g.add_child(s3)

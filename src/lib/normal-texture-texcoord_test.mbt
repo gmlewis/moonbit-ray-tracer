@@ -4,34 +4,37 @@
 
 ///|
 test "normalTexture texCoord selects UV set for normal map" {
-  let m = material()
+  let m = @lib.material()
   m.lighting_mode = Phong
-  m.color = color(1.0, 1.0, 1.0)
+  m.color = @lib.color(1.0, 1.0, 1.0)
   m.ambient = 0.0
   m.diffuse = 1.0
   m.specular = 0.0
 
   // 2x1 normal map: left pixel = flat (0,0,1), right pixel = tangent-x.
-  let c = canvas(2, 1)
-  c.write_pixel(0, 0, color(0.5, 0.5, 1.0))
-  c.write_pixel(1, 0, color(1.0, 0.5, 0.5))
-  let nt = texture(c)
+  let c = @lib.canvas(2, 1)
+  c.write_pixel(0, 0, @lib.color(0.5, 0.5, 1.0))
+  c.write_pixel(1, 0, @lib.color(1.0, 0.5, 0.5))
+  let nt = @lib.texture(c)
   m.normal_texture = Some(nt)
   m.normal_texture_scale = 1.0
 
   // A simple UV triangle in the XY plane.
-  let tri = triangle_uv(
-    point(0.0, 0.0, 0.0),
-    point(1.0, 0.0, 0.0),
-    point(0.0, 1.0, 0.0),
+  let tri = @lib.triangle_uv(
+    @lib.point(0.0, 0.0, 0.0),
+    @lib.point(1.0, 0.0, 0.0),
+    @lib.point(0.0, 1.0, 0.0),
     (0.0, 0.0),
     (1.0, 0.0),
     (0.0, 1.0),
   )
-  let light = point_light(point(0.0, 0.0, -10.0), color(1.0, 1.0, 1.0))
-  let position = point(0.0, 0.0, 0.0)
-  let eyev = vector(0.0, 0.0, -1.0)
-  let normalv = vector(0.0, 0.0, -1.0)
+  let light = @lib.point_light(
+    @lib.point(0.0, 0.0, -10.0),
+    @lib.color(1.0, 1.0, 1.0),
+  )
+  let position = @lib.point(0.0, 0.0, 0.0)
+  let eyev = @lib.vector(0.0, 0.0, -1.0)
+  let normalv = @lib.vector(0.0, 0.0, -1.0)
   let uv0 = Some((0.25, 0.5))
   let uv1 = Some((0.75, 0.5))
 

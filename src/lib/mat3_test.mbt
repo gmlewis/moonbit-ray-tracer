@@ -1,6 +1,6 @@
 ///|
 test "A 3x3 matrix ought to be representable (p.54)" {
-  let m = mat3(
+  let m = @lib.mat3(
     -3, 5, 0, // row 0
      1, -2, -7, // row 1
      0, 1, 1, // row 2
@@ -12,12 +12,12 @@ test "A 3x3 matrix ought to be representable (p.54)" {
 
 ///|
 test "A submatrix of a 3x3 matrix is a 2x2 matrix (p.63)" {
-  let a = mat3(
+  let a = @lib.mat3(
     1, 5, 0, // row 0
      -3, 2, 7, // row 1
      0, 6, -3, // row 2
   )
-  let want = mat2(
+  let want = @lib.mat2(
     -3, 2, // row 0
      0, 6, // row 1
   )
@@ -26,7 +26,7 @@ test "A submatrix of a 3x3 matrix is a 2x2 matrix (p.63)" {
 
 ///|
 test "Calculating a minor of a 3x3 matrix (p.64)" {
-  let a = mat3(
+  let a = @lib.mat3(
     3, 5, 0, // row 0
      2, -1, -7, // row 1
      6, -1, 5, // row 2
@@ -38,7 +38,7 @@ test "Calculating a minor of a 3x3 matrix (p.64)" {
 
 ///|
 test "Calculating a cofactor of a 3x3 matrix (p.64)" {
-  let a = mat3(
+  let a = @lib.mat3(
     3, 5, 0, // row 0
      2, -1, -7, // row 1
      6, -1, 5, // row 2
@@ -51,7 +51,7 @@ test "Calculating a cofactor of a 3x3 matrix (p.64)" {
 
 ///|
 test "Calculating the determinant of a 3x3 matrix (p.65)" {
-  let a = mat3(
+  let a = @lib.mat3(
     1, 2, 6, // row 0
      -5, 8, -4, // row 1
      2, 6, 4, // row 2

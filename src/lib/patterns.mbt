@@ -7,12 +7,25 @@ pub(all) struct Pattern {
 } derive(Debug)
 
 ///|
+pub extend Pattern with Debug::{to_repr}
+
+///|
 pub(open) trait PatternTrait: Debug + Show {
   fn pattern_at(Self, Tuple) -> Color
   fn uv_at(Self, Double, Double) -> Color
   fn pattern_at_with_info(Self, Tuple, Tuple, (Double, Double)?) -> Color
   fn clone(Self) -> Pattern
 }
+
+///|
+
+///|
+pub extend Pattern with Show::{to_string}
+
+///|
+#deprecated("Use `Show::output` via the trait or `to_string` instead", skip_current_package=true)
+#doc(hidden)
+pub extend Pattern with Show::{output}
 
 ///|
 pub impl Show for Pattern with fn output(self, logger) {
@@ -61,6 +74,16 @@ pub impl PatternTrait for Pattern with fn pattern_at_with_info(
 ) {
   self.pattern.pattern_at_with_info(point, normal, uv)
 }
+
+///|
+
+///|
+pub extend Pattern with Eq::{equal}
+
+///|
+#deprecated("Use `!=` instead", skip_current_package=true)
+#doc(hidden)
+pub extend Pattern with Eq::{not_equal}
 
 ///|
 pub impl Eq for Pattern with fn equal(self, other) {
@@ -120,9 +143,35 @@ pub(open) trait Mapping: Debug + Show {
 pub(all) struct SphericalMapping {} derive(Debug, Eq)
 
 ///|
+pub extend SphericalMapping with Eq::{equal}
+
+///|
+#deprecated("Use `!=` instead", skip_current_package=true)
+#doc(hidden)
+pub extend SphericalMapping with Eq::{not_equal}
+
+///|
+pub extend SphericalMapping with Debug::{to_repr}
+
+///|
+
+///|
+pub extend SphericalMapping with Show::{to_string}
+
+///|
+#deprecated("Use `Show::output` via the trait or `to_string` instead", skip_current_package=true)
+#doc(hidden)
+pub extend SphericalMapping with Show::{output}
+
+///|
 pub impl Show for SphericalMapping with fn output(_self, logger) {
   logger.write_string("spherical_mapping()")
 }
+
+///|
+
+///|
+pub extend SphericalMapping with Mapping::{map}
 
 ///|
 pub impl Mapping for SphericalMapping with fn map(_self, p) {
@@ -139,9 +188,35 @@ pub impl Mapping for SphericalMapping with fn map(_self, p) {
 pub(all) struct PlanarMapping {} derive(Debug, Eq)
 
 ///|
+pub extend PlanarMapping with Eq::{equal}
+
+///|
+#deprecated("Use `!=` instead", skip_current_package=true)
+#doc(hidden)
+pub extend PlanarMapping with Eq::{not_equal}
+
+///|
+pub extend PlanarMapping with Debug::{to_repr}
+
+///|
+
+///|
+pub extend PlanarMapping with Show::{to_string}
+
+///|
+#deprecated("Use `Show::output` via the trait or `to_string` instead", skip_current_package=true)
+#doc(hidden)
+pub extend PlanarMapping with Show::{output}
+
+///|
 pub impl Show for PlanarMapping with fn output(_self, logger) {
   logger.write_string("planar_mapping()")
 }
+
+///|
+
+///|
+pub extend PlanarMapping with Mapping::{map}
 
 ///|
 pub impl Mapping for PlanarMapping with fn map(_self, p) {
@@ -154,9 +229,35 @@ pub impl Mapping for PlanarMapping with fn map(_self, p) {
 pub(all) struct CylindricalMapping {} derive(Debug, Eq)
 
 ///|
+pub extend CylindricalMapping with Eq::{equal}
+
+///|
+#deprecated("Use `!=` instead", skip_current_package=true)
+#doc(hidden)
+pub extend CylindricalMapping with Eq::{not_equal}
+
+///|
+pub extend CylindricalMapping with Debug::{to_repr}
+
+///|
+
+///|
+pub extend CylindricalMapping with Show::{to_string}
+
+///|
+#deprecated("Use `Show::output` via the trait or `to_string` instead", skip_current_package=true)
+#doc(hidden)
+pub extend CylindricalMapping with Show::{output}
+
+///|
 pub impl Show for CylindricalMapping with fn output(_self, logger) {
   logger.write_string("cylindrical_mapping()")
 }
+
+///|
+
+///|
+pub extend CylindricalMapping with Mapping::{map}
 
 ///|
 pub impl Mapping for CylindricalMapping with fn map(_self, p) {
@@ -171,9 +272,35 @@ pub impl Mapping for CylindricalMapping with fn map(_self, p) {
 pub(all) struct CubicMapping {} derive(Debug, Eq)
 
 ///|
+pub extend CubicMapping with Eq::{equal}
+
+///|
+#deprecated("Use `!=` instead", skip_current_package=true)
+#doc(hidden)
+pub extend CubicMapping with Eq::{not_equal}
+
+///|
+pub extend CubicMapping with Debug::{to_repr}
+
+///|
+
+///|
+pub extend CubicMapping with Show::{to_string}
+
+///|
+#deprecated("Use `Show::output` via the trait or `to_string` instead", skip_current_package=true)
+#doc(hidden)
+pub extend CubicMapping with Show::{output}
+
+///|
 pub impl Show for CubicMapping with fn output(_self, logger) {
   logger.write_string("cubic_mapping()")
 }
+
+///|
+
+///|
+pub extend CubicMapping with Mapping::{map}
 
 ///|
 pub impl Mapping for CubicMapping with fn map(_self, p) {

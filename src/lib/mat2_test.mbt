@@ -1,6 +1,6 @@
 ///|
 test "A 2x2 matrix ought to be representable (p.54)" {
-  let m = mat2(
+  let m = @lib.mat2(
     -3, 5, // row 0
      1, -2, // row 1
   )
@@ -12,7 +12,7 @@ test "A 2x2 matrix ought to be representable (p.54)" {
 
 ///|
 test "Calculate the determinant of a 2x2 matrix (p.62)" {
-  let a = mat2(
+  let a = @lib.mat2(
     1, 5, // row 0
      -3, 2, // row 1
   )

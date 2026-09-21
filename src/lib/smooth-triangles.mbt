@@ -12,6 +12,17 @@ pub(all) struct SmoothTriangle {
 } derive(Debug, Eq)
 
 ///|
+pub extend SmoothTriangle with Eq::{equal}
+
+///|
+#deprecated("Use `!=` instead", skip_current_package=true)
+#doc(hidden)
+pub extend SmoothTriangle with Eq::{not_equal}
+
+///|
+pub extend SmoothTriangle with Debug::{to_repr}
+
+///|
 pub fn smooth_triangle(
   p1 : Tuple,
   p2 : Tuple,
@@ -56,6 +67,13 @@ pub fn SmoothTriangle::clone(self : SmoothTriangle) -> SmoothTriangle {
 pub fn SmoothTriangle::to_string(self : SmoothTriangle) -> String {
   "smooth_triangle(\{self.p1}, \{self.p2}, \{self.p3}, \{self.n1}, \{self.n2}, \{self.n3})"
 }
+
+///|
+
+///|
+#deprecated("Use `Show::output` via the trait or `to_string` instead", skip_current_package=true)
+#doc(hidden)
+pub extend SmoothTriangle with Show::{output}
 
 ///|
 pub impl Show for SmoothTriangle with fn output(self, logger) {

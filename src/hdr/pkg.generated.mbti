@@ -8,6 +8,7 @@ pub fn decode(Bytes) -> HdrImage raise HdrError
 pub suberror HdrError {
   HdrError(String)
 }
+pub fn HdrError::to_string(Self) -> String
 pub impl Show for HdrError
 
 // Types and methods

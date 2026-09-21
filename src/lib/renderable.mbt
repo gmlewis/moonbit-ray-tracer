@@ -10,6 +10,9 @@ pub(all) enum Renderable {
 } derive(Debug)
 
 ///|
+pub extend Renderable with Debug::{to_repr}
+
+///|
 pub fn Renderable::to_string(self : Renderable) -> String {
   match self {
     Object(object) => Show::to_string(object)
@@ -21,6 +24,13 @@ pub fn Renderable::to_string(self : Renderable) -> String {
     SmoothTriangleUV(triangle) => triangle.to_string()
   }
 }
+
+///|
+
+///|
+#deprecated("Use `Show::output` via the trait or `to_string` instead", skip_current_package=true)
+#doc(hidden)
+pub extend Renderable with Show::{output}
 
 ///|
 pub impl Show for Renderable with fn output(self, logger) {

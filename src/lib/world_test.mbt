@@ -1,31 +1,31 @@
 ///|
 test "Creating a world (p.134)" {
-  let w = world()
+  let w = @lib.world()
   @debug.assert_eq(w.shapes, [])
   @debug.assert_eq(w.lights, [])
 }
 
 ///|
 test "The default world (p.134)" {
-  let light = point_light(point(-10, 10, -10), color(1, 1, 1))
-  let s1 = sphere()
-  s1.material.color = color(0.8, 1, 0.6)
+  let light = @lib.point_light(@lib.point(-10, 10, -10), @lib.color(1, 1, 1))
+  let s1 = @lib.sphere()
+  s1.material.color = @lib.color(0.8, 1, 0.6)
   s1.material.diffuse = 0.7
   s1.material.specular = 0.2
   let s2 = {
-    let s = sphere()
-    s.set_transform(scaling(0.5, 0.5, 0.5))
+    let s = @lib.sphere()
+    s.set_transform(@lib.scaling(0.5, 0.5, 0.5))
     s
   }
-  let w = default_world()
+  let w = @lib.default_world()
   @debug.assert_eq(w.shapes, [s1, s2])
   @debug.assert_eq(w.lights, [light])
 }
 
 ///|
 test "Intersect a world with a ray (p.134)" {
-  let w = default_world()
-  let r = ray(point(0, 0, -5), vector(0, 0, 1))
+  let w = @lib.default_world()
+  let r = @lib.ray(@lib.point(0, 0, -5), @lib.vector(0, 0, 1))
   let xs = w.intersect_world(r)
   assert_eq(xs.count, 4)
   assert_eq(xs[0].t, 4)
@@ -36,229 +36,229 @@ test "Intersect a world with a ray (p.134)" {
 
 ///|
 test "Shading an intersection (p.137)" {
-  let w = default_world()
-  let r = ray(point(0, 0, -5), vector(0, 0, 1))
+  let w = @lib.default_world()
+  let r = @lib.ray(@lib.point(0, 0, -5), @lib.vector(0, 0, 1))
   let shape = w.shapes[0]
   let i = @lib.intersection(4, shape)
   let comps = i.prepare_computations(r)
   let c = w.shade_hit(comps)
-  assert_eq(c, color(0.38066, 0.47583, 0.2855))
+  assert_eq(c, @lib.color(0.38066, 0.47583, 0.2855))
 }
 
 ///|
 test "Shading an intersection from the inside (p.137)" {
-  let w = default_world()
-  w.lights = [point_light(point(0, 0.25, 0), color(1, 1, 1))]
-  let r = ray(point(0, 0, 0), vector(0, 0, 1))
+  let w = @lib.default_world()
+  w.lights = [@lib.point_light(@lib.point(0, 0.25, 0), @lib.color(1, 1, 1))]
+  let r = @lib.ray(@lib.point(0, 0, 0), @lib.vector(0, 0, 1))
   let shape = w.shapes[1]
   let i = @lib.intersection(0.5, shape)
   let comps = i.prepare_computations(r)
   let c = w.shade_hit(comps)
-  assert_eq(c, color(0.90498, 0.90498, 0.90498))
+  assert_eq(c, @lib.color(0.90498, 0.90498, 0.90498))
 }
 
 ///|
 test "The color when a ray misses (p.138)" {
-  let w = default_world()
-  let r = ray(point(0, 0, -5), vector(0, 1, 0))
+  let w = @lib.default_world()
+  let r = @lib.ray(@lib.point(0, 0, -5), @lib.vector(0, 1, 0))
   let c = w.color_at(r)
-  assert_eq(c, color(0, 0, 0))
+  assert_eq(c, @lib.color(0, 0, 0))
 }
 
 ///|
 test "The color when a ray hits (p.138)" {
-  let w = default_world()
-  let r = ray(point(0, 0, -5), vector(0, 0, 1))
+  let w = @lib.default_world()
+  let r = @lib.ray(@lib.point(0, 0, -5), @lib.vector(0, 0, 1))
   let c = w.color_at(r)
-  assert_eq(c, color(0.38066, 0.47583, 0.2855))
+  assert_eq(c, @lib.color(0.38066, 0.47583, 0.2855))
 }
 
 ///|
 test "The color with an intersection behind the ray (p.139)" {
-  let w = default_world()
+  let w = @lib.default_world()
   let outer = w.shapes[0]
   outer.material.ambient = 1
   let inner = w.shapes[1]
   inner.material.ambient = 1
-  let r = ray(point(0, 0, 0.75), vector(0, 0, -1))
+  let r = @lib.ray(@lib.point(0, 0, 0.75), @lib.vector(0, 0, -1))
   let c = w.color_at(r)
   assert_eq(c, inner.material.color)
 }
 
 ///|
 test "There is no shadow when nothing is collinear with point and light (p.157)" {
-  let w = default_world()
-  let p = point(0, 10, 0)
+  let w = @lib.default_world()
+  let p = @lib.point(0, 10, 0)
   assert_false(w.is_shadowed(p, w.lights[0].position))
 }
 
 ///|
 test "The shadow when an object is between the point and the light (p.157)" {
-  let w = default_world()
-  let p = point(10, -10, 10)
+  let w = @lib.default_world()
+  let p = @lib.point(10, -10, 10)
   assert_true(w.is_shadowed(p, w.lights[0].position))
 }
 
 ///|
 test "There is no shadow when an object is behind the light (p.158)" {
-  let w = default_world()
-  let p = point(-20, 20, -20)
+  let w = @lib.default_world()
+  let p = @lib.point(-20, 20, -20)
   assert_false(w.is_shadowed(p, w.lights[0].position))
 }
 
 ///|
 test "There is no shadow when an object is behind the point (p.159)" {
-  let w = default_world()
-  let p = point(-2, 2, -2)
+  let w = @lib.default_world()
+  let p = @lib.point(-2, 2, -2)
   assert_false(w.is_shadowed(p, w.lights[0].position))
 }
 
 ///|
 test "shade_hit() is given an intersection in shadow (p.160)" {
-  let w = world()
-  w.lights = [point_light(point(0, 0, -10), color(1, 1, 1))]
-  let s1 = sphere()
+  let w = @lib.world()
+  w.lights = [@lib.point_light(@lib.point(0, 0, -10), @lib.color(1, 1, 1))]
+  let s1 = @lib.sphere()
   let s2 = {
-    let s = sphere()
-    s.set_transform(translation(0, 0, 10))
+    let s = @lib.sphere()
+    s.set_transform(@lib.translation(0, 0, 10))
     s
   }
   w.shapes = [s1, s2]
-  let r = ray(point(0, 0, 5), vector(0, 0, 1))
+  let r = @lib.ray(@lib.point(0, 0, 5), @lib.vector(0, 0, 1))
   let i = @lib.intersection(4, s2)
   let comps = i.prepare_computations(r)
   let c = w.shade_hit(comps)
-  assert_eq(c, color(0.1, 0.1, 0.1))
+  assert_eq(c, @lib.color(0.1, 0.1, 0.1))
 }
 
 ///|
 test "The reflected color for a non-reflective material (p.197)" {
-  let w = default_world()
-  let r = ray(point(0, 0, 0), vector(0, 0, 1))
+  let w = @lib.default_world()
+  let r = @lib.ray(@lib.point(0, 0, 0), @lib.vector(0, 0, 1))
   let shape = w.shapes[1]
   shape.material.ambient = 1
   let i = @lib.intersection(1, shape)
   let comps = i.prepare_computations(r)
   let color = w.reflected_color(comps, 5)
-  assert_eq(color, black)
+  assert_eq(color, @lib.black)
 }
 
 ///|
 test "The reflected color for a reflective material (p.197)" {
-  let w = default_world()
+  let w = @lib.default_world()
   let shape = {
-    let p = plane()
-    p.set_transform(translation(0, -1, 0))
+    let p = @lib.plane()
+    p.set_transform(@lib.translation(0, -1, 0))
     p
   }
   shape.material.reflective = 0.5
   w.shapes.push(shape)
   let sq2 = 2.0.sqrt() / 2
-  let r = ray(point(0, 0, -3), vector(0, -sq2, sq2))
+  let r = @lib.ray(@lib.point(0, 0, -3), @lib.vector(0, -sq2, sq2))
   let i = @lib.intersection(2.0.sqrt(), shape)
   let comps = i.prepare_computations(r)
   let c = w.reflected_color(comps, 5)
-  assert_eq(c, color(0.19033, 0.23792, 0.14275))
+  assert_eq(c, @lib.color(0.19033, 0.23792, 0.14275))
 }
 
 ///|
 test "shade_hit() with a reflective material (p.198)" {
-  let w = default_world()
+  let w = @lib.default_world()
   let shape = {
-    let p = plane()
-    p.set_transform(translation(0, -1, 0))
+    let p = @lib.plane()
+    p.set_transform(@lib.translation(0, -1, 0))
     p
   }
   shape.material.reflective = 0.5
   w.shapes.push(shape)
   let sq2 = 2.0.sqrt() / 2
-  let r = ray(point(0, 0, -3), vector(0, -sq2, sq2))
+  let r = @lib.ray(@lib.point(0, 0, -3), @lib.vector(0, -sq2, sq2))
   let i = @lib.intersection(2.0.sqrt(), shape)
   let comps = i.prepare_computations(r)
   let c = w.shade_hit(comps)
-  assert_eq(c, color(0.87676, 0.92434, 0.82917))
+  assert_eq(c, @lib.color(0.87676, 0.92434, 0.82917))
 }
 
 ///|
 test "color_at() with mutually reflective surfaces (p.199)" {
-  let w = world()
-  w.lights.push(point_light(point(0, 0, 0), color(1, 1, 1)))
+  let w = @lib.world()
+  w.lights.push(@lib.point_light(@lib.point(0, 0, 0), @lib.color(1, 1, 1)))
   let lower = {
-    let p = plane()
-    p.set_transform(translation(0, -1, 0))
+    let p = @lib.plane()
+    p.set_transform(@lib.translation(0, -1, 0))
     p
   }
   lower.material.reflective = 1
   w.shapes.push(lower)
   let upper = {
-    let p = plane()
-    p.set_transform(translation(0, 1, 0))
+    let p = @lib.plane()
+    p.set_transform(@lib.translation(0, 1, 0))
     p
   }
   upper.material.reflective = 1
   w.shapes.push(upper)
-  let r = ray(point(0, 0, 0), vector(0, 1, 0))
+  let r = @lib.ray(@lib.point(0, 0, 0), @lib.vector(0, 1, 0))
   // should terminate successfully
   let _ = w.color_at(r)
 }
 
 ///|
 test "The reflected color at the maximum recursive depth (p.200)" {
-  let w = default_world()
+  let w = @lib.default_world()
   let shape = {
-    let p = plane()
-    p.set_transform(translation(0, -1, 0))
+    let p = @lib.plane()
+    p.set_transform(@lib.translation(0, -1, 0))
     p
   }
   shape.material.reflective = 0.5
   w.shapes.push(shape)
   let sq2 = 2.0.sqrt() / 2
-  let r = ray(point(0, 0, -3), vector(0, -sq2, sq2))
+  let r = @lib.ray(@lib.point(0, 0, -3), @lib.vector(0, -sq2, sq2))
   let i = @lib.intersection(2.0.sqrt(), shape)
   let comps = i.prepare_computations(r)
   let c = w.reflected_color(comps, 0)
-  assert_eq(c, black)
+  assert_eq(c, @lib.black)
 }
 
 ///|
 test "The refracted color with an opaque surface (p.209)" {
-  let w = default_world()
+  let w = @lib.default_world()
   let shape = w.shapes[0]
-  let r = ray(point(0, 0, -5), vector(0, 0, 1))
-  let xs = intersections([
+  let r = @lib.ray(@lib.point(0, 0, -5), @lib.vector(0, 0, 1))
+  let xs = @lib.intersections([
     @lib.intersection(4, shape),
     @lib.intersection(5, shape),
   ])
   let comps = xs[0].prepare_computations(r, xs~)
   let c = w.refracted_color(comps, 5)
-  assert_eq(c, black)
+  assert_eq(c, @lib.black)
 }
 
 ///|
 test "The refracted color at the maximum recursive depth (p.209)" {
-  let w = default_world()
+  let w = @lib.default_world()
   let shape = w.shapes[0]
   shape.material.transparency = 1
   shape.material.refractive_index = 1.5
-  let r = ray(point(0, 0, -5), vector(0, 0, 1))
-  let xs = intersections([
+  let r = @lib.ray(@lib.point(0, 0, -5), @lib.vector(0, 0, 1))
+  let xs = @lib.intersections([
     @lib.intersection(4, shape),
     @lib.intersection(6, shape),
   ])
   let comps = xs[0].prepare_computations(r, xs~)
   let c = w.refracted_color(comps, 0)
-  assert_eq(c, black)
+  assert_eq(c, @lib.black)
 }
 
 ///|
 test "The refracted color under total internal reflection (p.210)" {
-  let w = default_world()
+  let w = @lib.default_world()
   let shape = w.shapes[0]
   shape.material.transparency = 1
   shape.material.refractive_index = 1.5
   let sq2 = 2.0.sqrt() / 2
-  let r = ray(point(0, 0, sq2), vector(0, 1, 0))
-  let xs = intersections([
+  let r = @lib.ray(@lib.point(0, 0, sq2), @lib.vector(0, 1, 0))
+  let xs = @lib.intersections([
     @lib.intersection(-sq2, shape),
     @lib.intersection(sq2, shape),
   ])
@@ -266,20 +266,20 @@ test "The refracted color under total internal reflection (p.210)" {
   // to look at the second intersection, xs[1], not xs[0].
   let comps = xs[1].prepare_computations(r, xs~)
   let c = w.refracted_color(comps, 5)
-  assert_eq(c, color(0, 0, 0))
+  assert_eq(c, @lib.color(0, 0, 0))
 }
 
 ///|
 test "The refracted color with a refracted ray (p.212)" {
-  let w = default_world()
+  let w = @lib.default_world()
   let a = w.shapes[0]
   a.material.ambient = 1
   a.material.pattern = Some(test_pattern())
   let b = w.shapes[1]
   b.material.transparency = 1
   b.material.refractive_index = 1.5
-  let r = ray(point(0, 0, 0.1), vector(0, 1, 0))
-  let xs = intersections([
+  let r = @lib.ray(@lib.point(0, 0, 0.1), @lib.vector(0, 1, 0))
+  let xs = @lib.intersections([
     @lib.intersection(-0.9899, a),
     @lib.intersection(-0.4899, b),
     @lib.intersection(0.4899, b),
@@ -292,37 +292,37 @@ test "The refracted color with a refracted ray (p.212)" {
 
 ///|
 test "shade_hit() with a transparent material (p.213)" {
-  let w = default_world()
+  let w = @lib.default_world()
   let floor = {
-    let p = plane()
-    p.set_transform(translation(0, -1, 0))
+    let p = @lib.plane()
+    p.set_transform(@lib.translation(0, -1, 0))
     p
   }
   floor.material.transparency = 0.5
   floor.material.refractive_index = 1.5
   w.shapes.push(floor)
   let ball = {
-    let s = sphere()
-    s.set_transform(translation(0, -3.5, -0.5))
+    let s = @lib.sphere()
+    s.set_transform(@lib.translation(0, -3.5, -0.5))
     s
   }
-  ball.material.color = color(1, 0, 0)
+  ball.material.color = @lib.color(1, 0, 0)
   ball.material.ambient = 0.5
   w.shapes.push(ball)
   let sq2 = 2.0.sqrt() / 2
-  let r = ray(point(0, 0, -3), vector(0, -sq2, sq2))
-  let xs = intersections([@lib.intersection(2.0.sqrt(), floor)])
+  let r = @lib.ray(@lib.point(0, 0, -3), @lib.vector(0, -sq2, sq2))
+  let xs = @lib.intersections([@lib.intersection(2.0.sqrt(), floor)])
   let comps = xs[0].prepare_computations(r, xs~)
   let c = w.shade_hit(comps, remaining=5)
-  assert_eq(c, color(0.93642, 0.68642, 0.68642))
+  assert_eq(c, @lib.color(0.93642, 0.68642, 0.68642))
 }
 
 ///|
 test "shade_hit() with a reflective, transparent material (p.218)" {
-  let w = default_world()
+  let w = @lib.default_world()
   let floor = {
-    let p = plane()
-    p.set_transform(translation(0, -1, 0))
+    let p = @lib.plane()
+    p.set_transform(@lib.translation(0, -1, 0))
     p
   }
   floor.material.reflective = 0.5
@@ -330,17 +330,17 @@ test "shade_hit() with a reflective, transparent material (p.218)" {
   floor.material.refractive_index = 1.5
   w.shapes.push(floor)
   let ball = {
-    let s = sphere()
-    s.set_transform(translation(0, -3.5, -0.5))
+    let s = @lib.sphere()
+    s.set_transform(@lib.translation(0, -3.5, -0.5))
     s
   }
-  ball.material.color = color(1, 0, 0)
+  ball.material.color = @lib.color(1, 0, 0)
   ball.material.ambient = 0.5
   w.shapes.push(ball)
   let sq2 = 2.0.sqrt() / 2
-  let r = ray(point(0, 0, -3), vector(0, -sq2, sq2))
-  let xs = intersections([@lib.intersection(2.0.sqrt(), floor)])
+  let r = @lib.ray(@lib.point(0, 0, -3), @lib.vector(0, -sq2, sq2))
+  let xs = @lib.intersections([@lib.intersection(2.0.sqrt(), floor)])
   let comps = xs[0].prepare_computations(r, xs~)
   let c = w.shade_hit(comps, remaining=5)
-  assert_eq(c, color(0.93391, 0.69643, 0.69243))
+  assert_eq(c, @lib.color(0.93391, 0.69643, 0.69243))
 }

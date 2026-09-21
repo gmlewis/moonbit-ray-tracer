@@ -18,6 +18,9 @@ pub(all) struct Shape {
 } derive(Debug)
 
 ///|
+pub extend Shape with Debug::{to_repr}
+
+///|
 let id_counter : Ref[UInt] = { val: 0, }
 
 ///|
@@ -69,9 +72,29 @@ pub fn Shape::object_space_bounds(self : Shape) -> Bounds {
 }
 
 ///|
+
+///|
+pub extend Shape with Show::{to_string}
+
+///|
+#deprecated("Use `Show::output` via the trait or `to_string` instead", skip_current_package=true)
+#doc(hidden)
+pub extend Shape with Show::{output}
+
+///|
 pub impl Show for Shape with fn output(self, logger) {
   logger.write_string(self.object.to_string())
 }
+
+///|
+
+///|
+pub extend Shape with Eq::{equal}
+
+///|
+#deprecated("Use `!=` instead", skip_current_package=true)
+#doc(hidden)
+pub extend Shape with Eq::{not_equal}
 
 ///|
 pub impl Eq for Shape with fn equal(self, other) {

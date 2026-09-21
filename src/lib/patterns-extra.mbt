@@ -4,11 +4,29 @@ pub(all) struct StripePattern {
 } derive(Debug, Eq)
 
 ///|
+pub extend StripePattern with Eq::{equal}
+
+///|
+#deprecated("Use `!=` instead", skip_current_package=true)
+#doc(hidden)
+pub extend StripePattern with Eq::{not_equal}
+
+///|
+pub extend StripePattern with Debug::{to_repr}
+
+///|
 pub fn StripePattern::to_string(self : StripePattern) -> String {
   let colors = self.colors.map(fn(c) { "\{c}" })
   let colors = colors.join(",")
   "stripe(\{colors})"
 }
+
+///|
+
+///|
+#deprecated("Use `Show::output` via the trait or `to_string` instead", skip_current_package=true)
+#doc(hidden)
+pub extend StripePattern with Show::{output}
 
 ///|
 pub impl Show for StripePattern with fn output(self, logger) {
@@ -83,11 +101,29 @@ pub(all) struct GradientPattern {
 } derive(Debug, Eq)
 
 ///|
+pub extend GradientPattern with Eq::{equal}
+
+///|
+#deprecated("Use `!=` instead", skip_current_package=true)
+#doc(hidden)
+pub extend GradientPattern with Eq::{not_equal}
+
+///|
+pub extend GradientPattern with Debug::{to_repr}
+
+///|
 pub fn GradientPattern::to_string(self : GradientPattern) -> String {
   let colors = self.colors.map(fn(c) { "\{c}" })
   let colors = colors.join(",")
   "gradient(\{colors})"
 }
+
+///|
+
+///|
+#deprecated("Use `Show::output` via the trait or `to_string` instead", skip_current_package=true)
+#doc(hidden)
+pub extend GradientPattern with Show::{output}
 
 ///|
 pub impl Show for GradientPattern with fn output(self, logger) {
@@ -164,11 +200,29 @@ pub(all) struct RingPattern {
 } derive(Debug, Eq)
 
 ///|
+pub extend RingPattern with Eq::{equal}
+
+///|
+#deprecated("Use `!=` instead", skip_current_package=true)
+#doc(hidden)
+pub extend RingPattern with Eq::{not_equal}
+
+///|
+pub extend RingPattern with Debug::{to_repr}
+
+///|
 pub fn RingPattern::to_string(self : RingPattern) -> String {
   let colors = self.colors.map(fn(c) { "\{c}" })
   let colors = colors.join(",")
   "ring(\{colors})"
 }
+
+///|
+
+///|
+#deprecated("Use `Show::output` via the trait or `to_string` instead", skip_current_package=true)
+#doc(hidden)
+pub extend RingPattern with Show::{output}
 
 ///|
 pub impl Show for RingPattern with fn output(self, logger) {
@@ -235,11 +289,29 @@ pub(all) struct GradientRingPattern {
 } derive(Debug, Eq)
 
 ///|
+pub extend GradientRingPattern with Eq::{equal}
+
+///|
+#deprecated("Use `!=` instead", skip_current_package=true)
+#doc(hidden)
+pub extend GradientRingPattern with Eq::{not_equal}
+
+///|
+pub extend GradientRingPattern with Debug::{to_repr}
+
+///|
 pub fn GradientRingPattern::to_string(self : GradientRingPattern) -> String {
   let colors = self.colors.map(fn(c) { "\{c}" })
   let colors = colors.join(",")
   "ring(\{colors})"
 }
+
+///|
+
+///|
+#deprecated("Use `Show::output` via the trait or `to_string` instead", skip_current_package=true)
+#doc(hidden)
+pub extend GradientRingPattern with Show::{output}
 
 ///|
 pub impl Show for GradientRingPattern with fn output(self, logger) {
@@ -313,11 +385,29 @@ pub(all) struct CheckersPattern {
 } derive(Debug, Eq)
 
 ///|
+pub extend CheckersPattern with Eq::{equal}
+
+///|
+#deprecated("Use `!=` instead", skip_current_package=true)
+#doc(hidden)
+pub extend CheckersPattern with Eq::{not_equal}
+
+///|
+pub extend CheckersPattern with Debug::{to_repr}
+
+///|
 pub fn CheckersPattern::to_string(self : CheckersPattern) -> String {
   let colors = self.colors.map(fn(c) { "\{c}" })
   let colors = colors.join(",")
   "checkers(\{colors})"
 }
+
+///|
+
+///|
+#deprecated("Use `Show::output` via the trait or `to_string` instead", skip_current_package=true)
+#doc(hidden)
+pub extend CheckersPattern with Show::{output}
 
 ///|
 pub impl Show for CheckersPattern with fn output(self, logger) {
@@ -396,6 +486,19 @@ pub(all) struct Texture {
 } derive(Debug)
 
 ///|
+pub extend Texture with Debug::{to_repr}
+
+///|
+
+///|
+pub extend Texture with Show::{to_string}
+
+///|
+#deprecated("Use `Show::output` via the trait or `to_string` instead", skip_current_package=true)
+#doc(hidden)
+pub extend Texture with Show::{output}
+
+///|
 pub impl Show for Texture with fn output(_self, logger) {
   logger.write_string("texture()")
 }
@@ -442,6 +545,16 @@ pub impl PatternTrait for Texture with fn clone(self) {
 }
 
 ///|
+
+///|
+pub extend Texture with Eq::{equal}
+
+///|
+#deprecated("Use `!=` instead", skip_current_package=true)
+#doc(hidden)
+pub extend Texture with Eq::{not_equal}
+
+///|
 pub impl Eq for Texture with fn equal(self, other) {
   self.canvas == other.canvas
 }
@@ -466,6 +579,17 @@ pub(all) struct GradientCheckersPattern {
 } derive(Debug, Eq)
 
 ///|
+pub extend GradientCheckersPattern with Eq::{equal}
+
+///|
+#deprecated("Use `!=` instead", skip_current_package=true)
+#doc(hidden)
+pub extend GradientCheckersPattern with Eq::{not_equal}
+
+///|
+pub extend GradientCheckersPattern with Debug::{to_repr}
+
+///|
 pub fn GradientCheckersPattern::to_string(
   self : GradientCheckersPattern,
 ) -> String {
@@ -473,6 +597,13 @@ pub fn GradientCheckersPattern::to_string(
   let colors = colors.join(",")
   "gradient_checkers(\{colors})"
 }
+
+///|
+
+///|
+#deprecated("Use `Show::output` via the trait or `to_string` instead", skip_current_package=true)
+#doc(hidden)
+pub extend GradientCheckersPattern with Show::{output}
 
 ///|
 pub impl Show for GradientCheckersPattern with fn output(self, logger) {
@@ -589,6 +720,27 @@ pub(all) struct NoisePattern {
 } derive(Debug, Eq)
 
 ///|
+pub extend NoisePattern with Eq::{equal}
+
+///|
+#deprecated("Use `!=` instead", skip_current_package=true)
+#doc(hidden)
+pub extend NoisePattern with Eq::{not_equal}
+
+///|
+pub extend NoisePattern with Debug::{to_repr}
+
+///|
+
+///|
+pub extend NoisePattern with Show::{to_string}
+
+///|
+#deprecated("Use `Show::output` via the trait or `to_string` instead", skip_current_package=true)
+#doc(hidden)
+pub extend NoisePattern with Show::{output}
+
+///|
 pub impl Show for NoisePattern with fn output(self, logger) {
   logger.write_string("noise(seed=\{self.seed}, scale=\{self.scale})")
 }
@@ -645,6 +797,27 @@ pub(all) struct FbmPattern {
   lacunarity : Double
   gain : Double
 } derive(Debug, Eq)
+
+///|
+pub extend FbmPattern with Eq::{equal}
+
+///|
+#deprecated("Use `!=` instead", skip_current_package=true)
+#doc(hidden)
+pub extend FbmPattern with Eq::{not_equal}
+
+///|
+pub extend FbmPattern with Debug::{to_repr}
+
+///|
+
+///|
+pub extend FbmPattern with Show::{to_string}
+
+///|
+#deprecated("Use `Show::output` via the trait or `to_string` instead", skip_current_package=true)
+#doc(hidden)
+pub extend FbmPattern with Show::{output}
 
 ///|
 pub impl Show for FbmPattern with fn output(self, logger) {
@@ -726,6 +899,19 @@ pub(all) struct MarblePattern {
   frequency : Double
   strength : Double
 } derive(Debug)
+
+///|
+pub extend MarblePattern with Debug::{to_repr}
+
+///|
+
+///|
+pub extend MarblePattern with Show::{to_string}
+
+///|
+#deprecated("Use `Show::output` via the trait or `to_string` instead", skip_current_package=true)
+#doc(hidden)
+pub extend MarblePattern with Show::{output}
 
 ///|
 pub impl Show for MarblePattern with fn output(_self, logger) {
@@ -819,6 +1005,19 @@ pub(all) struct WoodPattern {
 } derive(Debug)
 
 ///|
+pub extend WoodPattern with Debug::{to_repr}
+
+///|
+
+///|
+pub extend WoodPattern with Show::{to_string}
+
+///|
+#deprecated("Use `Show::output` via the trait or `to_string` instead", skip_current_package=true)
+#doc(hidden)
+pub extend WoodPattern with Show::{output}
+
+///|
 pub impl Show for WoodPattern with fn output(_self, logger) {
   logger.write_string("wood(...) ")
 }
@@ -910,6 +1109,17 @@ pub(all) enum VoronoiMode {
 } derive(Debug, Eq)
 
 ///|
+pub extend VoronoiMode with Eq::{equal}
+
+///|
+#deprecated("Use `!=` instead", skip_current_package=true)
+#doc(hidden)
+pub extend VoronoiMode with Eq::{not_equal}
+
+///|
+pub extend VoronoiMode with Debug::{to_repr}
+
+///|
 pub fn VoronoiMode::to_string(self : VoronoiMode) -> String {
   match self {
     Distance => "distance"
@@ -921,6 +1131,13 @@ pub fn VoronoiMode::to_string(self : VoronoiMode) -> String {
     F2MinusF1 => "f2-minus-f1"
   }
 }
+
+///|
+
+///|
+#deprecated("Use `Show::output` via the trait or `to_string` instead", skip_current_package=true)
+#doc(hidden)
+pub extend VoronoiMode with Show::{output}
 
 ///|
 pub impl Show for VoronoiMode with fn output(self, logger) {
@@ -935,6 +1152,19 @@ pub(all) struct VoronoiPattern {
   mode : VoronoiMode
   edge_scale : Double
 } derive(Debug)
+
+///|
+pub extend VoronoiPattern with Debug::{to_repr}
+
+///|
+
+///|
+pub extend VoronoiPattern with Show::{to_string}
+
+///|
+#deprecated("Use `Show::output` via the trait or `to_string` instead", skip_current_package=true)
+#doc(hidden)
+pub extend VoronoiPattern with Show::{output}
 
 ///|
 pub impl Show for VoronoiPattern with fn output(self, logger) {
@@ -1112,8 +1342,31 @@ pub(all) struct LevelsPattern {
 } derive(Debug)
 
 ///|
+pub extend LevelsPattern with Debug::{to_repr}
+
+///|
+
+///|
+pub extend LevelsPattern with Show::{to_string}
+
+///|
+#deprecated("Use `Show::output` via the trait or `to_string` instead", skip_current_package=true)
+#doc(hidden)
+pub extend LevelsPattern with Show::{output}
+
+///|
 pub impl Show for LevelsPattern with fn output(_self, logger) {
   logger.write_string("levels(...)")
+}
+
+///|
+
+///|
+pub extend LevelsPattern with PatternTrait::{
+  clone,
+  pattern_at_with_info,
+  pattern_at,
+  uv_at,
 }
 
 ///|
@@ -1275,8 +1528,31 @@ pub(all) struct BiasGainPattern {
 } derive(Debug)
 
 ///|
+pub extend BiasGainPattern with Debug::{to_repr}
+
+///|
+
+///|
+pub extend BiasGainPattern with Show::{to_string}
+
+///|
+#deprecated("Use `Show::output` via the trait or `to_string` instead", skip_current_package=true)
+#doc(hidden)
+pub extend BiasGainPattern with Show::{output}
+
+///|
 pub impl Show for BiasGainPattern with fn output(_self, logger) {
   logger.write_string("bias_gain(...)")
+}
+
+///|
+
+///|
+pub extend BiasGainPattern with PatternTrait::{
+  clone,
+  pattern_at_with_info,
+  pattern_at,
+  uv_at,
 }
 
 ///|
@@ -1341,8 +1617,31 @@ pub(all) struct ContrastPattern {
 } derive(Debug)
 
 ///|
+pub extend ContrastPattern with Debug::{to_repr}
+
+///|
+
+///|
+pub extend ContrastPattern with Show::{to_string}
+
+///|
+#deprecated("Use `Show::output` via the trait or `to_string` instead", skip_current_package=true)
+#doc(hidden)
+pub extend ContrastPattern with Show::{output}
+
+///|
 pub impl Show for ContrastPattern with fn output(_self, logger) {
   logger.write_string("contrast(...)")
+}
+
+///|
+
+///|
+pub extend ContrastPattern with PatternTrait::{
+  clone,
+  pattern_at_with_info,
+  pattern_at,
+  uv_at,
 }
 
 ///|
@@ -1407,8 +1706,31 @@ pub(all) struct ThresholdPattern {
 } derive(Debug)
 
 ///|
+pub extend ThresholdPattern with Debug::{to_repr}
+
+///|
+
+///|
+pub extend ThresholdPattern with Show::{to_string}
+
+///|
+#deprecated("Use `Show::output` via the trait or `to_string` instead", skip_current_package=true)
+#doc(hidden)
+pub extend ThresholdPattern with Show::{output}
+
+///|
 pub impl Show for ThresholdPattern with fn output(_self, logger) {
   logger.write_string("threshold(...)")
+}
+
+///|
+
+///|
+pub extend ThresholdPattern with PatternTrait::{
+  clone,
+  pattern_at_with_info,
+  pattern_at,
+  uv_at,
 }
 
 ///|
@@ -1492,8 +1814,31 @@ pub(all) struct PosterizePattern {
 } derive(Debug)
 
 ///|
+pub extend PosterizePattern with Debug::{to_repr}
+
+///|
+
+///|
+pub extend PosterizePattern with Show::{to_string}
+
+///|
+#deprecated("Use `Show::output` via the trait or `to_string` instead", skip_current_package=true)
+#doc(hidden)
+pub extend PosterizePattern with Show::{output}
+
+///|
 pub impl Show for PosterizePattern with fn output(_self, logger) {
   logger.write_string("posterize(...)")
+}
+
+///|
+
+///|
+pub extend PosterizePattern with PatternTrait::{
+  clone,
+  pattern_at_with_info,
+  pattern_at,
+  uv_at,
 }
 
 ///|
@@ -1557,8 +1902,31 @@ pub(all) struct GradientMapPattern {
 } derive(Debug)
 
 ///|
+pub extend GradientMapPattern with Debug::{to_repr}
+
+///|
+
+///|
+pub extend GradientMapPattern with Show::{to_string}
+
+///|
+#deprecated("Use `Show::output` via the trait or `to_string` instead", skip_current_package=true)
+#doc(hidden)
+pub extend GradientMapPattern with Show::{output}
+
+///|
 pub impl Show for GradientMapPattern with fn output(_self, logger) {
   logger.write_string("gradient_map(...)")
+}
+
+///|
+
+///|
+pub extend GradientMapPattern with PatternTrait::{
+  clone,
+  pattern_at_with_info,
+  pattern_at,
+  uv_at,
 }
 
 ///|
@@ -1610,8 +1978,31 @@ pub(all) struct TriplanarPattern {
 } derive(Debug)
 
 ///|
+pub extend TriplanarPattern with Debug::{to_repr}
+
+///|
+
+///|
+pub extend TriplanarPattern with Show::{to_string}
+
+///|
+#deprecated("Use `Show::output` via the trait or `to_string` instead", skip_current_package=true)
+#doc(hidden)
+pub extend TriplanarPattern with Show::{output}
+
+///|
 pub impl Show for TriplanarPattern with fn output(_self, logger) {
   logger.write_string("triplanar(...)")
+}
+
+///|
+
+///|
+pub extend TriplanarPattern with PatternTrait::{
+  clone,
+  pattern_at_with_info,
+  pattern_at,
+  uv_at,
 }
 
 ///|
@@ -1679,6 +2070,19 @@ pub(all) struct InvertPattern {
 } derive(Debug)
 
 ///|
+pub extend InvertPattern with Debug::{to_repr}
+
+///|
+
+///|
+pub extend InvertPattern with Show::{to_string}
+
+///|
+#deprecated("Use `Show::output` via the trait or `to_string` instead", skip_current_package=true)
+#doc(hidden)
+pub extend InvertPattern with Show::{output}
+
+///|
 pub impl Show for InvertPattern with fn output(_self, logger) {
   logger.write_string("invert(...) ")
 }
@@ -1733,6 +2137,19 @@ pub(all) struct MixPattern {
   b : Pattern
   mask : Field
 } derive(Debug)
+
+///|
+pub extend MixPattern with Debug::{to_repr}
+
+///|
+
+///|
+pub extend MixPattern with Show::{to_string}
+
+///|
+#deprecated("Use `Show::output` via the trait or `to_string` instead", skip_current_package=true)
+#doc(hidden)
+pub extend MixPattern with Show::{output}
 
 ///|
 pub impl Show for MixPattern with fn output(_self, logger) {
@@ -1791,6 +2208,19 @@ pub(all) struct WarpPattern {
   warp : Field
   amplitude : Double
 } derive(Debug)
+
+///|
+pub extend WarpPattern with Debug::{to_repr}
+
+///|
+
+///|
+pub extend WarpPattern with Show::{to_string}
+
+///|
+#deprecated("Use `Show::output` via the trait or `to_string` instead", skip_current_package=true)
+#doc(hidden)
+pub extend WarpPattern with Show::{output}
 
 ///|
 pub impl Show for WarpPattern with fn output(_self, logger) {

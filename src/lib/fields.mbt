@@ -15,10 +15,24 @@ pub enum VectorDecoding {
 } derive(Debug, Eq)
 
 ///|
+pub extend VectorDecoding with Eq::{equal}
+
+///|
+#deprecated("Use `!=` instead", skip_current_package=true)
+#doc(hidden)
+pub extend VectorDecoding with Eq::{not_equal}
+
+///|
+pub extend VectorDecoding with Debug::{to_repr}
+
+///|
 pub struct Field {
   pattern : Pattern
   vector_decoding : VectorDecoding
 } derive(Debug)
+
+///|
+pub extend Field with Debug::{to_repr}
 
 ///|
 pub fn field(

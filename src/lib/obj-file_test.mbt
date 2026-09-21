@@ -6,7 +6,7 @@ test "Ignoring unrecognized lines in an OBJ file (p.272)" {
     #|She set out one day
     #|in a relative way,
     #|and came back the previous night.
-  let parser = parse_obj_file(gibberish)
+  let parser = @lib.parse_obj_file(gibberish)
   assert_eq(parser.ignored_lines, 5)
 }
 
@@ -17,11 +17,11 @@ test "Parse vertex records in an OBJ file (p.273)" {
     #|v -1.00000 0.50000 0.00000
     #|v 1 0 0
     #|v 1 1 0
-  let parser = parse_obj_file(file)
-  assert_eq(parser.vertices[1], point(-1, 1, 0))
-  assert_eq(parser.vertices[2], point(-1, 0.5, 0))
-  assert_eq(parser.vertices[3], point(1, 0, 0))
-  assert_eq(parser.vertices[4], point(1, 1, 0))
+  let parser = @lib.parse_obj_file(file)
+  assert_eq(parser.vertices[1], @lib.point(-1, 1, 0))
+  assert_eq(parser.vertices[2], @lib.point(-1, 0.5, 0))
+  assert_eq(parser.vertices[3], @lib.point(1, 0, 0))
+  assert_eq(parser.vertices[4], @lib.point(1, 1, 0))
 }
 
 ///|
@@ -34,7 +34,7 @@ test "Parse triangle faces in an OBJ file (p.274)" {
     #|
     #|f 1 2 3
     #|f 1 3 4
-  let parser = parse_obj_file(file)
+  let parser = @lib.parse_obj_file(file)
   let g = parser.default_group
   guard! g.children()[0].object is Triangle(t1)
   guard! g.children()[1].object is Triangle(t2)
@@ -56,7 +56,7 @@ test "Triangulating polygons in an OBJ file (p.274)" {
     #|v 0 2 0
     #|
     #|f 1 2 3 4 5
-  let parser = parse_obj_file(file)
+  let parser = @lib.parse_obj_file(file)
   let g = parser.default_group
   guard! g.children()[0].object is Triangle(t1)
   guard! g.children()[1].object is Triangle(t2)
@@ -84,7 +84,7 @@ test "Triangles in named groups in an OBJ file (p.275)" {
     #|f 1 2 3
     #|g SecondGroup
     #|f 1 3 4
-  let parser = parse_obj_file(file)
+  let parser = @lib.parse_obj_file(file)
   let g1 = parser.named_groups.get("FirstGroup").unwrap()
   let g2 = parser.named_groups.get("SecondGroup").unwrap()
   guard! g1.children()[0].object is Triangle(t1)
@@ -109,7 +109,7 @@ test "Converting an OBJ file to a group (p.277)" {
     #|f 1 2 3
     #|g SecondGroup
     #|f 1 3 4
-  let parser = parse_obj_file(file)
+  let parser = @lib.parse_obj_file(file)
   let g = parser.obj_to_group()
   assert_eq(g.children().length(), 2)
   let g1 = g.children()[0]
@@ -132,10 +132,10 @@ test "Vertex normal records in an OBJ file (p.285)" {
     #|vn 0 0 1
     #|vn 0.707 0 -0.707
     #|vn 1 2 3
-  let parser = parse_obj_file(file)
-  assert_eq(parser.normals[1], vector(0, 0, 1))
-  assert_eq(parser.normals[2], vector(0.707, 0, -0.707))
-  assert_eq(parser.normals[3], vector(1, 2, 3))
+  let parser = @lib.parse_obj_file(file)
+  assert_eq(parser.normals[1], @lib.vector(0, 0, 1))
+  assert_eq(parser.normals[2], @lib.vector(0.707, 0, -0.707))
+  assert_eq(parser.normals[3], @lib.vector(1, 2, 3))
 }
 
 ///|
@@ -151,7 +151,7 @@ test "Faces with normals in an OBJ file (p.285)" {
     #|
     #|f 1//3 2//1 3//2
     #|f 1/0/3 2/102/1 3/14/2
-  let parser = parse_obj_file(file)
+  let parser = @lib.parse_obj_file(file)
   let g = parser.default_group
   guard! g.children()[0].object is SmoothTriangle(t1)
   guard! g.children()[1].object is SmoothTriangle(t2)

@@ -10,6 +10,17 @@ pub(all) struct Triangle {
 } derive(Debug, Eq)
 
 ///|
+pub extend Triangle with Eq::{equal}
+
+///|
+#deprecated("Use `!=` instead", skip_current_package=true)
+#doc(hidden)
+pub extend Triangle with Eq::{not_equal}
+
+///|
+pub extend Triangle with Debug::{to_repr}
+
+///|
 pub fn triangle(p1 : Tuple, p2 : Tuple, p3 : Tuple) -> Shape {
   let bounds = Bounds::new()
   bounds..update(p1)..update(p2).update(p3)
@@ -46,6 +57,13 @@ pub fn Triangle::clone(self : Triangle) -> Triangle {
 pub fn Triangle::to_string(self : Triangle) -> String {
   "triangle(\{self.p1}, \{self.p2}, \{self.p3})"
 }
+
+///|
+
+///|
+#deprecated("Use `Show::output` via the trait or `to_string` instead", skip_current_package=true)
+#doc(hidden)
+pub extend Triangle with Show::{output}
 
 ///|
 pub impl Show for Triangle with fn output(self, logger) {

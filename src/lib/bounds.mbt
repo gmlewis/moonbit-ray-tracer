@@ -5,6 +5,17 @@ pub(all) struct Bounds {
 } derive(Debug, Eq)
 
 ///|
+pub extend Bounds with Eq::{equal}
+
+///|
+#deprecated("Use `!=` instead", skip_current_package=true)
+#doc(hidden)
+pub extend Bounds with Eq::{not_equal}
+
+///|
+pub extend Bounds with Debug::{to_repr}
+
+///|
 pub fn Bounds::new() -> Bounds {
   let min = point(@double.infinity, @double.infinity, @double.infinity)
   let max = point(

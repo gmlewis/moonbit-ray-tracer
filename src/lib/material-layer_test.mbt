@@ -3,29 +3,35 @@
 
 ///|
 test "material layer blends base and top via mask" {
-  let base = material()
+  let base = @lib.material()
   base.lighting_mode = Phong
-  base.color = color(1.0, 0.0, 0.0)
+  base.color = @lib.color(1.0, 0.0, 0.0)
   base.diffuse = 1.0
   base.specular = 0.0
-  let top = material()
+  let top = @lib.material()
   top.lighting_mode = Phong
-  top.color = color(0.0, 0.0, 1.0)
+  top.color = @lib.color(0.0, 0.0, 1.0)
   top.diffuse = 1.0
   top.specular = 0.0
-  let s = sphere()
+  let s = @lib.sphere()
   s.material = base
   s.material_layer = Some({
     top,
-    mask: stripe_pattern([color(0.0, 0.0, 0.0), color(1.0, 1.0, 1.0)]),
+    mask: @lib.stripe_pattern([
+      @lib.color(0.0, 0.0, 0.0),
+      @lib.color(1.0, 1.0, 1.0),
+    ]),
     opacity: 1.0,
   })
-  let light = point_light(point(0.0, 0.0, -10.0), color(1.0, 1.0, 1.0))
-  let eyev = vector(0.0, 0.0, -1.0)
-  let normalv = vector(0.0, 0.0, -1.0)
+  let light = @lib.point_light(
+    @lib.point(0.0, 0.0, -10.0),
+    @lib.color(1.0, 1.0, 1.0),
+  )
+  let eyev = @lib.vector(0.0, 0.0, -1.0)
+  let normalv = @lib.vector(0.0, 0.0, -1.0)
 
   // Keep the hit point fixed so N·L stays constant; toggle the mask using UVs.
-  let p = point(0.0, 0.0, 0.0)
+  let p = @lib.point(0.0, 0.0, 0.0)
 
   // Mask black => base.
   let uv0 = Some((0.25, 0.5))
@@ -42,29 +48,35 @@ test "material layer blends base and top via mask" {
 
 ///|
 test "material layer opacity scales mask" {
-  let base = material()
+  let base = @lib.material()
   base.lighting_mode = Phong
-  base.color = color(1.0, 0.0, 0.0)
+  base.color = @lib.color(1.0, 0.0, 0.0)
   base.diffuse = 1.0
   base.specular = 0.0
-  let top = material()
+  let top = @lib.material()
   top.lighting_mode = Phong
-  top.color = color(0.0, 0.0, 1.0)
+  top.color = @lib.color(0.0, 0.0, 1.0)
   top.diffuse = 1.0
   top.specular = 0.0
-  let s = sphere()
+  let s = @lib.sphere()
   s.material = base
   s.material_layer = Some({
     top,
-    mask: stripe_pattern([color(1.0, 1.0, 1.0), color(1.0, 1.0, 1.0)]),
+    mask: @lib.stripe_pattern([
+      @lib.color(1.0, 1.0, 1.0),
+      @lib.color(1.0, 1.0, 1.0),
+    ]),
     opacity: 0.5,
   })
-  let light = point_light(point(0.0, 0.0, -10.0), color(1.0, 1.0, 1.0))
-  let eyev = vector(0.0, 0.0, -1.0)
-  let normalv = vector(0.0, 0.0, -1.0)
+  let light = @lib.point_light(
+    @lib.point(0.0, 0.0, -10.0),
+    @lib.color(1.0, 1.0, 1.0),
+  )
+  let eyev = @lib.vector(0.0, 0.0, -1.0)
+  let normalv = @lib.vector(0.0, 0.0, -1.0)
   let c = s.material.lighting(
     light,
-    point(0.0, 0.0, 0.0),
+    @lib.point(0.0, 0.0, 0.0),
     eyev,
     normalv,
     shape=Some(s),

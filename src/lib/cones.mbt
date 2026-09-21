@@ -7,6 +7,17 @@ pub(all) struct Cone {
 } derive(Debug, Eq)
 
 ///|
+pub extend Cone with Eq::{equal}
+
+///|
+#deprecated("Use `!=` instead", skip_current_package=true)
+#doc(hidden)
+pub extend Cone with Eq::{not_equal}
+
+///|
+pub extend Cone with Debug::{to_repr}
+
+///|
 let _Cone : &Object = Cone::{ minimum: 0, maximum: 0, closed: false, }
 
 ///|
@@ -20,12 +31,27 @@ pub fn cone(
 }
 
 ///|
+
+///|
+pub extend Cone with Object::{bounds, clone, local_intersect, local_normal_at}
+
+///|
 pub impl Object for Cone with fn bounds(self) {
   let r_max = @cmp.maximum(self.minimum.abs(), self.maximum.abs())
   let min = point(-r_max, self.minimum, -r_max)
   let max = point(r_max, self.maximum, r_max)
   { min, max, }
 }
+
+///|
+
+///|
+pub extend Cone with Show::{to_string}
+
+///|
+#deprecated("Use `Show::output` via the trait or `to_string` instead", skip_current_package=true)
+#doc(hidden)
+pub extend Cone with Show::{output}
 
 ///|
 pub impl Show for Cone with fn output(self, logger) {

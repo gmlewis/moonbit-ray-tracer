@@ -5,6 +5,17 @@ pub(all) enum LightingMode {
 } derive(Debug, Eq)
 
 ///|
+pub extend LightingMode with Eq::{equal}
+
+///|
+#deprecated("Use `!=` instead", skip_current_package=true)
+#doc(hidden)
+pub extend LightingMode with Eq::{not_equal}
+
+///|
+pub extend LightingMode with Debug::{to_repr}
+
+///|
 // Matches the accepted TOML spellings, like VoronoiMode::to_string.
 pub fn LightingMode::to_string(self : LightingMode) -> String {
   match self {
@@ -12,6 +23,13 @@ pub fn LightingMode::to_string(self : LightingMode) -> String {
     PBR => "pbr"
   }
 }
+
+///|
+
+///|
+#deprecated("Use `Show::output` via the trait or `to_string` instead", skip_current_package=true)
+#doc(hidden)
+pub extend LightingMode with Show::{output}
 
 ///|
 pub impl Show for LightingMode with fn output(self, logger) {
@@ -48,11 +66,29 @@ pub(all) struct Material {
 } derive(Debug, Eq)
 
 ///|
+pub extend Material with Eq::{equal}
+
+///|
+#deprecated("Use `!=` instead", skip_current_package=true)
+#doc(hidden)
+pub extend Material with Eq::{not_equal}
+
+///|
+pub extend Material with Debug::{to_repr}
+
+///|
 // Scalar fields only: the pattern/texture fields are optional and print
 // verbosely, and callers that care about them use Repr in the --debug dump.
 pub fn Material::to_string(self : Material) -> String {
   "material(color=\{self.color}, ambient=\{self.ambient}, diffuse=\{self.diffuse}, specular=\{self.specular}, shininess=\{self.shininess}, reflective=\{self.reflective}, transparency=\{self.transparency}, refractive_index=\{self.refractive_index}, metallic=\{self.metallic}, roughness=\{self.roughness}, lighting_mode=\{self.lighting_mode})"
 }
+
+///|
+
+///|
+#deprecated("Use `Show::output` via the trait or `to_string` instead", skip_current_package=true)
+#doc(hidden)
+pub extend Material with Show::{output}
 
 ///|
 pub impl Show for Material with fn output(self, logger) {
@@ -175,11 +211,29 @@ pub(all) struct MaterialLayer {
 } derive(Debug, Eq)
 
 ///|
+pub extend MaterialLayer with Eq::{equal}
+
+///|
+#deprecated("Use `!=` instead", skip_current_package=true)
+#doc(hidden)
+pub extend MaterialLayer with Eq::{not_equal}
+
+///|
+pub extend MaterialLayer with Debug::{to_repr}
+
+///|
 
 ///|
 pub fn MaterialLayer::to_string(self : MaterialLayer) -> String {
   "material_layer(opacity=\{self.opacity}, mask=\{self.mask}, top=\{self.top})"
 }
+
+///|
+
+///|
+#deprecated("Use `Show::output` via the trait or `to_string` instead", skip_current_package=true)
+#doc(hidden)
+pub extend MaterialLayer with Show::{output}
 
 ///|
 pub impl Show for MaterialLayer with fn output(self, logger) {

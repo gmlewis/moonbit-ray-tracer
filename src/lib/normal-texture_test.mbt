@@ -49,7 +49,7 @@ async test "GLB normalTexture is parsed (probe)" {
   let json_val = @json.parse(json_str) catch {
     e => abort("GLB JSON parse error: \{e}")
   }
-  let gltf = match parse_gltf(json_val) {
+  let gltf = match @lib.parse_gltf(json_val) {
     Some(g) => g
     None => abort("Failed to parse glTF JSON structure")
   }

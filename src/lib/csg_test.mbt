@@ -1,8 +1,8 @@
 ///|
 test "CSG is created with an operation and two shapes (p.293)" {
-  let s1 = sphere()
-  let s2 = cube()
-  let parent = csg(Union, s1, s2)
+  let s1 = @lib.sphere()
+  let s2 = @lib.cube()
+  let parent = @lib.csg(Union, s1, s2)
   guard! parent.object is CSG(c)
   assert_eq(c.operation, Union)
   assert_eq(c.left, s1)
@@ -39,7 +39,7 @@ test "Evaluating the rule for a CSG operation (p.294)" {
     (Difference, false, false, false, false),
   ]
   for tt in tests {
-    let got = intersection_allowed(tt.0, tt.1, tt.2, tt.3)
+    let got = @lib.intersection_allowed(tt.0, tt.1, tt.2, tt.3)
     @debug.assert_eq((tt.0, tt.1, tt.2, tt.3, got), tt)
   }
 }
@@ -47,11 +47,11 @@ test "Evaluating the rule for a CSG operation (p.294)" {
 ///|
 test "Filtering a list of intersections (p.297)" {
   let tests = [(@lib.Union, 0, 3), (Intersection, 1, 2), (Difference, 0, 1)]
-  let s1 = sphere()
-  let s2 = cube()
+  let s1 = @lib.sphere()
+  let s2 = @lib.cube()
   for tt in tests {
-    guard! csg(tt.0, s1, s2).object is CSG(c)
-    let xs = intersections([
+    guard! @lib.csg(tt.0, s1, s2).object is CSG(c)
+    let xs = @lib.intersections([
       @lib.intersection(1, s1),
       @lib.intersection(2, s2),
       @lib.intersection(3, s1),
@@ -66,22 +66,22 @@ test "Filtering a list of intersections (p.297)" {
 
 ///|
 test "A ray misses a CSG object (p.299)" {
-  let c = csg(Union, sphere(), cube())
-  let r = ray(point(0, 2, -5), vector(0, 0, 1))
+  let c = @lib.csg(Union, @lib.sphere(), @lib.cube())
+  let r = @lib.ray(@lib.point(0, 2, -5), @lib.vector(0, 0, 1))
   let xs = c.local_intersect(r)
   assert_eq(xs.count, 0)
 }
 
 ///|
 test "A ray hits a CSG object (p.299)" {
-  let s1 = sphere()
+  let s1 = @lib.sphere()
   let s2 = {
-    let s = sphere()
-    s.set_transform(translation(0, 0, 0.5))
+    let s = @lib.sphere()
+    s.set_transform(@lib.translation(0, 0, 0.5))
     s
   }
-  let c = csg(Union, s1, s2)
-  let r = ray(point(0, 0, -5), vector(0, 0, 1))
+  let c = @lib.csg(Union, s1, s2)
+  let r = @lib.ray(@lib.point(0, 0, -5), @lib.vector(0, 0, 1))
   let xs = c.local_intersect(r)
   assert_eq(xs.count, 2)
   assert_eq(xs[0].t, 4)

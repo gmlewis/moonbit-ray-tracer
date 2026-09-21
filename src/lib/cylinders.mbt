@@ -7,6 +7,17 @@ pub(all) struct Cylinder {
 } derive(Debug, Eq)
 
 ///|
+pub extend Cylinder with Eq::{equal}
+
+///|
+#deprecated("Use `!=` instead", skip_current_package=true)
+#doc(hidden)
+pub extend Cylinder with Eq::{not_equal}
+
+///|
+pub extend Cylinder with Debug::{to_repr}
+
+///|
 let _Cylinder : &Object = Cylinder::{ minimum: 0, maximum: 0, closed: false, }
 
 ///|
@@ -18,6 +29,16 @@ pub fn cylinder(
   let cylinder = Cylinder::{ minimum, maximum, closed, }
   Shape::new_object(cylinder)
 }
+
+///|
+
+///|
+pub extend Cylinder with Show::{to_string}
+
+///|
+#deprecated("Use `Show::output` via the trait or `to_string` instead", skip_current_package=true)
+#doc(hidden)
+pub extend Cylinder with Show::{output}
 
 ///|
 pub impl Show for Cylinder with fn output(_self, logger) {
@@ -58,6 +79,16 @@ fn Cylinder::intersect_caps(
   if check_cylinder_cap(ray, t) {
     xs.push(t)
   }
+}
+
+///|
+
+///|
+pub extend Cylinder with Object::{
+  bounds,
+  clone,
+  local_intersect,
+  local_normal_at,
 }
 
 ///|

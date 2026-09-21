@@ -18,6 +18,17 @@ pub(all) struct TriangleUV {
 } derive(Debug, Eq)
 
 ///|
+pub extend TriangleUV with Eq::{equal}
+
+///|
+#deprecated("Use `!=` instead", skip_current_package=true)
+#doc(hidden)
+pub extend TriangleUV with Eq::{not_equal}
+
+///|
+pub extend TriangleUV with Debug::{to_repr}
+
+///|
 pub fn triangle_uv(
   p1 : Tuple,
   p2 : Tuple,
@@ -256,6 +267,13 @@ pub fn TriangleUV::clone(self : TriangleUV) -> TriangleUV {
 pub fn TriangleUV::to_string(self : TriangleUV) -> String {
   "triangle_uv(\{self.p1}, \{self.p2}, \{self.p3}, \{Repr(self.uv1)}, \{Repr(self.uv2)}, \{Repr(self.uv3)})"
 }
+
+///|
+
+///|
+#deprecated("Use `Show::output` via the trait or `to_string` instead", skip_current_package=true)
+#doc(hidden)
+pub extend TriangleUV with Show::{output}
 
 ///|
 pub impl Show for TriangleUV with fn output(self, logger) {

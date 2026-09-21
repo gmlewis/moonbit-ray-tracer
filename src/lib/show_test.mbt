@@ -4,9 +4,9 @@
 // default `to_string` -- and that default calls `output`, so simply printing
 // one of them overflowed the stack (it crashed the renderer's --debug flag).
 test "Show for LightingMode and Operation terminates" {
-  let modes : Array[LightingMode] = [Phong, PBR]
+  let modes : Array[@lib.LightingMode] = [Phong, PBR]
   inspect(modes.map(fn(m) { m.to_string() }).join(","), content="phong,pbr")
-  let ops : Array[Operation] = [Union, Intersection, Difference]
+  let ops : Array[@lib.Operation] = [Union, Intersection, Difference]
   inspect(
     ops.map(fn(o) { o.to_string() }).join(","),
     content="union,intersection,difference",
@@ -15,7 +15,7 @@ test "Show for LightingMode and Operation terminates" {
 
 ///|
 test "Show for CSG terminates" {
-  let shape = csg(Union, sphere(), cube())
+  let shape = @lib.csg(Union, @lib.sphere(), @lib.cube())
   let csg_shape = match shape.object {
     CSG(csg) => csg
     _ => abort("expected a CSG shape")
@@ -25,16 +25,16 @@ test "Show for CSG terminates" {
 
 ///|
 test "Show for Light terminates" {
-  let white = color(1, 1, 1)
+  let white = @lib.color(1, 1, 1)
   inspect(
-    point_light(point(0, 0, 0), white).to_string(),
+    @lib.point_light(@lib.point(0, 0, 0), white).to_string(),
     content="point_light(point(0, 0, 0), color(1, 1, 1))",
   )
-  let area = area_light(
-    point(0, 0, 0),
-    vector(2, 0, 0),
+  let area = @lib.area_light(
+    @lib.point(0, 0, 0),
+    @lib.vector(2, 0, 0),
     2,
-    vector(0, 2, 0),
+    @lib.vector(0, 2, 0),
     2,
     white,
   )
@@ -46,15 +46,15 @@ test "Show for Light terminates" {
 
 ///|
 test "Show for Material and MaterialLayer terminates" {
-  let mat = material()
+  let mat = @lib.material()
   inspect(
     mat.to_string(),
     content="material(color=color(1, 1, 1), ambient=0.1, diffuse=0.9, specular=0.9, shininess=200, reflective=0, transparency=0, refractive_index=1, metallic=0, roughness=0.5, lighting_mode=phong)",
   )
 
-  let layer : MaterialLayer = {
+  let layer : @lib.MaterialLayer = {
     top: mat,
-    mask: checkers_pattern([color(0, 0, 0), color(1, 1, 1)]),
+    mask: @lib.checkers_pattern([@lib.color(0, 0, 0), @lib.color(1, 1, 1)]),
     opacity: 0.5,
   }
   let s = layer.to_string()
