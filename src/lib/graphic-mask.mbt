@@ -11,7 +11,7 @@ pub(all) struct GraphicMaskPattern {
   profiles : Array[(Array[@draw.Vec2], Array[Array[@draw.Vec2]])]
   overall_bbox : (@draw.Vec2, @draw.Vec2)?
   profile_bboxes : Array[(@draw.Vec2, @draw.Vec2)]
-  curve_segments : Int
+  curve_segments : Int32
   inside : Color
   outside : Color
   style : Bool
@@ -92,10 +92,10 @@ pub impl PatternTrait for GraphicMaskPattern with fn pattern_at_with_info(
 ///|
 pub fn graphic_mask_pattern(
   graphic : @draw.Graphic,
-  curve_segments? : Int = 16,
-  inside? : Color = color(1, 1, 1),
-  outside? : Color = color(0, 0, 0),
-  style? : Bool = false,
+  curve_segments~ : Int32 = 16,
+  inside~ : Color = color(1, 1, 1),
+  outside~ : Color = color(0, 0, 0),
+  style~ : Bool = false,
 ) -> Pattern {
   // Note: `gmlewis/fonts/draw` currently has `contains_point` unimplemented on
   // Path/CompoundPath, so we build polygon profiles and use point-in-polygon.

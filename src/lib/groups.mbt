@@ -115,7 +115,7 @@ pub fn Group::partition_children(self : Group) -> (Array[Shape], Array[Shape]) {
 }
 
 ///|
-pub fn Group::divide(self : Group, limit : Int) -> Unit {
+pub fn Group::divide(self : Group, limit : Int32) -> Unit {
   if self.children.length() > limit {
     let (left, right) = self.partition_children()
     self.children.clear()

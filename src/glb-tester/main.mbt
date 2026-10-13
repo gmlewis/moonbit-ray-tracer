@@ -1,7 +1,7 @@
 ///|
 
 ///|
-fn count_all_children(shape : @lib.Shape) -> Int {
+fn count_all_children(shape : @lib.Shape) -> Int32 {
   let mut count = shape.children().length()
   for child in shape.children() {
     count += count_all_children(child)

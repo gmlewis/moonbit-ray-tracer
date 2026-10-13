@@ -1,7 +1,7 @@
 ///|
 pub(all) struct ObjFile {
   default_group : Shape
-  ignored_lines : Int
+  ignored_lines : Int32
 
   //
   vertices : Array[Tuple]
@@ -141,7 +141,7 @@ pub fn parse_obj_file(buf : String) -> ObjFile raise ParserError {
 }
 
 ///|
-fn parse_indices(s : String) -> (Int, Int) raise ParserError {
+fn parse_indices(s : String) -> (Int32, Int32) raise ParserError {
   let mut p = 0
   let mut n = 0
   let get_vert_and_normal_indices = fn(
@@ -162,7 +162,7 @@ fn parse_args(
   s : String,
   sep : String,
   double_fn : (Array[Double]) -> Unit raise ParserError,
-  string_fn? : (Array[String]) -> Unit raise ParserError = fn(_args) {  },
+  string_fn~ : (Array[String]) -> Unit raise ParserError = fn(_args) {  },
 ) -> Unit raise ParserError {
   let parts = s.split(sep).map(fn(s) { s.trim().to_owned() }).collect()
   let doubles = Array(capacity=parts.length())

@@ -37,7 +37,7 @@ pub extend Field with Debug::{to_repr}
 ///|
 pub fn field(
   pattern : Pattern,
-  vector_decoding? : VectorDecoding = VectorDecoding::Signed,
+  vector_decoding~ : VectorDecoding = VectorDecoding::Signed,
 ) -> Field {
   { pattern, vector_decoding, }
 }

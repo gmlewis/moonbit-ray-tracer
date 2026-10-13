@@ -14,14 +14,14 @@ pub(all) struct Shape {
   // Unfortunately, the bumping of the `id` field should be an atomic
   // operation to be safe in future parallel threaded runtimes, but for now
   // this is all single-threaded and unprotected.
-  id : UInt
+  id : UInt32
 } derive(Debug)
 
 ///|
 pub extend Shape with Debug::{to_repr}
 
 ///|
-let id_counter : Ref[UInt] = { val: 0, }
+let id_counter : Ref[UInt32] = { val: 0, }
 
 ///|
 pub fn Shape::bounds(self : Shape) -> Bounds {
@@ -271,7 +271,7 @@ pub fn Shape::local_intersect(self : Shape, local_ray : Ray) -> Intersections {
 pub fn Shape::normal_at(
   self : Shape,
   world_point : Tuple,
-  hit? : Intersection? = None,
+  hit~ : Intersection? = None,
 ) -> Tuple {
   let local_point = self.world_to_object(world_point)
   let local_normal = self.local_normal_at(local_point, hit~)
@@ -282,7 +282,7 @@ pub fn Shape::normal_at(
 pub fn Shape::local_normal_at(
   self : Shape,
   local_point : Tuple,
-  hit? : Intersection? = None,
+  hit~ : Intersection? = None,
 ) -> Tuple {
   match self.object {
     Object(object) => object.local_normal_at(local_point)
@@ -327,7 +327,7 @@ pub fn Shape::children(self : Shape) -> Array[Shape] {
 }
 
 ///|
-pub fn Shape::estimated_primitive_count(self : Shape) -> Int {
+pub fn Shape::estimated_primitive_count(self : Shape) -> Int32 {
   match self.object {
     Group(group) => {
       let mut total = 0
@@ -360,7 +360,7 @@ pub fn Shape::add_child(self : Shape, child : Shape) -> Unit {
 }
 
 ///|
-pub fn Shape::divide(self : Shape, limit : Int) -> Unit {
+pub fn Shape::divide(self : Shape, limit : Int32) -> Unit {
   match self.object {
     Group(group) => group.divide(limit)
     CSG(csg) => {

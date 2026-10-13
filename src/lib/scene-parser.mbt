@@ -43,12 +43,12 @@ pub(all) struct ParsedScene {
 ///|
 /// Render settings from scene file
 pub(all) struct RenderSettings {
-  mut width : Int
-  mut height : Int
-  mut samples : Int
-  mut max_bounces : Int
+  mut width : Int32
+  mut height : Int32
+  mut samples : Int32
+  mut max_bounces : Int32
   mut background : Color
-  mut divide : Int
+  mut divide : Int32
   mut exposure : Double
 } derive(Eq)
 
@@ -106,8 +106,8 @@ fn get_string_required(
 fn get_int_or_default(
   table : Map[String, @toml.TomlValue],
   key : String,
-  default_value : Int,
-) -> Int {
+  default_value : Int32,
+) -> Int32 {
   match table.get(key) {
     Some(@toml.TomlInteger(i)) => i.to_int()
     Some(@toml.TomlFloat(f)) => f.to_int() // Allow float that's actually an int

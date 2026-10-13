@@ -7,7 +7,7 @@ fn get_string(json : Json) -> String? {
 }
 
 ///|
-fn get_int(json : Json) -> Int? {
+fn get_int(json : Json) -> Int32? {
   match json {
     Number(n, ..) => Some(n.to_int())
     _ => None

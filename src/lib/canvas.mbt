@@ -1,7 +1,7 @@
 ///|
 pub(all) struct Canvas {
-  width : Int
-  height : Int
+  width : Int32
+  height : Int32
   red : Array[Double]
   green : Array[Double]
   blue : Array[Double]
@@ -21,7 +21,7 @@ pub extend Canvas with Eq::{not_equal}
 pub extend Canvas with Debug::{to_repr}
 
 ///|
-pub fn canvas(width : Int, height : Int) -> Canvas {
+pub fn canvas(width : Int32, height : Int32) -> Canvas {
   let size = width * height
   let red = Array::make(size, 0.0)
   let green = Array::make(size, 0.0)
@@ -30,12 +30,12 @@ pub fn canvas(width : Int, height : Int) -> Canvas {
 }
 
 ///|
-fn Canvas::offset(self : Canvas, x : Int, y : Int) -> Int {
+fn Canvas::offset(self : Canvas, x : Int32, y : Int32) -> Int32 {
   y * self.width + x
 }
 
 ///|
-pub fn Canvas::pixel_at(self : Canvas, x : Int, y : Int) -> Color {
+pub fn Canvas::pixel_at(self : Canvas, x : Int32, y : Int32) -> Color {
   let x = if x < 0 { 0 } else if x >= self.width { self.width - 1 } else { x }
   let y = if y < 0 { 0 } else if y >= self.height { self.height - 1 } else { y }
   let off = self.offset(x, y)
@@ -71,8 +71,8 @@ pub fn Canvas::pixel_at_bilinear(
 ///|
 pub fn Canvas::write_pixel(
   self : Canvas,
-  x : Int,
-  y : Int,
+  x : Int32,
+  y : Int32,
   color : Color,
 ) -> Unit {
   let off = self.offset(x, y)
@@ -167,7 +167,7 @@ pub fn Canvas::to_ppm(self : Canvas) -> String {
 ///|
 pub fn Canvas::from_image(
   img : &@image.Image,
-  linear? : Bool = false,
+  linear~ : Bool = false,
 ) -> Canvas {
   let rect = img.bounds()
   let width = rect.dx()
@@ -189,7 +189,7 @@ pub fn Canvas::from_image(
 }
 
 ///|
-pub fn Canvas::from_png(png_data : Bytes, linear? : Bool = false) -> Canvas? {
+pub fn Canvas::from_png(png_data : Bytes, linear~ : Bool = false) -> Canvas? {
   let b = @io.Buffer::from_bytes(png_data)
   let (img, err) = @png.decode(b)
   if err is None {
@@ -201,7 +201,7 @@ pub fn Canvas::from_png(png_data : Bytes, linear? : Bool = false) -> Canvas? {
 }
 
 ///|
-pub fn Canvas::from_jpeg(jpeg_data : Bytes, linear? : Bool = false) -> Canvas? {
+pub fn Canvas::from_jpeg(jpeg_data : Bytes, linear~ : Bool = false) -> Canvas? {
   let b = @io.Buffer::from_bytes(jpeg_data)
   let (img, err) = @jpeg.decode(b)
   if err is None {

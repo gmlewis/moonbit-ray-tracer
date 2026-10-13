@@ -9,7 +9,7 @@ pub(all) struct World {
   mut environment_map : Pattern?
   mut stats_enabled : Bool
   mut stats : RenderStats
-  mut stats_est_primitives_per_intersect_world : Int
+  mut stats_est_primitives_per_intersect_world : Int32
 }
 
 ///|
@@ -57,7 +57,7 @@ pub fn default_world() -> World {
 }
 
 ///|
-pub fn World::estimated_primitive_count(self : World) -> Int {
+pub fn World::estimated_primitive_count(self : World) -> Int32 {
   let mut total = 0
   for shape in self.shapes {
     total = total + shape.estimated_primitive_count()
@@ -87,7 +87,7 @@ pub fn World::intersect_world(self : World, ray : Ray) -> Intersections {
 pub fn World::shade_hit(
   self : World,
   comps : Computations,
-  remaining? : Int = MAX_BOUNCES,
+  remaining~ : Int32 = MAX_BOUNCES,
 ) -> Color {
 
   // Get surface color including pattern
@@ -214,7 +214,7 @@ pub fn World::shade_hit(
 pub fn World::color_at(
   self : World,
   ray : Ray,
-  remaining? : Int = MAX_BOUNCES,
+  remaining~ : Int32 = MAX_BOUNCES,
 ) -> Color {
   if self.stats_enabled {
     self.stats.rays_total = self.stats.rays_total + 1
@@ -280,7 +280,7 @@ fn pseudo_random_vector(p : Tuple) -> Tuple {
 }
 
 ///|
-fn jitter01(p : Tuple, u : Int, v : Int, salt : Double) -> Double {
+fn jitter01(p : Tuple, u : Int32, v : Int32, salt : Double) -> Double {
   let t = p.x * 12.9898 +
     p.y * 78.233 +
     p.z * 37.719 +
@@ -295,7 +295,7 @@ fn jitter01(p : Tuple, u : Int, v : Int, salt : Double) -> Double {
 pub fn World::reflected_color(
   self : World,
   comps : Computations,
-  remaining : Int,
+  remaining : Int32,
 ) -> Color {
   let material = comps.shape.material
   let mut reflective = material.reflective
@@ -350,7 +350,7 @@ pub fn World::reflected_color(
 pub fn World::refracted_color(
   self : World,
   comps : Computations,
-  remaining : Int,
+  remaining : Int32,
 ) -> Color {
   if remaining <= 0 || comps.shape.material.transparency == 0 {
     return color(0, 0, 0)

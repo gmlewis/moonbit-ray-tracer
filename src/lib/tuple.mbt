@@ -47,7 +47,7 @@ pub impl Show for Tuple with fn output(self, logger) {
 
 ///|
 #alias("_[_]")
-pub fn Tuple::get(self : Tuple, i : Int) -> Double {
+pub fn Tuple::get(self : Tuple, i : Int32) -> Double {
   match i {
     0 => self.x
     1 => self.y
@@ -59,7 +59,7 @@ pub fn Tuple::get(self : Tuple, i : Int) -> Double {
 
 ///|
 #alias("_[_]=_")
-pub fn Tuple::set(self : Tuple, i : Int, v : Double) -> Unit {
+pub fn Tuple::set(self : Tuple, i : Int32, v : Double) -> Unit {
   match i {
     0 => self.x = v
     1 => self.y = v

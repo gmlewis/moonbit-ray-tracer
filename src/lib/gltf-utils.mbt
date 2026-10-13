@@ -1,11 +1,11 @@
 ///|
 pub(all) struct BinaryReader {
   bytes : Bytes
-  mut offset : Int
+  mut offset : Int32
 }
 
 ///|
-pub fn BinaryReader::new(bytes : Bytes, offset? : Int) -> BinaryReader {
+pub fn BinaryReader::new(bytes : Bytes, offset? : Int32) -> BinaryReader {
   let offset = match offset {
     Some(v) => v
     None => 0
@@ -14,14 +14,14 @@ pub fn BinaryReader::new(bytes : Bytes, offset? : Int) -> BinaryReader {
 }
 
 ///|
-pub fn BinaryReader::read_uint8(self : BinaryReader) -> UInt {
+pub fn BinaryReader::read_uint8(self : BinaryReader) -> UInt32 {
   let b = self.bytes[self.offset].to_int()
   self.offset += 1
   b.reinterpret_as_uint()
 }
 
 ///|
-pub fn BinaryReader::read_uint16(self : BinaryReader) -> UInt {
+pub fn BinaryReader::read_uint16(self : BinaryReader) -> UInt32 {
   let b1 = self.bytes[self.offset].to_int()
   let b2 = self.bytes[self.offset + 1].to_int()
   self.offset += 2
@@ -29,7 +29,7 @@ pub fn BinaryReader::read_uint16(self : BinaryReader) -> UInt {
 }
 
 ///|
-pub fn BinaryReader::read_uint32(self : BinaryReader) -> UInt {
+pub fn BinaryReader::read_uint32(self : BinaryReader) -> UInt32 {
   let b1 = self.bytes[self.offset].to_int()
   let b2 = self.bytes[self.offset + 1].to_int()
   let b3 = self.bytes[self.offset + 2].to_int()

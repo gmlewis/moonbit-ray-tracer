@@ -22,8 +22,8 @@ pub fn RGBE::to_rgb(self : RGBE) -> (Double, Double, Double) {
 
 ///|
 pub(all) struct HdrImage {
-  width : Int
-  height : Int
+  width : Int32
+  height : Int32
   data : Array[Double] // R, G, B interleaved
 }
 
@@ -116,9 +116,9 @@ fn next_byte(reader : @io.Buffer) -> Byte {
 ///|
 fn read_scanline(
   reader : @io.Buffer,
-  width : Int,
+  width : Int32,
   data : Array[Double],
-  offset : Int,
+  offset : Int32,
 ) -> Unit raise HdrError {
   if width < 8 || width > 0x7fff {
     // Non-RLE or very small
@@ -186,9 +186,9 @@ fn read_scanline(
 ///|
 fn read_old_scanline(
   _reader : @io.Buffer,
-  _width : Int,
+  _width : Int32,
   _data : Array[Double],
-  _offset : Int,
+  _offset : Int32,
 ) -> Unit raise HdrError {
   raise HdrError("Old HDR format not supported")
 }

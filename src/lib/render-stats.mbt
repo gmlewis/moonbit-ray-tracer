@@ -1,24 +1,24 @@
 ///|
 pub(all) struct RenderStats {
-  mut rays_total : Int
-  mut rays_hit : Int
-  mut rays_miss : Int
-  mut shadow_rays : Int
-  mut reflected_rays : Int
-  mut refracted_rays : Int
-  mut intersect_world_calls : Int
-  mut shape_intersect_calls : Int
-  mut intersections_total : Int
+  mut rays_total : Int32
+  mut rays_hit : Int32
+  mut rays_miss : Int32
+  mut shadow_rays : Int32
+  mut reflected_rays : Int32
+  mut refracted_rays : Int32
+  mut intersect_world_calls : Int32
+  mut shape_intersect_calls : Int32
+  mut intersections_total : Int32
 }
 
 ///|
 let stats_global_enabled : Ref[Bool] = { val: false, }
 
 ///|
-let stats_group_bounds_tests : Ref[Int] = { val: 0, }
+let stats_group_bounds_tests : Ref[Int32] = { val: 0, }
 
 ///|
-let stats_group_bounds_culled : Ref[Int] = { val: 0, }
+let stats_group_bounds_culled : Ref[Int32] = { val: 0, }
 
 ///|
 pub fn stats_enable_and_reset() -> Unit {
@@ -44,12 +44,12 @@ pub fn stats_record_group_bounds_test(passed : Bool) -> Unit {
 }
 
 ///|
-fn group_bounds_tests() -> Int {
+fn group_bounds_tests() -> Int32 {
   stats_group_bounds_tests.val
 }
 
 ///|
-fn group_bounds_culled() -> Int {
+fn group_bounds_culled() -> Int32 {
   stats_group_bounds_culled.val
 }
 
@@ -69,7 +69,7 @@ pub fn render_stats() -> RenderStats {
 }
 
 ///|
-fn ratio(n : Int, d : Int) -> Double {
+fn ratio(n : Int32, d : Int32) -> Double {
   if d == 0 {
     0.0
   } else {
@@ -78,7 +78,7 @@ fn ratio(n : Int, d : Int) -> Double {
 }
 
 ///|
-fn pct(n : Int, d : Int) -> Int {
+fn pct(n : Int32, d : Int32) -> Int32 {
   // Percentage as an integer in [0,100].
   @math.round(ratio(n, d) * 100.0).to_int()
 }
@@ -86,9 +86,9 @@ fn pct(n : Int, d : Int) -> Int {
 ///|
 pub fn RenderStats::summary(
   self : RenderStats,
-  width : Int,
-  height : Int,
-  samples : Int,
+  width : Int32,
+  height : Int32,
+  samples : Int32,
 ) -> String {
   let primary_rays = width * height * samples
   let secondary_rays = self.rays_total - primary_rays

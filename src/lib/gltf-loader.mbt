@@ -7,8 +7,8 @@ pub(all) struct GltfData {
 ///|
 pub fn GltfData::get_accessor_reader(
   self : GltfData,
-  accessor_idx : Int,
-) -> (BinaryReader, Int)? {
+  accessor_idx : Int32,
+) -> (BinaryReader, Int32)? {
   let accessor = match self.gltf.accessors.get(accessor_idx) {
     Some(a) => a
     None => return None
@@ -64,7 +64,7 @@ pub fn GltfData::get_accessor_reader(
 ///|
 fn GltfData::read_vec3(
   self : GltfData,
-  accessor_idx : Int,
+  accessor_idx : Int32,
   is_point : Bool,
 ) -> Array[Tuple] {
   let accessor = match self.gltf.accessors.get(accessor_idx) {
@@ -96,7 +96,7 @@ fn GltfData::read_vec3(
 ///|
 fn GltfData::read_tangents(
   self : GltfData,
-  accessor_idx : Int,
+  accessor_idx : Int32,
 ) -> Array[(Tuple, Double)] {
   let accessor = match self.gltf.accessors.get(accessor_idx) {
     Some(a) => a
@@ -131,8 +131,8 @@ fn GltfData::read_tangents(
 ///|
 pub fn GltfData::read_indices(
   self : GltfData,
-  accessor_idx : Int,
-) -> Array[Int] {
+  accessor_idx : Int32,
+) -> Array[Int32] {
   let accessor = match self.gltf.accessors.get(accessor_idx) {
     Some(a) => a
     None => return []
@@ -269,7 +269,7 @@ fn GltfData::to_shape(self : GltfData) -> Shape {
 }
 
 ///|
-pub fn GltfData::load_node(self : GltfData, node_idx : Int) -> Shape {
+pub fn GltfData::load_node(self : GltfData, node_idx : Int32) -> Shape {
   let node = match self.gltf.nodes.get(node_idx) {
     Some(n) => n
     None => return group()
@@ -372,7 +372,7 @@ pub fn GltfData::load_node(self : GltfData, node_idx : Int) -> Shape {
 ///|
 pub fn GltfData::read_vec2(
   self : GltfData,
-  accessor_idx : Int,
+  accessor_idx : Int32,
 ) -> Array[(Double, Double)] {
   let accessor = match self.gltf.accessors.get(accessor_idx) {
     Some(a) => a
@@ -397,7 +397,7 @@ pub fn GltfData::read_vec2(
 }
 
 ///|
-pub fn GltfData::load_mesh(self : GltfData, mesh_idx : Int) -> Shape {
+pub fn GltfData::load_mesh(self : GltfData, mesh_idx : Int32) -> Shape {
   let mesh = match self.gltf.meshes.get(mesh_idx) {
     Some(m) => m
     None => return group()
@@ -748,7 +748,7 @@ pub fn GltfData::load_mesh(self : GltfData, mesh_idx : Int) -> Shape {
 ///|
 
 ///|
-pub fn GltfData::load_material(self : GltfData, mat_idx : Int) -> Material {
+pub fn GltfData::load_material(self : GltfData, mat_idx : Int32) -> Material {
   let mat = material()
   let g_mat = match self.gltf.materials.get(mat_idx) {
     Some(m) => m
@@ -836,8 +836,8 @@ pub fn GltfData::load_material(self : GltfData, mat_idx : Int) -> Material {
 ///|
 pub fn GltfData::load_material_texture(
   self : GltfData,
-  tex_idx : Int,
-  linear? : Bool = false,
+  tex_idx : Int32,
+  linear~ : Bool = false,
 ) -> Pattern? {
   let tex = match self.gltf.textures.get(tex_idx) {
     Some(t) => t

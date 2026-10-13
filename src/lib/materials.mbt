@@ -53,7 +53,7 @@ pub(all) struct Material {
   mut displacement_strength : Double
   mut normal_texture : Pattern?
   mut normal_texture_scale : Double
-  mut normal_texture_texcoord : Int
+  mut normal_texture_texcoord : Int32
   // Scene-only: optional material layering (resolved onto Shape).
   mut layer_material : String?
   mut layer_mask : String?
@@ -440,8 +440,8 @@ pub fn Material::lighting(
   position : Tuple,
   eyev : Tuple,
   normalv : Tuple,
-  in_shadow? : Bool = false,
-  shape? : Shape? = None,
+  in_shadow~ : Bool = false,
+  shape~ : Shape? = None,
   uv0? : (Double, Double),
   uv1? : (Double, Double),
 ) -> Color {

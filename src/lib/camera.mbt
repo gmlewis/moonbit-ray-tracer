@@ -1,7 +1,7 @@
 ///|
 pub(all) struct Camera {
-  hsize : Int
-  vsize : Int
+  hsize : Int32
+  vsize : Int32
   field_of_view : Double
   mut transform : Matrix
   pixel_size : Double
@@ -18,7 +18,7 @@ pub extend Camera with Eq::{equal}
 pub extend Camera with Eq::{not_equal}
 
 ///|
-pub fn camera(hsize : Int, vsize : Int, field_of_view : Double) -> Camera {
+pub fn camera(hsize : Int32, vsize : Int32, field_of_view : Double) -> Camera {
   let transform = mat4ident()
   let half_view = @math.tan(field_of_view / 2)
   let aspect = hsize.to_double() / vsize.to_double()
@@ -42,10 +42,10 @@ pub fn camera(hsize : Int, vsize : Int, field_of_view : Double) -> Camera {
 ///|
 pub fn Camera::ray_for_pixel(
   self : Camera,
-  px : Int,
-  py : Int,
-  offset_x? : Double = 0.5,
-  offset_y? : Double = 0.5,
+  px : Int32,
+  py : Int32,
+  offset_x~ : Double = 0.5,
+  offset_y~ : Double = 0.5,
 ) -> Ray {
   // the offset from the edge of the canvas to the pixel's center
   let xoffset = (px.to_double() + offset_x) * self.pixel_size
@@ -69,9 +69,9 @@ pub fn Camera::ray_for_pixel(
 pub async fn Camera::render(
   self : Camera,
   world : World,
-  samples? : Int = 1,
-  max_bounces? : Int = 4,
-  progress? : async (Int) -> Unit,
+  samples~ : Int32 = 1,
+  max_bounces~ : Int32 = 4,
+  progress? : async (Int32) -> Unit,
 ) -> Canvas {
   let image = canvas(self.hsize, self.vsize)
   let samples = if samples < 1 { 1 } else { samples }

@@ -21,7 +21,7 @@ fn fade(t : Double) -> Double {
 }
 
 ///|
-fn hash3(ix : Int, iy : Int, iz : Int, seed : Int) -> Double {
+fn hash3(ix : Int32, iy : Int32, iz : Int32, seed : Int32) -> Double {
   // Deterministic pseudo-random in [0, 1)
   let x = ix.to_double()
   let y = iy.to_double()
@@ -33,7 +33,7 @@ fn hash3(ix : Int, iy : Int, iz : Int, seed : Int) -> Double {
 }
 
 ///|
-pub fn value_noise3(p : Tuple, seed : Int) -> Double {
+pub fn value_noise3(p : Tuple, seed : Int32) -> Double {
   let x0 = @math.floor(p.x).to_int()
   let y0 = @math.floor(p.y).to_int()
   let z0 = @math.floor(p.z).to_int()
@@ -63,8 +63,8 @@ pub fn value_noise3(p : Tuple, seed : Int) -> Double {
 ///|
 pub fn fbm3(
   p : Tuple,
-  seed : Int,
-  octaves : Int,
+  seed : Int32,
+  octaves : Int32,
   lacunarity : Double,
   gain : Double,
 ) -> Double {
@@ -87,7 +87,7 @@ pub fn fbm3(
 }
 
 ///|
-fn hash2(ix : Int, iy : Int, seed : Int) -> (Double, Double) {
+fn hash2(ix : Int32, iy : Int32, seed : Int32) -> (Double, Double) {
   // Two independent hashes in [0,1)
   let a = hash3(ix, iy, 0, seed)
   let b = hash3(ix, iy, 1, seed + 101)
@@ -95,7 +95,11 @@ fn hash2(ix : Int, iy : Int, seed : Int) -> (Double, Double) {
 }
 
 ///|
-pub fn voronoi2(p : Tuple, seed : Int, jitter : Double) -> (Double, Int, Int) {
+pub fn voronoi2(
+  p : Tuple,
+  seed : Int32,
+  jitter : Double,
+) -> (Double, Int32, Int32) {
   // 2D Voronoi on (x,z)
   let x = p.x
   let y = p.z
@@ -129,9 +133,9 @@ pub fn voronoi2(p : Tuple, seed : Int, jitter : Double) -> (Double, Int, Int) {
 ///|
 pub fn voronoi2_f1_f2(
   p : Tuple,
-  seed : Int,
+  seed : Int32,
   jitter : Double,
-) -> (Double, Double, Int, Int) {
+) -> (Double, Double, Int32, Int32) {
   // Returns F1, F2 (Euclidean), and the winning cell coords.
   // 2D Voronoi on (x,z)
   let x = p.x

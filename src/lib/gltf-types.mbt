@@ -1,9 +1,9 @@
 ///|
 pub(all) struct GltfAccessor {
-  buffer_view : Int?
-  byte_offset : Int
-  component_type : Int
-  count : Int
+  buffer_view : Int32?
+  byte_offset : Int32
+  component_type : Int32
+  count : Int32
   max : Array[Double]?
   min : Array[Double]?
   type_ : String
@@ -11,25 +11,25 @@ pub(all) struct GltfAccessor {
 
 ///|
 pub(all) struct GltfBufferView {
-  buffer : Int
-  byte_offset : Int
-  byte_length : Int
-  byte_stride : Int?
-  target : Int?
+  buffer : Int32
+  byte_offset : Int32
+  byte_length : Int32
+  byte_stride : Int32?
+  target : Int32?
 }
 
 ///|
 pub(all) struct GltfBuffer {
   uri : String?
-  byte_length : Int
+  byte_length : Int32
 }
 
 ///|
 pub(all) struct GltfMeshPrimitive {
-  attributes : Map[String, Int]
-  indices : Int?
-  material : Int?
-  mode : Int
+  attributes : Map[String, Int32]
+  indices : Int32?
+  material : Int32?
+  mode : Int32
 }
 
 ///|
@@ -40,8 +40,8 @@ pub(all) struct GltfMesh {
 
 ///|
 pub(all) struct GltfNode {
-  mesh : Int?
-  children : Array[Int]?
+  mesh : Int32?
+  children : Array[Int32]?
   matrix : Array[Double]?
   translation : Array[Double]?
   rotation : Array[Double]?
@@ -51,34 +51,34 @@ pub(all) struct GltfNode {
 
 ///|
 pub(all) struct GltfScene {
-  nodes : Array[Int]
+  nodes : Array[Int32]
   name : String?
 }
 
 ///|
 pub(all) struct GltfTextureInfo {
-  index : Int
-  tex_coord : Int?
+  index : Int32
+  tex_coord : Int32?
 }
 
 ///|
 pub(all) struct GltfNormalTextureInfo {
-  index : Int
-  tex_coord : Int?
+  index : Int32
+  tex_coord : Int32?
   scale : Double?
 }
 
 ///|
 pub(all) struct GltfTexture {
-  sampler : Int?
-  source : Int?
+  sampler : Int32?
+  source : Int32?
   name : String?
 }
 
 ///|
 pub(all) struct GltfImage {
   uri : String?
-  buffer_view : Int?
+  buffer_view : Int32?
   mime_type : String?
   name : String?
 }
@@ -110,7 +110,7 @@ pub(all) struct Gltf {
   meshes : Array[GltfMesh]
   nodes : Array[GltfNode]
   scenes : Array[GltfScene]
-  scene : Int?
+  scene : Int32?
   materials : Array[GltfMaterial]
   textures : Array[GltfTexture]
   images : Array[GltfImage]

@@ -1,7 +1,7 @@
 ///|
 pub(all) enum LightKind {
   Point
-  Area(Tuple, Int, Tuple, Int) // u_vec, u_steps, v_vec, v_steps
+  Area(Tuple, Int32, Tuple, Int32) // u_vec, u_steps, v_vec, v_steps
 } derive(Debug, Eq)
 
 ///|
@@ -63,9 +63,9 @@ pub fn point_light(position : Tuple, intensity : Color) -> Light {
 pub fn area_light(
   corner : Tuple,
   full_uvec : Tuple,
-  u_steps : Int,
+  u_steps : Int32,
   full_vvec : Tuple,
-  v_steps : Int,
+  v_steps : Int32,
   intensity : Color,
 ) -> Light {
   let uvec = full_uvec.div_scalar(u_steps.to_double())
@@ -83,7 +83,7 @@ pub fn Light::point_at_uv(self : Light, u : Double, v : Double) -> Tuple {
 }
 
 ///|
-pub fn Light::point_at(self : Light, u : Int, v : Int) -> Tuple {
+pub fn Light::point_at(self : Light, u : Int32, v : Int32) -> Tuple {
   match self.kind {
     Point => self.position
     Area(_, _, _, _) =>
@@ -92,7 +92,7 @@ pub fn Light::point_at(self : Light, u : Int, v : Int) -> Tuple {
 }
 
 ///|
-pub fn Light::samples(self : Light) -> Int {
+pub fn Light::samples(self : Light) -> Int32 {
   match self.kind {
     Point => 1
     Area(_, u_steps, _, v_steps) => u_steps * v_steps
@@ -100,7 +100,7 @@ pub fn Light::samples(self : Light) -> Int {
 }
 
 ///|
-pub fn Light::cap_area_steps(self : Light, max_steps : Int) -> Light {
+pub fn Light::cap_area_steps(self : Light, max_steps : Int32) -> Light {
   if max_steps <= 0 {
     return self
   }

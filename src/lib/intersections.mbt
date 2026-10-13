@@ -19,8 +19,8 @@ pub extend Intersection with Debug::{to_repr}
 pub fn intersection(
   t : Double,
   shape : Shape,
-  u? : Double = 0,
-  v? : Double = 0,
+  u~ : Double = 0,
+  v~ : Double = 0,
 ) -> Intersection {
   {
     t,
@@ -70,7 +70,7 @@ pub impl Show for Intersection with fn output(self, logger) {
 
 ///|
 pub(all) struct Intersections {
-  count : Int
+  count : Int32
   xs : Array[Intersection]
   hit : Intersection?
 }
@@ -120,7 +120,7 @@ pub fn intersections(xs : Array[Intersection]) -> Intersections {
 
 ///|
 #alias("_[_]")
-pub fn Intersections::get(self : Intersections, i : Int) -> Intersection {
+pub fn Intersections::get(self : Intersections, i : Int32) -> Intersection {
   self.xs[i]
 }
 

@@ -715,7 +715,7 @@ fn palette(colors : Array[Color], t : Double) -> Color {
 
 ///|
 pub(all) struct NoisePattern {
-  seed : Int
+  seed : Int32
   scale : Double
 } derive(Debug, Eq)
 
@@ -785,15 +785,15 @@ pub impl PatternTrait for NoisePattern with fn pattern_at_with_info(
 }
 
 ///|
-pub fn noise_pattern(seed? : Int = 0, scale? : Double = 1.0) -> Pattern {
+pub fn noise_pattern(seed~ : Int32 = 0, scale~ : Double = 1.0) -> Pattern {
   Pattern::new(NoisePattern::{ seed, scale, })
 }
 
 ///|
 pub(all) struct FbmPattern {
-  seed : Int
+  seed : Int32
   scale : Double
-  octaves : Int
+  octaves : Int32
   lacunarity : Double
   gain : Double
 } derive(Debug, Eq)
@@ -879,11 +879,11 @@ pub impl PatternTrait for FbmPattern with fn pattern_at_with_info(
 
 ///|
 pub fn fbm_pattern(
-  seed? : Int = 0,
-  scale? : Double = 1.0,
-  octaves? : Int = 5,
-  lacunarity? : Double = 2.0,
-  gain? : Double = 0.5,
+  seed~ : Int32 = 0,
+  scale~ : Double = 1.0,
+  octaves~ : Int32 = 5,
+  lacunarity~ : Double = 2.0,
+  gain~ : Double = 0.5,
 ) -> Pattern {
   Pattern::new(FbmPattern::{ seed, scale, octaves, lacunarity, gain, })
 }
@@ -891,9 +891,9 @@ pub fn fbm_pattern(
 ///|
 pub(all) struct MarblePattern {
   colors : Array[Color]
-  seed : Int
+  seed : Int32
   scale : Double
-  octaves : Int
+  octaves : Int32
   lacunarity : Double
   gain : Double
   frequency : Double
@@ -972,13 +972,13 @@ pub impl PatternTrait for MarblePattern with fn pattern_at_with_info(
 ///|
 pub fn marble_pattern(
   colors : Array[Color],
-  seed? : Int = 0,
-  scale? : Double = 1.0,
-  octaves? : Int = 5,
-  lacunarity? : Double = 2.0,
-  gain? : Double = 0.5,
-  frequency? : Double = 5.0,
-  strength? : Double = 2.0,
+  seed~ : Int32 = 0,
+  scale~ : Double = 1.0,
+  octaves~ : Int32 = 5,
+  lacunarity~ : Double = 2.0,
+  gain~ : Double = 0.5,
+  frequency~ : Double = 5.0,
+  strength~ : Double = 2.0,
 ) -> Pattern {
   Pattern::new(MarblePattern::{
     colors,
@@ -995,9 +995,9 @@ pub fn marble_pattern(
 ///|
 pub(all) struct WoodPattern {
   colors : Array[Color]
-  seed : Int
+  seed : Int32
   scale : Double
-  octaves : Int
+  octaves : Int32
   lacunarity : Double
   gain : Double
   ring_frequency : Double
@@ -1077,13 +1077,13 @@ pub impl PatternTrait for WoodPattern with fn pattern_at_with_info(
 ///|
 pub fn wood_pattern(
   colors : Array[Color],
-  seed? : Int = 0,
-  scale? : Double = 1.0,
-  octaves? : Int = 5,
-  lacunarity? : Double = 2.0,
-  gain? : Double = 0.5,
-  ring_frequency? : Double = 6.0,
-  turbulence? : Double = 0.5,
+  seed~ : Int32 = 0,
+  scale~ : Double = 1.0,
+  octaves~ : Int32 = 5,
+  lacunarity~ : Double = 2.0,
+  gain~ : Double = 0.5,
+  ring_frequency~ : Double = 6.0,
+  turbulence~ : Double = 0.5,
 ) -> Pattern {
   Pattern::new(WoodPattern::{
     colors,
@@ -1146,7 +1146,7 @@ pub impl Show for VoronoiMode with fn output(self, logger) {
 
 ///|
 pub(all) struct VoronoiPattern {
-  seed : Int
+  seed : Int32
   scale : Double
   jitter : Double
   mode : VoronoiMode
@@ -1265,39 +1265,39 @@ pub impl PatternTrait for VoronoiPattern with fn pattern_at_with_info(
 
 ///|
 pub fn voronoi_pattern(
-  seed? : Int = 0,
-  scale? : Double = 1.0,
-  jitter? : Double = 1.0,
-  mode? : VoronoiMode = VoronoiMode::Distance,
-  edge_scale? : Double = 12.0,
+  seed~ : Int32 = 0,
+  scale~ : Double = 1.0,
+  jitter~ : Double = 1.0,
+  mode~ : VoronoiMode = VoronoiMode::Distance,
+  edge_scale~ : Double = 12.0,
 ) -> Pattern {
   Pattern::new(VoronoiPattern::{ seed, scale, jitter, mode, edge_scale, })
 }
 
 ///|
 pub fn voronoi_f1_pattern(
-  seed? : Int = 0,
-  scale? : Double = 1.0,
-  jitter? : Double = 1.0,
+  seed~ : Int32 = 0,
+  scale~ : Double = 1.0,
+  jitter~ : Double = 1.0,
 ) -> Pattern {
   voronoi_pattern(seed~, scale~, jitter~, mode=VoronoiMode::F1)
 }
 
 ///|
 pub fn voronoi_f2_pattern(
-  seed? : Int = 0,
-  scale? : Double = 1.0,
-  jitter? : Double = 1.0,
+  seed~ : Int32 = 0,
+  scale~ : Double = 1.0,
+  jitter~ : Double = 1.0,
 ) -> Pattern {
   voronoi_pattern(seed~, scale~, jitter~, mode=VoronoiMode::F2)
 }
 
 ///|
 pub fn voronoi_f2_minus_f1_pattern(
-  seed? : Int = 0,
-  scale? : Double = 1.0,
-  jitter? : Double = 1.0,
-  edge_scale? : Double = 12.0,
+  seed~ : Int32 = 0,
+  scale~ : Double = 1.0,
+  jitter~ : Double = 1.0,
+  edge_scale~ : Double = 12.0,
 ) -> Pattern {
   voronoi_pattern(
     seed~,
@@ -1482,11 +1482,11 @@ pub impl PatternTrait for LevelsPattern with fn pattern_at_with_info(
 ///|
 pub fn levels_pattern(
   pattern : Pattern,
-  in_min? : Double = 0.0,
-  in_max? : Double = 1.0,
-  out_min? : Double = 0.0,
-  out_max? : Double = 1.0,
-  gamma? : Double = 1.0,
+  in_min~ : Double = 0.0,
+  in_max~ : Double = 1.0,
+  out_min~ : Double = 0.0,
+  out_max~ : Double = 1.0,
+  gamma~ : Double = 1.0,
 ) -> Pattern {
   Pattern::new(LevelsPattern::{
     pattern,
@@ -1598,8 +1598,8 @@ pub impl PatternTrait for BiasGainPattern with fn pattern_at_with_info(
 ///|
 pub fn bias_gain_pattern(
   pattern : Pattern,
-  bias? : Double = 0.5,
-  gain? : Double = 0.5,
+  bias~ : Double = 0.5,
+  gain~ : Double = 0.5,
 ) -> Pattern {
   Pattern::new(BiasGainPattern::{ pattern, bias, gain, })
 }
@@ -1691,8 +1691,8 @@ pub impl PatternTrait for ContrastPattern with fn pattern_at_with_info(
 ///|
 pub fn contrast_pattern(
   pattern : Pattern,
-  contrast? : Double = 1.0,
-  pivot? : Double = 0.5,
+  contrast~ : Double = 1.0,
+  pivot~ : Double = 0.5,
 ) -> Pattern {
   Pattern::new(ContrastPattern::{ pattern, contrast, pivot, })
 }
@@ -1795,9 +1795,9 @@ pub impl PatternTrait for ThresholdPattern with fn pattern_at_with_info(
 ///|
 pub fn threshold_pattern(
   pattern : Pattern,
-  threshold? : Double = 0.5,
-  low? : Color = color(0.0, 0.0, 0.0),
-  high? : Color = color(1.0, 1.0, 1.0),
+  threshold~ : Double = 0.5,
+  low~ : Color = color(0.0, 0.0, 0.0),
+  high~ : Color = color(1.0, 1.0, 1.0),
 ) -> Pattern {
   Pattern::new(ThresholdPattern::{
     pattern: field(pattern),
@@ -1810,7 +1810,7 @@ pub fn threshold_pattern(
 ///|
 pub(all) struct PosterizePattern {
   pattern : Pattern
-  steps : Int
+  steps : Int32
 } derive(Debug)
 
 ///|
@@ -1847,7 +1847,7 @@ pub impl PatternTrait for PosterizePattern with fn clone(self) {
 }
 
 ///|
-fn posterize_channel(x : Double, steps : Int) -> Double {
+fn posterize_channel(x : Double, steps : Int32) -> Double {
   let steps = if steps < 2 { 2 } else { steps }
   let levels = (steps - 1).to_double()
   let idx = @math.floor(clamp01(x) * steps.to_double()).to_int()
@@ -1891,7 +1891,7 @@ pub impl PatternTrait for PosterizePattern with fn pattern_at_with_info(
 }
 
 ///|
-pub fn posterize_pattern(pattern : Pattern, steps? : Int = 4) -> Pattern {
+pub fn posterize_pattern(pattern : Pattern, steps~ : Int32 = 4) -> Pattern {
   Pattern::new(PosterizePattern::{ pattern, steps, })
 }
 
@@ -2058,8 +2058,8 @@ pub impl PatternTrait for TriplanarPattern with fn pattern_at_with_info(
 ///|
 pub fn triplanar_pattern(
   pattern : Pattern,
-  scale? : Double = 1.0,
-  sharpness? : Double = 1.0,
+  scale~ : Double = 1.0,
+  sharpness~ : Double = 1.0,
 ) -> Pattern {
   Pattern::new(TriplanarPattern::{ pattern, scale, sharpness, })
 }
@@ -2280,7 +2280,7 @@ pub impl PatternTrait for WarpPattern with fn pattern_at_with_info(
 pub fn warp_pattern(
   base : Pattern,
   warp : Pattern,
-  amplitude? : Double = 0.25,
+  amplitude~ : Double = 0.25,
 ) -> Pattern {
   Pattern::new(WarpPattern::{ base, warp: field(warp), amplitude, })
 }

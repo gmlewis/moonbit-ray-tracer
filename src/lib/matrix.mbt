@@ -6,13 +6,13 @@ pub extend MatrixRow with Debug::{to_repr}
 
 ///|
 #alias("_[_]")
-pub fn MatrixRow::get(self : MatrixRow, col : Int) -> Double {
+pub fn MatrixRow::get(self : MatrixRow, col : Int32) -> Double {
   self.0[col]
 }
 
 ///|
 #alias("_[_]=_")
-pub fn MatrixRow::set(self : MatrixRow, col : Int, v : Double) -> Unit {
+pub fn MatrixRow::set(self : MatrixRow, col : Int32, v : Double) -> Unit {
   self.0[col] = v
 }
 
@@ -53,17 +53,17 @@ pub impl Show for Matrix with fn output(self, logger) {
 
 ///|
 #alias("_[_]")
-pub fn Matrix::get(self : Matrix, row : Int) -> MatrixRow {
+pub fn Matrix::get(self : Matrix, row : Int32) -> MatrixRow {
   self.0[row]
 }
 
 ///|
-pub fn Matrix::num_rows(self : Matrix) -> Int {
+pub fn Matrix::num_rows(self : Matrix) -> Int32 {
   self.0.length()
 }
 
 ///|
-pub fn Matrix::num_cols(self : Matrix) -> Int {
+pub fn Matrix::num_cols(self : Matrix) -> Int32 {
   if self.num_rows() == 0 {
     return 0
   }
@@ -197,7 +197,7 @@ pub fn Matrix::determinant(self : Matrix) -> Double {
 }
 
 ///|
-pub fn Matrix::submatrix(self : Matrix, row : Int, col : Int) -> Matrix {
+pub fn Matrix::submatrix(self : Matrix, row : Int32, col : Int32) -> Matrix {
   let nrows = self.num_rows()
   let ncols = self.num_cols()
   guard! nrows == ncols
@@ -219,13 +219,13 @@ pub fn Matrix::submatrix(self : Matrix, row : Int, col : Int) -> Matrix {
 }
 
 ///|
-pub fn Matrix::minor(self : Matrix, row : Int, col : Int) -> Double {
+pub fn Matrix::minor(self : Matrix, row : Int32, col : Int32) -> Double {
   let m = self.submatrix(row, col)
   m.determinant()
 }
 
 ///|
-pub fn Matrix::cofactor(self : Matrix, row : Int, col : Int) -> Double {
+pub fn Matrix::cofactor(self : Matrix, row : Int32, col : Int32) -> Double {
   let m = self.minor(row, col)
   if (row + col) % 2 == 0 {
     m
@@ -268,7 +268,7 @@ fn my_pow(base : Double, exponent : Double) -> Double {
 ///|
 /// round_to_fixed rounds the double to the provided
 /// number of digits.
-pub fn round_to_fixed(v : Double, digits : Int) -> Double {
+pub fn round_to_fixed(v : Double, digits : Int32) -> Double {
   let num = digits.to_double().abs()
   let exp = @math.round(my_pow(10, num))
   if digits < 0 {

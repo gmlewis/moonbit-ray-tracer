@@ -4,7 +4,7 @@
 // image-based tangent-space normal mapping.
 
 ///|
-fn read_u32_le(bytes : Bytes, offset : Int) -> UInt {
+fn read_u32_le(bytes : Bytes, offset : Int32) -> UInt32 {
   let b0 = bytes[offset].to_int()
   let b1 = bytes[offset + 1].to_int()
   let b2 = bytes[offset + 2].to_int()
