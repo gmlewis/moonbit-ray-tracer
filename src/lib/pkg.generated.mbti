@@ -13,7 +13,7 @@ import {
 // Values
 pub const EPSILON : Double = 0.00001
 
-pub fn area_light(Tuple, Tuple, Int, Tuple, Int, Color) -> Light
+pub fn area_light(Tuple, Tuple, Int32, Tuple, Int32, Color) -> Light
 
 pub fn bias_gain_pattern(Pattern, bias? : Double, gain? : Double) -> Pattern
 
@@ -21,9 +21,9 @@ pub let black : Color
 
 pub fn bump_normal_from_pattern(Pattern, Double, Shape, Tuple, Tuple, uv? : (Double, Double)) -> Tuple
 
-pub fn camera(Int, Int, Double) -> Camera
+pub fn camera(Int32, Int32, Double) -> Camera
 
-pub fn canvas(Int, Int) -> Canvas
+pub fn canvas(Int32, Int32) -> Canvas
 
 pub fn checkers_pattern(Array[Color]) -> Pattern
 
@@ -47,9 +47,9 @@ pub fn decode_base64_uri(String) -> Bytes?
 
 pub fn default_world() -> World
 
-pub fn fbm3(Tuple, Int, Int, Double, Double) -> Double
+pub fn fbm3(Tuple, Int32, Int32, Double, Double) -> Double
 
-pub fn fbm_pattern(seed? : Int, scale? : Double, octaves? : Int, lacunarity? : Double, gain? : Double) -> Pattern
+pub fn fbm_pattern(seed? : Int32, scale? : Double, octaves? : Int32, lacunarity? : Double, gain? : Double) -> Pattern
 
 pub fn field(Pattern, vector_decoding? : VectorDecoding) -> Field
 
@@ -69,7 +69,7 @@ pub fn gradient_pattern(Array[Color]) -> Pattern
 
 pub fn gradient_ring_pattern(Array[Color]) -> Pattern
 
-pub fn graphic_mask_pattern(@draw.Graphic, curve_segments? : Int, inside? : Color, outside? : Color, style? : Bool) -> Pattern
+pub fn graphic_mask_pattern(@draw.Graphic, curve_segments? : Int32, inside? : Color, outside? : Color, style? : Bool) -> Pattern
 
 pub fn group() -> Shape
 
@@ -87,7 +87,7 @@ pub async fn load_font(String) -> @fonts.Font raise LoaderError
 
 pub async fn load_gltf_file(String) -> Shape raise SceneParseError
 
-pub fn marble_pattern(Array[Color], seed? : Int, scale? : Double, octaves? : Int, lacunarity? : Double, gain? : Double, frequency? : Double, strength? : Double) -> Pattern
+pub fn marble_pattern(Array[Color], seed? : Int32, scale? : Double, octaves? : Int32, lacunarity? : Double, gain? : Double, frequency? : Double, strength? : Double) -> Pattern
 
 pub fn mat2(Double, Double, Double, Double) -> Matrix
 
@@ -103,7 +103,7 @@ pub fn material() -> Material
 
 pub fn mix_pattern(Pattern, Pattern, Pattern) -> Pattern
 
-pub fn noise_pattern(seed? : Int, scale? : Double) -> Pattern
+pub fn noise_pattern(seed? : Int32, scale? : Double) -> Pattern
 
 pub fn parse_gltf(Json) -> Gltf?
 
@@ -121,7 +121,7 @@ pub fn point(Double, Double, Double) -> Tuple
 
 pub fn point_light(Tuple, Color) -> Light
 
-pub fn posterize_pattern(Pattern, steps? : Int) -> Pattern
+pub fn posterize_pattern(Pattern, steps? : Int32) -> Pattern
 
 pub fn ray(Tuple, Tuple) -> Ray
 
@@ -135,7 +135,7 @@ pub fn rotation_y(Double) -> Matrix
 
 pub fn rotation_z(Double) -> Matrix
 
-pub fn round_to_fixed(Double, Int) -> Double
+pub fn round_to_fixed(Double, Int32) -> Double
 
 pub fn scaling(Double, Double, Double) -> Matrix
 
@@ -183,29 +183,29 @@ pub fn triplanar_pattern(Pattern, scale? : Double, sharpness? : Double) -> Patte
 
 pub fn tuple(Double, Double, Double, Double) -> Tuple
 
-pub fn value_noise3(Tuple, Int) -> Double
+pub fn value_noise3(Tuple, Int32) -> Double
 
 pub fn vector(Double, Double, Double) -> Tuple
 
 pub fn view_transform(Tuple, Tuple, Tuple) -> Matrix
 
-pub fn voronoi2(Tuple, Int, Double) -> (Double, Int, Int)
+pub fn voronoi2(Tuple, Int32, Double) -> (Double, Int32, Int32)
 
-pub fn voronoi2_f1_f2(Tuple, Int, Double) -> (Double, Double, Int, Int)
+pub fn voronoi2_f1_f2(Tuple, Int32, Double) -> (Double, Double, Int32, Int32)
 
-pub fn voronoi_f1_pattern(seed? : Int, scale? : Double, jitter? : Double) -> Pattern
+pub fn voronoi_f1_pattern(seed? : Int32, scale? : Double, jitter? : Double) -> Pattern
 
-pub fn voronoi_f2_minus_f1_pattern(seed? : Int, scale? : Double, jitter? : Double, edge_scale? : Double) -> Pattern
+pub fn voronoi_f2_minus_f1_pattern(seed? : Int32, scale? : Double, jitter? : Double, edge_scale? : Double) -> Pattern
 
-pub fn voronoi_f2_pattern(seed? : Int, scale? : Double, jitter? : Double) -> Pattern
+pub fn voronoi_f2_pattern(seed? : Int32, scale? : Double, jitter? : Double) -> Pattern
 
-pub fn voronoi_pattern(seed? : Int, scale? : Double, jitter? : Double, mode? : VoronoiMode, edge_scale? : Double) -> Pattern
+pub fn voronoi_pattern(seed? : Int32, scale? : Double, jitter? : Double, mode? : VoronoiMode, edge_scale? : Double) -> Pattern
 
 pub fn warp_pattern(Pattern, Pattern, amplitude? : Double) -> Pattern
 
 pub let white : Color
 
-pub fn wood_pattern(Array[Color], seed? : Int, scale? : Double, octaves? : Int, lacunarity? : Double, gain? : Double, ring_frequency? : Double, turbulence? : Double) -> Pattern
+pub fn wood_pattern(Array[Color], seed? : Int32, scale? : Double, octaves? : Int32, lacunarity? : Double, gain? : Double, ring_frequency? : Double, turbulence? : Double) -> Pattern
 
 pub fn world() -> World
 
@@ -244,13 +244,13 @@ pub impl Show for BiasGainPattern
 
 pub(all) struct BinaryReader {
   bytes : Bytes
-  mut offset : Int
+  mut offset : Int32
 }
-pub fn BinaryReader::new(Bytes, offset? : Int) -> Self
+pub fn BinaryReader::new(Bytes, offset? : Int32) -> Self
 pub fn BinaryReader::read_float32(Self) -> Float
-pub fn BinaryReader::read_uint16(Self) -> UInt
-pub fn BinaryReader::read_uint32(Self) -> UInt
-pub fn BinaryReader::read_uint8(Self) -> UInt
+pub fn BinaryReader::read_uint16(Self) -> UInt32
+pub fn BinaryReader::read_uint32(Self) -> UInt32
+pub fn BinaryReader::read_uint8(Self) -> UInt32
 
 pub(all) struct Bounds {
   mut min : Tuple
@@ -280,8 +280,8 @@ pub fn CSG::to_string(Self) -> String
 pub impl Show for CSG
 
 pub(all) struct Camera {
-  hsize : Int
-  vsize : Int
+  hsize : Int32
+  vsize : Int32
   field_of_view : Double
   mut transform : Matrix
   pixel_size : Double
@@ -289,12 +289,12 @@ pub(all) struct Camera {
   half_height : Double
 } derive(Eq)
 pub fn Camera::equal(Self, Self) -> Bool
-pub fn Camera::ray_for_pixel(Self, Int, Int, offset_x? : Double, offset_y? : Double) -> Ray
-pub async fn Camera::render(Self, World, samples? : Int, max_bounces? : Int, progress? : async (Int) -> Unit) -> Canvas
+pub fn Camera::ray_for_pixel(Self, Int32, Int32, offset_x? : Double, offset_y? : Double) -> Ray
+pub async fn Camera::render(Self, World, samples? : Int32, max_bounces? : Int32, progress? : async (Int32) -> Unit) -> Canvas
 
 pub(all) struct Canvas {
-  width : Int
-  height : Int
+  width : Int32
+  height : Int32
   red : Array[Double]
   green : Array[Double]
   blue : Array[Double]
@@ -307,12 +307,12 @@ pub fn Canvas::from_hdr(@hdr.HdrImage) -> Self
 pub fn Canvas::from_image(&@image.Image, linear? : Bool) -> Self
 pub fn Canvas::from_jpeg(Bytes, linear? : Bool) -> Self?
 pub fn Canvas::from_png(Bytes, linear? : Bool) -> Self?
-pub fn Canvas::pixel_at(Self, Int, Int) -> Color
+pub fn Canvas::pixel_at(Self, Int32, Int32) -> Color
 pub fn Canvas::pixel_at_bilinear(Self, Double, Double) -> Color
 pub fn Canvas::to_png(Self) -> Bytes raise @image.SizeError
 pub fn Canvas::to_ppm(Self) -> String
 pub fn Canvas::to_repr(Self) -> @debug.Repr
-pub fn Canvas::write_pixel(Self, Int, Int, Color) -> Unit
+pub fn Canvas::write_pixel(Self, Int32, Int32, Color) -> Unit
 
 pub(all) struct CheckersPattern {
   colors : Array[Color]
@@ -445,9 +445,9 @@ pub impl Mapping for CylindricalMapping
 pub impl Show for CylindricalMapping
 
 pub(all) struct FbmPattern {
-  seed : Int
+  seed : Int32
   scale : Double
-  octaves : Int
+  octaves : Int32
   lacunarity : Double
   gain : Double
 } derive(Eq, @debug.Debug)
@@ -483,17 +483,17 @@ pub(all) struct Gltf {
   meshes : Array[GltfMesh]
   nodes : Array[GltfNode]
   scenes : Array[GltfScene]
-  scene : Int?
+  scene : Int32?
   materials : Array[GltfMaterial]
   textures : Array[GltfTexture]
   images : Array[GltfImage]
 }
 
 pub(all) struct GltfAccessor {
-  buffer_view : Int?
-  byte_offset : Int
-  component_type : Int
-  count : Int
+  buffer_view : Int32?
+  byte_offset : Int32
+  component_type : Int32
+  count : Int32
   max : Array[Double]?
   min : Array[Double]?
   type_ : String
@@ -501,32 +501,32 @@ pub(all) struct GltfAccessor {
 
 pub(all) struct GltfBuffer {
   uri : String?
-  byte_length : Int
+  byte_length : Int32
 }
 
 pub(all) struct GltfBufferView {
-  buffer : Int
-  byte_offset : Int
-  byte_length : Int
-  byte_stride : Int?
-  target : Int?
+  buffer : Int32
+  byte_offset : Int32
+  byte_length : Int32
+  byte_stride : Int32?
+  target : Int32?
 }
 
 pub(all) struct GltfData {
   gltf : Gltf
   buffers : Array[Bytes]
 }
-pub fn GltfData::get_accessor_reader(Self, Int) -> (BinaryReader, Int)?
-pub fn GltfData::load_material(Self, Int) -> Material
-pub fn GltfData::load_material_texture(Self, Int, linear? : Bool) -> Pattern?
-pub fn GltfData::load_mesh(Self, Int) -> Shape
-pub fn GltfData::load_node(Self, Int) -> Shape
-pub fn GltfData::read_indices(Self, Int) -> Array[Int]
-pub fn GltfData::read_vec2(Self, Int) -> Array[(Double, Double)]
+pub fn GltfData::get_accessor_reader(Self, Int32) -> (BinaryReader, Int32)?
+pub fn GltfData::load_material(Self, Int32) -> Material
+pub fn GltfData::load_material_texture(Self, Int32, linear? : Bool) -> Pattern?
+pub fn GltfData::load_mesh(Self, Int32) -> Shape
+pub fn GltfData::load_node(Self, Int32) -> Shape
+pub fn GltfData::read_indices(Self, Int32) -> Array[Int32]
+pub fn GltfData::read_vec2(Self, Int32) -> Array[(Double, Double)]
 
 pub(all) struct GltfImage {
   uri : String?
-  buffer_view : Int?
+  buffer_view : Int32?
   mime_type : String?
   name : String?
 }
@@ -554,15 +554,15 @@ pub(all) struct GltfMesh {
 }
 
 pub(all) struct GltfMeshPrimitive {
-  attributes : Map[String, Int]
-  indices : Int?
-  material : Int?
-  mode : Int
+  attributes : Map[String, Int32]
+  indices : Int32?
+  material : Int32?
+  mode : Int32
 }
 
 pub(all) struct GltfNode {
-  mesh : Int?
-  children : Array[Int]?
+  mesh : Int32?
+  children : Array[Int32]?
   matrix : Array[Double]?
   translation : Array[Double]?
   rotation : Array[Double]?
@@ -571,25 +571,25 @@ pub(all) struct GltfNode {
 }
 
 pub(all) struct GltfNormalTextureInfo {
-  index : Int
-  tex_coord : Int?
+  index : Int32
+  tex_coord : Int32?
   scale : Double?
 }
 
 pub(all) struct GltfScene {
-  nodes : Array[Int]
+  nodes : Array[Int32]
   name : String?
 }
 
 pub(all) struct GltfTexture {
-  sampler : Int?
-  source : Int?
+  sampler : Int32?
+  source : Int32?
   name : String?
 }
 
 pub(all) struct GltfTextureInfo {
-  index : Int
-  tex_coord : Int?
+  index : Int32
+  tex_coord : Int32?
 }
 
 pub(all) struct GradientCheckersPattern {
@@ -649,7 +649,7 @@ pub(all) struct GraphicMaskPattern {
   profiles : Array[(Array[@geom.Vec2], Array[Array[@geom.Vec2]])]
   overall_bbox : (@geom.Vec2, @geom.Vec2)?
   profile_bboxes : Array[(@geom.Vec2, @geom.Vec2)]
-  curve_segments : Int
+  curve_segments : Int32
   inside : Color
   outside : Color
   style : Bool
@@ -669,7 +669,7 @@ pub(all) struct Group {
 } derive(@debug.Debug)
 pub fn Group::bounds(Self) -> Bounds
 pub fn Group::clone(Self) -> Self
-pub fn Group::divide(Self, Int) -> Unit
+pub fn Group::divide(Self, Int32) -> Unit
 pub fn Group::local_intersect(Self, Shape, Ray) -> Intersections
 pub fn Group::local_normal_at(Self, Tuple) -> Tuple
 pub fn Group::output(Self, &Logger) -> Unit
@@ -697,13 +697,13 @@ pub impl Eq for Intersection
 pub impl Show for Intersection
 
 pub(all) struct Intersections {
-  count : Int
+  count : Int32
   xs : Array[Intersection]
   hit : Intersection?
 }
 pub fn Intersections::from_ts(Array[Double], Shape) -> Self
 #alias("_[_]")
-pub fn Intersections::get(Self, Int) -> Intersection
+pub fn Intersections::get(Self, Int32) -> Intersection
 pub fn Intersections::hit(Self) -> Intersection?
 pub fn Intersections::to_ts(Self) -> Array[Double]
 
@@ -741,18 +741,18 @@ pub(all) struct Light {
   intensity : Color
   kind : LightKind
 } derive(Eq, @debug.Debug)
-pub fn Light::cap_area_steps(Self, Int) -> Self
+pub fn Light::cap_area_steps(Self, Int32) -> Self
 pub fn Light::equal(Self, Self) -> Bool
-pub fn Light::point_at(Self, Int, Int) -> Tuple
+pub fn Light::point_at(Self, Int32, Int32) -> Tuple
 pub fn Light::point_at_uv(Self, Double, Double) -> Tuple
-pub fn Light::samples(Self) -> Int
+pub fn Light::samples(Self) -> Int32
 pub fn Light::to_repr(Self) -> @debug.Repr
 pub fn Light::to_string(Self) -> String
 pub impl Show for Light
 
 pub(all) enum LightKind {
   Point
-  Area(Tuple, Int, Tuple, Int)
+  Area(Tuple, Int32, Tuple, Int32)
 } derive(Eq, @debug.Debug)
 pub fn LightKind::equal(Self, Self) -> Bool
 pub fn LightKind::to_repr(Self) -> @debug.Repr
@@ -768,9 +768,9 @@ pub impl Show for LightingMode
 
 pub(all) struct MarblePattern {
   colors : Array[Color]
-  seed : Int
+  seed : Int32
   scale : Double
-  octaves : Int
+  octaves : Int32
   lacunarity : Double
   gain : Double
   frequency : Double
@@ -801,7 +801,7 @@ pub(all) struct Material {
   mut displacement_strength : Double
   mut normal_texture : Pattern?
   mut normal_texture_scale : Double
-  mut normal_texture_texcoord : Int
+  mut normal_texture_texcoord : Int32
   mut layer_material : String?
   mut layer_mask : String?
   mut layer_opacity : Double
@@ -830,26 +830,26 @@ pub impl Show for MaterialLayer
 
 pub(all) struct Matrix(Array[MatrixRow]) derive(@debug.Debug)
 pub fn Matrix::clone(Self) -> Self
-pub fn Matrix::cofactor(Self, Int, Int) -> Double
+pub fn Matrix::cofactor(Self, Int32, Int32) -> Double
 pub fn Matrix::copy(Self, Self) -> Unit
 pub fn Matrix::determinant(Self) -> Double
 pub fn Matrix::dump(Self) -> String
 pub fn Matrix::equal(Self, Self) -> Bool
 #alias("_[_]")
-pub fn Matrix::get(Self, Int) -> MatrixRow
+pub fn Matrix::get(Self, Int32) -> MatrixRow
 pub fn Matrix::inverse(Self) -> Self
 pub fn Matrix::is_invertible(Self) -> Bool
-pub fn Matrix::minor(Self, Int, Int) -> Double
+pub fn Matrix::minor(Self, Int32, Int32) -> Double
 pub fn Matrix::mul(Self, Self) -> Self
 pub fn Matrix::mul_tuple(Self, Tuple) -> Tuple
-pub fn Matrix::num_cols(Self) -> Int
-pub fn Matrix::num_rows(Self) -> Int
+pub fn Matrix::num_cols(Self) -> Int32
+pub fn Matrix::num_rows(Self) -> Int32
 pub fn Matrix::rotate_x(Self, Double) -> Self
 pub fn Matrix::rotate_y(Self, Double) -> Self
 pub fn Matrix::rotate_z(Self, Double) -> Self
 pub fn Matrix::scale(Self, Double, Double, Double) -> Self
 pub fn Matrix::shear(Self, Double, Double, Double, Double, Double, Double) -> Self
-pub fn Matrix::submatrix(Self, Int, Int) -> Self
+pub fn Matrix::submatrix(Self, Int32, Int32) -> Self
 pub fn Matrix::to_repr(Self) -> @debug.Repr
 pub fn Matrix::to_string(Self) -> String
 pub fn Matrix::translate(Self, Double, Double, Double) -> Self
@@ -860,9 +860,9 @@ pub impl Show for Matrix
 
 pub(all) struct MatrixRow(Array[Double]) derive(@debug.Debug)
 #alias("_[_]")
-pub fn MatrixRow::get(Self, Int) -> Double
+pub fn MatrixRow::get(Self, Int32) -> Double
 #alias("_[_]=_")
-pub fn MatrixRow::set(Self, Int, Double) -> Unit
+pub fn MatrixRow::set(Self, Int32, Double) -> Unit
 pub fn MatrixRow::to_repr(Self) -> @debug.Repr
 
 pub(all) struct MixPattern {
@@ -880,7 +880,7 @@ pub impl PatternTrait for MixPattern
 pub impl Show for MixPattern
 
 pub(all) struct NoisePattern {
-  seed : Int
+  seed : Int32
   scale : Double
 } derive(Eq, @debug.Debug)
 pub fn NoisePattern::clone(Self) -> Pattern
@@ -895,7 +895,7 @@ pub impl Show for NoisePattern
 
 pub(all) struct ObjFile {
   default_group : Shape
-  ignored_lines : Int
+  ignored_lines : Int32
   vertices : Array[Tuple]
   normals : Array[Tuple]
   named_groups : Map[String, Shape]
@@ -963,7 +963,7 @@ pub impl Show for Plane
 
 pub(all) struct PosterizePattern {
   pattern : Pattern
-  steps : Int
+  steps : Int32
 } derive(@debug.Debug)
 pub fn PosterizePattern::clone(Self) -> Pattern
 pub fn PosterizePattern::pattern_at(Self, Tuple) -> Color
@@ -987,28 +987,28 @@ pub impl Eq for Ray
 pub impl Show for Ray
 
 pub(all) struct RenderSettings {
-  mut width : Int
-  mut height : Int
-  mut samples : Int
-  mut max_bounces : Int
+  mut width : Int32
+  mut height : Int32
+  mut samples : Int32
+  mut max_bounces : Int32
   mut background : Color
-  mut divide : Int
+  mut divide : Int32
   mut exposure : Double
 } derive(Eq)
 pub fn RenderSettings::equal(Self, Self) -> Bool
 
 pub(all) struct RenderStats {
-  mut rays_total : Int
-  mut rays_hit : Int
-  mut rays_miss : Int
-  mut shadow_rays : Int
-  mut reflected_rays : Int
-  mut refracted_rays : Int
-  mut intersect_world_calls : Int
-  mut shape_intersect_calls : Int
-  mut intersections_total : Int
+  mut rays_total : Int32
+  mut rays_hit : Int32
+  mut rays_miss : Int32
+  mut shadow_rays : Int32
+  mut reflected_rays : Int32
+  mut refracted_rays : Int32
+  mut intersect_world_calls : Int32
+  mut shape_intersect_calls : Int32
+  mut intersections_total : Int32
 }
-pub fn RenderStats::summary(Self, Int, Int, Int) -> String
+pub fn RenderStats::summary(Self, Int32, Int32, Int32) -> String
 
 pub(all) enum Renderable {
   Object(&Object)
@@ -1051,15 +1051,15 @@ pub(all) struct Shape {
   mut inv_transform : Matrix
   mut parent : Shape?
   mut bounds : Bounds?
-  id : UInt
+  id : UInt32
 } derive(@debug.Debug)
 pub fn Shape::add_child(Self, Self) -> Unit
 pub fn Shape::bounds(Self) -> Bounds
 pub fn Shape::children(Self) -> Array[Self]
 pub fn Shape::clone(Self) -> Self
-pub fn Shape::divide(Self, Int) -> Unit
+pub fn Shape::divide(Self, Int32) -> Unit
 pub fn Shape::equal(Self, Self) -> Bool
-pub fn Shape::estimated_primitive_count(Self) -> Int
+pub fn Shape::estimated_primitive_count(Self) -> Int32
 pub fn Shape::includes_shape(Self, Self) -> Bool
 pub fn Shape::intersect(Self, Ray) -> Intersections
 pub fn Shape::local_intersect(Self, Ray) -> Intersections
@@ -1266,7 +1266,7 @@ pub fn Tuple::div_scalar(Self, Double) -> Self
 pub fn Tuple::dot(Self, Self) -> Double
 pub fn Tuple::equal(Self, Self) -> Bool
 #alias("_[_]")
-pub fn Tuple::get(Self, Int) -> Double
+pub fn Tuple::get(Self, Int32) -> Double
 pub fn Tuple::is_point(Self) -> Bool
 pub fn Tuple::is_vector(Self) -> Bool
 pub fn Tuple::magnitude(Self) -> Double
@@ -1277,7 +1277,7 @@ pub fn Tuple::normalize(Self) -> Self
 pub fn Tuple::op_div(Self, Self) -> Self
 pub fn Tuple::reflect(Self, Self) -> Self
 #alias("_[_]=_")
-pub fn Tuple::set(Self, Int, Double) -> Unit
+pub fn Tuple::set(Self, Int32, Double) -> Unit
 pub fn Tuple::sub(Self, Self) -> Self
 pub fn Tuple::to_repr(Self) -> @debug.Repr
 pub fn Tuple::to_string(Self) -> String
@@ -1310,7 +1310,7 @@ pub fn VoronoiMode::to_string(Self) -> String
 pub impl Show for VoronoiMode
 
 pub(all) struct VoronoiPattern {
-  seed : Int
+  seed : Int32
   scale : Double
   jitter : Double
   mode : VoronoiMode
@@ -1341,9 +1341,9 @@ pub impl Show for WarpPattern
 
 pub(all) struct WoodPattern {
   colors : Array[Color]
-  seed : Int
+  seed : Int32
   scale : Double
-  octaves : Int
+  octaves : Int32
   lacunarity : Double
   gain : Double
   ring_frequency : Double
@@ -1365,15 +1365,15 @@ pub(all) struct World {
   mut environment_map : Pattern?
   mut stats_enabled : Bool
   mut stats : RenderStats
-  mut stats_est_primitives_per_intersect_world : Int
+  mut stats_est_primitives_per_intersect_world : Int32
 }
-pub fn World::color_at(Self, Ray, remaining? : Int) -> Color
-pub fn World::estimated_primitive_count(Self) -> Int
+pub fn World::color_at(Self, Ray, remaining? : Int32) -> Color
+pub fn World::estimated_primitive_count(Self) -> Int32
 pub fn World::intersect_world(Self, Ray) -> Intersections
 pub fn World::is_shadowed(Self, Tuple, Tuple) -> Bool
-pub fn World::reflected_color(Self, Computations, Int) -> Color
-pub fn World::refracted_color(Self, Computations, Int) -> Color
-pub fn World::shade_hit(Self, Computations, remaining? : Int) -> Color
+pub fn World::reflected_color(Self, Computations, Int32) -> Color
+pub fn World::refracted_color(Self, Computations, Int32) -> Color
+pub fn World::shade_hit(Self, Computations, remaining? : Int32) -> Color
 
 // Type aliases
 pub using @fonts {type Font}

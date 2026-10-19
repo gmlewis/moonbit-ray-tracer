@@ -13,8 +13,8 @@ pub impl Show for HdrError
 
 // Types and methods
 pub(all) struct HdrImage {
-  width : Int
-  height : Int
+  width : Int32
+  height : Int32
   data : Array[Double]
 }
 
