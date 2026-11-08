@@ -1,5 +1,6 @@
 ///|
-pub(all) struct MatrixRow(Array[Double]) derive(Debug)
+#derive(Debug)
+pub(all) struct MatrixRow(Array[Double])
 
 ///|
 pub extend MatrixRow with Debug::{to_repr}
@@ -17,7 +18,8 @@ pub fn MatrixRow::set(self : MatrixRow, col : Int32, v : Double) -> Unit {
 }
 
 ///|
-pub(all) struct Matrix(Array[MatrixRow]) derive(Debug)
+#derive(Debug)
+pub(all) struct Matrix(Array[MatrixRow])
 
 ///|
 pub extend Matrix with Debug::{to_repr}

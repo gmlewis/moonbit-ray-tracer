@@ -1,10 +1,11 @@
 ///|
+#derive(Debug)
 pub(all) struct Color {
   red : Double
   green : Double
   blue : Double
   // alpha : Double
-} derive(Debug)
+}
 
 ///|
 pub extend Color with Debug::{to_repr}

@@ -1,8 +1,9 @@
 ///|
+#derive(Debug, Eq)
 pub(all) enum LightKind {
   Point
   Area(Tuple, Int32, Tuple, Int32) // u_vec, u_steps, v_vec, v_steps
-} derive(Debug, Eq)
+}
 
 ///|
 pub extend LightKind with Eq::{equal}
@@ -16,11 +17,12 @@ pub extend LightKind with Eq::{not_equal}
 pub extend LightKind with Debug::{to_repr}
 
 ///|
+#derive(Debug, Eq)
 pub(all) struct Light {
   position : Tuple // Corner for area light, position for point light
   intensity : Color
   kind : LightKind
-} derive(Debug, Eq)
+}
 
 ///|
 pub extend Light with Eq::{equal}

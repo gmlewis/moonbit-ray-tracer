@@ -6,6 +6,7 @@
 /// - `uv_at(u, v)`: uses `(u, v)` directly.
 ///
 /// This is intended to be used as a mask for `mix_pattern` or material layering.
+#derive(Debug)
 pub(all) struct GraphicMaskPattern {
   graphic : @draw.Graphic
   profiles : Array[(Array[@draw.Vec2], Array[Array[@draw.Vec2]])]
@@ -15,7 +16,7 @@ pub(all) struct GraphicMaskPattern {
   inside : Color
   outside : Color
   style : Bool
-} derive(Debug)
+}
 
 ///|
 pub extend GraphicMaskPattern with Debug::{to_repr}

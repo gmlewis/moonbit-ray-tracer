@@ -1,10 +1,11 @@
 ///|
 /// Cone represents a unit cone at the origin.
+#derive(Debug, Eq)
 pub(all) struct Cone {
   minimum : Double
   maximum : Double
   closed : Bool
-} derive(Debug, Eq)
+}
 
 ///|
 pub extend Cone with Eq::{equal}

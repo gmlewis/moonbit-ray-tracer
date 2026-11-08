@@ -1,4 +1,5 @@
 ///|
+#derive(Debug, Eq)
 pub(all) struct Canvas {
   width : Int32
   height : Int32
@@ -7,7 +8,7 @@ pub(all) struct Canvas {
   blue : Array[Double]
   mut exposure : Double
   mut use_tone_mapping : Bool
-} derive(Debug, Eq)
+}
 
 ///|
 pub extend Canvas with Eq::{equal}

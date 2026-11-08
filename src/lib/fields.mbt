@@ -7,12 +7,13 @@
 // - vector (for warps/flows)
 
 ///|
+#derive(Debug, Eq)
 pub enum VectorDecoding {
   /// Interpret RGB as [0,1] components.
   Unit01
   /// Interpret RGB as [-1,1] components via (c*2-1).
   Signed
-} derive(Debug, Eq)
+}
 
 ///|
 pub extend VectorDecoding with Eq::{equal}
@@ -26,10 +27,11 @@ pub extend VectorDecoding with Eq::{not_equal}
 pub extend VectorDecoding with Debug::{to_repr}
 
 ///|
+#derive(Debug)
 pub struct Field {
   pattern : Pattern
   vector_decoding : VectorDecoding
-} derive(Debug)
+}
 
 ///|
 pub extend Field with Debug::{to_repr}

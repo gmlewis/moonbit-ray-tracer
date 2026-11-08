@@ -1,4 +1,5 @@
 ///|
+#derive(Eq)
 pub(all) struct Camera {
   hsize : Int32
   vsize : Int32
@@ -7,7 +8,7 @@ pub(all) struct Camera {
   pixel_size : Double
   half_width : Double
   half_height : Double
-} derive(Eq)
+}
 
 ///|
 pub extend Camera with Eq::{equal}

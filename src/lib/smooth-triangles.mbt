@@ -1,4 +1,5 @@
 ///|
+#derive(Debug, Eq)
 pub(all) struct SmoothTriangle {
   p1 : Tuple
   p2 : Tuple
@@ -9,7 +10,7 @@ pub(all) struct SmoothTriangle {
   e1 : Tuple
   e2 : Tuple
   bounds : Bounds
-} derive(Debug, Eq)
+}
 
 ///|
 pub extend SmoothTriangle with Eq::{equal}

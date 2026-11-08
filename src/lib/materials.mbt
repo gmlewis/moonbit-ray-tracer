@@ -1,8 +1,9 @@
 ///|
+#derive(Debug, Eq)
 pub(all) enum LightingMode {
   Phong
   PBR
-} derive(Debug, Eq)
+}
 
 ///|
 pub extend LightingMode with Eq::{equal}
@@ -37,6 +38,7 @@ pub impl Show for LightingMode with fn output(self, logger) {
 }
 
 ///|
+#derive(Debug, Eq)
 pub(all) struct Material {
   mut color : Color
   mut ambient : Double
@@ -63,7 +65,7 @@ pub(all) struct Material {
   mut roughness : Double
   mut roughness_pattern : Pattern?
   mut lighting_mode : LightingMode
-} derive(Debug, Eq)
+}
 
 ///|
 pub extend Material with Eq::{equal}
@@ -204,11 +206,12 @@ pub fn Material::clone(self : Material) -> Material {
 }
 
 ///|
+#derive(Debug, Eq)
 pub(all) struct MaterialLayer {
   top : Material
   mask : Pattern
   opacity : Double
-} derive(Debug, Eq)
+}
 
 ///|
 pub extend MaterialLayer with Eq::{equal}

@@ -191,7 +191,8 @@ test "Bump mapping perturbs sphere normal (deterministic)" {
 
 ///|
 // A simple height field: grayscale ramps with +x.
-struct RampX {} derive(Debug)
+#derive(Debug)
+struct RampX {}
 
 ///|
 pub fn RampX::to_string(_self : RampX) -> String {

@@ -1,4 +1,5 @@
 ///|
+#derive(Debug)
 pub(all) enum Renderable {
   Object(&Object)
   Group(Group)
@@ -7,7 +8,7 @@ pub(all) enum Renderable {
   CSG(CSG)
   TriangleUV(TriangleUV)
   SmoothTriangleUV(SmoothTriangleUV)
-} derive(Debug)
+}
 
 ///|
 pub extend Renderable with Debug::{to_repr}

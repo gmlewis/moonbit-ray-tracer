@@ -1,7 +1,8 @@
 ///|
+#derive(Debug, Eq)
 struct TestShape {
   mut saved_ray : @lib.Ray
-} derive(Debug, Eq)
+}
 
 ///|
 impl Object for TestShape with fn bounds(_self) {

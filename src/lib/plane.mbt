@@ -1,6 +1,7 @@
 ///|
 /// Plane represents an infinite plane along the x and z axes.
-pub(all) struct Plane {} derive(Debug, Eq)
+#derive(Debug, Eq)
+pub(all) struct Plane {}
 
 ///|
 pub extend Plane with Eq::{equal}

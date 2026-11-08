@@ -3,12 +3,13 @@ pub const EPSILON = 0.00001
 
 ///|
 /// Tuple represents either a point or a vector.
+#derive(Debug)
 pub(all) struct Tuple {
   mut x : Double
   mut y : Double
   mut z : Double
   mut w : Double
-} derive(Debug)
+}
 
 ///|
 pub extend Tuple with Debug::{to_repr}

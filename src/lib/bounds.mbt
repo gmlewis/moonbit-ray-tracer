@@ -1,8 +1,9 @@
 ///|
+#derive(Debug, Eq)
 pub(all) struct Bounds {
   mut min : Tuple
   mut max : Tuple
-} derive(Debug, Eq)
+}
 
 ///|
 pub extend Bounds with Eq::{equal}

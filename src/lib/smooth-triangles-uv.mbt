@@ -1,4 +1,5 @@
 ///|
+#derive(Debug, Eq)
 pub(all) struct SmoothTriangleUV {
   p1 : Tuple
   p2 : Tuple
@@ -17,7 +18,7 @@ pub(all) struct SmoothTriangleUV {
   tangent_u : Tuple
   tangent_v : Tuple
   bounds : Bounds
-} derive(Debug, Eq)
+}
 
 ///|
 pub extend SmoothTriangleUV with Eq::{equal}

@@ -66,7 +66,8 @@ test "A stripe pattern supports more than two colors" {
 }
 
 ///|
-struct TestPattern {} derive(Debug)
+#derive(Debug)
+struct TestPattern {}
 
 ///|
 pub fn TestPattern::to_string(_self : TestPattern) -> String {

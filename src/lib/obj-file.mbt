@@ -10,9 +10,10 @@ pub(all) struct ObjFile {
 }
 
 ///|
+#derive(Eq)
 suberror ParserError {
   ParserError(String)
-} derive(Eq)
+}
 
 ///|
 pub extend ParserError with Eq::{equal}

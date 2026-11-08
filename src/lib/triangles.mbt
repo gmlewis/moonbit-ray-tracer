@@ -1,4 +1,5 @@
 ///|
+#derive(Debug, Eq)
 pub(all) struct Triangle {
   p1 : Tuple
   p2 : Tuple
@@ -7,7 +8,7 @@ pub(all) struct Triangle {
   e2 : Tuple
   normal : Tuple
   bounds : Bounds
-} derive(Debug, Eq)
+}
 
 ///|
 pub extend Triangle with Eq::{equal}

@@ -1,8 +1,9 @@
 ///|
+#derive(Debug)
 pub(all) struct Group {
   children : Array[Shape]
   mut bounds : Bounds?
-} derive(Debug)
+}
 
 ///|
 pub extend Group with Debug::{to_repr}

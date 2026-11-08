@@ -1,10 +1,11 @@
 ///|
+#derive(Debug)
 pub(all) struct Pattern {
   pattern : &PatternTrait
   // Do not modify transform directly. Use `set_transform` instead.
   mut transform : Matrix
   mut inv_transform : Matrix
-} derive(Debug)
+}
 
 ///|
 pub extend Pattern with Debug::{to_repr}
@@ -140,7 +141,8 @@ pub(open) trait Mapping: Debug + Show {
 }
 
 ///|
-pub(all) struct SphericalMapping {} derive(Debug, Eq)
+#derive(Debug, Eq)
+pub(all) struct SphericalMapping {}
 
 ///|
 pub extend SphericalMapping with Eq::{equal}
@@ -185,7 +187,8 @@ pub impl Mapping for SphericalMapping with fn map(_self, p) {
 }
 
 ///|
-pub(all) struct PlanarMapping {} derive(Debug, Eq)
+#derive(Debug, Eq)
+pub(all) struct PlanarMapping {}
 
 ///|
 pub extend PlanarMapping with Eq::{equal}
@@ -226,7 +229,8 @@ pub impl Mapping for PlanarMapping with fn map(_self, p) {
 }
 
 ///|
-pub(all) struct CylindricalMapping {} derive(Debug, Eq)
+#derive(Debug, Eq)
+pub(all) struct CylindricalMapping {}
 
 ///|
 pub extend CylindricalMapping with Eq::{equal}
@@ -269,7 +273,8 @@ pub impl Mapping for CylindricalMapping with fn map(_self, p) {
 }
 
 ///|
-pub(all) struct CubicMapping {} derive(Debug, Eq)
+#derive(Debug, Eq)
+pub(all) struct CubicMapping {}
 
 ///|
 pub extend CubicMapping with Eq::{equal}

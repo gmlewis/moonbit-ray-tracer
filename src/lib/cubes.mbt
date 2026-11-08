@@ -1,6 +1,7 @@
 ///|
 /// Cube represents a unit cube at the origin.
-pub(all) struct Cube {} derive(Debug, Eq)
+#derive(Debug, Eq)
+pub(all) struct Cube {}
 
 ///|
 pub extend Cube with Eq::{equal}

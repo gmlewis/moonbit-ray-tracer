@@ -1,4 +1,5 @@
 ///|
+#derive(Debug, Eq)
 pub(all) struct TriangleUV {
   p1 : Tuple
   p2 : Tuple
@@ -15,7 +16,7 @@ pub(all) struct TriangleUV {
   tangent_u : Tuple
   tangent_v : Tuple
   bounds : Bounds
-} derive(Debug, Eq)
+}
 
 ///|
 pub extend TriangleUV with Eq::{equal}

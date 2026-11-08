@@ -1,6 +1,7 @@
 ///|
 /// Sphere represents a sphere with radius 1.
-pub(all) struct Sphere {} derive(Debug, Eq)
+#derive(Debug, Eq)
+pub(all) struct Sphere {}
 
 ///|
 pub extend Sphere with Eq::{equal}

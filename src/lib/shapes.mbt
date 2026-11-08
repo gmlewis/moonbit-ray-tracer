@@ -1,4 +1,5 @@
 ///|
+#derive(Debug)
 pub(all) struct Shape {
   object : Renderable
   mut material : Material
@@ -15,7 +16,7 @@ pub(all) struct Shape {
   // operation to be safe in future parallel threaded runtimes, but for now
   // this is all single-threaded and unprotected.
   id : UInt32
-} derive(Debug)
+}
 
 ///|
 pub extend Shape with Debug::{to_repr}

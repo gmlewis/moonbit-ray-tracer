@@ -1,9 +1,10 @@
 ///|
 /// Ray represents an origin and direction.
+#derive(Debug)
 pub(all) struct Ray {
   origin : Tuple
   direction : Tuple
-} derive(Debug)
+}
 
 ///|
 pub extend Ray with Debug::{to_repr}

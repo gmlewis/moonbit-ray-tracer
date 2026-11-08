@@ -1,10 +1,11 @@
 ///|
 /// Cylinder represents a unit cylinder at the origin.
+#derive(Debug, Eq)
 pub(all) struct Cylinder {
   minimum : Double
   maximum : Double
   closed : Bool
-} derive(Debug, Eq)
+}
 
 ///|
 pub extend Cylinder with Eq::{equal}

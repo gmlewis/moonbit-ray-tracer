@@ -1,8 +1,9 @@
 ///|
 /// Scene parsing errors
+#derive(Eq)
 pub suberror SceneParseError {
   SceneParseError(String)
-} derive(Eq)
+}
 
 ///|
 pub extend SceneParseError with Eq::{equal}
@@ -42,6 +43,7 @@ pub(all) struct ParsedScene {
 
 ///|
 /// Render settings from scene file
+#derive(Eq)
 pub(all) struct RenderSettings {
   mut width : Int32
   mut height : Int32
@@ -50,7 +52,7 @@ pub(all) struct RenderSettings {
   mut background : Color
   mut divide : Int32
   mut exposure : Double
-} derive(Eq)
+}
 
 ///|
 pub extend RenderSettings with Eq::{equal}
@@ -62,11 +64,12 @@ pub extend RenderSettings with Eq::{not_equal}
 
 ///|
 /// Scene metadata
+#derive(Eq)
 pub(all) struct SceneMetadata {
   name : String
   description : String
   version : String
-} derive(Eq)
+}
 
 ///|
 pub extend SceneMetadata with Eq::{equal}

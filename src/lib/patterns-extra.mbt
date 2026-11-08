@@ -1,7 +1,8 @@
 ///|
+#derive(Debug, Eq)
 pub(all) struct StripePattern {
   colors : Array[Color]
-} derive(Debug, Eq)
+}
 
 ///|
 pub extend StripePattern with Eq::{equal}
@@ -96,9 +97,10 @@ pub fn stripe_pattern(colors : Array[Color]) -> Pattern {
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 ///|
+#derive(Debug, Eq)
 pub(all) struct GradientPattern {
   colors : Array[Color]
-} derive(Debug, Eq)
+}
 
 ///|
 pub extend GradientPattern with Eq::{equal}
@@ -195,9 +197,10 @@ pub fn gradient_pattern(colors : Array[Color]) -> Pattern {
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 ///|
+#derive(Debug, Eq)
 pub(all) struct RingPattern {
   colors : Array[Color]
-} derive(Debug, Eq)
+}
 
 ///|
 pub extend RingPattern with Eq::{equal}
@@ -284,9 +287,10 @@ pub fn ring_pattern(colors : Array[Color]) -> Pattern {
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 ///|
+#derive(Debug, Eq)
 pub(all) struct GradientRingPattern {
   colors : Array[Color]
-} derive(Debug, Eq)
+}
 
 ///|
 pub extend GradientRingPattern with Eq::{equal}
@@ -380,9 +384,10 @@ pub fn gradient_ring_pattern(colors : Array[Color]) -> Pattern {
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 ///|
+#derive(Debug, Eq)
 pub(all) struct CheckersPattern {
   colors : Array[Color]
-} derive(Debug, Eq)
+}
 
 ///|
 pub extend CheckersPattern with Eq::{equal}
@@ -480,10 +485,11 @@ pub fn checkers_pattern(colors : Array[Color]) -> Pattern {
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 ///|
+#derive(Debug)
 pub(all) struct Texture {
   canvas : Canvas
   mapping : &Mapping
-} derive(Debug)
+}
 
 ///|
 pub extend Texture with Debug::{to_repr}
@@ -574,9 +580,10 @@ pub fn texture(canvas : Canvas, mapping? : &Mapping) -> Pattern {
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 ///|
+#derive(Debug, Eq)
 pub(all) struct GradientCheckersPattern {
   colors : Array[Color]
-} derive(Debug, Eq)
+}
 
 ///|
 pub extend GradientCheckersPattern with Eq::{equal}
@@ -714,10 +721,11 @@ fn palette(colors : Array[Color], t : Double) -> Color {
 }
 
 ///|
+#derive(Debug, Eq)
 pub(all) struct NoisePattern {
   seed : Int32
   scale : Double
-} derive(Debug, Eq)
+}
 
 ///|
 pub extend NoisePattern with Eq::{equal}
@@ -790,13 +798,14 @@ pub fn noise_pattern(seed~ : Int32 = 0, scale~ : Double = 1.0) -> Pattern {
 }
 
 ///|
+#derive(Debug, Eq)
 pub(all) struct FbmPattern {
   seed : Int32
   scale : Double
   octaves : Int32
   lacunarity : Double
   gain : Double
-} derive(Debug, Eq)
+}
 
 ///|
 pub extend FbmPattern with Eq::{equal}
@@ -889,6 +898,7 @@ pub fn fbm_pattern(
 }
 
 ///|
+#derive(Debug)
 pub(all) struct MarblePattern {
   colors : Array[Color]
   seed : Int32
@@ -898,7 +908,7 @@ pub(all) struct MarblePattern {
   gain : Double
   frequency : Double
   strength : Double
-} derive(Debug)
+}
 
 ///|
 pub extend MarblePattern with Debug::{to_repr}
@@ -993,6 +1003,7 @@ pub fn marble_pattern(
 }
 
 ///|
+#derive(Debug)
 pub(all) struct WoodPattern {
   colors : Array[Color]
   seed : Int32
@@ -1002,7 +1013,7 @@ pub(all) struct WoodPattern {
   gain : Double
   ring_frequency : Double
   turbulence : Double
-} derive(Debug)
+}
 
 ///|
 pub extend WoodPattern with Debug::{to_repr}
@@ -1098,6 +1109,7 @@ pub fn wood_pattern(
 }
 
 ///|
+#derive(Debug, Eq)
 pub(all) enum VoronoiMode {
   Distance
   Cells
@@ -1106,7 +1118,7 @@ pub(all) enum VoronoiMode {
   F1
   F2
   F2MinusF1
-} derive(Debug, Eq)
+}
 
 ///|
 pub extend VoronoiMode with Eq::{equal}
@@ -1145,13 +1157,14 @@ pub impl Show for VoronoiMode with fn output(self, logger) {
 }
 
 ///|
+#derive(Debug)
 pub(all) struct VoronoiPattern {
   seed : Int32
   scale : Double
   jitter : Double
   mode : VoronoiMode
   edge_scale : Double
-} derive(Debug)
+}
 
 ///|
 pub extend VoronoiPattern with Debug::{to_repr}
@@ -1332,6 +1345,7 @@ fn remap_channel(
 }
 
 ///|
+#derive(Debug)
 pub(all) struct LevelsPattern {
   pattern : Pattern
   in_min : Double
@@ -1339,7 +1353,7 @@ pub(all) struct LevelsPattern {
   out_min : Double
   out_max : Double
   gamma : Double
-} derive(Debug)
+}
 
 ///|
 pub extend LevelsPattern with Debug::{to_repr}
@@ -1521,11 +1535,12 @@ fn gain_value(x : Double, gain : Double) -> Double {
 }
 
 ///|
+#derive(Debug)
 pub(all) struct BiasGainPattern {
   pattern : Pattern
   bias : Double
   gain : Double
-} derive(Debug)
+}
 
 ///|
 pub extend BiasGainPattern with Debug::{to_repr}
@@ -1610,11 +1625,12 @@ fn contrast_value(x : Double, contrast : Double, pivot : Double) -> Double {
 }
 
 ///|
+#derive(Debug)
 pub(all) struct ContrastPattern {
   pattern : Pattern
   contrast : Double
   pivot : Double
-} derive(Debug)
+}
 
 ///|
 pub extend ContrastPattern with Debug::{to_repr}
@@ -1698,12 +1714,13 @@ pub fn contrast_pattern(
 }
 
 ///|
+#derive(Debug)
 pub(all) struct ThresholdPattern {
   pattern : Field
   threshold : Double
   low : Color
   high : Color
-} derive(Debug)
+}
 
 ///|
 pub extend ThresholdPattern with Debug::{to_repr}
@@ -1808,10 +1825,11 @@ pub fn threshold_pattern(
 }
 
 ///|
+#derive(Debug)
 pub(all) struct PosterizePattern {
   pattern : Pattern
   steps : Int32
-} derive(Debug)
+}
 
 ///|
 pub extend PosterizePattern with Debug::{to_repr}
@@ -1896,10 +1914,11 @@ pub fn posterize_pattern(pattern : Pattern, steps~ : Int32 = 4) -> Pattern {
 }
 
 ///|
+#derive(Debug)
 pub(all) struct GradientMapPattern {
   pattern : Pattern
   colors : Array[Color]
-} derive(Debug)
+}
 
 ///|
 pub extend GradientMapPattern with Debug::{to_repr}
@@ -1971,11 +1990,12 @@ pub fn gradient_map_pattern(
 }
 
 ///|
+#derive(Debug)
 pub(all) struct TriplanarPattern {
   pattern : Pattern
   scale : Double
   sharpness : Double
-} derive(Debug)
+}
 
 ///|
 pub extend TriplanarPattern with Debug::{to_repr}
@@ -2065,9 +2085,10 @@ pub fn triplanar_pattern(
 }
 
 ///|
+#derive(Debug)
 pub(all) struct InvertPattern {
   pattern : Pattern
-} derive(Debug)
+}
 
 ///|
 pub extend InvertPattern with Debug::{to_repr}
@@ -2132,11 +2153,12 @@ pub fn invert_pattern(pattern : Pattern) -> Pattern {
 }
 
 ///|
+#derive(Debug)
 pub(all) struct MixPattern {
   a : Pattern
   b : Pattern
   mask : Field
-} derive(Debug)
+}
 
 ///|
 pub extend MixPattern with Debug::{to_repr}
@@ -2203,11 +2225,12 @@ pub fn mix_pattern(a : Pattern, b : Pattern, mask : Pattern) -> Pattern {
 }
 
 ///|
+#derive(Debug)
 pub(all) struct WarpPattern {
   base : Pattern
   warp : Field
   amplitude : Double
-} derive(Debug)
+}
 
 ///|
 pub extend WarpPattern with Debug::{to_repr}
