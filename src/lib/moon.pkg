@@ -1,5 +1,4 @@
 import {
-  "bobzhang/toml",
   "gmlewis/base64",
   "gmlewis/fonts",
   "gmlewis/fonts/draw",
@@ -10,6 +9,7 @@ import {
   "gmlewis/image/png",
   "gmlewis/io",
   "gmlewis/ray-tracer/hdr",
+  "moonbit-community/toml",
   "moonbitlang/async",
   "moonbitlang/async/fs",
   "moonbitlang/async/stdio",

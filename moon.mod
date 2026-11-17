@@ -1,17 +1,17 @@
 name = "gmlewis/ray-tracer"
 
-version = "0.10.52"
+version = "0.10.53"
 
 import {
-  "gmlewis/base64@0.16.14",
-  "gmlewis/flate@0.36.18",
-  "gmlewis/fonts@0.19.20",
-  "gmlewis/gzip@0.34.18",
-  "gmlewis/image@0.17.19",
-  "gmlewis/io@0.23.21",
-  "moonbitlang/async@0.22.7",
+  "gmlewis/base64@0.16.15",
+  "gmlewis/flate@0.36.19",
+  "gmlewis/fonts@0.19.21",
+  "gmlewis/gzip@0.34.19",
+  "gmlewis/image@0.17.20",
+  "gmlewis/io@0.23.22",
+  "moonbit-community/toml@0.5.1",
+  "moonbitlang/async@0.22.9",
   "moonbitlang/x@0.4.38",
-  "bobzhang/toml@0.4.3",
 }
 
 readme = "README.md"
